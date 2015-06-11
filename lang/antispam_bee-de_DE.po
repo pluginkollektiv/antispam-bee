@@ -1,0 +1,265 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Antispam Bee\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2015-03-10 09:52+0100\n"
+"Last-Translator: Sergej Müller\n"
+"Language-Team: Sergej Müller\n"
+"Language: German\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Poedit-Basepath: .\n"
+"X-Loco-Target-Locale: de_DE\n"
+"X-Generator: Loco - https://localise.biz/\n"
+"X-Poedit-SearchPath-0: .\n"
+
+msgid "No data available."
+msgstr "Noch keine Daten vorhanden."
+
+msgid "New spam comment on your post"
+msgstr "Neuer Spam zum Artikel"
+
+msgid "Comment"
+msgstr "Kommentar"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Spam Reason"
+msgstr "Spamgrund"
+
+msgid "Empty Data"
+msgstr "Leere Daten"
+
+msgid "CSS Hack"
+msgstr "CSS Hack"
+
+msgid "Comment time"
+msgstr "Kommentarzeit"
+
+msgid "Fake IP"
+msgstr "Gefälschte IP"
+
+msgid "Local DB Spam"
+msgstr "Lokale Spamdatenbank"
+
+msgid "Comment Language"
+msgstr "Sprache"
+
+msgid "Country Check"
+msgstr "Ländercode"
+
+msgid "DNSBL Spam"
+msgstr "DNSBL Spam"
+
+msgid "RegExp"
+msgstr "Regulärer Ausdruck"
+
+msgid "Approve it"
+msgstr "Freigeben"
+
+msgid "Delete it"
+msgstr "Löschen"
+
+msgid "Trash it"
+msgstr "In Papierkorb"
+
+msgid "Spam list"
+msgstr "Spamliste"
+
+msgid "Notify message by Antispam Bee"
+msgstr "Benachrichtigung von Antispam Bee"
+
+msgid "Content removed by Antispam Bee"
+msgstr "Inhalt entfernt von Antispam Bee"
+
+msgid "Last check"
+msgstr "Zuletzt"
+
+msgid "Blocked"
+msgstr "Blockiert"
+
+msgid "Today"
+msgstr "Heute"
+
+msgid "Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes protection again trackback spam."
+msgstr "Simples, äußerst effektives Plugin zur Bekämpfung von Spam-Kommentaren. Datenschutzkonform, funktionsreich und unkompliziert."
+
+msgid "http://antispambee.com"
+msgstr "http://antispambee.de"
+
+msgid "Comments"
+msgstr "Kommentare"
+
+msgid "Comment marked as spam"
+msgstr "Spam-Benachrichtigung"
+
+# Sprachen
+msgid "Language"
+msgstr "Sprache"
+
+msgid "English"
+msgstr "Englisch"
+
+msgid "German"
+msgstr "Deutsch"
+
+msgid "French"
+msgstr "Französisch"
+
+msgid "Italian"
+msgstr "Italienisch"
+
+msgid "Spanish"
+msgstr "Spanisch"
+
+# Antispam-Filter
+msgid "Antispam filter"
+msgstr "Antispam-Regeln"
+
+msgid "Filter in the execution order"
+msgstr "Filter in Reihenfolge der Ausführung"
+
+msgid "Trust approved commenters"
+msgstr "Genehmigten Kommentatoren vertrauen"
+
+msgid "Always approve previously approved users"
+msgstr "Keine Prüfung bereits kommentierender Nutzer"
+
+msgid "Consider the comment time"
+msgstr "Kommentarzeit berücksichtigen"
+
+msgid "Not recommended when using page caching"
+msgstr "Nicht empfohlen beim Caching von Blogseiten"
+
+msgid "BBCode is spam"
+msgstr "BBCode als Spam einstufen"
+
+msgid "Review the comment contents for BBCode links"
+msgstr "Analyse der Kommentarinhalte auf BBCode-Links"
+
+msgid "Use a public antispam database"
+msgstr "Öffentliche Spamdatenbank berücksichtigen"
+
+msgid "Matching the ip address with <a href=\"https://dnsbl.tornevall.org\" target=\"_blank\">Tornevall</a>"
+msgstr "Beachte den <a href=\"http://playground.ebiene.de/antispam-bee-wordpress-plugin/#dnsbl_check\" target=\"_blank\">Datenschutzhinweis</a> für die Option"
+
+msgid "Validate the ip address of commenters"
+msgstr "IP-Adresse des Kommentators validieren"
+
+msgid "Validity check for used ip address"
+msgstr "Kontrolle auf Gültigkeit verwendeter Kennung"
+
+msgid "Use regular expressions"
+msgstr "Reguläre Ausdrücke anwenden"
+
+msgid "Predefined and custom patterns by <a href=\"https://gist.github.com/4242142\" target=\"_blank\">plugin hook</a>"
+msgstr "Vordefinierte und eigene Muster via <a href=\"http://playground.ebiene.de/antispam-bee-wordpress-plugin/#regexp_check\" target=\"_blank\">Plugin-Hook</a>"
+
+msgid "Look in the local spam database"
+msgstr "Lokale Spamdatenbank einbeziehen"
+
+msgid "Already marked as spam? Yes? No?"
+msgstr "Suche im Spambestand des eigenen Blogs"
+
+msgid "Trust commenters with a Gravatar"
+msgstr "Kommentatoren mit Gravatar vertrauen"
+
+msgid "Check if commenter has a Gravatar image"
+msgstr "Beachte den <a href=\"http://playground.ebiene.de/antispam-bee-wordpress-plugin/#gravatar_check\" target=\"_blank\">Datenschutzhinweis</a> für die Option"
+
+msgid "Block comments from specific countries"
+msgstr "Bestimmte Länder blockieren bzw. erlauben"
+
+msgid "Filtering the requests depending on country"
+msgstr "Filterung der Anfragen je nach Herkunftsland"
+
+msgid "Allow comments only in certain language"
+msgstr "Kommentare nur in einer Sprache zulassen"
+
+msgid "Detection and approval in specified language"
+msgstr "Erkennung und Freigabe festgelegter Sprache"
+
+# Erweitert
+msgid "Advanced"
+msgstr "Erweitert"
+
+msgid "Other antispam tools"
+msgstr "Weitere Steuerungselemente"
+
+msgid "Mark as spam, do not delete"
+msgstr "Erkannten Spam kennzeichnen, nicht löschen"
+
+msgid "Keep the spam in my blog."
+msgstr "Markierung als Spam / Aufbewahrung im Blog"
+
+msgid "Notification by email"
+msgstr "Bei Spam via E-Mail informieren"
+
+msgid "Notify admins by e-mail about incoming spam"
+msgstr "Versand der Benachrichtigung an den Admin"
+
+msgid "Not save the spam reason"
+msgstr "Spamgrund zum Kommentar nicht speichern"
+
+msgid "Spam reason as table column in the spam overview"
+msgstr "Verdachtsgrund-Spalte in der Spam-Übersicht"
+
+#, c-format
+msgid "Delete existing spam after %s days"
+msgstr "Vorhandenen Spam nach %s Tagen löschen"
+
+msgid "Cleaning up the database from old entries"
+msgstr "Säuberung der Datenbank von alten Einträgen"
+
+#, c-format
+msgid "Limit approval to %s"
+msgstr "Aufbewahrung gilt nur für %s"
+
+msgid "Other types of spam will be deleted immediately"
+msgstr "Spam anderes Typs unterliegt sofortiger Löschung"
+
+msgid "Delete comments by spam reasons"
+msgstr "Bei definierten Spamgründen sofort löschen"
+
+msgid "For multiple selections press Ctrl/CMD"
+msgstr "Mehrfachauswahl bzw. Abwahl mit Strg/CMD"
+
+# Sonstiges
+msgid "More"
+msgstr "Sonstiges"
+
+msgid "A few little things"
+msgstr "Weniger relevante Optionen"
+
+msgid "Statistics on the dashboard"
+msgstr "Statistiken als Dashboard-Widget generieren"
+
+msgid "Daily updates of spam detection rate"
+msgstr "Verlauf der Erkennungsrate mit täglichen Werten"
+
+msgid "Spam counter on the dashboard"
+msgstr "Spam-Anzahl auf dem Dashboard anzeigen"
+
+msgid "Amount of identified spam comments"
+msgstr "Menge an identifizierten Spam-Kommentaren"
+
+msgid "Do not check trackbacks / pingbacks"
+msgstr "Eingehende Ping- und Trackbacks ignorieren"
+
+msgid "No spam check for trackback notifications"
+msgstr "Kein Spam-Check für Link-Benachrichtigungen"
+
+msgid "Comment form used outside of posts"
+msgstr "Kommentarformular auf Archivseiten"
+
+msgid "Check for comment forms on archive pages"
+msgstr "Überwachung des Formulars auf Archivseiten"
+
