@@ -1,0 +1,169 @@
+/* @group Global */
+
+* {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	outline: 0;
+}
+html {
+	height: 100%;
+}
+body {
+	font: normal 15px/25px Georgia;
+	color: #777;
+	height: 100%;
+	background: #fff url(../img/bg.png) repeat-x left top;
+	overflow-x: hidden;
+}
+a {
+	color: #644007;
+	font-size: 15px;
+	line-height: 24px;
+	text-decoration: underline;
+}
+a:hover {
+	text-decoration: none;
+}
+ul {
+	list-style: none;
+}
+ul li {
+	float: left;
+}
+
+/* @end group */
+
+
+/* @group Header */
+
+.header {
+	top: 10px;
+	left: 50%;
+	width: 940px;
+	height: 50px;
+	margin: 0 0 0 -470px;
+	padding: 1px 0 0;
+	position: absolute;
+}
+.header > p {
+	float: right;
+	width: 209px;
+	height: 58px;
+}
+.header > p > a {
+	width: 209px;
+	height: 29px;
+	display: block;
+	background: url(../img/button.png) no-repeat;
+	text-indent: -9999px;
+}
+.header > p > a:hover {
+	background-position: 0 -29px;
+}
+.header > ul > li {
+	margin: 0 20px 0 0;
+}
+.header > ul > li > a {
+	color: #c68c03;
+}
+.header > ul > li > a.lang {
+	width: 22px;
+	height: 14px;
+	margin: 7px 0 0 1px;
+	display: block;
+	background: url(../img/lang.png) no-repeat;
+	text-indent: -9999px;
+}
+
+/* @end group */
+
+
+/* @group Main */
+
+.main {
+	left: 50%;
+	top: 50%;
+	width: 940px;
+	height: 514px;
+	margin: -217px 0 0 -470px;
+	padding: 0 100px 0 0;
+	position: absolute;
+	background: url(../img/icon.png) no-repeat right center;
+}
+.main > h1 {
+	width: 474px;
+	height: 40px;
+	margin: 41px 0 0;
+	display: block;
+	background: url(../img/love.png) no-repeat;
+	text-indent: -9999px;
+}
+.main > h2 {
+	color: #555;
+	margin: -1px 0 20px;
+	font-size: 21px;
+	line-height: 30px;
+	font-weight: normal;
+}
+.main > p {
+	width: 380px;
+	margin: 10px 0;
+}
+.main > div {
+	margin: 40px 0 0;
+}
+.main > div > a {
+	float: left;
+	width: 221px;
+	height: 42px;
+	display: block;
+	background: url(../img/button.png) no-repeat 0 -58px;
+	text-indent: -9999px;
+}
+.main > div > a:hover {
+	background-position: 0 -100px;
+}
+.main > div > p {
+	float: left;
+	margin: 0 0 0 20px;
+	font-size: 17px;
+	line-height: 42px;
+}
+.main > div > p > a {
+	font-size: 17px;
+	line-height: 42px;	
+}
+
+/* @end group */
+
+
+/* @group Footer */
+
+.footer {
+	left: 50%;
+	width: 940px;
+	bottom: 14px;
+	margin: 0 0 0 -470px;
+	position: absolute;
+	white-space: nowrap;
+	line-height: 20px;
+}
+.footer > p:first-child {
+	float: right;
+	text-align: right;
+}
+.footer > p em {
+	display: none;
+}
+.footer .black {
+	color: #000;
+}
+.footer .red {
+	color: #e10019;
+}
+.footer .yellow {
+	color: #edbe03;
+}
+
+/* @end group */
