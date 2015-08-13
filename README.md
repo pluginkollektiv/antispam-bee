@@ -1,26 +1,21 @@
 # Antispam Bee #
-**Contributors:** sergej.mueller
-  
-**Tags:** comment, spam, antispam, comments, trackback, protection, prevention
-  
-**Donate link:** https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZAQUT9RLPW8QN
-  
-**Requires at least:** 3.8
-  
-**Tested up to:** 4.2.2
-  
-**Stable tag:** trunk
-  
-**License:** GPLv2 or later
-  
-**License URI:** https://www.gnu.org/licenses/gpl-2.0.html
-  
+Contributors: sergej.mueller
 
+Tags: comment, spam, antispam, comments, trackback, protection, prevention
 
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZAQUT9RLPW8QN
 
+Requires at least: 3.8
+
+Tested up to: 4.2.2
+
+Stable tag: trunk
+
+License: GPLv2 or later
+
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+  
 „... another popular solution to fight spam is Antispam Bee“ – Matt Mullenweg, Q&A WordCamp Europe 2014
-
-
 
 ## Description ##
 
