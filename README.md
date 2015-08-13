@@ -1,5 +1,5 @@
 # Antispam Bee #
-Contributors: sergej.mueller
+Contributors: pluginkollektiv
 
 Tags: comment, spam, antispam, comments, trackback, protection, prevention
 
@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 
 Requires at least: 3.8
 
-Tested up to: 4.2.2
+Tested up to: 4.3
 
 Stable tag: trunk
 
@@ -88,7 +88,7 @@ Fragen rund ums Plugin werden gern per E-Mail beantwortet. Beachtet auch die [Gu
 
 
 ### Lesenswertes ###
-* [Antispam Bee: Antispam für WordPress](http://playground.ebiene.de/antispam-bee-wordpress-plugin/)
+* [Antispam Bee: Antispam für WordPress](https://github.com/pluginkollektiv/antispam-bee/wiki)
 * [Guide: Spam-Bekämpfung in WordPress](http://cup.wpcoder.de/wordpress-antispam-guide/)
 
 
@@ -96,13 +96,9 @@ Fragen rund ums Plugin werden gern per E-Mail beantwortet. Beachtet auch die [Gu
 * [antispambee.de](http://antispambee.de)
 
 
-### Autor ###
-* [Twitter](https://twitter.com/wpSEO)
-* [Google+](https://plus.google.com/110569673423509816572)
-* [Plugins](http://wpcoder.de)
-
-
-
+### Credits ###
+* Autor: [Sergej Müller](https://sergejmueller.github.io/)
+* Pflege: [pluginkollektiv](http://pluginkollektiv.org)
 
 
 ## Changelog ##
