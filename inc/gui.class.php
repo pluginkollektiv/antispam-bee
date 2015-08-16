@@ -366,12 +366,12 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 					<div class="ab-column ab-column--service">
 						<?php if ( get_locale() == 'de_DE' ) { ?>
 							<p>
-								<a href="http://playground.ebiene.de/antispam-bee-wordpress-plugin/" target="_blank">Online-Handbuch</a> &bull; <a href="http://cup.wpcoder.de/wordpress-antispam-guide/" target="_blank">Antispam-Guide</a>
+								<a href="https://github.com/pluginkollektiv/antispam-bee/wiki/" target="_blank">Online-Handbuch</a> &bull; <a href="http://cup.wpcoder.de/wordpress-antispam-guide/" target="_blank">Antispam-Guide</a>
 							</p>
 						<?php } ?>
 
 						<p>
-							<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=ZAQUT9RLPW8QN" target="_blank">PayPal</a> &bull; <a href="https://flattr.com/t/1323822" target="_blank">Flattr</a> &bull; <a href="https://www.amazon.de/registry/wishlist/2U5I7F9649LOJ/" target="_blank">Wishlist</a>
+							<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LG5VC9KXMAYXJ" target="_blank">PayPal</a>
 						</p>
 					</div>
 
