@@ -27,7 +27,7 @@ final class Antispam_Bee_Columns {
 		return array_merge(
 			$columns,
 			array(
-				'antispam_bee_reason' => esc_html__('Spam Reason', 'antispam_bee')
+				'antispam_bee_reason' => esc_html__('Spam Reason', 'antispam-bee')
 			)
 		);
 	}
@@ -62,7 +62,7 @@ final class Antispam_Bee_Columns {
 		/* Escape & Print */
 		echo esc_html__(
 			$spam_reasons[$spam_reason],
-			'antispam_bee'
+			'antispam-bee'
 		);
 	}
 
