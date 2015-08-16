@@ -1,192 +1,148 @@
 # Antispam Bee #
-Contributors: pluginkollektiv
+* Contributors:      pluginkollektiv
+* Tags:              comment, spam, antispam, comments, trackback, protection, prevention
+* Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LG5VC9KXMAYXJ
+* Requires at least: 3.8
+* Tested up to:      4.3
+* Stable tag:        trunk
+* License:           GPLv2 or later
+* License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Tags: comment, spam, antispam, comments, trackback, protection, prevention
-
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZAQUT9RLPW8QN
-
-Requires at least: 3.8
-
-Tested up to: 4.3
-
-Stable tag: trunk
-
-License: GPLv2 or later
-
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
-  
-„... another popular solution to fight spam is Antispam Bee“ – Matt Mullenweg, Q&A WordCamp Europe 2014
+“…another popular solution to fight spam is Antispam Bee”—Matt Mullenweg, Q&A WordCamp Europe 2014
 
 ## Description ##
-
-Say Goodbye zu Spam in deinem Blog. Kostenlos, werbefrei und datenschutzkonform. Für Kommentare und Trackbacks.
-
-Blog-Spam bekämpfen ist die Stärke von *Antispam Bee*. Seit Jahren wird das Plugin darauf trainiert, Spam-Kommentare zuverlässig zu erkennen (auf Wunsch auch sofort zu beseitigen). Dabei greift *Antispam Bee* auf unterschiedliche Techniken zu, die sich zur Identifizierung von Spam-Nachrichten bewährt haben.
+Say Goodbye to comment spam on your WorddPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively and without captchas. It is free of charge, ad-free and compliant with European data privacy standards.
 
 
-### Pluspunkte ###
-* Aktive Weiterentwicklung seit 2009
-* Über 20 untereinander kombinierbare Funktionen
-* Keine Speicherung von personenbezogenen Daten
-* Volle Transparenz bei der Prüfung der Kommentare
-* Keine Registrierung notwendig
-* Kostenlos auch für kommerzielle Projekte
-* Keine Anpassung von Theme-Templates vonnöten
-* Alle Funktionen vom Nutzer steuerbar
-* Statistik der letzten 30 Tage als Dashboard-Widget
+### Feature/Settings Overview ###
+* Trust approved commenters.
+* Trust commenters with a Gravatar.
+* Consider the comment time.
+* Treat BBCode as spam.
+* Validate the IP address of commenters.
+* Use regular expressions.
+* Search local spam database for commenters previously marked as spammers.
+* Match against a public anti-spam database.
+* Notify admins by e-mail about incoming spam.
+* Delete existing spam after n days.
+* Limit approval to comments/pings (will delete other comment types).
+* Select spam indicators to send comments to deletion directly.
+* Optionally exclude trackbacks and pingbacks from spam detection.
+* Optionally spam-check comment forms on archive pages.
+* Display spam statistics on the dashboard, including daily updates of spam detection rate and a total of blocked spam comments.
 
 
-### Einstellungen ###
-Nach der Aktivierung nimmt *Antispam Bee* den regulären Betrieb auf, indem vordefinierte Schutzmechanismen scharf geschaltet werden. Es empfiehlt sich jedoch, die Seite mit Plugin-Einstellungen aufzurufen und sich mit wirkungsvollen Optionen auseinander zu setzen. Alle Optionsschalter sind in der [Online-Dokumentation](http://playground.ebiene.de/antispam-bee-wordpress-plugin/) detailliert vorgestellt.
-
-Die meisten Auswahlmöglichkeiten innerhalb der Optionsseite sind konfigurierbare Antispam-Filter, die der Blog-Administrator nach Bedarf aktiviert. Zahlreiche Wahlmöglichkeiten steuern hingegen die Benachrichtigungs- und die automatische Löschfunktion des Plugins. Die *Antispam Bee* Optionen in der Kurzfassung:
-
-* Genehmigten Kommentatoren vertrauen
-* BBCode als Spam einstufen
-* IP-Adresse des Kommentators validieren
-* Reguläre Ausdrücke anwenden
-* Lokale Spamdatenbank einbeziehen
-* Öffentliche Spamdatenbank berücksichtigen
-* Bestimmte Länder blockieren bzw. erlauben
-* Kommentare nur in einer Sprache zulassen
-* Erkannten Spam kennzeichnen, nicht löschen
-* Bei Spam via E-Mail informieren
-* Optionale Logdatei mit Spam-Einträgen z.B. für [Fail2Ban](http://cup.wpcoder.de/fail2ban-ip-firewall/)
-* Spamgrund im Kommentar nicht speichern
-* Vorhandenen Spam nach X Tagen löschen
-* Aufbewahrung der Spam-Kommentare für einen Typ
-* Bei definierten Spamgründen sofort löschen
-* Statistiken als Dashboard-Widget generieren
-* Spam-Anzahl auf dem Dashboard anzeigen
-* Eingehende Ping- und Trackbacks ignorieren
-* Kommentarformular befindet sich auf Archivseiten
-
-
-### Datenschutz ###
-In Blogs innerhalb der EU-Länder sollte die Option *"Öffentliche Spamdatenbank berücksichtigen"* nicht aktiviert werden, da das Antispam-Plugin dann ungekürzte IP-Adressen der Kommentatoren dafür verwendet, diese in einer öffentlichen Spammer-Datenbank nachzuschlagen, um als Spam zu identifizieren. Technisch ist die Verschlüsselung der IP nicht möglich, da Spammer-Datenbanken mit vollständigen, unverschlüsselten IP-Adressen arbeiten. [Weitere Details](http://playground.ebiene.de/antispam-bee-wordpress-plugin/#dnsbl_check)
-
-
-### Schlusswort ###
-Installiert, probiert die bewährte Antispam-Lösung für WordPress aus.
-Anmeldefrei und ohne lästige Captchas.
-
-
-### Support ###
-Fragen rund ums Plugin werden gern per E-Mail beantwortet. Beachtet auch die [Guidelines](https://plus.google.com/+SergejMüller/posts/Ex2vYGN8G2L).
-
-
-### Inkompatibilität ###
-* Disqus
-* Jetpack Comments
-* AJAX-Kommentarformulare
-
-
-### Unterstützung ###
-* [Flattr](https://flattr.com/t/1323822)
-* [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZAQUT9RLPW8QN)
-* [Wishlist](https://www.amazon.de/registry/wishlist/2U5I7F9649LOJ/)
-
-
-### Lesenswertes ###
-* [Antispam Bee: Antispam für WordPress](https://github.com/pluginkollektiv/antispam-bee/wiki)
-* [Guide: Spam-Bekämpfung in WordPress](http://cup.wpcoder.de/wordpress-antispam-guide/)
-
-
-### Website ###
-* [antispambee.de](http://antispambee.de)
+> #### Auf Deutsch? ####
+> Für eine ausführliche [Dokumentation](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation) besuche bitte das [Antispam-Bee-Wiki](https://github.com/pluginkollektiv/antispam-bee/wiki). Dort findest du u.a. Antworten auf [häufig gestellte Fragen](https://github.com/pluginkollektiv/antispam-bee/wiki/H%C3%A4ufige-Fragen), sowie Hinweise zu den [Einstellungen der Antispam-Regeln](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation#antispam-regeln).
+>
+> **Community-Support auf Deutsch** erhältst du in einem der [deutschsprachigen Foren](https://de.forums.wordpress.org/forum/plugins); im [Plugin-Forum für Antispam Bee](https://wordpress.org/support/plugin/antispam-bee) wird, wie in allen Plugin-Foren auf wordpress.org, ausschließlich **Englisch** gesprochen.
 
 
 ### Credits ###
-* Autor: [Sergej Müller](https://sergejmueller.github.io/)
-* Pflege: [pluginkollektiv](http://pluginkollektiv.org)
+* Author: [Sergej Müller](https://sergejmueller.github.io/)
+* Maintainers: [pluginkollektiv](http://pluginkollektiv.org)
+
+
+## Installation ##
+* If you don’t know how to install a plugin for WordPress, [here’s how](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
+
+
+### Requirements ###
+* PHP 5.2.4 or greater
+* WordPress 3.8 or greater
+
+
+### Settings ###
+After you have activated *Antispam Bee* the plugin will block spam comments out of the box. However, you may want to visit *Settings → Antispam Bee* to configure your custom set of anti-spam options that works best for your site.
+
+
+### Privacy Notice ###
+On sites operating from within the EU the option *Use a public antispam database* should not be activated for privacy reasons. When that option has been activated, *Antispam Bee* will match full IP addresses from comments against a public spam database. Technically it is not possible to encrypt those IPs, because spam databases only store and operate with complete, unencrypted IP addresses.
+
+
+## Frequently Asked Questions ##
+### Does Antispam Bee work with Jetpack, Disqus Comments and other comment plugins? ###
+Antispam Bee works best with default WordPress comments. It is not compatible with Jetpack or Disqus Comments as those plugins load the comment form within an iframe. Thus Antispam Bee can not access the comment form directly.
+It also won’t work with any AJAX-powered comment forms.
+
+### On how many web sites or blogs can I use Antispam Bee? ###
+On as many as you wish. There is no limitation to the number of sites you use the plugin on.
+
+### Do I have to register for any sort of paid service if my site gets a lot of comment spam? ###
+No, Antispam Bee is free forever, for both private and commercial projects.
+
+### Does Antispam Bee store any private user data, IP addresses or the like? ###
+Nope. Antispam Bee is developed in Germany and Switzerland. You might have heard we can be a bit nitpicky over here when it comes to privacy.
+
+### Will I have to edit any theme templates to get Antispam Bee to work? ###
+No, the plugin works as is. You may want to configure your favorite settings, though.
 
 
 ## Changelog ##
-
 ### 2.6.7 ###
-
+* **English**
+    * Removal of functions *Block comments from specific countries* and *Allow comments only in certain language* for financial reasons
 * **Deutsch**
     * Entfernung der Funktionen *Kommentare nur in einer Sprache zulassen* und *Bestimmte Länder blockieren bzw. erlauben* aus finanziellen Gründen
     * [Weitere Informationen zum Hintergrund](https://plus.google.com/u/0/+SergejMüller/posts/ZyquhoYjUyF)
 
-* **English**
-    * Removal of functions *Block comments from specific countries* and *Allow comments only in certain language* for financial reasons
-
-
 ### 2.6.6 ###
-
+* **English**
+    * Switch to the official Google Translation API
+    * *Release time investment (Development & QA): 2.5 h*
 * **Deutsch**
     * (Testweise) Umstellung auf die offizielle Google Translation API
     * [Weitere Informationen zum Hintergrund](https://plus.google.com/u/0/+SergejMüller/posts/ZyquhoYjUyF)
     * *Release-Zeitaufwand (Development & QA): 2,5 Stunden*
 
-* **English**
-    * Switch to the official Google Translation API
-    * *Release time investment (Development & QA): 2,5 h*
-
 ### 2.6.5 ###
-
 * **English**
     * Fix: Return parameters on `dashboard_glance_items` callback / thx [@toscho](https://twitter.com/toscho)
     * New function: Trust commenters with a Gravatar / thx [@glueckpress](https://twitter.com/glueckpress)
     * Additional plausibility checks and filters
     * *Release time investment (Development & QA): 12 h*
-
 * **Deutsch**
     * Fix: Parameter-Rückgabe bei `dashboard_glance_items` / thx [@toscho](https://twitter.com/toscho)
     * Neue Funktion: [Kommentatoren mit Gravatar vertrauen](http://playground.ebiene.de/antispam-bee-wordpress-plugin/#gravatar_check) / thx [@glueckpress](https://twitter.com/glueckpress)
     * Zusätzliche Plausibilitätsprüfungen und Filter
     * *Release-Zeitaufwand (Development & QA): 12 Stunden*
 
-
 ### 2.6.4 ###
-
 * **English**
     * Consideration of the comment time (Spam if a comment was written in less than 5 seconds)
-    * *Release time investment (Development & QA): 6,25 h*
-
+    * *Release time investment (Development & QA): 6.25 h*
 * **Deutsch**
     * Berücksichtigung der Kommentarzeit (Spam, wenn ein Kommentar in unter 5 Sekunden verfasst)
     * [Mehr Informationen auf Google+](https://plus.google.com/+SergejMüller/posts/73EbP6F1BgC)
     * *Release-Zeitaufwand (Development & QA): 6,25 Stunden*
 
-
 ### 2.6.3 ###
-
 * **English**
     * Sorting for the Antispam Bee column in the spam comments overview
     * Code refactoring around the use of REQUEST_URI
-    * *Release time investment (Development & QA): 2,75 h*
-
+    * *Release time investment (Development & QA): 2.75 h*
 * **Deutsch**
     * Sortierung für die Antispam Bee Spalte in der Spam-Übersicht
     * Code-Refactoring rund um die Nutzung von REQUEST_URI
-    * *Release-Zeitaufwand (Development & QA): 2,75 Stunden*
-
+    * *Release-Zeitaufwand (Development & QA): 2,.75 Stunden*
 
 ### 2.6.2 ###
-
 * **English**
     * Improving detection of fake IPs
     * *Release time investment (Development & QA): 11 h*
-
 * **Deutsch**
     * Überarbeitung der Erkennung von gefälschten IPs
     * *Release-Zeitaufwand (Development & QA): 11 Stunden*
 
-
 ### 2.6.1 ###
-
 * **English**
     * Code refactoring of options management
     * Support for `HTTP_FORWARDED_FOR` header
-    * *Release time investment (Development & QA): 8,5 h*
-
+    * *Release time investment (Development & QA): 8.5 h*
 * **Deutsch**
     * Überarbeitung der Optionen-Verwaltung
     * Berücksichtigung der Header `HTTP_FORWARDED_FOR`
     * *Release-Zeitaufwand (Development & QA): 8,5 Stunden*
-
 
 ### 2.6.0 ###
 * DE: Optimierungen für WordPress 3.8
@@ -208,7 +164,7 @@ Fragen rund ums Plugin werden gern per E-Mail beantwortet. Beachtet auch die [Gu
 * EN: New JS library for the Antispam Bee dashboard chart
 
 ### 2.5.7 ###
-* DE: Optionale Spam-Logdatei z.B. für [Fail2Ban](http://cup.wpcoder.de/fail2ban-ip-firewall/)
+* DE: Optionale Spam-Logdatei z.B. für [Fail2Ban](https://github.com/sergejmueller/sergejmueller.github.io/wiki/Fail2Ban:-IP-Blacklist)
 * DE: Filter `antispam_bee_notification_subject` für eigenen Betreff in Benachrichtigungen
 * DE: Detaillierte Informationen zum Update auf [Google+](https://plus.google.com/110569673423509816572/posts/iCfip2ggYt9)
 * EN: Optional logfile with spam entries e.g. for [Fail2Ban](https://gist.github.com/sergejmueller/5622883)
@@ -231,13 +187,13 @@ Fragen rund ums Plugin werden gern per E-Mail beantwortet. Beachtet auch die [Gu
 * Optimierung des Regulären Ausdrucks
 
 ### 2.5.2 ###
-* Neu: [Reguläre Ausdrücke anwenden](http://playground.ebiene.de/antispam-bee-wordpress-plugin/#regexp_check) mit vordefinierten und eigenen Erkennungsmustern
+* Neu: [Reguläre Ausdrücke anwenden](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation) mit vordefinierten und eigenen Erkennungsmustern
 * Änderung der Filter-Reihenfolge
 * Verbesserungen an der Sprachdatei
 * [Hintergrundinformationen zum Update](https://plus.google.com/110569673423509816572/posts/CwtbSoMkGrT)
 
 ### 2.5.1 ###
-* [BBCode im Kommentar als Spamgrund](http://playground.ebiene.de/antispam-bee-wordpress-plugin/#bbcode_check)
+* [BBCode im Kommentar als Spamgrund](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation)
 * IP-Anonymisierung bei der Länderprüfung
 * [Mehr Transparenz](https://plus.google.com/110569673423509816572/posts/ZMU6RfyRK29) durch hinzugefügte Datenschutzhinweise
 * PHP 5.2.4 als Voraussetzung (ist zugleich die Voraussetzung für WP 3.4)
@@ -371,19 +327,5 @@ Fragen rund ums Plugin werden gern per E-Mail beantwortet. Beachtet auch die [Gu
 * Trackback and Pingback spam protection
 
 
-
-## Installation ##
-
-### Requirements ###
-* WordPress 3.8 or greater
-* PHP 5.2.4 or greater
-
-### Installation ###
-* WordPress Dashboard > Plugins > Add New
-* Search for *Antispam Bee* > Install
-* Set plugin settings or leave the default values
-
-
 ## Screenshots ##
-
 1. Antispam Bee Optionen
