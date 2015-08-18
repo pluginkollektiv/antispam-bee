@@ -5,7 +5,7 @@ Description: Easy and extremely productive spam-fighting plugin with many sophis
 Author:      pluginkollektiv
 Author URI:  http://pluginkollektiv.org
 Plugin URI:  https://wordpress.org/plugins/antispam-bee/
-Text Domain: antispam_bee
+Text Domain: antispam-bee
 Domain Path: /lang
 License:     GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
