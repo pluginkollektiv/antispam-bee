@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Antispam Bee\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-18 14:25+0100\n"
-"PO-Revision-Date: 2015-08-18 14:26+0100\n"
+"PO-Revision-Date: 2015-08-18 16:06+0100\n"
 "Last-Translator: Caspar Huebinger <caspar@glueckpress.com>\n"
 "Language-Team: pluginkollektiv\n"
 "Language: de\n"
@@ -260,11 +260,9 @@ msgstr "Kommentarformular auf Archivseiten"
 msgid "Check for comment forms on archive pages"
 msgstr "Überwachung des Formulars auf Archivseiten"
 
-# Antispam-Filter
 msgid "Antispam Bee"
 msgstr "Antispam Bee"
 
-#, fuzzy
 msgid ""
 "Easy and extremely productive spam-fighting plugin with many sophisticated "
 "solutions. Includes protection again trackback spam."

@@ -260,7 +260,6 @@ msgstr "Kommentarformular auf Archivseiten"
 msgid "Check for comment forms on archive pages"
 msgstr "Überwachung des Formulars auf Archivseiten"
 
-# Antispam-Filter
 msgid "Antispam Bee"
 msgstr "Antispam Bee"
 
