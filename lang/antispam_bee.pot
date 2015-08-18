@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Antispam Bee\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: Sun Aug 16 2015 12:08:35 GMT+0200 (CEST)\n"
-"POT-Revision-Date: Sun Aug 16 2015 12:13:39 GMT+0200 (CEST)\n"
+"POT-Revision-Date: Tue Aug 18 2015 12:20:54 GMT+0200 (CEST)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -248,4 +248,7 @@ msgstr ""
 
 #: ../inc/gui.class.php:360
 msgid "Check for comment forms on archive pages"
+msgstr ""
+
+msgid "Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes protection again trackback spam."
 msgstr ""
