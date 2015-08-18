@@ -250,5 +250,17 @@ msgstr ""
 msgid "Check for comment forms on archive pages"
 msgstr ""
 
+msgid "Antispam Bee"
+msgstr ""
+
 msgid "Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes protection again trackback spam."
+msgstr ""
+
+msgid "pluginkollektiv"
+msgstr ""
+
+msgid "http://pluginkollektiv.org"
+msgstr ""
+
+msgid "https://wordpress.org/plugins/antispam-bee/"
 msgstr ""

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Antispam Bee\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-18 12:28+0100\n"
-"PO-Revision-Date: 2015-08-18 14:14+0100\n"
+"POT-Creation-Date: 2015-08-18 14:24+0100\n"
+"PO-Revision-Date: 2015-08-18 14:25+0100\n"
 "Last-Translator: Caspar Huebinger <caspar@glueckpress.com>\n"
 "Language-Team: pluginkollektiv\n"
 "Language: de\n"
@@ -260,9 +260,22 @@ msgstr "Kommentarformular auf Archivseiten"
 msgid "Check for comment forms on archive pages"
 msgstr "Überwachung des Formulars auf Archivseiten"
 
+# Antispam-Filter
+msgid "Antispam Bee"
+msgstr "Antispam Bee"
+
 msgid ""
 "Easy and extremely productive spam-fighting plugin with many sophisticated "
 "solutions. Includes protection again trackback spam."
 msgstr ""
 "Simples, äußerst effektives Plugin zur Bekämpfung von Spam-Kommentaren. "
 "Datenschutzkonform, funktionsreich und unkompliziert."
+
+msgid "pluginkollektiv"
+msgstr "pluginkollektiv"
+
+msgid "http://pluginkollektiv.org"
+msgstr "http://pluginkollektiv.org"
+
+msgid "https://wordpress.org/plugins/antispam-bee/"
+msgstr "https://wordpress.org/plugins/antispam-bee/"
