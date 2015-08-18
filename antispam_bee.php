@@ -9,7 +9,7 @@ Text Domain: antispam_bee
 Domain Path: /lang
 License:     GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Version:     2.6.7
+Version:     2.6.8
 */
 
 /*
