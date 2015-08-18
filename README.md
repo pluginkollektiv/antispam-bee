@@ -81,7 +81,7 @@ No, the plugin works as is. You may want to configure your favorite settings, th
 ## Changelog ##
 ### 2.6.8 ###
 * added a POT file
-* updated DE translation
+* updated German translation, added formal version
 * updated plugin text domain to include a dash instead of an underscore
 * updated, translated + formatted README.md
 * updated expired link URLs in plugin and languages files
