@@ -458,7 +458,7 @@ class Antispam_Bee {
 	public static function load_plugin_lang()
 	{
 		load_plugin_textdomain(
-			'antispam_bee',
+			'antispam-bee',
 			false,
 			'antispam-bee/lang'
 		);
@@ -688,7 +688,7 @@ class Antispam_Bee {
         	    admin_url('options-general.php')
         	),
         	esc_html( self::_get_spam_count() ),
-        	esc_html__('Blocked', 'antispam_bee')
+        	esc_html__('Blocked', 'antispam-bee')
         );
 
         return $items;
@@ -827,7 +827,7 @@ class Antispam_Bee {
 		if ( empty($items) ) {
 			echo sprintf(
 				'<div id="ab_chart"><p>%s</p></div>',
-				esc_html__('No data available.', 'antispam_bee')
+				esc_html__('No data available.', 'antispam-bee')
 			);
 
 			return;
@@ -2183,21 +2183,21 @@ class Antispam_Bee {
 					ENT_QUOTES
 				)
 			),
-			__('Comment marked as spam', 'antispam_bee')
+			__('Comment marked as spam', 'antispam-bee')
 		);
 
 		/* Content */
 		if ( !$content = strip_tags(stripslashes($comment['comment_content'])) ) {
 			$content = sprintf(
 				'-- %s --',
-				__('Content removed by Antispam Bee', 'antispam_bee')
+				__('Content removed by Antispam Bee', 'antispam-bee')
 			);
 		}
 
 		/* Body */
 		$body = sprintf(
 			"%s \"%s\"\r\n\r\n",
-			__('New spam comment on your post', 'antispam_bee'),
+			__('New spam comment on your post', 'antispam-bee'),
 			strip_tags($post->post_title)
 		).sprintf(
 			"%s: %s\r\n",
@@ -2208,15 +2208,15 @@ class Antispam_Bee {
 			esc_url($comment['comment_author_url']) /* empty check exists */
 		).sprintf(
 			"%s: %s\r\n",
-			__('Type', 'antispam_bee'),
-			__( ( empty($comment['comment_type']) ? 'Comment' : 'Trackback' ), 'antispam_bee' )
+			__('Type', 'antispam-bee'),
+			__( ( empty($comment['comment_type']) ? 'Comment' : 'Trackback' ), 'antispam-bee' )
 		).sprintf(
 			"Whois: http://whois.arin.net/rest/ip/%s\r\n",
 			$comment['comment_author_IP']
 		).sprintf(
 			"%s: %s\r\n\r\n",
-			__('Spam Reason', 'antispam_bee'),
-			__(self::$defaults['reasons'][self::$_reason], 'antispam_bee')
+			__('Spam Reason', 'antispam-bee'),
+			__(self::$defaults['reasons'][self::$_reason], 'antispam-bee')
 		).sprintf(
 			"%s\r\n\r\n\r\n",
 			$content
@@ -2224,28 +2224,28 @@ class Antispam_Bee {
 			EMPTY_TRASH_DAYS ? (
 				sprintf(
 					"%s: %s\r\n",
-					__('Trash it', 'antispam_bee'),
+					__('Trash it', 'antispam-bee'),
 					admin_url('comment.php?action=trash&c=' .$id)
 				)
 			) : (
 				sprintf(
 					"%s: %s\r\n",
-					__('Delete it', 'antispam_bee'),
+					__('Delete it', 'antispam-bee'),
 					admin_url('comment.php?action=delete&c=' .$id)
 				)
 			)
 		).sprintf(
 				"%s: %s\r\n",
-			__('Approve it', 'antispam_bee'),
+			__('Approve it', 'antispam-bee'),
 			admin_url('comment.php?action=approve&c=' .$id)
 		).sprintf(
 			"%s: %s\r\n\r\n",
-			__('Spam list', 'antispam_bee'),
+			__('Spam list', 'antispam-bee'),
 			admin_url('edit-comments.php?comment_status=spam')
 		).sprintf(
 			"%s\r\n%s\r\n",
-			__('Notify message by Antispam Bee', 'antispam_bee'),
-			__('http://antispambee.com', 'antispam_bee')
+			__('Notify message by Antispam Bee', 'antispam-bee'),
+			__('http://antispambee.com', 'antispam-bee')
 		);
 
 		/* Send */
