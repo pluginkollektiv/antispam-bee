@@ -79,6 +79,14 @@ No, the plugin works as is. You may want to configure your favorite settings, th
 
 
 ## Changelog ##
+### 2.6.8 ###
+* added a POT file
+* updated German translation, added formal version
+* updated plugin text domain to include a dash instead of an underscore
+* updated, translated + formatted README.md
+* updated expired link URLs in plugin and languages files
+* updated [plugin authors](https://gist.github.com/glueckpress/f058c0ab973d45a72720)
+
 ### 2.6.7 ###
 * **English**
     * Removal of functions *Block comments from specific countries* and *Allow comments only in certain language* for financial reasons
@@ -103,7 +111,7 @@ No, the plugin works as is. You may want to configure your favorite settings, th
     * *Release time investment (Development & QA): 12 h*
 * **Deutsch**
     * Fix: Parameter-Rückgabe bei `dashboard_glance_items` / thx [@toscho](https://twitter.com/toscho)
-    * Neue Funktion: [Kommentatoren mit Gravatar vertrauen](http://playground.ebiene.de/antispam-bee-wordpress-plugin/#gravatar_check) / thx [@glueckpress](https://twitter.com/glueckpress)
+    * Neue Funktion: [Kommentatoren mit Gravatar vertrauen](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation) / thx [@glueckpress](https://twitter.com/glueckpress)
     * Zusätzliche Plausibilitätsprüfungen und Filter
     * *Release-Zeitaufwand (Development & QA): 12 Stunden*
 

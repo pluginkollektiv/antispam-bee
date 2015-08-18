@@ -364,9 +364,9 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 					</div>
 
 					<div class="ab-column ab-column--service">
-						<?php if ( get_locale() == 'de_DE' ) { ?>
+						<?php if ( substr( get_locale(), 0, 3 ) === 'de_' ) { ?>
 							<p>
-								<a href="https://github.com/pluginkollektiv/antispam-bee/wiki/" target="_blank">Online-Handbuch</a> &bull; <a href="http://cup.wpcoder.de/wordpress-antispam-guide/" target="_blank">Antispam-Guide</a>
+								<a href="https://github.com/pluginkollektiv/antispam-bee/wiki/" target="_blank">Dokumentation</a>
 							</p>
 						<?php } ?>
 
