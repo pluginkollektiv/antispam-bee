@@ -1,7 +1,7 @@
 # Antispam Bee #
 * Contributors:      pluginkollektiv
 * Tags:              comment, spam, antispam, comments, trackback, protection, prevention
-* Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LG5VC9KXMAYXJ
+* Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML
 * Requires at least: 3.8
 * Tested up to:      4.3
 * Stable tag:        trunk
