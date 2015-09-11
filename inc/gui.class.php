@@ -27,12 +27,12 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	{
 		/* Kein POST? */
 		if ( empty($_POST) ) {
-			wp_die(__('Cheatin&#8217; uh?'));
+			wp_die(__('Cheatin&#8217; uh?', 'antispam-bee'));
 		}
 
 		/* Capability check */
 		if ( ! current_user_can('manage_options') ) {
-			wp_die(__('Cheatin&#8217; uh?'));
+			wp_die(__('Cheatin&#8217; uh?', 'antispam-bee'));
 		}
 
 		/* Referer prüfen */
@@ -376,7 +376,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 					</div>
 
 					<div class="ab-column ab-column--submit">
-						<input type="submit" class="button button-primary" value="<?php _e('Save Changes') ?>" />
+						<input type="submit" class="button button-primary" value="<?php _e('Save Changes', 'antispam-bee') ?>" />
 					</div>
 				</div>
 			</form>

@@ -490,7 +490,7 @@ class Antispam_Bee {
 						),
 						admin_url('options-general.php')
 					),
-					__('Settings')
+					__('Settings', 'antispam-bee')
 				)
 			)
 		);
@@ -2200,7 +2200,7 @@ class Antispam_Bee {
 			strip_tags($post->post_title)
 		).sprintf(
 			"%s: %s\r\n",
-			__('Author'),
+			__('Author', 'antispam-bee'),
 			( empty($comment['comment_author']) ? '' : strip_tags($comment['comment_author']) )
 		).sprintf(
 			"URL: %s\r\n",
