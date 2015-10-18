@@ -50,7 +50,6 @@ class Antispam_Bee {
 	/* Init */
 	public static $defaults;
 	private static $_base;
-	private static $_secret;
 	private static $_reason;
 
 
@@ -345,7 +344,6 @@ class Antispam_Bee {
 	private static function _init_internal_vars()
 	{
 		self::$_base   = plugin_basename(__FILE__);
-		self::$_secret = substr(md5(get_bloginfo('url')), 0, 5). '-comment';
 
 		self::$defaults = array(
 			'options' => array(
@@ -392,6 +390,57 @@ class Antispam_Bee {
 		);
 	}
 
+	/**
+	 * Get a Secret key that changes every Month
+	 *
+	 * @param string $prefix prefix
+	 * @param string $suffix suffix
+	 * @param int    $days_older_key key that is some days older for caching propose
+	 *
+	 * @return string secret key for input filds
+	 */
+	public static function _get_secret( $prefix = '', $suffix = '-comment', $days_older_key = 0 ) {
+
+		$time = time();
+		$key = substr( md5( NONCE_KEY . date( 'Y', $time ) ), date( 'n', $time ), 6 );
+
+		if ( (int) $days_older_key > 0 ) {
+			$time = $time - ( 86400 * (int)$days_older_key );
+			$key = substr( md5( NONCE_KEY . date( 'Y', $time ) ), date( 'n', $time ), 6 );
+		}
+
+		return esc_attr( $prefix . $key . $suffix );
+	}
+
+	/**
+	 * Get the $_POST content of secret
+	 *
+	 * @param string $prefix prefix
+	 * @param string $suffix suffix
+	 *
+	 * @return string post content
+	 */
+	public static function _get_secret_post( $prefix = '', $suffix = '-comment' ) {
+
+		$post = null;
+		$secret = self::_get_secret( $prefix, $suffix );
+
+		if ( ! empty( $_POST[ $secret ] ) ) {
+			$post = $_POST[ $secret ];
+			unset( $_POST[ $secret ] );
+		}
+
+		//check if older post is present
+		if ( empty( $post ) ) {
+			$secret = self::_get_secret( $prefix, $suffix, 5 );
+			if ( ! empty( $_POST[ $secret ] ) ) {
+				$post = $_POST[ $secret ];
+				unset( $_POST[ $secret ] );
+			}
+		}
+
+		return $post;
+	}
 
 	/**
 	* Prüfung und Rückgabe eines Array-Keys
@@ -1102,12 +1151,11 @@ class Antispam_Bee {
 
 		/* Form fields */
 		$hidden_field = self::get_key($_POST, 'comment');
-		$plugin_field = self::get_key($_POST, self::$_secret);
+		$plugin_field = self::_get_secret_post();
 
 		/* Hidden field check */
 		if ( empty($hidden_field) && ! empty($plugin_field) ) {
 			$_POST['comment'] = $plugin_field;
-			unset( $_POST[self::$_secret] );
 		} else {
 			$_POST['ab_spam__hidden_field'] = 1;
 		}
@@ -1255,7 +1303,7 @@ class Antispam_Bee {
 			'#<textarea(.+?)name=["\']comment["\'](.+?)</textarea>#s',
             sprintf(
                 '<textarea$1name="%s"$2</textarea><textarea name="comment" style="display:none" rows="1" cols="1"></textarea>%s',
-                self::$_secret,
+                self::_get_secret(),
                 $init_time_field
             ),
 			$data,
