@@ -55,6 +55,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'already_commented'	=> (int)(!empty($_POST['ab_already_commented'])),
 			'time_check'		=> (int)(!empty($_POST['ab_time_check'])),
 			'always_allowed' 	=> (int)(!empty($_POST['ab_always_allowed'])),
+			'bbpress_allowed' 	=> (int)(!empty($_POST['ab_bbpress_allowed'])),
 
 			'ignore_pings' 		=> (int)(!empty($_POST['ab_ignore_pings'])),
 			'ignore_filter' 	=> (int)(!empty($_POST['ab_ignore_filter'])),
@@ -360,6 +361,17 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									<span><?php esc_html_e('Check for comment forms on archive pages', 'antispam-bee') ?></span>
 								</label>
 							</li>
+							<?php if ( function_exists( 'bbPress' ) ) { ?>
+							<li>
+								<input type="checkbox" name="ab_bbpress_allowed" id="ab_ppbress_allowed" value="1" <?php checked($options['bbpress_allowed'], 1) ?> />
+								<label for="ab_ppbress_allowed">
+									<?php esc_html_e('Check bbPress for spam', 'antispam-bee') ?>
+									<span><?php esc_html_e('Check bbPress new topics and replies.', 'antispam-bee') ?></span>
+								</label>
+							</li>
+							<?php  } else { ?>
+								<input type="hidden" name="ab_bbpress_allowed" value="0" />
+							<?php  }  ?>
 						</ul>
 					</div>
 

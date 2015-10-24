@@ -62,6 +62,11 @@ class Antispam_Bee {
 
   	public static function init()
   	{
+	    /* Load bbPress integration */
+	    if ( function_exists( 'bbpress' ) ) {
+		    require dirname( __FILE__ ) . '/inc/bbpress.class.php';
+	    }
+
   		/* Delete spam reason */
   		add_action(
   			'unspam_comment',
@@ -356,6 +361,7 @@ class Antispam_Bee {
 				'time_check'		=> 0,
 				'ignore_pings' 		=> 0,
 				'always_allowed' 	=> 0,
+				'bbpress_allowed' 	=> 0,
 
 				'dashboard_chart' 	=> 0,
 				'dashboard_count' 	=> 0,
@@ -1498,7 +1504,7 @@ class Antispam_Bee {
 	* @return  boolean       	Check status (true = Gravatar available)
 	*/
 
-    private static function _has_valid_gravatar($email) {
+    public static function _has_valid_gravatar($email) {
         $response = wp_safe_remote_get(
             sprintf(
                 'https://www.gravatar.com/avatar/%s?d=404',
@@ -1527,7 +1533,7 @@ class Antispam_Bee {
 	* @return  boolean    TRUE if the action time is less than 5 seconds
 	*/
 
-	private static function _is_shortest_time()
+	public static function _is_shortest_time()
 	{
 		/* Comment init time */
 		if ( ! $init_time = (int)self::get_key($_POST, 'ab_init_time') ) {
@@ -1553,7 +1559,7 @@ class Antispam_Bee {
 	* @return  boolean       	  TRUE bei verdächtigem Kommentar
 	*/
 
-	private static function _is_regexp_spam($comment)
+	public static function _is_regexp_spam($comment)
 	{
 		/* Felder */
 		$fields = array(
@@ -1657,7 +1663,7 @@ class Antispam_Bee {
 	* @return  boolean          TRUE bei verdächtigem Kommentar
 	*/
 
-	private static function _is_db_spam($ip, $url = '', $email = '')
+	public static function _is_db_spam($ip, $url = '', $email = '')
 	{
 		/* Global */
 		global $wpdb;
@@ -1703,7 +1709,7 @@ class Antispam_Bee {
 	* @return  boolean       TRUE bei gemeldeter IP
 	*/
 
-	private static function _is_dnsbl_spam($ip)
+	public static function _is_dnsbl_spam($ip)
 	{
 		/* Start request */
 		$response = wp_safe_remote_request(
@@ -1747,7 +1753,7 @@ class Antispam_Bee {
 	* @return  boolean         TRUE bei BBCode im Inhalt
 	*/
 
-	private static function _is_bbcode_spam($body)
+	public static function _is_bbcode_spam($body)
 	{
 		return (bool) preg_match('/\[url[=\]].*\[\/url\]/is', $body);
 	}
@@ -1763,7 +1769,7 @@ class Antispam_Bee {
 	* @return  boolean          TRUE bei einem gefundenen Eintrag
 	*/
 
-	private static function _is_approved_email($email)
+	public static function _is_approved_email($email)
 	{
 		/* Global */
 		global $wpdb;
@@ -1781,6 +1787,20 @@ class Antispam_Bee {
 			return true;
 		}
 
+		/* bbPress DB */
+		if ( function_exists( 'bbPress' ) && Antispam_Bee::get_option( 'bbpress_allowed' ) ) {
+			$result = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT p.ID FROM $wpdb->posts p LEFT JOIN $wpdb->postmeta m ON p.ID = m.post_id WHERE p.post_status != 'spam' AND (p.post_type ='reply' OR p.post_type ='topic') AND m.meta_key = '_bbp_anonymous_email' AND m.meta_value = %s LIMIT 1",
+					wp_unslash($email)
+				)
+			);
+
+			if ( $result ) {
+				return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -1796,7 +1816,7 @@ class Antispam_Bee {
 	* @return  boolean         TRUE if fake IP
 	*/
 
-	private static function _is_fake_ip($client_ip, $client_host = false)
+	public static function _is_fake_ip($client_ip, $client_host = false)
 	{
 		/* Remote Host */
 		$host_by_ip = gethostbyaddr($client_ip);
@@ -2355,7 +2375,7 @@ class Antispam_Bee {
 	* @change  2.6.1
 	*/
 
-	private static function _update_spam_count()
+	public static function _update_spam_count()
 	{
 		/* Skip if not enabled */
 		if ( ! self::get_option('dashboard_count') ) {
@@ -2376,7 +2396,7 @@ class Antispam_Bee {
 	* @change  2.6.1
 	*/
 
-	private static function _update_daily_stats()
+	public static function _update_daily_stats()
 	{
 		/* Skip if not enabled */
 		if ( ! self::get_option('dashboard_chart') ) {
