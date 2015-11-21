@@ -335,7 +335,7 @@ class Antispam_Bee_bbPress extends Antispam_Bee {
 			$message_headers .= $reply_to . "\n";
 		}
 
-		@wp_mail( get_bloginfo( 'admin_email' ), $subject, $notify_message, $message_headers );
+		wp_mail( get_bloginfo( 'admin_email' ), $subject, $notify_message, $message_headers );
 	}
 
 	/**
@@ -386,11 +386,11 @@ class Antispam_Bee_bbPress extends Antispam_Bee {
 			$message_headers .= $reply_to . "\n";
 		}
 
-		@wp_mail( get_bloginfo( 'admin_email' ), $subject, $notify_message, $message_headers );
+		wp_mail( get_bloginfo( 'admin_email' ), $subject, $notify_message, $message_headers );
 	}
 
 	/**
-	 * Add Spam Column to form threads and topics
+	 * Add spam column to threads and topics
 	 *
 	 * @param $columns
 	 *
@@ -439,10 +439,9 @@ class Antispam_Bee_bbPress extends Antispam_Bee {
 
 	public static function delete_old_spam()
 	{
-		/* Anzahl der Tage */
+		/* Number of days */
 		$days = (int)self::get_option('cronjob_interval');
 
-		/* Kein Wert? */
 		if ( empty($days) ) {
 			return false;
 		}
