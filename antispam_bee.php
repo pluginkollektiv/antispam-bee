@@ -1392,7 +1392,7 @@ class Antispam_Bee {
 	* @return  array            Array mit dem Verdachtsgrund [optional]
 	*/
 
-	private static function _verify_comment_request($comment)
+	protected static function _verify_comment_request($comment)
 	{
 		/* Kommentarwerte */
 		$ip = self::get_key($comment, 'comment_author_IP');
@@ -1504,7 +1504,7 @@ class Antispam_Bee {
 	* @return  boolean       	Check status (true = Gravatar available)
 	*/
 
-    public static function _has_valid_gravatar($email) {
+	protected static function _has_valid_gravatar($email) {
         $response = wp_safe_remote_get(
             sprintf(
                 'https://www.gravatar.com/avatar/%s?d=404',
@@ -1533,7 +1533,7 @@ class Antispam_Bee {
 	* @return  boolean    TRUE if the action time is less than 5 seconds
 	*/
 
-	public static function _is_shortest_time()
+	protected static function _is_shortest_time()
 	{
 		/* Comment init time */
 		if ( ! $init_time = (int)self::get_key($_POST, 'ab_init_time') ) {
@@ -1559,7 +1559,7 @@ class Antispam_Bee {
 	* @return  boolean       	  TRUE bei verdächtigem Kommentar
 	*/
 
-	public static function _is_regexp_spam($comment)
+	protected static function _is_regexp_spam($comment)
 	{
 		/* Felder */
 		$fields = array(
@@ -1663,7 +1663,7 @@ class Antispam_Bee {
 	* @return  boolean          TRUE bei verdächtigem Kommentar
 	*/
 
-	public static function _is_db_spam($ip, $url = '', $email = '')
+	protected static function _is_db_spam($ip, $url = '', $email = '')
 	{
 		/* Global */
 		global $wpdb;
@@ -1709,7 +1709,7 @@ class Antispam_Bee {
 	* @return  boolean       TRUE bei gemeldeter IP
 	*/
 
-	public static function _is_dnsbl_spam($ip)
+	protected static function _is_dnsbl_spam($ip)
 	{
 		/* Start request */
 		$response = wp_safe_remote_request(
@@ -1753,7 +1753,7 @@ class Antispam_Bee {
 	* @return  boolean         TRUE bei BBCode im Inhalt
 	*/
 
-	public static function _is_bbcode_spam($body)
+	protected static function _is_bbcode_spam($body)
 	{
 		return (bool) preg_match('/\[url[=\]].*\[\/url\]/is', $body);
 	}
@@ -1769,7 +1769,7 @@ class Antispam_Bee {
 	* @return  boolean          TRUE bei einem gefundenen Eintrag
 	*/
 
-	public static function _is_approved_email($email)
+	protected static function _is_approved_email($email)
 	{
 		/* Global */
 		global $wpdb;
@@ -1819,7 +1819,7 @@ class Antispam_Bee {
 	* @return  boolean         TRUE if fake IP
 	*/
 
-	public static function _is_fake_ip($client_ip, $client_host = false)
+	protected static function _is_fake_ip($client_ip, $client_host = false)
 	{
 		/* Remote Host */
 		$host_by_ip = gethostbyaddr($client_ip);
