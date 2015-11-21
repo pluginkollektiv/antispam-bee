@@ -120,6 +120,17 @@ class Antispam_Bee_bbPress extends Antispam_Bee {
 			2
 		);
 
+		if ( defined('DOING_CRON') ) {
+			add_action(
+				'antispam_bee_daily_cronjob',
+				array(
+					__CLASS__,
+					'delete_old_spam'
+				),
+				11
+			);
+		}
+
 	}
 
 	/**
@@ -415,6 +426,49 @@ class Antispam_Bee_bbPress extends Antispam_Bee {
 				_e(Antispam_Bee::$defaults['reasons'][$reason], 'antispam-bee');
 			} elseif ( ! empty( $reason ) ) {
 				echo $reason;
+			}
+		}
+	}
+
+	/**
+	 * Delete old spam
+	 *
+	 * @since   0.1
+	 * @change  2.4
+	 */
+
+	public static function delete_old_spam()
+	{
+		/* Anzahl der Tage */
+		$days = (int)self::get_option('cronjob_interval');
+
+		/* Kein Wert? */
+		if ( empty($days) ) {
+			return false;
+		}
+
+		$time = time() - ( $days * 3600 * 24 );
+
+		$posts = get_posts(
+			array(
+				'post_type' => array( 'topic', 'reply' ),
+				'post_status' => 'spam',
+				'date_query' => array(
+					array(
+						'before' => array(
+							'year'  => date('Y', $time ),
+							'month' => date('m', $time ),
+							'day'   => date('d', $time ),
+						)
+					)
+				),
+				'numberposts' => -1
+			)
+		);
+
+		if ( ! empty( $posts ) ) {
+			foreach( $posts as $post ) {
+				wp_delete_post( $post->ID, true );
 			}
 		}
 	}
