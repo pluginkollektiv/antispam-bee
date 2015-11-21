@@ -1788,15 +1788,18 @@ class Antispam_Bee {
 		}
 
 		/* bbPress DB */
-		if ( function_exists( 'bbPress' ) && Antispam_Bee::get_option( 'bbpress_allowed' ) ) {
-			$result = $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT p.ID FROM $wpdb->posts p LEFT JOIN $wpdb->postmeta m ON p.ID = m.post_id WHERE p.post_status != 'spam' AND (p.post_type ='reply' OR p.post_type ='topic') AND m.meta_key = '_bbp_anonymous_email' AND m.meta_value = %s LIMIT 1",
-					wp_unslash($email)
+		if ( function_exists( 'bbpress' ) && Antispam_Bee::get_option( 'bbpress_allowed' ) ) {
+			$result = get_posts(
+				array(
+					'post_type' => array( 'topic', 'reply' ),
+					'post_status' => 'publish',
+					'meta_key' => '_bbp_anonymous_email',
+					'meta_value' => wp_unslash($email),
+					'numberposts' => 1
 				)
 			);
 
-			if ( $result ) {
+			if ( ! empty( $result[0] ) ) {
 				return true;
 			}
 		}

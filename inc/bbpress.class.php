@@ -134,7 +134,7 @@ class Antispam_Bee_bbPress extends Antispam_Bee {
 	}
 
 	/**
-	 * Replaces the replay and topic content field of bbPress
+	 * Replaces the reply and topic content field of bbPress
 	 *
 	 * @param $output
 	 * @param $args
