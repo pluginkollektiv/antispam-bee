@@ -15,7 +15,7 @@ if ( ! class_exists('Antispam_Bee') ) {
 class Antispam_Bee_bbPress extends Antispam_Bee {
 
 	/**
-	 * @var string temparay saving of spam reason
+	 * @var string temporary saving of spam reason
 	 */
 	static private $_reason = '';
 
