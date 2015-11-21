@@ -14,11 +14,15 @@ if ( ! class_exists('Antispam_Bee') ) {
  */
 class Antispam_Bee_bbPress extends Antispam_Bee {
 
+	/**
+	 * @var string temparay saving of spam reason
+	 */
 	static private $_reason = '';
 
-
+	/**
+	 * Init all actions
+	 */
 	public static function init() {
-
 
 		if ( ! Antispam_Bee::get_option( 'bbpress_allowed' ) ) {
 			return;
@@ -81,6 +85,38 @@ class Antispam_Bee_bbPress extends Antispam_Bee {
 				'new_reply'
 			),
 			100,
+			2
+		);
+		add_filter(
+			'bbp_admin_topics_column_headers',
+			array(
+				__CLASS__,
+				'manage_columns'
+			)
+		);
+		add_filter(
+			'bbp_admin_replies_column_headers',
+			array(
+				__CLASS__,
+				'manage_columns'
+			)
+		);
+		add_filter(
+			'manage_topic_posts_custom_column',
+			array(
+				__CLASS__,
+				'manage_reason_column'
+			),
+			10,
+			2
+		);
+		add_filter(
+			'manage_reply_posts_custom_column',
+			array(
+				__CLASS__,
+				'manage_reason_column'
+			),
+			10,
 			2
 		);
 
@@ -342,7 +378,46 @@ class Antispam_Bee_bbPress extends Antispam_Bee {
 		@wp_mail( get_bloginfo( 'admin_email' ), $subject, $notify_message, $message_headers );
 	}
 
+	/**
+	 * Add Spam Column to form threads and topics
+	 *
+	 * @param $columns
+	 *
+	 * @return array
+	 */
+	public static function manage_columns( $columns ) {
 
+		$options = Antispam_Bee::get_options();
+		if ( ! empty( $options['no_notice'] ) ) {
+			return $columns;
+		}
+
+		if ( ! isset( $_REQUEST['post_status'] ) || $_REQUEST['post_status'] !== 'spam' ) {
+			return $columns;
+		}
+
+		$columns['reason'] = __('Spam Reason', 'antispam-bee');
+
+		return $columns;
+	}
+
+	/**
+	 * Add reasons column
+	 *
+	 * @param $column
+	 * @param $post_id
+	 */
+	public static function manage_reason_column( $column, $post_id ) {
+
+		if ( $column === 'reason' ) {
+			$reason = get_post_meta( $post_id, '_antispam_bee_reason', true );
+			if ( ! empty( $reason ) && isset( Antispam_Bee::$defaults['reasons'][$reason] ) ) {
+				_e(Antispam_Bee::$defaults['reasons'][$reason], 'antispam-bee');
+			} elseif ( ! empty( $reason ) ) {
+				echo $reason;
+			}
+		}
+	}
 }
 
 /* Fire bbPress */
