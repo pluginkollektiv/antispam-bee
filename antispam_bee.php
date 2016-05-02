@@ -9,7 +9,7 @@ Text Domain: antispam-bee
 Domain Path: /lang
 License:     GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Version:     2.6.8
+Version:     2.6.9
 */
 
 /*
@@ -339,7 +339,7 @@ class Antispam_Bee {
 	* Initialisierung der internen Variablen
 	*
 	* @since   2.4
-	* @change  2.6.5
+	* @change  2.6.9
 	*/
 
 	private static function _init_internal_vars()
@@ -363,6 +363,10 @@ class Antispam_Bee {
 				'dashboard_count' 	=> 0,
 
 				/* Filter */
+				'country_code' 		=> 0,
+				'country_black'		=> '',
+				'country_white'		=> '',
+
 				'dnsbl_check'		=> 0,
 				'bbcode_check'		=> 1,
 
@@ -385,6 +389,7 @@ class Antispam_Bee {
 				'empty'		=> 'Empty Data',
 				'server'	=> 'Fake IP',
 				'localdb'	=> 'Local DB Spam',
+				'country'	=> 'Country Check',
 				'dnsbl'		=> 'DNSBL Spam',
 				'bbcode'	=> 'BBCode',
 				'regexp'	=> 'RegExp'
@@ -1268,7 +1273,7 @@ class Antispam_Bee {
 	* Prüfung der Trackbacks
 	*
 	* @since   2.4
-	* @change  2.6.6
+	* @change  2.6.9
 	*
 	* @param   array  $comment  Daten des Trackbacks
 	* @return  array            Array mit dem Verdachtsgrund [optional]
@@ -1325,6 +1330,13 @@ class Antispam_Bee {
 				'reason' => 'dnsbl'
 			);
 		}
+
+		/* Country Code prüfen */
+		if ( $options['country_code'] && self::_is_country_spam($ip) ) {
+			return array(
+				'reason' => 'country'
+			);
+		}
 	}
 
 
@@ -1332,7 +1344,7 @@ class Antispam_Bee {
 	* Prüfung den Kommentar
 	*
 	* @since   2.4
-	* @change  2.6.5
+	* @change  2.6.9
 	*
 	* @param   array  $comment  Daten des Kommentars
 	* @return  array            Array mit dem Verdachtsgrund [optional]
@@ -1435,6 +1447,13 @@ class Antispam_Bee {
 		if ( $options['dnsbl_check'] && self::_is_dnsbl_spam($ip) ) {
 			return array(
 				'reason' => 'dnsbl'
+			);
+		}
+
+		/* Country Code prüfen */
+		if ( $options['country_code'] && self::_is_country_spam($ip) ) {
+			return array(
+				'reason' => 'country'
 			);
 		}
 	}
@@ -1642,6 +1661,79 @@ class Antispam_Bee {
 		);
 
 		return !empty($result);
+	}
+
+
+	/**
+	* Check for country spam by (anonymized) IP
+	*
+	* @since   2.6.9
+	* @change  2.6.9
+	*
+	* @param   string	$ip  IP address
+	* @return  boolean       TRUE if the comment is spam based on country filter
+	*/
+
+	private static function _is_country_spam($ip)
+	{
+		/* Get options */
+		$options = self::get_options();
+
+		/* White & Black */
+		$white = preg_split(
+			'/ /',
+			$options['country_white'],
+			-1,
+			PREG_SPLIT_NO_EMPTY
+		);
+		$black = preg_split(
+			'/ /',
+			$options['country_black'],
+			-1,
+			PREG_SPLIT_NO_EMPTY
+		);
+
+		/* Empty lists? */
+		if ( empty($white) && empty($black) ) {
+			return false;
+		}
+
+		/* IP 2 Country API */
+		$response = wp_safe_remote_head(
+			esc_url_raw(
+				sprintf(
+					'https://api.ip2country.info/ip?%s',
+					self::_anonymize_ip($ip)
+				),
+				'https'
+			)
+		);
+
+		/* Error by WP */
+		if ( is_wp_error($response) ) {
+			return false;
+		}
+
+		/* Response code check */
+		if ( wp_remote_retrieve_response_code($response) !== 200 ) {
+			return false;
+		}
+
+		/* Get country code */
+		$country = (string)wp_remote_retrieve_header($response, 'x-country-code');
+
+		/* Country code check */
+		if ( empty($country) OR strlen($country) !== 2 ) {
+			return false;
+		}
+
+		/* Dive into blacklist */
+		if ( ! empty($black) ) {
+			return ( in_array($country, $black) );
+		}
+
+		/* Dive into whitelist */
+		return ( ! in_array($country, $white) );
 	}
 
 
