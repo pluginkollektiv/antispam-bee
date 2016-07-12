@@ -700,11 +700,10 @@ class Antispam_Bee {
 	* @since   1.9
 	* @change  2.5.6
 	*/
-
 	public static function add_dashboard_chart()
 	{
 		/* Filter */
-		if ( ! current_user_can('publish_posts') OR ! self::get_option('dashboard_chart') ) {
+		if ( ! current_user_can( 'publish_posts' ) || ! self::get_option( 'dashboard_chart' ) ) {
 			return;
 		}
 
@@ -715,15 +714,6 @@ class Antispam_Bee {
 			array(
 				__CLASS__,
 				'show_spam_chart'
-			)
-		);
-
-		/* JS laden */
-		add_action(
-			'wp_print_scripts',
-			array(
-				__CLASS__,
-				'add_dashboard_script'
 			)
 		);
 
@@ -769,9 +759,7 @@ class Antispam_Bee {
 	* @since   1.9.0
 	* @change  2.5.8
 	*/
-
-	public static function add_dashboard_script()
-	{
+	public static function add_dashboard_script() {
 		/* Get stats */
 		if ( ! self::get_option('daily_stats') ) {
 			return;
@@ -780,33 +768,30 @@ class Antispam_Bee {
 		/* Get plugin data */
 		$plugin = get_plugin_data(__FILE__);
 
-		/* Register scripts */
-		wp_register_script(
-			'sm_raphael_js',
-			plugins_url('js/raphael.min.js', __FILE__),
+		/* Embed scripts */
+		wp_enqueue_script(
+			'raphael',
+			plugins_url( 'js/raphael.min.js', __FILE__ ),
 			array(),
-			$plugin['Version'],
+			'2.1.0',
 			true
 		);
-		wp_register_script(
-			'sm_raphael_helper',
-			plugins_url('js/raphael.helper.min.js', __FILE__),
-			array(),
-			$plugin['Version'],
-			true
-		);
-		wp_register_script(
-			'ab_chart_js',
-			plugins_url('js/dashboard.min.js', __FILE__),
-			array('jquery'),
+
+		wp_enqueue_script(
+			'ab-raphael',
+			plugins_url( 'js/raphael.helper.min.js', __FILE__ ),
+			array( 'raphael' ),
 			$plugin['Version'],
 			true
 		);
 
-		/* Embed scripts */
-		wp_enqueue_script('sm_raphael_js');
-		wp_enqueue_script('sm_raphael_helper');
-		wp_enqueue_script('ab_chart_js');
+		wp_enqueue_script(
+			'ab_chart_js',
+			plugins_url( 'js/dashboard.min.js', __FILE__ ),
+			array( 'jquery', 'ab-raphael' ),
+			$plugin['Version'],
+			true
+		);
 	}
 
 
@@ -831,6 +816,9 @@ class Antispam_Bee {
 
 			return;
 		}
+
+		// Enqueue scripts.
+		self::add_dashboard_script();
 
 		/* Sort stats */
 		ksort($items, SORT_NUMERIC);
