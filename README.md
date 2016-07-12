@@ -3,16 +3,15 @@
 * Tags:              comment, spam, antispam, comments, trackback, protection, prevention
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML
 * Requires at least: 3.8
-* Tested up to:      4.3
-* Stable tag:        trunk
+* Tested up to:      4.6
+* Stable tag:        2.6.9
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
 “…another popular solution to fight spam is Antispam Bee”—Matt Mullenweg, Q&A WordCamp Europe 2014
 
 ## Description ##
-Say Goodbye to comment spam on your WorddPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively and without captchas. It is free of charge, ad-free and compliant with European data privacy standards.
-
+Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively and without captchas. It is free of charge, ad-free and compliant with European data privacy standards.
 
 ### Feature/Settings Overview ###
 * Trust approved commenters.
@@ -31,36 +30,30 @@ Say Goodbye to comment spam on your WorddPress blog or website. *Antispam Bee* b
 * Optionally spam-check comment forms on archive pages.
 * Display spam statistics on the dashboard, including daily updates of spam detection rate and a total of blocked spam comments.
 
-
 > #### Auf Deutsch? ####
 > Für eine ausführliche [Dokumentation](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation) besuche bitte das [Antispam-Bee-Wiki](https://github.com/pluginkollektiv/antispam-bee/wiki). Dort findest du u.a. Antworten auf [häufig gestellte Fragen](https://github.com/pluginkollektiv/antispam-bee/wiki/H%C3%A4ufige-Fragen), sowie Hinweise zu den [Einstellungen der Antispam-Regeln](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation#antispam-regeln).
 >
 > **Community-Support auf Deutsch** erhältst du in einem der [deutschsprachigen Foren](https://de.forums.wordpress.org/forum/plugins); im [Plugin-Forum für Antispam Bee](https://wordpress.org/support/plugin/antispam-bee) wird, wie in allen Plugin-Foren auf wordpress.org, ausschließlich **Englisch** gesprochen.
 
-
 ### Credits ###
 * Author: [Sergej Müller](https://sergejmueller.github.io/)
 * Maintainers: [pluginkollektiv](http://pluginkollektiv.org)
 
-
 ## Installation ##
 * If you don’t know how to install a plugin for WordPress, [here’s how](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
-
 
 ### Requirements ###
 * PHP 5.2.4 or greater
 * WordPress 3.8 or greater
 
-
 ### Settings ###
 After you have activated *Antispam Bee* the plugin will block spam comments out of the box. However, you may want to visit *Settings → Antispam Bee* to configure your custom set of anti-spam options that works best for your site.
-
 
 ### Privacy Notice ###
 On sites operating from within the EU the option *Use a public antispam database* should not be activated for privacy reasons. When that option has been activated, *Antispam Bee* will match full IP addresses from comments against a public spam database. Technically it is not possible to encrypt those IPs, because spam databases only store and operate with complete, unencrypted IP addresses.
 
-
 ## Frequently Asked Questions ##
+
 ### Does Antispam Bee work with Jetpack, Disqus Comments and other comment plugins? ###
 Antispam Bee works best with default WordPress comments. It is not compatible with Jetpack or Disqus Comments as those plugins load the comment form within an iframe. Thus Antispam Bee can not access the comment form directly.
 It also won’t work with any AJAX-powered comment forms.
@@ -77,8 +70,12 @@ Nope. Antispam Bee is developed in Germany and Switzerland. You might have heard
 ### Will I have to edit any theme templates to get Antispam Bee to work? ###
 No, the plugin works as is. You may want to configure your favorite settings, though.
 
-
 ## Changelog ##
+
+### 2.6.9 ###
+* Update donation links throughout the plugin
+* Ensures compatibility with the latest WordPress version
+
 ### 2.6.8 ###
 * added a POT file
 * updated German translation, added formal version
@@ -334,6 +331,11 @@ No, the plugin works as is. You may want to configure your favorite settings, th
 ### 0.3 ###
 * Trackback and Pingback spam protection
 
+## Upgrade Notice ##
+
+### 2.6.9 ###
+
+This is a maintenance release ensuring compatibility with the latest version of WordPress. Expect bigger changes in 2.7 soon!
 
 ## Screenshots ##
-1. Antispam Bee Optionen
+1. Antispam Bee settings

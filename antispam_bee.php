@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Antispam Bee
-Description: Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes protection again trackback spam.
+Description: Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes protection against trackback spam.
 Author:      pluginkollektiv
 Author URI:  http://pluginkollektiv.org
 Plugin URI:  https://wordpress.org/plugins/antispam-bee/
@@ -9,7 +9,7 @@ Text Domain: antispam-bee
 Domain Path: /lang
 License:     GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Version:     2.6.8
+Version:     2.6.9
 */
 
 /*
