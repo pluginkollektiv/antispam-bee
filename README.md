@@ -73,7 +73,8 @@ No, the plugin works as is. You may want to configure your favorite settings, th
 ## Changelog ##
 
 ### 2.6.9 ###
-* Update donation links throughout the plugin
+* Updates donation links throughout the plugin
+* Fixes an error were JavaScript on the dashboard was erroneously being enqueued
 * Ensures compatibility with the latest WordPress version
 
 ### 2.6.8 ###
@@ -335,7 +336,7 @@ No, the plugin works as is. You may want to configure your favorite settings, th
 
 ### 2.6.9 ###
 
-This is a maintenance release ensuring compatibility with the latest version of WordPress. Expect bigger changes in 2.7 soon!
+This is mainly a maintenance release ensuring compatibility with the latest version of WordPress. Expect bigger changes in 2.7 soon!
 
 ## Screenshots ##
 1. Antispam Bee settings
