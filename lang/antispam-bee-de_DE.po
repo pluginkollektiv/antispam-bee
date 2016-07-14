@@ -171,6 +171,21 @@ msgstr ""
 "Beachte den <a href=\"https://github.com/pluginkollektiv/antispam-bee/wiki/"
 "Dokumentation\" target=\"_blank\">Datenschutzhinweis</a> für die Option"
 
+msgid "Block comments from specific countries"
+msgstr "Bestimmte Länder blockieren bzw. erlauben"
+
+msgid "Filtering the requests depending on country"
+msgstr "Filterung der Anfragen je nach Herkunftsland"
+
+msgid "Allow comments only in certain language"
+msgstr "Kommentare nur in einer Sprache zulassen"
+
+msgid "Detection and approval in specified language"
+msgstr "Erkennung und Freigabe festgelegter Sprache"
+
+msgid "Country Check"
+msgstr "Ländercode"
+
 # Erweitert
 #: inc/gui.class.php:239
 msgid "Advanced"
