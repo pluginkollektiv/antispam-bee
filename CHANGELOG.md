@@ -1,32 +1,34 @@
 ## Changelog ##
 
 ### 2.6.9 ###
-* Updates donation links throughout the plugin
-* Fixes an error were JavaScript on the dashboard was erroneously being enqueued
-* Ensures compatibility with the latest WordPress version
+* **English**
+   * Updates donation links throughout the plugin
+   * Fixes an error were JavaScript on the dashboard was erroneously being enqueued
+   * Ensures compatibility with the latest WordPress version
+* **Deutsch**
 
 ### 2.6.8 ###
-* added a POT file
-* updated German translation, added formal version
-* updated plugin text domain to include a dash instead of an underscore
-* updated, translated + formatted README.md
-* updated expired link URLs in plugin and languages files
-* updated [plugin authors](https://gist.github.com/glueckpress/f058c0ab973d45a72720)
+* **English**
+   * added a POT file
+   * updated German translation, added formal version
+   * updated plugin text domain to include a dash instead of an underscore
+   * updated, translated + formatted README.md
+   * updated expired link URLs in plugin and languages files
+   * updated [plugin authors](https://gist.github.com/glueckpress/f058c0ab973d45a72720)
+* **Deutsch**
 
 ### 2.6.7 ###
 * **English**
    * Removal of functions *Block comments from specific countries* and *Allow comments only in certain language* for financial reasons
 * **Deutsch**
-   * Entfernung der Funktionen *Kommentare nur in einer Sprache zulassen* und *Bestimmte Länder blockieren bzw. erlauben* aus finanziellen Gründen
-   * [Weitere Informationen zum Hintergrund](https://plus.google.com/u/0/+SergejMüller/posts/ZyquhoYjUyF)
+   * Entfernung der Funktionen *Kommentare nur in einer Sprache zulassen* und *Bestimmte Länder blockieren bzw. erlauben* aus finanziellen Gründen - [Hintergrund-Informationen](https://plus.google.com/u/0/+SergejMüller/posts/ZyquhoYjUyF)
 
 ### 2.6.6 ###
 * **English**
     * Switch to the official Google Translation API
     * *Release time investment (Development & QA): 2.5 h*
 * **Deutsch**
-    * (Testweise) Umstellung auf die offizielle Google Translation API
-    * [Weitere Informationen zum Hintergrund](https://plus.google.com/u/0/+SergejMüller/posts/ZyquhoYjUyF)
+    * (Testweise) Umstellung auf die offizielle Google Translation API - [Hintergrund-Informationen](https://plus.google.com/u/0/+SergejMüller/posts/ZyquhoYjUyF)
     * *Release-Zeitaufwand (Development & QA): 2,5 Stunden*
 
 ### 2.6.5 ###
@@ -46,7 +48,7 @@
    * Consideration of the comment time (Spam if a comment was written in less than 5 seconds)
    * *Release time investment (Development & QA): 6.25 h*
 * **Deutsch**
-   * Berücksichtigung der Kommentarzeit (Spam, wenn ein Kommentar in unter 5 Sekunden verfasst) - [Mehr Informationen auf Google+](https://plus.google.com/+SergejMüller/posts/73EbP6F1BgC)
+   * Berücksichtigung der Kommentarzeit (Spam, wenn ein Kommentar in unter 5 Sekunden verfasst) - [Hintergrund-Informationen](https://plus.google.com/+SergejMüller/posts/73EbP6F1BgC)
    * *Release-Zeitaufwand (Development & QA): 6,25 Stunden*
 
 ### 2.6.3 ###
