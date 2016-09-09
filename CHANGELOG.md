@@ -126,149 +126,248 @@
    * Erkennung und Ausfilterung von Spam-Kommentaren, die versuchen, [Sicherheitslücken von W3 Total Cache und WP Super Cache](http://blog.sucuri.net/2013/05/w3-total-cache-and-wp-super-cache-vulnerability-being-targeted-in-the-wild.html) auszunutzen. [Ausführlicher auf Google+](https://plus.google.com/110569673423509816572/posts/afWWQbUh4at).
 
 ### 2.5.4 ###
-* Jubiläumsausgabe: [Details zum Update](https://plus.google.com/110569673423509816572/posts/3dq9Re5vTY5)
-* Neues Maskottchen für Antispam Bee
-* Erweiterte Prüfung eingehender Kommentare in lokaler Blog-Spamdatenbank auf IP, URL und E-Mail-Adresse
+* **English**
+   * 
+* **Deutsch**
+   * Jubiläumsausgabe: [Details zum Update](https://plus.google.com/110569673423509816572/posts/3dq9Re5vTY5)
+   * Neues Maskottchen für Antispam Bee
+   * Erweiterte Prüfung eingehender Kommentare in lokaler Blog-Spamdatenbank auf IP, URL und E-Mail-Adresse
 
 ### 2.5.3 ###
-* Optimierung des Regulären Ausdrucks
+* **English**
+   * 
+* **Deutsch**
+   * Optimierung des Regulären Ausdrucks
 
 ### 2.5.2 ###
-* Neu: [Reguläre Ausdrücke anwenden](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation) mit vordefinierten und eigenen Erkennungsmustern
-* Änderung der Filter-Reihenfolge
-* Verbesserungen an der Sprachdatei
-* [Hintergrundinformationen zum Update](https://plus.google.com/110569673423509816572/posts/CwtbSoMkGrT)
+* **English**
+   * 
+* **Deutsch**
+   * Neu: [Reguläre Ausdrücke anwenden](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation) mit vordefinierten und eigenen Erkennungsmustern
+   * Änderung der Filter-Reihenfolge
+   * Verbesserungen an der Sprachdatei
+   * [Hintergrundinformationen zum Update](https://plus.google.com/110569673423509816572/posts/CwtbSoMkGrT)
 
 ### 2.5.1 ###
-* [BBCode im Kommentar als Spamgrund](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation)
-* IP-Anonymisierung bei der Länderprüfung
-* [Mehr Transparenz](https://plus.google.com/110569673423509816572/posts/ZMU6RfyRK29) durch hinzugefügte Datenschutzhinweise
-* PHP 5.2.4 als Voraussetzung (ist zugleich die Voraussetzung für WP 3.4)
+* **English**
+   * 
+* **Deutsch**
+   * [BBCode im Kommentar als Spamgrund](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation)
+   * IP-Anonymisierung bei der Länderprüfung
+   * [Mehr Transparenz](https://plus.google.com/110569673423509816572/posts/ZMU6RfyRK29) durch hinzugefügte Datenschutzhinweise
+   * PHP 5.2.4 als Voraussetzung (ist zugleich die Voraussetzung für WP 3.4)
 
 ### 2.5.0 ###
-* [Edition 2012](https://plus.google.com/110569673423509816572/posts/6JUC6PHXd6A)
+* **English**
+   * [Edition 2012](https://plus.google.com/110569673423509816572/posts/6JUC6PHXd6A)
+* **Deutsch**
+   * [Edition 2012](https://plus.google.com/110569673423509816572/posts/6JUC6PHXd6A)
 
 ### 2.4.6 ###
-* Russische Übersetzung
-* Veränderung der Secret-Zeichenfolge
+* **English**
+   * 
+* **Deutsch**
+   * Russische Übersetzung
+   * Veränderung der Secret-Zeichenfolge
 
 ### 2.4.5 ###
-* Überarbeitetes Layout der Einstellungen
-* Streichung von Project Honey Pot
-* TornevallNET als neuer DNSBL-Dienst
-* WordPress 3.4 als Mindestvoraussetzung
-* WordPress 3.5 Unterstützung
-* Online-Handbuch in Neufassung
+* **English**
+   * 
+* **Deutsch**
+   * Überarbeitetes Layout der Einstellungen
+   * Streichung von Project Honey Pot
+   * TornevallNET als neuer DNSBL-Dienst
+   * WordPress 3.4 als Mindestvoraussetzung
+   * WordPress 3.5 Unterstützung
+   * Neufassung des Online-Handbuchs
 
 ### 2.4.4 ###
-* Technical and visual support for WordPress 3.5
-* Modification of the file structure: from `xyz.dev.css` to `xyz.min.css`
-* Retina screenshot
+* **English**
+   * 
+* **Deutsch**
+   * Technical and visual support for WordPress 3.5
+   * Modification of the file structure: from `xyz.dev.css` to `xyz.min.css`
+   * Retina screenshot
 
 ### 2.4.3 ###
-* Check for basic requirements
-* Remove the sidebar plugin icon
-* Set the Google API calls to SSL
-* Compatibility with WordPress 3.4
-* Add retina plugin icon on options
-* Depending on WordPress settings: anonymous comments allowed
+* **English**
+   * Check for basic requirements
+   * Remove the sidebar plugin icon
+   * Set the Google API calls to SSL
+   * Compatibility with WordPress 3.4
+   * Add retina plugin icon on options
+   * Depending on WordPress settings: anonymous comments allowed
+* **Deutsch**
+   * 
 
 ### 2.4.2 ###
-* New geo ip location service (without the api key)
-* Code cleanup: Replacement of `@` characters by a function
-* JS-Fallback for missing jQuery UI
+* **English**
+   * New geo ip location service (without the api key)
+   * Code cleanup: Replacement of `@` characters by a function
+   * JS-Fallback for missing jQuery UI
+* **Deutsch**
+   * 
 
 ### 2.4.1 ###
-* Add russian translation
-* Fix for the textarea replace
-* Detect and hide admin notices
+* **English**
+   * Add russian translation
+   * Fix for the textarea replace
+   * Detect and hide admin notices
+* **Deutsch**
+   * 
 
 ### 2.4 ###
-* Support for IPv6
-* Source code revision
-* Delete spam by reason
-* Changing the user interface
-* Requirements: PHP 5.1.2 and WordPress 3.3
+* **English**
+   * Support for IPv6
+   * Source code revision
+   * Delete spam by reason
+   * Changing the user interface
+   * Requirements: PHP 5.1.2 and WordPress 3.3
+* **Deutsch**
+   * 
 
 ### 2.3 ###
-* Xmas Edition
+* **English**
+   * Xmas Edition
+* **Deutsch**
+   * 
 
 ### 2.2 ###
-* Interactive Dashboard Stats
+* **English**
+   * Interactive Dashboard Stats
+* **Deutsch**
+   * 
 
 ### 2.1 ###
-* Remove Google Translate API support
+* **English**
+   * Remove Google Translate API support
+* **Deutsch**
+   * 
 
 ### 2.0 ###
-* Allow comments only in certain language (English/German)
-* Consider comments which are already marked as spam
-* Dashboard Stats: Change from canvas to image format
-* System requirements: WordPress 2.8
-* Removal of the migration script
-* Increase plugin security
+* **English**
+   * Allow comments only in certain language (English/German)
+   * Consider comments which are already marked as spam
+   * Dashboard Stats: Change from canvas to image format
+   * System requirements: WordPress 2.8
+   * Removal of the migration script
+   * Increase plugin security
+* **Deutsch**
+   * 
 
 ### 1.9 ###
-* Dashboard History Stats (HTML5 Canvas)
+* **English**
+   * Dashboard History Stats (HTML5 Canvas)
+* **Deutsch**
+   * 
 
 ### 1.8 ###
-* Support for the new IPInfoDB API (including API Key)
+* **English**
+   * Support for the new IPInfoDB API (including API Key)
+* **Deutsch**
+   * 
 
 ### 1.7 ###
-* Black and whitelisting for specific countries
-* "Project Honey Pot" as a optional spammer source
-* Spam reason in the notification email
-* Visual refresh of the notification email
-* Advanced GUI changes + Fold-out options
+* **English**
+   * Black and whitelisting for specific countries
+   * "Project Honey Pot" as a optional spammer source
+   * Spam reason in the notification email
+   * Visual refresh of the notification email
+   * Advanced GUI changes + Fold-out options
+* **Deutsch**
+   * 
 
 ### 1.6 ###
-* Support for WordPress 3.0
-* System requirements: WordPress 2.7
-* Code optimization
+* **English**
+   * Support for WordPress 3.0
+   * System requirements: WordPress 2.7
+   * Code optimization
+* **Deutsch**
+   * 
 
 ### 1.5 ###
-* Compatibility with WPtouch
-* Add support for do_action
-* Translation to Portuguese of Brazil
+* **English**
+   * Compatibility with WPtouch
+   * Add support for do_action
+   * Translation to Portuguese of Brazil
+* **Deutsch**
+   * 
 
 ### 1.4 ###
-* Enable stricter inspection for incomming comments
-* Do not check if the author has already commented and approved
+* **English**
+   * Enable stricter inspection for incomming comments
+   * Do not check if the author has already commented and approved
+* **Deutsch**
+   * 
 
 ### 1.3 ###
-* New code structure
-* Email notifications about new spam comments
-* Novel Algorithm: Advanced spam checking
+* **English**
+   * New code structure
+   * Email notifications about new spam comments
+   * Novel Algorithm: Advanced spam checking
+* **Deutsch**
+   * 
 
 ### 1.2 ###
-* Antispam Bee spam counter on dashboard
+* **English**
+   * Antispam Bee spam counter on dashboard
+* **Deutsch**
+   * 
 
 ### 1.1 ###
-* Adds support for WordPress new changelog readme.txt standard
-* Various changes for more speed, usability and security
+* **English**
+   * Adds support for WordPress new changelog readme.txt standard
+   * Various changes for more speed, usability and security
+* **Deutsch**
+   * 
 
 ### 1.0 ###
-* Adds WordPress 2.8 support
+* **English**
+   * Adds WordPress 2.8 support
+* **Deutsch**
+   * 
 
 ### 0.9 ###
-* Mark as spam only comments or only pings
+* **English**
+   * Mark as spam only comments or only pings
+* **Deutsch**
+   * 
 
 ### 0.8 ###
-* Optical adjustments of the settings page
-* Translation for Simplified Chinese, Spanish and Catalan
+* **English**
+   * Optical adjustments of the settings page
+   * Translation for Simplified Chinese, Spanish and Catalan
+* **Deutsch**
+   * 
 
 ### 0.7 ###
-* Spam folder cleanup after X days
-* Optional hide the &quot;MARKED AS SPAM&quot; note
-* Language support for Italian and Turkish
+* **English**
+   * Spam folder cleanup after X days
+   * Optional hide the &quot;MARKED AS SPAM&quot; note
+   * Language support for Italian and Turkish
+* **Deutsch**
+   * 
 
 ### 0.6 ###
-* Language support for English, German, Russian
+* **English**
+   * Language support for English, German, Russian
+* **Deutsch**
+   * 
 
 ### 0.5 ###
-* Workaround for empty comments
+* **English**
+   * Workaround for empty comments
+* **Deutsch**
+   * 
 
 ### 0.4 ###
-* Option for trackback and pingback protection
+* **English**
+   * Option for trackback and pingback protection
+* **Deutsch**
+   * 
 
 ### 0.3 ###
-* Trackback and Pingback spam protection
+* **English**
+   * Trackback and Pingback spam protection
+* **Deutsch**
+   * 
