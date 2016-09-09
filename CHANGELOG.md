@@ -46,8 +46,7 @@
    * Consideration of the comment time (Spam if a comment was written in less than 5 seconds)
    * *Release time investment (Development & QA): 6.25 h*
 * **Deutsch**
-   * Berücksichtigung der Kommentarzeit (Spam, wenn ein Kommentar in unter 5 Sekunden verfasst)
-   * [Mehr Informationen auf Google+](https://plus.google.com/+SergejMüller/posts/73EbP6F1BgC)
+   * Berücksichtigung der Kommentarzeit (Spam, wenn ein Kommentar in unter 5 Sekunden verfasst) - [Mehr Informationen auf Google+](https://plus.google.com/+SergejMüller/posts/73EbP6F1BgC)
    * *Release-Zeitaufwand (Development & QA): 6,25 Stunden*
 
 ### 2.6.3 ###
@@ -58,7 +57,7 @@
 * **Deutsch**
     * Sortierung für die Antispam Bee Spalte in der Spam-Übersicht
     * Code-Refactoring rund um die Nutzung von REQUEST_URI
-    * *Release-Zeitaufwand (Development & QA): 2,.75 Stunden*
+    * *Release-Zeitaufwand (Development & QA): 2,75 Stunden*
 
 ### 2.6.2 ###
 * **English**
