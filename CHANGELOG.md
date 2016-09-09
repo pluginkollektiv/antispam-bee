@@ -80,38 +80,50 @@
     * *Release-Zeitaufwand (Development & QA): 8,5 Stunden*
 
 ### 2.6.0 ###
-* DE: Optimierungen für WordPress 3.8
-* DE: Zusatzprüfung auf Nicht-UTF-8-Zeichen in Kommentardaten
-* DE: Spamgrund als Spalte in der Übersicht mit Spamkommentaren
-* EN: Optimizations for WordPress 3.8
-* EN: Clear invalid UTF-8 characters in comment fields
-* EN: Spam reason as a column in the table with spam comments
+* **English**
+   * Optimizations for WordPress 3.8
+   * Clear invalid UTF-8 characters in comment fields
+   * Spam reason as a column in the table with spam comments
+* **Deutsch**
+   * Optimierungen für WordPress 3.8
+   * Zusatzprüfung auf Nicht-UTF-8-Zeichen in Kommentardaten
+   * Spamgrund als Spalte in der Übersicht mit Spamkommentaren
 
 ### 2.5.9 ###
-* DE: Anpassung des Dashboard-Skriptes für die Zusammenarbeit mit [Statify](http://statify.de)
-* EN: Dashboard widget changes to work with [Statify](http://statify.de)
+* **English**
+   * Dashboard widget changes to work with [Statify](http://statify.de)
+* **Deutsch**
+   * Anpassung des Dashboard-Skriptes für die Zusammenarbeit mit [Statify](http://statify.de)
 
 ### 2.5.8 ###
-* DE: Umstellung von TornevallDNSBL zu [Stop Forum Spam](http://www.stopforumspam.com)
-* DE: Neue JS-Bibliothek für das Dashboard-Widget
-* DE: [Mehr Informationen auf Google+](https://plus.google.com/110569673423509816572/posts/VCFr3fDAYDs)
-* EN: Switch from TornevallDNSBL to [Stop Forum Spam](http://www.stopforumspam.com)
-* EN: New JS library for the Antispam Bee dashboard chart
+* **English**
+   * Switch from TornevallDNSBL to [Stop Forum Spam](http://www.stopforumspam.com)
+   * New JS library for the Antispam Bee dashboard chart
+* **Deutsch**
+   * Umstellung von TornevallDNSBL zu [Stop Forum Spam](http://www.stopforumspam.com)
+   * Neue JS-Bibliothek für das Dashboard-Widget
+   * [Mehr Informationen auf Google+](https://plus.google.com/110569673423509816572/posts/VCFr3fDAYDs)
 
 ### 2.5.7 ###
-* DE: Optionale Spam-Logdatei z.B. für [Fail2Ban](https://github.com/sergejmueller/sergejmueller.github.io/wiki/Fail2Ban:-IP-Blacklist)
-* DE: Filter `antispam_bee_notification_subject` für eigenen Betreff in Benachrichtigungen
-* DE: Detaillierte Informationen zum Update auf [Google+](https://plus.google.com/110569673423509816572/posts/iCfip2ggYt9)
-* EN: Optional logfile with spam entries e.g. for [Fail2Ban](https://gist.github.com/sergejmueller/5622883)
-* EN: Filter `antispam_bee_notification_subject` for a custom subject in notifications
+* **English**
+   * Optional logfile with spam entries e.g. for [Fail2Ban](https://gist.github.com/sergejmueller/5622883)
+   * Filter `antispam_bee_notification_subject` for a custom subject in notifications
+* **Deutsch**
+   * Optionale Spam-Logdatei z.B. für [Fail2Ban](https://github.com/sergejmueller/sergejmueller.github.io/wiki/Fail2Ban:-IP-Blacklist)
+   * Filter `antispam_bee_notification_subject` für eigenen Betreff in Benachrichtigungen
+   * Detaillierte Informationen zum Update auf [Google+](https://plus.google.com/110569673423509816572/posts/iCfip2ggYt9)
 
 ### 2.5.6 ###
-* DE: Neue Erkennungsmuster für Spam hinzugefügt / [Google+](https://plus.google.com/110569673423509816572/posts/9BSURheN3as)
-* EN: Added new detection/patterns for spam comments
+* **English**
+   * Added new detection/patterns for spam comments
+* **Deutsch**
+   * Neue Erkennungsmuster für Spam hinzugefügt / [Google+](https://plus.google.com/110569673423509816572/posts/9BSURheN3as)
 
 ### 2.5.5 ###
-* Deutsch: Erkennung und Ausfilterung von Spam-Kommentaren, die versuchen, [Sicherheitslücken von W3 Total Cache und WP Super Cache](http://blog.sucuri.net/2013/05/w3-total-cache-and-wp-super-cache-vulnerability-being-targeted-in-the-wild.html) auszunutzen. [Ausführlicher auf Google+](https://plus.google.com/110569673423509816572/posts/afWWQbUh4at).
-* English: Detection and filtering of spam comments that try to exploit the latest [W3 Total Cache and WP Super Cache Vulnerability](http://blog.sucuri.net/2013/05/w3-total-cache-and-wp-super-cache-vulnerability-being-targeted-in-the-wild.html).
+* **English**
+   * Detection and filtering of spam comments that try to exploit the latest [W3 Total Cache and WP Super Cache Vulnerability](http://blog.sucuri.net/2013/05/w3-total-cache-and-wp-super-cache-vulnerability-being-targeted-in-the-wild.html).
+* **Deutsch**
+   * Erkennung und Ausfilterung von Spam-Kommentaren, die versuchen, [Sicherheitslücken von W3 Total Cache und WP Super Cache](http://blog.sucuri.net/2013/05/w3-total-cache-and-wp-super-cache-vulnerability-being-targeted-in-the-wild.html) auszunutzen. [Ausführlicher auf Google+](https://plus.google.com/110569673423509816572/posts/afWWQbUh4at).
 
 ### 2.5.4 ###
 * Jubiläumsausgabe: [Details zum Update](https://plus.google.com/110569673423509816572/posts/3dq9Re5vTY5)
