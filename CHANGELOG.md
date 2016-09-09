@@ -159,7 +159,7 @@
 
 ### 2.5.0 ###
 * **English**
-   * [Edition 2012](https://plus.google.com/110569673423509816572/posts/6JUC6PHXd6A)
+   * Edition 2012
 * **Deutsch**
    * [Edition 2012](https://plus.google.com/110569673423509816572/posts/6JUC6PHXd6A)
 
