@@ -246,7 +246,7 @@
    * Detect and hide admin notices
 * **Deutsch**
    * Russian Übersetzung hinzugefügt
-   * Fix für das Textfeld
+   * Fehlerbehebung bei dem ersetzten Textfeld
    * Erkennen und verstecken von Admin-Mitteilungen
 
 ### 2.4 ###
@@ -321,7 +321,7 @@
    * "Project Honey Pot" als optionale Spammer-Quelle
    * Spam-Begründung in der E-Mail-Benachrichtigung
    * Visuelle Überarbeitung der E-Mail-Benachrichtigung
-   * Erweiterte Benutzeroberflächenänderungen + ausklappbare Einstellungen
+   * Erweiterte Benutzeroberflächenanpassungen + ausklappbare Einstellungen
 
 ### 1.6 ###
 * **English**
