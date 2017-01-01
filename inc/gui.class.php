@@ -227,7 +227,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_dnsbl_check" id="ab_dnsbl_check" value="1" <?php checked($options['dnsbl_check'], 1) ?> />
 								<label for="ab_dnsbl_check">
 									<?php esc_html_e('Use a public antispam database', 'antispam-bee') ?>
-									<span><?php _e('Matching the ip address with <a href="https://dnsbl.tornevall.org" target="_blank">Tornevall</a>', 'antispam-bee') ?></span>
+									<span><?php _e('Matching the ip address with <a href="http://www.stopforumspam.com/" target="_blank">Stopforumspam</a>', 'antispam-bee') ?></span>
 								</label>
 							</li>
 						</ul>
