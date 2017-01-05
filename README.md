@@ -30,11 +30,6 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Optionally spam-check comment forms on archive pages.
 * Display spam statistics on the dashboard, including daily updates of spam detection rate and a total of blocked spam comments.
 
-> #### Auf Deutsch? ####
-> Für eine ausführliche [Dokumentation](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation) besuche bitte das [Antispam-Bee-Wiki](https://github.com/pluginkollektiv/antispam-bee/wiki). Dort findest du u.a. Antworten auf [häufig gestellte Fragen](https://github.com/pluginkollektiv/antispam-bee/wiki/H%C3%A4ufige-Fragen), sowie Hinweise zu den [Einstellungen der Antispam-Regeln](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation#antispam-regeln).
->
-> **Community-Support auf Deutsch** erhältst du in einem der [deutschsprachigen Foren](https://de.forums.wordpress.org/forum/plugins); im [Plugin-Forum für Antispam Bee](https://wordpress.org/support/plugin/antispam-bee) wird, wie in allen Plugin-Foren auf wordpress.org, ausschließlich **Englisch** gesprochen.
-
 ### Support ###
 * Community support via the [support forums on wordpress.org](https://wordpress.org/support/plugin/antispam-bee)
 * We don’t handle support via e-mail, Twitter, GitHub issues etc.
@@ -79,6 +74,8 @@ Nope. Antispam Bee is developed in Germany and Switzerland. You might have heard
 
 ### Will I have to edit any theme templates to get Antispam Bee to work? ###
 No, the plugin works as is. You may want to configure your favorite settings, though.
+
+A complete documentation is available in the [GitHub repository Wiki](https://github.com/pluginkollektiv/cachify/wiki).
 
 ## Changelog ##
 
