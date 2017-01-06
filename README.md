@@ -75,7 +75,7 @@ Nope. Antispam Bee is developed in Germany and Switzerland. You might have heard
 ### Will I have to edit any theme templates to get Antispam Bee to work? ###
 No, the plugin works as is. You may want to configure your favorite settings, though.
 
-A complete documentation is available in the [GitHub repository Wiki](https://github.com/pluginkollektiv/cachify/wiki).
+A complete documentation is available in the [GitHub repository Wiki](https://github.com/pluginkollektiv/antispam-bee/wiki).
 
 ## Changelog ##
 
