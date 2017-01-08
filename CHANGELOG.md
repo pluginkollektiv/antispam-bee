@@ -43,12 +43,12 @@
 ### 2.6.5 ###
 * **English**
    * Fix: Return parameters on `dashboard_glance_items` callback / thx [@toscho](https://twitter.com/toscho)
-   * New function: Trust commenters with a Gravatar / thx [@glueckpress](https://twitter.com/glueckpress)
+   * New function: [Trust commenters with a Gravatar](https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation) / thx [@glueckpress](https://twitter.com/glueckpress)
    * Additional plausibility checks and filters
    * *Release time investment (Development & QA): 12 h*
 * **Deutsch**
    * Fix: Parameter-Rückgabe bei `dashboard_glance_items` / thx [@toscho](https://twitter.com/toscho)
-   * Neue Funktion: [Kommentatoren mit Gravatar vertrauen](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation) / thx [@glueckpress](https://twitter.com/glueckpress)
+   * Neue Funktion: [Kommentatoren mit Gravatar vertrauen](https://github.com/pluginkollektiv/antispam-bee/wiki/de-Dokumentation) / thx [@glueckpress](https://twitter.com/glueckpress)
    * Zusätzliche Plausibilitätsprüfungen und Filter
    * *Release-Zeitaufwand (Development & QA): 12 Stunden*
 
