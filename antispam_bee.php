@@ -519,7 +519,7 @@ class Antispam_Bee {
 			$input,
 			array(
 				'<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML" target="_blank" rel="noopener noreferrer">' . __( 'Donate', 'antispam-bee' ) . '</a>',
-				'<a href="https://wordpress.org/support/plugin/antispam-bee" target="_blank" rel="noopener noreferrer">' . __( 'Support', 'antispam-bee' ) . '</a>'
+				'<a href="https://wordpress.org/support/plugin/antispam-bee" target="_blank" rel="noopener noreferrer">' . __( 'Support', 'antispam-bee' ) . '</a>',
 			)
 		);
 	}
