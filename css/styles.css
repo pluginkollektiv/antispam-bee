@@ -145,7 +145,7 @@
     background: #fff;
     list-style: none;
     border-radius: 3px;
-    white-space: nowrap;
+    max-width: 288px;
 }
 
 .ab-column > ul > li a {
