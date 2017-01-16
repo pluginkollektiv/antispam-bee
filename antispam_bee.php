@@ -345,7 +345,6 @@ class Antispam_Bee {
 	private static function _init_internal_vars()
 	{
 		self::$_base   = plugin_basename(__FILE__);
-		self::$_secret = substr(md5(get_bloginfo('url')), 0, 5). '-comment';
 
 		self::$defaults = array(
 			'options' => array(
@@ -377,6 +376,7 @@ class Antispam_Bee {
 				'ignore_type' 		=> 0,
 
 				'reasons_enable'	=> 0,
+				'secret'	        => substr( sha1( md5( NONCE_SALT ) ), 0, 10 ),
 				'ignore_reasons'	=> array()
 			),
 			'reasons' => array(
@@ -390,6 +390,9 @@ class Antispam_Bee {
 				'regexp'	=> 'RegExp'
 			)
 		);
+
+
+		self::$_secret = sha1( md5( self::get_option( 'secret' ) ) );
 	}
 
 

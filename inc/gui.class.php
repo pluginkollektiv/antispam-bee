@@ -38,6 +38,11 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		/* Referer prüfen */
 		check_admin_referer('_antispam_bee__settings_nonce');
 
+		if ( ! empty( $_POST['ab_secret'] ) ) {
+			$secret = sanitize_text_field( wp_unslash( $_POST['ab_secret'] ) );
+		} else {
+			$secret = substr( sha1( md5( NONCE_SALT . time() ) ), 0, 10 );
+		}
 		/* Optionen ermitteln */
 		$options = array(
 			'flag_spam' 		=> (int)(!empty($_POST['ab_flag_spam'])),
@@ -65,7 +70,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 			'bbcode_check'		=> (int)(!empty($_POST['ab_bbcode_check'])),
 			'gravatar_check'	=> (int)(!empty($_POST['ab_gravatar_check'])),
-			'dnsbl_check'		=> (int)(!empty($_POST['ab_dnsbl_check']))
+			'dnsbl_check'		=> (int)(!empty($_POST['ab_dnsbl_check'])),
+			'secret'            => $secret,
 		);
 
 		/* Keine Tagmenge eingetragen? */
@@ -150,7 +156,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 				<?php wp_nonce_field('_antispam_bee__settings_nonce') ?>
 
 				<?php $options = self::get_options() ?>
-
 				<div class="ab-wrap">
 					<!--[if lt IE 9]>
 						<p class="browsehappy">
@@ -243,6 +248,15 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 						</h6>
 
 						<ul>
+							<li>
+								<label for="ab_flag_spam">
+									<?php esc_html_e('Secret key', 'antispam-bee') ?>
+									<span><?php esc_html_e('Your personal secret key.', 'antispam-bee') ?></span>
+								</label>
+								<br>
+								<input type="text" name="ab_secret" id="ab_secret" value="<?php echo esc_attr( $options['secret'] ); ?>" />
+
+							</li>
 							<li>
 								<input type="checkbox" name="ab_flag_spam" id="ab_flag_spam" value="1" <?php checked($options['flag_spam'], 1) ?> />
 								<label for="ab_flag_spam">
