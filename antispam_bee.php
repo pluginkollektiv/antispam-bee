@@ -1245,7 +1245,7 @@ class Antispam_Bee {
 		return preg_replace(
 			'#<textarea(.+?)name=["\']comment["\'](.+?)</textarea>#s',
             sprintf(
-                '<textarea$1name="%s"$2</textarea><textarea name="comment" style="display:none" rows="1" cols="1"></textarea>%s',
+                '<textarea$1name="%s"$2</textarea><textarea$1name="comment" style="display:none" rows="1" cols="1"></textarea>%s',
                 self::$_secret,
                 $init_time_field
             ),
