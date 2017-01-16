@@ -1316,8 +1316,6 @@ class Antispam_Bee {
 			|| empty( $request['nonce'] )
 			|| ! wp_verify_nonce( $request['nonce'], 'abs-wrong' )
 		) {
-			return 'trap';
-
 			return wp_create_nonce( 'abs-trap' );
 		}
 		return wp_create_nonce( 'abs-correct' );
@@ -1336,14 +1334,15 @@ class Antispam_Bee {
 		}
 		$url = add_query_arg(
 			array(
-				'action' => 'abs-nonce',
-				'nonce'  => wp_create_nonce( 'abs-wrong' )
+				'action'   => 'abs-nonce',
+				'nonce'    => wp_create_nonce( 'abs-wrong' ),
+				'_wpnonce' => wp_create_nonce( 'wp_rest' ),
 			),
 			$url
 		);
 
 		$string = sprintf(
-			'<input name="ab_nonce" id="ab_nonce" value="%s" /><script type="text/javascript">var xmlhttp;xmlhttp=new XMLHttpRequest,xmlhttp.onreadystatechange=function(){4==xmlhttp.readyState&&200==xmlhttp.status&&(document.getElementById("ab_nonce").value=xmlhttp.responseText.slice(1,-1))},xmlhttp.open("GET","%s",!0),xmlhttp.send();</script>',
+			'<input type="hidden" name="ab_nonce" id="ab_nonce" value="%s" /><script type="text/javascript">var xmlhttp;xmlhttp=new XMLHttpRequest,xmlhttp.onreadystatechange=function(){4==xmlhttp.readyState&&200==xmlhttp.status&&(document.getElementById("ab_nonce").value=xmlhttp.responseText.slice(1,-1))},xmlhttp.open("GET","%s",!0),xmlhttp.send();</script>',
 			esc_attr( wp_create_nonce( 'abs-wrong' ) ),
 			$url
 		);
