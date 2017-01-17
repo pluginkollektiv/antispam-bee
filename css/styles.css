@@ -18,7 +18,6 @@
     margin: 0;
     padding: 0;
     outline: 0;
-
     -webkit-box-sizing: border-box;
     -moz-box-sizing:    border-box;
     box-sizing:         border-box;
@@ -42,7 +41,6 @@
 /* @group Spalten */
 
 .ab-wrap {
-    color: #2f353e;
     margin: 0 0 0 -10px;
     padding: 20px 0 0 0;
     text-rendering: optimizeLegibility;
@@ -143,9 +141,7 @@
     padding: 10px 0 12px 12px;
     position: relative;
     background: #fff;
-    list-style: none;
     border-radius: 3px;
-    white-space: nowrap;
 }
 
 .ab-column > ul > li a {
@@ -157,14 +153,13 @@
 }
 
 .ab-column > ul > li input[type="checkbox"] {
-    display: inline-block;
     margin: 0 8px 0 0;
 }
 .ab-column > ul > li label {
     cursor: default;
     display: inline-block;
-    overflow: hidden;
     line-height: 24px;
+    max-width: 288px;
 }
 .ab-column > ul > li label span {
     color: #8e959c;
@@ -254,7 +249,6 @@
 .ab-column > ul > li > ul {
     margin: 10px 10px 0 26px;
     display: none;
-    list-style: none;
 }
 .ab-column > ul > li > ul li {
     padding: 2px 0;
