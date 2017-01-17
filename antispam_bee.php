@@ -72,30 +72,32 @@ class Antispam_Bee {
   			)
   		);
 
-	    if ( self::_has_rest() ) {
-		    add_action(
-			    'rest_api_init',
-			    array(
-				    __CLASS__,
-				    'register_rest'
-			    )
-		    );
-	    } else {
-		    add_action(
-			    'wp_ajax_nopriv_abs-nonce',
-			    array(
-				    __CLASS__,
-				    'ajax_create_nonce'
-			    )
-		    );
+	    if ( self::get_option( 'js_nonce' ) ) {
+		    if ( self::_has_rest() ) {
+			    add_action(
+				    'rest_api_init',
+				    array(
+					    __CLASS__,
+					    'register_rest'
+				    )
+			    );
+		    } else {
+			    add_action(
+				    'wp_ajax_nopriv_abs-nonce',
+				    array(
+					    __CLASS__,
+					    'ajax_create_nonce'
+				    )
+			    );
 
-		    add_action(
-			    'wp_ajax_abs-nonce',
-			    array(
-				    __CLASS__,
-				    'ajax_create_nonce'
-			    )
-		    );
+			    add_action(
+				    'wp_ajax_abs-nonce',
+				    array(
+					    __CLASS__,
+					    'ajax_create_nonce'
+				    )
+			    );
+		    }
 	    }
 
 		/* AJAX & Co. */
@@ -1289,13 +1291,15 @@ class Antispam_Bee {
 
 	/**
 	 * Handles the Ajax request if REST API does not exist.
+	 *
+	 * @since 2.7.0
 	 */
 	public function ajax_create_nonce() {
 
-		$nonce = self::get_key( $_GET, 'nonce' );
+		$nonce = self::get_key( $_GET, '_wpnonce' );
 		echo wp_json_encode( self::create_nonce( array(
 			'action' => 'abs-nonce',
-			'nonce' => $nonce,
+			'_wpnonce' => $nonce,
 		) ) );
 		die();
 	}
@@ -1303,18 +1307,17 @@ class Antispam_Bee {
 	/**
 	 * Creates the nonce for the Ajax request.
 	 *
-	 * @param $request
-	 * @return string
+	 * @since 2.7.0
+	 * @param $request The Request
+	 * @return string  The Nonce, to be placed in the ab_nonce input field.
 	 */
 	public static function create_nonce( $request ) {
 
-		if ( ! wp_verify_nonce( $request['nonce'], 'abs-wrong' ) )
-		echo $request['action'] . '<br >' . $request['nonce'];
 		if (
 			empty( $request['action'] )
 			|| 'abs-nonce' !== $request['action']
-			|| empty( $request['nonce'] )
-			|| ! wp_verify_nonce( $request['nonce'], 'abs-wrong' )
+			|| empty( $request['_wpnonce'] )
+			|| ! wp_verify_nonce( $request['_wpnonce'], 'wp_rest' )
 		) {
 			return wp_create_nonce( 'abs-trap' );
 		}
@@ -1323,7 +1326,9 @@ class Antispam_Bee {
 
 	/**
 	 * Generate the HTML for the JS Nonce functionality.
-	 * @return string
+	 *
+	 * @since 2.7.0
+	 * @return string The HTML String.
 	 */
 	private static function get_js_nonce_html() {
 
@@ -1335,7 +1340,6 @@ class Antispam_Bee {
 		$url = add_query_arg(
 			array(
 				'action'   => 'abs-nonce',
-				'nonce'    => wp_create_nonce( 'abs-wrong' ),
 				'_wpnonce' => wp_create_nonce( 'wp_rest' ),
 			),
 			$url
@@ -1351,6 +1355,8 @@ class Antispam_Bee {
 
 	/**
 	 * Register the REST endpoint.
+	 *
+	 * @since 2.7.0
 	 */
 	public static function register_rest() {
 
@@ -1360,7 +1366,7 @@ class Antispam_Bee {
 			array(
 				'methods' => 'GET',
 				'args'    => array(
-					'nonce' => array(
+					'_wpnonce' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'action' => array(
@@ -1375,16 +1381,12 @@ class Antispam_Bee {
 	/**
 	 * Does the current WP version has the REST API?
 	 *
+	 * @since 2.7.0
 	 * @return bool
 	 */
 	private static function _has_rest() {
 
-		global $wp_version;
-		$check = version_compare( $wp_version, '4.7' );
-		if ( $check === -1 ) {
-			return false;
-		}
-		return true;
+		return function_exists( 'register_rest_route' );
 	}
 
 
