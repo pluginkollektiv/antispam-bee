@@ -65,11 +65,11 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 			'bbcode_check'		=> (int)(!empty($_POST['ab_bbcode_check'])),
 			'gravatar_check'	=> (int)(!empty($_POST['ab_gravatar_check'])),
-			'dnsbl_check'		=> (int)(!empty($_POST['ab_dnsbl_check']))
+			'dnsbl_check'		=> (int)(!empty($_POST['ab_dnsbl_check'])),
 
 			'country_code' 		=> (int)(!empty($_POST['ab_country_code'])),
 			'country_black'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_black')),
-			'country_white'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_white'))
+			'country_white'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_white')),
 		);
 
 		/* Keine Tagmenge eingetragen? */
