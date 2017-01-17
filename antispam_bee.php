@@ -1521,7 +1521,7 @@ class Antispam_Bee {
 				'host' => '^(www\.)?fkbook\.co\.uk$|^(www\.)?nsru\.net$|^(www\.)?goo\.gl$|^(www\.)?bit\.ly$',
 			),
 			array(
-				'body' => 'target[t]?ed (visitors|traffic)',
+				'body' => 'target[t]?ed (visitors|traffic)|viagra|cialis',
 			),
 		);
 
