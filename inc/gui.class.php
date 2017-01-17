@@ -20,7 +20,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	* Speicherung der GUI
 	*
 	* @since   0.1
-	* @change  2.5.2
+	* @change  2.7.0
 	*/
 
 	public static function save_changes()
@@ -66,6 +66,10 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'bbcode_check'		=> (int)(!empty($_POST['ab_bbcode_check'])),
 			'gravatar_check'	=> (int)(!empty($_POST['ab_gravatar_check'])),
 			'dnsbl_check'		=> (int)(!empty($_POST['ab_dnsbl_check']))
+
+			'country_code' 		=> (int)(!empty($_POST['ab_country_code'])),
+			'country_black'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_black')),
+			'country_white'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_white'))
 		);
 
 		/* Keine Tagmenge eingetragen? */
@@ -76,6 +80,29 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		/* Liste der Spamgründe */
 		if ( empty($options['reasons_enable']) ) {
 			$options['ignore_reasons'] = array();
+		}
+
+		/* Blacklist reinigen */
+		if ( !empty($options['country_black']) ) {
+			$options['country_black'] = preg_replace(
+				'/[^A-Z ]/',
+				'',
+				strtoupper($options['country_black'])
+			);
+		}
+
+		/* Whitelist reinigen */
+		if ( !empty($options['country_white']) ) {
+			$options['country_white'] = preg_replace(
+				'/[^A-Z ]/',
+				'',
+				strtoupper($options['country_white'])
+			);
+		}
+
+		/* Leere Listen? */
+		if ( empty($options['country_black']) && empty($options['country_white']) ) {
+			$options['country_code'] = 0;
 		}
 
 		/* Cron stoppen? */
@@ -135,7 +162,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	* Anzeige der GUI
 	*
 	* @since   0.1
-	* @change  2.6.4
+	* @change  2.7.0
 	*/
 
 	public static function options_page() { ?>
@@ -248,6 +275,29 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 												$link2 );
 										?></span>
 								</label>
+							</li>
+							
+							<li>
+								<input type="checkbox" name="ab_country_code" id="ab_country_code" value="1" <?php checked($options['country_code'], 1) ?> />
+								<label for="ab_country_code">
+									<?php esc_html_e('Block comments from specific countries', 'antispam-bee') ?>
+									<span><?php esc_html_e('Filtering the requests depending on country', 'antispam-bee') ?></span>
+								</label>
+
+								<ul>
+									<li>
+										<input type="text" name="ab_country_black" id="ab_country_black" value="<?php echo esc_attr($options['country_black']); ?>" class="ab-medium-field code" />
+										<label for="ab_country_black">
+											Blacklist <a href="https://www.iso.org/obp/ui/" target="_blank">ISO Codes</a>
+										</label>
+									</li>
+									<li>
+										<input type="text" name="ab_country_white" id="ab_country_white" value="<?php echo esc_attr($options['country_white']); ?>" class="ab-medium-field code" />
+										<label for="ab_country_white">
+											Whitelist <a href="https://www.iso.org/obp/ui/" target="_blank">ISO Codes</a>
+										</label>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</div>
