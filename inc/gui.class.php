@@ -211,7 +211,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_regexp_check" id="ab_regexp_check" value="1" <?php checked($options['regexp_check'], 1) ?> />
 								<label for="ab_regexp_check">
 									<?php esc_html_e( 'Use regular expressions', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Predefined and custom patterns by <a href="https://gist.github.com/4242142" target="_blank" rel="noopener noreferrer">plugin hook</a>', 'antispam-bee' ); ?></span>
+									<span><?php esc_html_e( 'Predefined and custom patterns by plugin hook', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 
@@ -227,7 +227,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_dnsbl_check" id="ab_dnsbl_check" value="1" <?php checked($options['dnsbl_check'], 1) ?> />
 								<label for="ab_dnsbl_check">
 									<?php esc_html_e( 'Use a public antispam database', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Matching the ip address with <a href="http://www.stopforumspam.com/" target="_blank" rel="noopener noreferrer">Stopforumspam</a>', 'antispam-bee' ); ?></span>
+									<span><?php _e( 'Matching the ip address with <a href="http://www.stopforumspam.com/" target="_blank" rel="noopener noreferrer">Stopforumspam</a>', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 						</ul>
