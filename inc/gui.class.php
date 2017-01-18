@@ -38,10 +38,12 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		/* Referer prüfen */
 		check_admin_referer('_antispam_bee__settings_nonce');
 
+
 		if ( ! empty( $_POST['ab_secret'] ) ) {
 			$secret = sanitize_text_field( wp_unslash( $_POST['ab_secret'] ) );
 		} else {
-			$secret = substr( sha1( md5( ABSPATH ) ), 0, 10 );
+			$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : md5( ABSPATH );
+			$secret = substr( sha1( md5( $salt ) ), 0, 10 );
 		}
 		/* Optionen ermitteln */
 		$options = array(
