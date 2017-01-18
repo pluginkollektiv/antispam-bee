@@ -305,8 +305,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										self::_build_select(
 											'ab_ignore_type',
 											array(
-												1 => 'Comments',
-												2 => 'Pings'
+												1 => esc_html__( 'Comments', 'antispam-bee' ),
+												2 => esc_html__( 'Pings', 'antispam-bee' )
 											),
 											$options['ignore_type']
 										)
