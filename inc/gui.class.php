@@ -179,7 +179,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_gravatar_check" id="ab_gravatar_check" value="1" <?php checked($options['gravatar_check'], 1) ?> />
 								<label for="ab_gravatar_check">
 									<?php esc_html_e( 'Trust commenters with a Gravatar', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Check if commenter has a Gravatar image', 'antispam-bee' ); ?></span>
+									<span><?php _e( 'Check if commenter has a Gravatar image. Please note the <a href="https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar" target="_blank" rel="noopener noreferrer">privacy notice</a> for this option.', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 
@@ -227,7 +227,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_dnsbl_check" id="ab_dnsbl_check" value="1" <?php checked($options['dnsbl_check'], 1) ?> />
 								<label for="ab_dnsbl_check">
 									<?php esc_html_e( 'Use a public antispam database', 'antispam-bee' ); ?>
-									<span><?php _e( 'Matching the ip address with <a href="http://www.stopforumspam.com/" target="_blank" rel="noopener noreferrer">Stopforumspam</a>', 'antispam-bee' ); ?></span>
+									<span><?php _e( 'Matching the ip address with <a href="http://www.stopforumspam.com/" target="_blank" rel="noopener noreferrer">Stopforumspam</a>. Please note the <a href="https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#use-a-public-antispam-database" target="_blank" rel="noopener noreferrer">privacy notice</a> for this option.', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 						</ul>
