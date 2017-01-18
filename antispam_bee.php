@@ -1241,7 +1241,26 @@ class Antispam_Bee {
 
 		/* Inject HTML */
 		return preg_replace(
-			'#<textarea(.+?)name=["\']comment["\'](.+?)</textarea>#s',
+			'/(?P<all>                                                              (?# match the whole textarea tag )
+				<textarea                                                           (?# the opening of the textarea and some optional attributes )
+				(                                                                   (?# match a class attribute followed by some optional ones and the src attribute )
+					(?P<before1>[^>]*)
+					(?P<id1>id=["\'](?P<id_value1>[^>"\']*)["\'])
+					(?P<between1>[^>]*)
+					name=["\']comment["\']
+					|                                                               (?# match same as before, but with the name attribute before the id attribute )
+					(?P<before2>[^>]*)
+					name=["\']comment["\']
+					(?P<between2>[^>]*)
+					(?P<id2>id=["\'](?P<id_value2>[^>"\']*)["\'])
+					|                                                               (?# match same as before, but with no id attribute )
+					(?P<before3>[^>]*)
+					name=["\']comment["\']
+					(?P<between3>[^>]*)
+				)
+				(?P<after>[^>]*)                                                    (?# match any additional optional attributes )
+				><\/textarea>                                                       (?# the closing of the textarea )
+			)/x',
             sprintf(
                 '<textarea$1name="%s"$2</textarea><textarea name="comment" style="display:none" rows="1" cols="1"></textarea>%s',
                 self::$_secret,
