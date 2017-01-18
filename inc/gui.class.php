@@ -181,7 +181,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									<?php esc_html_e( 'Trust commenters with a Gravatar', 'antispam-bee' ); ?>
 									<span><?php $link1 = sprintf(
 										'<a href="%s" target="_blank" rel="noopener noreferrer">',
-											esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar', 'antispam-bee' ) )
+											esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar', 'antispam-bee' ),
+											       'https' )
 										);
 									/* translators: %s: <a> html tag with link to documentation */
 									echo sprintf(
@@ -237,7 +238,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									<?php esc_html_e( 'Use a public antispam database', 'antispam-bee' ); ?>
 									<span><?php $link2 = sprintf(
 											'<a href="%s" target="_blank" rel="noopener noreferrer">',
-												esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar', 'antispam-bee' ) )
+												esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar', 'antispam-bee' ),
+												       'https' )
 										);
 										/* translators: %s: <a> html tag with link to Tornevall (%1$s) and documentation (%2$s) */
 										echo sprintf(
