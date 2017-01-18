@@ -376,7 +376,7 @@ class Antispam_Bee {
 				'ignore_type' 		=> 0,
 
 				'reasons_enable'	=> 0,
-				'secret'	        => substr( sha1( md5( NONCE_SALT ) ), 0, 10 ),
+				'secret'	        => substr( sha1( md5( ABSPATH ) ), 0, 10 ),
 				'ignore_reasons'	=> array()
 			),
 			'reasons' => array(
@@ -1091,14 +1091,15 @@ class Antispam_Bee {
 			return;
 		}
 
+		$post_id = (int) self::get_key( $_POST, 'comment_post_ID' );
 		/* Form fields */
 		$hidden_field = self::get_key($_POST, 'comment');
-		$plugin_field = self::get_key($_POST, self::$_secret);
+		$plugin_field = self::get_key( $_POST, self::get_secret_for_post( $post_id ) );
 
 		/* Hidden field check */
 		if ( empty($hidden_field) && ! empty($plugin_field) ) {
 			$_POST['comment'] = $plugin_field;
-			unset( $_POST[self::$_secret] );
+			unset( $_POST[ self::get_secret_for_post( $post_id ) ] );
 		} else {
 			$_POST['ab_spam__hidden_field'] = 1;
 		}
@@ -1246,7 +1247,7 @@ class Antispam_Bee {
 			'#<textarea(.+?)name=["\']comment["\'](.+?)</textarea>#s',
             sprintf(
                 '<textarea$1name="%s"$2</textarea><textarea$1name="comment" style="display:none" rows="1" cols="1"></textarea>%s',
-                self::$_secret,
+                self::get_secret_for_post( get_the_ID() ),
                 $init_time_field
             ),
 			$data,
@@ -2345,6 +2346,18 @@ class Antispam_Bee {
 			'daily_stats',
 			array_slice($stats, 0, 31, true)
 		);
+	}
+
+	/**
+	 * Returns the secret of a post used in the textarea name attribute.
+	 *
+	 * @param int $post_id
+	 *
+	 * @return string
+	 */
+	public static function get_secret_for_post( $post_id ) {
+
+		return substr( sha1( md5( self::$_secret . get_the_title( (int) $post_id ) ) ), 0, 10 );
 	}
 }
 

@@ -41,7 +41,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		if ( ! empty( $_POST['ab_secret'] ) ) {
 			$secret = sanitize_text_field( wp_unslash( $_POST['ab_secret'] ) );
 		} else {
-			$secret = substr( sha1( md5( NONCE_SALT . time() ) ), 0, 10 );
+			$secret = substr( sha1( md5( ABSPATH ) ), 0, 10 );
 		}
 		/* Optionen ermitteln */
 		$options = array(
