@@ -346,7 +346,7 @@ class Antispam_Bee {
 	{
 		self::$_base   = plugin_basename(__FILE__);
 
-		$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : md5( ABSPATH );
+		$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
 		self::$defaults = array(
 			'options' => array(
 				/* Allgemein */
