@@ -179,7 +179,15 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_gravatar_check" id="ab_gravatar_check" value="1" <?php checked($options['gravatar_check'], 1) ?> />
 								<label for="ab_gravatar_check">
 									<?php esc_html_e( 'Trust commenters with a Gravatar', 'antispam-bee' ); ?>
-									<span><?php _e( 'Check if commenter has a Gravatar image. Please note the <a href="https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar" target="_blank" rel="noopener noreferrer">privacy notice</a> for this option.', 'antispam-bee' ); ?></span>
+									<span><?php $link1 = sprintf(
+										'<a href="%s" target="_blank" rel="noopener noreferrer">',
+											esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar', 'antispam-bee' ) )
+										);
+									/* translators: %s: <a> html tag with link to documentation */
+									echo sprintf(
+										__( 'Check if commenter has a Gravatar image. Please note the %sprivacynotice</a> for this option.', 'antispam-bee' ),
+										$link1 );
+										?></span>
 								</label>
 							</li>
 
@@ -227,7 +235,16 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_dnsbl_check" id="ab_dnsbl_check" value="1" <?php checked($options['dnsbl_check'], 1) ?> />
 								<label for="ab_dnsbl_check">
 									<?php esc_html_e( 'Use a public antispam database', 'antispam-bee' ); ?>
-									<span><?php _e( 'Matching the ip address with <a href="http://www.stopforumspam.com/" target="_blank" rel="noopener noreferrer">Stopforumspam</a>. Please note the <a href="https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#use-a-public-antispam-database" target="_blank" rel="noopener noreferrer">privacy notice</a> for this option.', 'antispam-bee' ); ?></span>
+									<span><?php $link2 = sprintf(
+											'<a href="%s" target="_blank" rel="noopener noreferrer">',
+												esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar', 'antispam-bee' ) )
+										);
+										/* translators: %s: <a> html tag with link to Tornevall (%1$s) and documentation (%2$s) */
+										echo sprintf(
+											__( 'Matching the ip address with %1$sTornevall</a>. Please note the %2$sprivacy notice</a> for this option.', 'antispam-bee' ),
+												'<a href="https://dnsbl.tornevall.org" target="_blank" rel="noopener noreferrer">',
+												$link2 );
+										?></span>
 								</label>
 							</li>
 						</ul>
