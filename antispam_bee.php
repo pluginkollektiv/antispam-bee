@@ -1527,6 +1527,9 @@ class Antispam_Bee {
 				'body'	=> '^dating|sex|lotto|pharmacy$',
 				'email'	=> '@mail\.ru|@yandex\.$',
 			),
+			array(
+				'body' => '^(?=.{0,2}$).*'
+			),
 		);
 
 		/* Spammy author */
