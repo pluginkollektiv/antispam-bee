@@ -1286,13 +1286,13 @@ class Antispam_Bee {
 		$id_script = '';
 		if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
 			$output .= 'id="' . self::get_secret_id_for_post( get_the_ID() ) . '" ';
-			$id_script = '<script type="text/javascript">document.getElementById( "' . esc_js( self::get_secret_id_for_post( get_the_ID() ) ) . '").setAttribute( "id", "comment" );</script>';
+			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "" );document.getElementById("' . esc_js( self::get_secret_id_for_post( get_the_ID() ) ) . '").setAttribute( "id", "comment" );</script>';
 		}
 
 		$output .= ' name="' . self::get_secret_for_post( get_the_ID() ) . '" ';
 		$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
 		$output .= $matches['after'] . '>';
-		$output .= '</textarea>';
+		$output .= '</textarea><textarea id="comment" name="comment" style="display:none" rows="1" cols="1"></textarea>';
 		$output .= $id_script;
 		$output .= $init_time_field;
 
