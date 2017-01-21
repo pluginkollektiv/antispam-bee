@@ -243,8 +243,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										);
 										/* translators: %s: <a> html tag with link to Tornevall (%1$s) and documentation (%2$s) */
 										echo sprintf(
-											__( 'Matching the ip address with %1$sTornevall</a>. Please note the %2$sprivacy notice</a> for this option.', 'antispam-bee' ),
-												'<a href="https://dnsbl.tornevall.org" target="_blank" rel="noopener noreferrer">',
+											__( 'Matching the ip address with %1$sStop Forum Spam</a>. Please note the %2$sprivacy notice</a> for this option.', 'antispam-bee' ),
+												'<a href="https://www.stopforumspam.com/" target="_blank" rel="noopener noreferrer">',
 												$link2 );
 										?></span>
 								</label>
