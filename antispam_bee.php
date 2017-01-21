@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Antispam Bee
-Description: Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes protection against trackback spam.
+Description: Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes protection against trackback spam and privacy hints.
 Author:      pluginkollektiv
 Author URI:  http://pluginkollektiv.org
 Plugin URI:  https://wordpress.org/plugins/antispam-bee/
