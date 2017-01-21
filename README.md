@@ -8,7 +8,7 @@
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-“…another popular solution to fight spam is Antispam Bee”—Matt Mullenweg, Q&A WordCamp Europe 2014
+Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes protection against trackback spam and privacy hints.
 
 ## Description ##
 Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively and without captchas. It is free of charge, ad-free and compliant with European data privacy standards.
