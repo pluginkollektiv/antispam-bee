@@ -5,8 +5,8 @@ jQuery(document).ready(
 				nextAll = $$.parent('li').nextAll();
 
 			nextAll.css(
-				'visibility',
-				( $$.is(':checked') ? 'visible' : 'hidden' )
+				'display',
+				( $$.is(':checked') ? 'list-item' : 'none' )
 			);
 		}
 
