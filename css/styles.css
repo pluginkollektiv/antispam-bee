@@ -136,12 +136,11 @@
     border: 0;
 }
 .ab-column > ul > li {
-    width: 330px;
+    width: 318px;
     margin: 0 0 36px;
-    padding: 10px 0 12px 12px;
+    padding: 10px 12px 12px;
     position: relative;
     background: #fff;
-    border-radius: 3px;
 }
 
 .ab-column > ul > li a {
@@ -153,13 +152,15 @@
 }
 
 .ab-column > ul > li input[type="checkbox"] {
-    margin: 0 8px 0 0;
+    width: 24px;
+    min-width: 24px;
+    height: 24px;
 }
 .ab-column > ul > li label {
     cursor: default;
     display: inline-block;
     line-height: 24px;
-    max-width: 288px;
+    width: 286px;
 }
 .ab-column > ul > li label span {
     color: #8e959c;
