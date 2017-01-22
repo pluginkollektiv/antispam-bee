@@ -152,15 +152,15 @@
 }
 
 .ab-column > ul > li input[type="checkbox"] {
-    width: 24px;
-    min-width: 24px;
-    height: 24px;
+    width: 16px;
+    min-width: 16px;
+    height: 16px;
 }
 .ab-column > ul > li label {
     cursor: default;
     display: inline-block;
     line-height: 24px;
-    width: 286px;
+    width: 294px;
 }
 .ab-column > ul > li label span {
     color: #8e959c;
