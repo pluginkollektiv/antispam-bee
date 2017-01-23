@@ -63,17 +63,26 @@ On sites operating from within the EU the option *Use a public antispam database
 Antispam Bee works best with default WordPress comments. It is not compatible with Jetpack or Disqus Comments as those plugins load the comment form within an iframe. Thus Antispam Bee can not access the comment form directly.
 It also won’t work with any AJAX-powered comment forms.
 
-### On how many web sites or blogs can I use Antispam Bee? ###
-On as many as you wish. There is no limitation to the number of sites you use the plugin on.
-
-### Do I have to register for any sort of paid service if my site gets a lot of comment spam? ###
-No, Antispam Bee is free forever, for both private and commercial projects.
-
 ### Does Antispam Bee store any private user data, IP addresses or the like? ###
 Nope. Antispam Bee is developed in Germany and Switzerland. You might have heard we can be a bit nitpicky over here when it comes to privacy.
 
 ### Will I have to edit any theme templates to get Antispam Bee to work? ###
 No, the plugin works as is. You may want to configure your favorite settings, though.
+
+### Does Antispam Bee work with shortened IPs? ###
+Generally yes. However, commissioning the Antispam plugin for canceled or shortened IP addresses in comment metadata is not recommended. Because the name and the e-mail address of the comments are not unique, an IP address is the only reliable measure. The more complete the stored IP addresses, the more reliable the assignment or detection of spam.
+
+### How can I submit undetected spam? ###
+If the Antispam plugin has passed some spam comments, these comments can be reported for analysis. A [Google table](http://goo.gl/forms/ITzVHXkLVL) was created for this purpose.
+
+### Antispam Bee with Varnish? ###
+If WordPress is operated with Apache + Varnish, the actual IP address of the visitors does not appear in WordPress. Accordingly the Antispam-Plugin lacks the base for the correct functionality. An adaptation in the Varnish configuration file /etc/varnish/default.vcl provides a remedy and forwards the original (not from Apache) IP address in the HTTP header X-Forwarded-For:
+`if (req.restarts == 0) {`
+    `set req.http.X-Forwarded-For = client.ip;`
+`}`
+
+### Are there some paid services or limitations? ###
+No, Antispam Bee is free forever, for both private and commercial projects. You can use it on as many sites as you want. There is no limitation to the number of sites you use the plugin on.
 
 A complete documentation is available in the [GitHub repository Wiki](https://github.com/pluginkollektiv/antispam-bee/wiki).
 
