@@ -291,7 +291,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<label>
 									<?php echo sprintf(
 										esc_html__( 'Delete existing spam after %s days', 'antispam-bee' ),
-										'<input type="text" name="ab_cronjob_interval" value="' .esc_attr($options['cronjob_interval']). '" class="ab-mini-field" />'
+										'<input type="number" min="0" name="ab_cronjob_interval" value="' .esc_attr($options['cronjob_interval']). '" class="ab-mini-field" />'
 									) ?>
 									<span><?php esc_html_e('Cleaning up the database from old entries', 'antispam-bee') ?></span>
 								</label>
