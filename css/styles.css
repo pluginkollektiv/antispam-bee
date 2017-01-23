@@ -100,18 +100,20 @@
 /* @group Formular */
 
 .ab-column input[type="text"],
+.ab-column input[type="number"],
 .ab-column select {
     height: 20px;
     font-size: 11px;
     text-align: center;
     background: #f8f8f9;
+    padding: 0;
 }
 .ab-column select[multiple] {
     width: 150px;
     height: 56px;
 }
 .ab-column input.ab-mini-field {
-    width: 30px;
+    width: 40px;
 }
 .ab-column input.ab-medium-field {
     width: 120px;
