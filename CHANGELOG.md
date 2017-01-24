@@ -115,10 +115,10 @@
 
 ### 2.5.7 ###
 * **English**
-   * Optional logfile with spam entries e.g. for [Fail2Ban](https://gist.github.com/sergejmueller/5622883)
+   * Optional logfile with spam entries e.g. for [Fail2Ban](https://help.ubuntu.com/community/Fail2ban)
    * Filter `antispam_bee_notification_subject` for a custom subject in notifications
 * **Deutsch**
-   * Optionale Spam-Logdatei z.B. für [Fail2Ban](https://github.com/sergejmueller/sergejmueller.github.io/wiki/Fail2Ban:-IP-Blacklist)
+   * Optionale Spam-Logdatei z.B. für [Fail2Ban](https://wiki.ubuntuusers.de/fail2ban/)
    * Filter `antispam_bee_notification_subject` für eigenen Betreff in Benachrichtigungen
    * Detaillierte Informationen zum Update auf [Google+](https://plus.google.com/110569673423509816572/posts/iCfip2ggYt9)
 
