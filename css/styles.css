@@ -100,18 +100,20 @@
 /* @group Formular */
 
 .ab-column input[type="text"],
+.ab-column input[type="number"],
 .ab-column select {
     height: 20px;
     font-size: 11px;
     text-align: center;
     background: #f8f8f9;
+    padding: 0;
 }
 .ab-column select[multiple] {
     width: 150px;
     height: 56px;
 }
 .ab-column input.ab-mini-field {
-    width: 30px;
+    width: 40px;
 }
 .ab-column input.ab-medium-field {
     width: 120px;
@@ -136,12 +138,11 @@
     border: 0;
 }
 .ab-column > ul > li {
-    width: 330px;
+    width: 318px;
     margin: 0 0 36px;
-    padding: 10px 0 12px 12px;
+    padding: 10px 12px 12px;
     position: relative;
     background: #fff;
-    border-radius: 3px;
 }
 
 .ab-column > ul > li a {
@@ -153,13 +154,15 @@
 }
 
 .ab-column > ul > li input[type="checkbox"] {
-    margin: 0 8px 0 0;
+    width: 16px;
+    min-width: 16px;
+    height: 16px;
 }
 .ab-column > ul > li label {
     cursor: default;
     display: inline-block;
     line-height: 24px;
-    max-width: 288px;
+    width: 294px;
 }
 .ab-column > ul > li label span {
     color: #8e959c;
