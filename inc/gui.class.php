@@ -291,7 +291,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											'https' )
 										); ?>
 									<li>
-										<input type="textarea" name="ab_country_black" id="ab_country_black" value="<?php echo esc_attr($options['country_black']); ?>" class="ab-medium-field code" />
+										<textarea name="ab_country_black" id="ab_country_black" class="ab-medium-field code"><?php echo esc_attr($options['country_black']); ?></textarea>
 										<label for="ab_country_black">
 											<span><?php
 												/* translators: %s: <a> html tag with link to ISO codes reference */
@@ -302,7 +302,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										</label>
 									</li>
 									<li>
-										<input type="textarea" name="ab_country_white" id="ab_country_white" value="<?php echo esc_attr($options['country_white']); ?>" class="ab-medium-field code" />
+										<textarea name="ab_country_white" id="ab_country_white" class="ab-medium-field code"><?php echo esc_attr($options['country_white']); ?></textarea>
 										<label for="ab_country_white">
 											<span><?php
 												/* translators: %s: <a> html tag with link to ISO codes reference */
