@@ -297,7 +297,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 												/* translators: %s: <a> html tag with link to ISO codes reference */
 												echo sprintf(
 													__( 'Blacklist  %sISO Codes</a> for this option.', 'antispam-bee' ),
-													$link1 );
+													$iso_codes_link );
 											?></span>
 										</label>
 									</li>
@@ -308,7 +308,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 												/* translators: %s: <a> html tag with link to ISO codes reference */
 												echo sprintf(
 													__( 'Whitelist  %sISO Codes</a> for this option.', 'antispam-bee' ),
-													$link1 );
+													$iso_codes_link );
 											?></span>
 										</label>
 									</li>
