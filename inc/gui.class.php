@@ -276,7 +276,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										?></span>
 								</label>
 							</li>
-							
+
 							<li>
 								<input type="checkbox" name="ab_country_code" id="ab_country_code" value="1" <?php checked($options['country_code'], 1) ?> />
 								<label for="ab_country_code">
@@ -285,16 +285,31 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								</label>
 
 								<ul>
+									<?php $iso_codes_link = sprintf(
+										'<a href="%s" target="_blank" rel="noopener noreferrer">',
+										esc_url( __( 'https://www.iso.org/iso/country_names_and_code_elements', 'antispam-bee' ),
+											'https' )
+										); ?>
 									<li>
 										<input type="textarea" name="ab_country_black" id="ab_country_black" value="<?php echo esc_attr($options['country_black']); ?>" class="ab-medium-field code" />
 										<label for="ab_country_black">
-											Blacklist <a href="https://www.iso.org/iso/country_names_and_code_elements" target="_blank" rel="noopener noreferrer">ISO Codes</a>
+											<span><?php
+												/* translators: %s: <a> html tag with link to ISO codes reference */
+												echo sprintf(
+													__( 'Blacklist  %sISO Codes</a> for this option.', 'antispam-bee' ),
+													$link1 );
+											?></span>
 										</label>
 									</li>
 									<li>
 										<input type="textarea" name="ab_country_white" id="ab_country_white" value="<?php echo esc_attr($options['country_white']); ?>" class="ab-medium-field code" />
 										<label for="ab_country_white">
-											Whitelist <a href="https://www.iso.org/iso/country_names_and_code_elements" target="_blank" rel="noopener noreferrer">ISO Codes</a>
+											<span><?php
+												/* translators: %s: <a> html tag with link to ISO codes reference */
+												echo sprintf(
+													__( 'Whitelist  %sISO Codes</a> for this option.', 'antispam-bee' ),
+													$link1 );
+											?></span>
 										</label>
 									</li>
 								</ul>
