@@ -1292,7 +1292,7 @@ class Antispam_Bee {
 		$output .= ' name="' . self::get_secret_for_post( get_the_ID() ) . '" ';
 		$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
 		$output .= $matches['after'] . '>';
-		$output .= '</textarea><textarea id="comment" name="comment" style="width:10px;position:absolute;left:-10000000px"></textarea>';
+		$output .= '</textarea><textarea id="comment" aria-hidden="true" name="comment" style="width:10px !important;position:absolute !important;left:-10000000px !important"></textarea>';
 		$output .= $id_script;
 		$output .= $init_time_field;
 
