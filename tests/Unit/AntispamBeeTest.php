@@ -92,7 +92,7 @@ class FactoryTest extends TestCase {
 			         $reason
 		         );
 
-		// We need to explcitly trigger the handling and...
+		// We need to explicitly trigger the handling and...
 		Testee::handle_incoming_request( $comment );
 		// ... let Antispam Bee add the spam reason as comment meta.
 		Testee::add_spam_reason_to_comment( 1 );
