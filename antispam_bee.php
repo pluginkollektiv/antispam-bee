@@ -72,6 +72,34 @@ class Antispam_Bee {
   			)
   		);
 
+	    if ( self::get_option( 'js_nonce' ) ) {
+		    if ( self::_has_rest() ) {
+			    add_action(
+				    'rest_api_init',
+				    array(
+					    __CLASS__,
+					    'register_rest'
+				    )
+			    );
+		    } else {
+			    add_action(
+				    'wp_ajax_nopriv_abs-nonce',
+				    array(
+					    __CLASS__,
+					    'ajax_create_nonce'
+				    )
+			    );
+
+			    add_action(
+				    'wp_ajax_abs-nonce',
+				    array(
+					    __CLASS__,
+					    'ajax_create_nonce'
+				    )
+			    );
+		    }
+	    }
+
 		/* AJAX & Co. */
 		if ( (defined('DOING_AJAX') && DOING_AJAX) or (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) ) {
 			return;
@@ -377,7 +405,8 @@ class Antispam_Bee {
 				'ignore_type' 		=> 0,
 
 				'reasons_enable'	=> 0,
-				'ignore_reasons'	=> array()
+				'ignore_reasons'	=> array(),
+				'js_nonce'          => 0,
 			),
 			'reasons' => array(
 				'css'		=> 'CSS Hack',
@@ -387,7 +416,8 @@ class Antispam_Bee {
 				'localdb'	=> 'Local DB Spam',
 				'dnsbl'		=> 'DNSBL Spam',
 				'bbcode'	=> 'BBCode',
-				'regexp'	=> 'RegExp'
+				'regexp'	=> 'RegExp',
+				'nonce'	    => 'JS Nonce',
 			)
 		);
 	}
@@ -1239,17 +1269,125 @@ class Antispam_Bee {
 			$init_time_field = '';
 		}
 
+		/* Build JS Nonce Field */
+		if( self::get_option( 'js_nonce' ) ) {
+			$js_nonce = self::get_js_nonce_html();
+		} else {
+			$js_nonce = '';
+		}
+
 		/* Inject HTML */
 		return preg_replace(
 			'#<textarea(.+?)name=["\']comment["\'](.+?)</textarea>#s',
             sprintf(
-                '<textarea$1name="%s"$2</textarea><textarea name="comment" style="display:none" rows="1" cols="1"></textarea>%s',
+                '<textarea$1name="%s"$2</textarea><textarea name="comment" style="display:none" rows="1" cols="1"></textarea>%s%s',
                 self::$_secret,
-                $init_time_field
+	            $init_time_field,
+	            $js_nonce
             ),
 			$data,
 			1
 		);
+	}
+
+	/**
+	 * Handles the Ajax request if REST API does not exist.
+	 *
+	 * @since 2.7.0
+	 */
+	public function ajax_create_nonce() {
+
+		$nonce = self::get_key( $_GET, '_wpnonce' );
+		echo wp_json_encode( self::create_nonce( array(
+			'action' => 'abs-nonce',
+			'_wpnonce' => $nonce,
+		) ) );
+		die();
+	}
+
+	/**
+	 * Creates the nonce for the Ajax request.
+	 *
+	 * @since 2.7.0
+	 * @param $request The Request
+	 * @return string  The Nonce, to be placed in the ab_nonce input field.
+	 */
+	public static function create_nonce( $request ) {
+
+		if (
+			empty( $request['action'] )
+			|| 'abs-nonce' !== $request['action']
+			|| empty( $request['_wpnonce'] )
+			|| ! wp_verify_nonce( $request['_wpnonce'], 'wp_rest' )
+		) {
+			return wp_create_nonce( 'abs-trap' );
+		}
+		return wp_create_nonce( 'abs-correct' );
+	}
+
+	/**
+	 * Generate the HTML for the JS Nonce functionality.
+	 *
+	 * @since 2.7.0
+	 * @return string The HTML String.
+	 */
+	private static function get_js_nonce_html() {
+
+		if ( ! self::_has_rest() ) {
+			$url = esc_url( admin_url( 'admin-ajax.php' ) );
+		} else {
+			$url = esc_url( rest_url( '/antispam-bee/v1/jsnonce/' ) );
+		}
+		$url = add_query_arg(
+			array(
+				'action'   => 'abs-nonce',
+				'_wpnonce' => wp_create_nonce( 'wp_rest' ),
+			),
+			$url
+		);
+
+		$string = sprintf(
+			'<input type="hidden" name="ab_nonce" id="ab_nonce" value="%s" /><script type="text/javascript">var xmlhttp;xmlhttp=new XMLHttpRequest,xmlhttp.onreadystatechange=function(){4==xmlhttp.readyState&&200==xmlhttp.status&&(document.getElementById("ab_nonce").value=xmlhttp.responseText.slice(1,-1))},xmlhttp.open("GET","%s",!0),xmlhttp.send();</script>',
+			esc_attr( wp_create_nonce( 'abs-wrong' ) ),
+			$url
+		);
+		return $string;
+	}
+
+	/**
+	 * Register the REST endpoint.
+	 *
+	 * @since 2.7.0
+	 */
+	public static function register_rest() {
+
+		register_rest_route(
+			'antispam-bee/v1',
+			'jsnonce',
+			array(
+				'methods' => 'GET',
+				'args'    => array(
+					'_wpnonce' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'action' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'callback' => array( __CLASS__, 'create_nonce' ),
+			)
+		);
+	}
+
+	/**
+	 * Does the current WP version has the REST API?
+	 *
+	 * @since 2.7.0
+	 * @return bool
+	 */
+	private static function _has_rest() {
+
+		return function_exists( 'register_rest_route' );
 	}
 
 
@@ -1384,6 +1522,13 @@ class Antispam_Bee {
 			);
 		}
 
+		/* Nonce Field */
+		if ( $options['js_nonce'] && ! self::_verify_nonce() ) {
+			return array(
+				'reason' => 'nonce'
+			);
+		}
+
 		/* BBCode Spam */
 		if ( $options['bbcode_check'] && self::_is_bbcode_spam($body) ) {
 			return array(
@@ -1460,13 +1605,13 @@ class Antispam_Bee {
 
 
 	/**
-	* Check for comment action time
-	*
-	* @since   2.6.4
-	* @change  2.6.4
-	*
-	* @return  boolean    TRUE if the action time is less than 5 seconds
-	*/
+	 * Check for comment action time
+	 *
+	 * @since   2.6.4
+	 * @change  2.6.4
+	 *
+	 * @return  boolean    TRUE if the action time is less than 5 seconds
+	 */
 
 	private static function _is_shortest_time()
 	{
@@ -1481,6 +1626,26 @@ class Antispam_Bee {
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * Check for the Nonce
+	 *
+	 * @since   2.7.0
+	 *
+	 * @return  boolean    TRUE if the nonce was verified.
+	 */
+
+	private static function _verify_nonce()
+	{
+		/* Comment init time */
+		if ( ! $nonce = self::get_key($_POST, 'ab_nonce') ) {
+			return false;
+		}
+
+		$nonce = sanitize_text_field( wp_unslash( $nonce ) );
+		return wp_verify_nonce( $nonce, 'abs-correct' );
 	}
 
 

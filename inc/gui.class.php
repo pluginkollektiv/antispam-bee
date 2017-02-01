@@ -65,7 +65,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 			'bbcode_check'		=> (int)(!empty($_POST['ab_bbcode_check'])),
 			'gravatar_check'	=> (int)(!empty($_POST['ab_gravatar_check'])),
-			'dnsbl_check'		=> (int)(!empty($_POST['ab_dnsbl_check']))
+			'dnsbl_check'		=> (int)(!empty($_POST['ab_dnsbl_check'])),
+			'js_nonce'		    => (int)(!empty($_POST['ab_js_nonce'])),
 		);
 
 		/* Keine Tagmenge eingetragen? */
@@ -229,6 +230,14 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<label for="ab_spam_ip">
 									<?php esc_html_e( 'Look in the local spam database', 'antispam-bee' ); ?>
 									<span><?php esc_html_e( 'Already marked as spam? Yes? No?', 'antispam-bee' ); ?></span>
+								</label>
+							</li>
+
+							<li>
+								<input type="checkbox" name="ab_js_nonce" id="ab_js_nonce" value="1" <?php checked($options['js_nonce'], 1) ?> />
+								<label for="ab_js_nonce">
+									<?php esc_html_e('Use Javascript', 'antispam-bee') ?>
+									<span><?php esc_html_e('Use a Javascript generated security check.', 'antispam-bee') ?></span>
 								</label>
 							</li>
 
