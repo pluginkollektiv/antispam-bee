@@ -213,7 +213,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										);
 									/* translators: %s: <a> html tag with link to documentation */
 									echo sprintf(
-										__( 'Check if commenter has a Gravatar image. Please note the %sprivacynotice</a> for this option.', 'antispam-bee' ),
+										__( 'Check if commenter has a Gravatar image. Please note the %sprivacy notice</a> for this option.', 'antispam-bee' ),
 										$link1 );
 										?></span>
 								</label>
