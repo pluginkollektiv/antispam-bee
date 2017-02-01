@@ -288,13 +288,13 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									<li>
 										<input type="text" name="ab_country_black" id="ab_country_black" value="<?php echo esc_attr($options['country_black']); ?>" class="ab-medium-field code" />
 										<label for="ab_country_black">
-											Blacklist <a href="https://www.iso.org/obp/ui/" target="_blank">ISO Codes</a>
+											Blacklist <a href="https://www.iso.org/obp/ui/" target="_blank" rel="noopener noreferrer">ISO Codes</a>
 										</label>
 									</li>
 									<li>
 										<input type="text" name="ab_country_white" id="ab_country_white" value="<?php echo esc_attr($options['country_white']); ?>" class="ab-medium-field code" />
 										<label for="ab_country_white">
-											Whitelist <a href="https://www.iso.org/obp/ui/" target="_blank">ISO Codes</a>
+											Whitelist <a href="https://www.iso.org/obp/ui/" target="_blank" rel="noopener noreferrer">ISO Codes</a>
 										</label>
 									</li>
 								</ul>
