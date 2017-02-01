@@ -70,10 +70,10 @@ Nope. Antispam Bee is developed in Germany and Switzerland. You might have heard
 No, the plugin works as is. You may want to configure your favorite settings, though.
 
 ### Does Antispam Bee work with shortened IPs? ###
-Generally yes. However, commissioning the Antispam plugin for canceled or shortened IP addresses in comment metadata is not recommended. Because the name and the e-mail address of the comments are not unique, an IP address is the only reliable measure. The more complete the stored IP addresses, the more reliable the assignment or detection of spam.
+Generally yes. However, commissioning the Antispam Bee plugin for canceled or shortened IP addresses in comment metadata is not recommended. Because the name and the e-mail address of the comments are not unique, an IP address is the only reliable measure. The more complete the stored IP addresses, the more reliable the assignment or detection of spam.
 
 ### How can I submit undetected spam? ###
-If the Antispam plugin has passed some spam comments, these comments can be reported for analysis. A [Google table](http://goo.gl/forms/ITzVHXkLVL) was created for this purpose.
+If the antispam plugin has passed some spam comments, these comments can be reported for analysis. A [Google table](http://goo.gl/forms/ITzVHXkLVL) was created for this purpose.
 
 ### Antispam Bee with Varnish? ###
 If WordPress is operated with Apache + Varnish, the actual IP address of the visitors does not appear in WordPress. Accordingly the Antispam-Plugin lacks the base for the correct functionality. An adaptation in the Varnish configuration file /etc/varnish/default.vcl provides a remedy and forwards the original (not from Apache) IP address in the HTTP header X-Forwarded-For:
