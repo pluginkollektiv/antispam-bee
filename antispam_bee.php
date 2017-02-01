@@ -1502,19 +1502,32 @@ class Antispam_Bee {
 			'host',
 			'body',
 			'email',
-			'author'
+			'author',
 		);
 
 		/* Regexp */
 		$patterns = array(
-			0 => array(
+			array(
 				'host'	=> '^(www\.)?\d+\w+\.com$',
 				'body'	=> '^\w+\s\d+$',
-				'email'	=> '@gmail.com$'
+				'email'	=> '@gmail.com$',
 			),
-			1 => array(
-				'body'	=> '\<\!.+?mfunc.+?\>'
-			)
+			array(
+				'body'	=> '\<\!.+?mfunc.+?\>',
+			),
+			array(
+				'author' => 'moncler|north face|vuitton|handbag|burberry|outlet|prada|cialis|viagra|maillot|oakley|ralph lauren|ray ban|iphone|プラダ',
+			),
+			array(
+				'host' => '^(www\.)?fkbook\.co\.uk$|^(www\.)?nsru\.net$|^(www\.)?goo\.gl$|^(www\.)?bit\.ly$',
+			),
+			array(
+				'body' => 'target[t]?ed (visitors|traffic)|viagra|cialis',
+			),
+			array(
+				'body'	=> '^dating|sex|lotto|pharmacy$',
+				'email'	=> '@mail\.ru|@yandex\.$',
+			),
 		);
 
 		/* Spammy author */
@@ -1523,13 +1536,13 @@ class Antispam_Bee {
 				'body' => sprintf(
 					'<a.+?>%s<\/a>$',
 					$quoted_author
-				)
+				),
 			);
 			$patterns[] = array(
 				'body' => sprintf(
 					'%s https?:.+?$',
 					$quoted_author
-				)
+				),
 			);
 			$patterns[] = array(
 				'email'	 => '@gmail.com$',
@@ -1537,7 +1550,7 @@ class Antispam_Bee {
 				'host'	 => sprintf(
 					'^%s$',
 					$quoted_author
-				)
+				),
 			);
 		}
 
