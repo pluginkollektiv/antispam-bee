@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Antispam Bee
-Description: Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes protection against trackback spam.
+Description: Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes privacy hints and protection against trackback spam.
 Author:      pluginkollektiv
 Author URI:  http://pluginkollektiv.org
 Plugin URI:  https://wordpress.org/plugins/antispam-bee/
@@ -339,7 +339,7 @@ class Antispam_Bee {
 	* Initialisierung der internen Variablen
 	*
 	* @since   2.4
-	* @change  2.6.5
+	* @change  2.7.0
 	*/
 
 	private static function _init_internal_vars()
@@ -363,6 +363,10 @@ class Antispam_Bee {
 				'dashboard_count' 	=> 0,
 
 				/* Filter */
+				'country_code' 		=> 0,
+				'country_black'		=> '',
+				'country_white'		=> '',
+
 				'dnsbl_check'		=> 0,
 				'bbcode_check'		=> 1,
 
@@ -386,6 +390,7 @@ class Antispam_Bee {
 				'empty'		=> 'Empty Data',
 				'server'	=> 'Fake IP',
 				'localdb'	=> 'Local DB Spam',
+				'country'	=> 'Country Check',
 				'dnsbl'		=> 'DNSBL Spam',
 				'bbcode'	=> 'BBCode',
 				'regexp'	=> 'RegExp'
@@ -522,7 +527,8 @@ class Antispam_Bee {
 		return array_merge(
 			$input,
 			array(
-				'<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML" target="_blank">PayPal</a>',
+				'<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Donate', 'antispam-bee' ) . '</a>',
+				'<a href="https://wordpress.org/support/plugin/antispam-bee" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Support', 'antispam-bee' ) . '</a>',
 			)
 		);
 	}
@@ -1304,7 +1310,7 @@ class Antispam_Bee {
 	* Prüfung der Trackbacks
 	*
 	* @since   2.4
-	* @change  2.6.6
+	* @change  2.7.0
 	*
 	* @param   array  $comment  Daten des Trackbacks
 	* @return  array            Array mit dem Verdachtsgrund [optional]
@@ -1361,14 +1367,21 @@ class Antispam_Bee {
 				'reason' => 'dnsbl'
 			);
 		}
+
+		/* Country Code prüfen */
+		if ( $options['country_code'] && self::_is_country_spam($ip) ) {
+			return array(
+				'reason' => 'country'
+			);
+		}
 	}
 
 
 	/**
-	* Prüfung den Kommentar
+	* Prüfung des Kommentars
 	*
 	* @since   2.4
-	* @change  2.6.5
+	* @change  2.7.0
 	*
 	* @param   array  $comment  Daten des Kommentars
 	* @return  array            Array mit dem Verdachtsgrund [optional]
@@ -1449,6 +1462,7 @@ class Antispam_Bee {
 		if ( $options['regexp_check'] && self::_is_regexp_spam(
 			array(
 				'ip'	 => $ip,
+				'rawurl' => $url,
 				'host'	 => parse_url($url, PHP_URL_HOST),
 				'body'	 => $body,
 				'email'	 => $email,
@@ -1471,6 +1485,13 @@ class Antispam_Bee {
 		if ( $options['dnsbl_check'] && self::_is_dnsbl_spam($ip) ) {
 			return array(
 				'reason' => 'dnsbl'
+			);
+		}
+
+		/* Country Code prüfen */
+		if ( $options['country_code'] && self::_is_country_spam($ip) ) {
+			return array(
+				'reason' => 'country'
 			);
 		}
 	}
@@ -1549,19 +1570,32 @@ class Antispam_Bee {
 			'host',
 			'body',
 			'email',
-			'author'
+			'author',
 		);
 
 		/* Regexp */
 		$patterns = array(
-			0 => array(
+			array(
 				'host'	=> '^(www\.)?\d+\w+\.com$',
 				'body'	=> '^\w+\s\d+$',
-				'email'	=> '@gmail.com$'
+				'email'	=> '@gmail.com$',
 			),
-			1 => array(
-				'body'	=> '\<\!.+?mfunc.+?\>'
-			)
+			array(
+				'body'	=> '\<\!.+?mfunc.+?\>',
+			),
+			array(
+				'author' => 'moncler|north face|vuitton|handbag|burberry|outlet|prada|cialis|viagra|maillot|oakley|ralph lauren|ray ban|iphone|プラダ',
+			),
+			array(
+				'host' => '^(www\.)?fkbook\.co\.uk$|^(www\.)?nsru\.net$|^(www\.)?goo\.gl$|^(www\.)?bit\.ly$',
+			),
+			array(
+				'body' => 'target[t]?ed (visitors|traffic)|viagra|cialis',
+			),
+			array(
+				'body'	=> '^dating|sex|lotto|pharmacy$',
+				'email'	=> '@mail\.ru|@yandex\.$',
+			),
 		);
 
 		/* Spammy author */
@@ -1570,13 +1604,13 @@ class Antispam_Bee {
 				'body' => sprintf(
 					'<a.+?>%s<\/a>$',
 					$quoted_author
-				)
+				),
 			);
 			$patterns[] = array(
 				'body' => sprintf(
 					'%s https?:.+?$',
 					$quoted_author
-				)
+				),
 			);
 			$patterns[] = array(
 				'email'	 => '@gmail.com$',
@@ -1584,7 +1618,7 @@ class Antispam_Bee {
 				'host'	 => sprintf(
 					'^%s$',
 					$quoted_author
-				)
+				),
 			);
 		}
 
@@ -1680,6 +1714,78 @@ class Antispam_Bee {
 		return !empty($result);
 	}
 
+
+	/**
+	* Check for country spam by (anonymized) IP
+	*
+	* @since   2.6.9
+	* @change  2.6.9
+	*
+	* @param   string	$ip  IP address
+	* @return  boolean       TRUE if the comment is spam based on country filter
+	*/
+
+	private static function _is_country_spam($ip)
+	{
+		/* Get options */
+		$options = self::get_options();
+
+		/* White & Black */
+		$white = preg_split(
+			'/ /',
+			$options['country_white'],
+			-1,
+			PREG_SPLIT_NO_EMPTY
+		);
+		$black = preg_split(
+			'/ /',
+			$options['country_black'],
+			-1,
+			PREG_SPLIT_NO_EMPTY
+		);
+
+		/* Empty lists? */
+		if ( empty($white) && empty($black) ) {
+			return false;
+		}
+
+		/* IP 2 Country API */
+		$response = wp_safe_remote_head(
+			esc_url_raw(
+				sprintf(
+					'https://api.ip2country.info/ip?%s',
+					self::_anonymize_ip($ip)
+				),
+				'https'
+			)
+		);
+
+		/* Error by WP */
+		if ( is_wp_error($response) ) {
+			return false;
+		}
+
+		/* Response code check */
+		if ( wp_remote_retrieve_response_code($response) !== 200 ) {
+			return false;
+		}
+
+		/* Get country code */
+		$country = (string)wp_remote_retrieve_header($response, 'x-country-code');
+
+		/* Country code check */
+		if ( empty($country) OR strlen($country) !== 2 ) {
+			return false;
+		}
+
+		/* Dive into blacklist */
+		if ( ! empty($black) ) {
+			return ( in_array($country, $black) );
+		}
+
+		/* Dive into whitelist */
+		return ( ! in_array($country, $white) );
+	}
 
 	/**
 	* Prüfung auf DNSBL Spam
