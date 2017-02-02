@@ -1684,13 +1684,13 @@ class Antispam_Bee {
 
 		/* White & Black */
 		$white = preg_split(
-			'/ /',
+			'/[\s,;]+/',
 			$options['country_white'],
 			-1,
 			PREG_SPLIT_NO_EMPTY
 		);
 		$black = preg_split(
-			'/ /',
+			'/[\s,;]+/',
 			$options['country_black'],
 			-1,
 			PREG_SPLIT_NO_EMPTY
