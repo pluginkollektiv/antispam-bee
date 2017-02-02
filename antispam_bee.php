@@ -50,7 +50,6 @@ class Antispam_Bee {
 	/* Init */
 	public static $defaults;
 	private static $_base;
-	private static $_secret;
 	private static $_reason;
 
 
@@ -63,6 +62,11 @@ class Antispam_Bee {
 
   	public static function init()
   	{
+	    /* Load bbPress integration */
+	    if ( function_exists( 'bbpress' ) ) {
+		    require dirname( __FILE__ ) . '/inc/bbpress.class.php';
+	    }
+
   		/* Delete spam reason */
   		add_action(
   			'unspam_comment',
@@ -345,7 +349,6 @@ class Antispam_Bee {
 	private static function _init_internal_vars()
 	{
 		self::$_base   = plugin_basename(__FILE__);
-		self::$_secret = substr(md5(get_bloginfo('url')), 0, 5). '-comment';
 
 		self::$defaults = array(
 			'options' => array(
@@ -358,6 +361,7 @@ class Antispam_Bee {
 				'time_check'		=> 0,
 				'ignore_pings' 		=> 0,
 				'always_allowed' 	=> 0,
+				'bbpress_allowed' 	=> 0,
 
 				'dashboard_chart' 	=> 0,
 				'dashboard_count' 	=> 0,
@@ -397,6 +401,57 @@ class Antispam_Bee {
 		);
 	}
 
+	/**
+	 * Get a Secret key that changes every Month
+	 *
+	 * @param string $prefix prefix
+	 * @param string $suffix suffix
+	 * @param int    $days_older_key key that is some days older for caching propose
+	 *
+	 * @return string secret key for input filds
+	 */
+	public static function _get_secret( $prefix = '', $suffix = '-comment', $days_older_key = 0 ) {
+
+		$time = time();
+		$key = substr( md5( NONCE_KEY . date( 'Y', $time ) ), date( 'n', $time ), 6 );
+
+		if ( (int) $days_older_key > 0 ) {
+			$time = $time - ( 86400 * (int)$days_older_key );
+			$key = substr( md5( NONCE_KEY . date( 'Y', $time ) ), date( 'n', $time ), 6 );
+		}
+
+		return esc_attr( $prefix . $key . $suffix );
+	}
+
+	/**
+	 * Get the $_POST content of secret
+	 *
+	 * @param string $prefix prefix
+	 * @param string $suffix suffix
+	 *
+	 * @return string post content
+	 */
+	public static function _get_secret_post( $prefix = '', $suffix = '-comment' ) {
+
+		$post = null;
+		$secret = self::_get_secret( $prefix, $suffix );
+
+		if ( ! empty( $_POST[ $secret ] ) ) {
+			$post = $_POST[ $secret ];
+			unset( $_POST[ $secret ] );
+		}
+
+		//check if older post is present
+		if ( empty( $post ) ) {
+			$secret = self::_get_secret( $prefix, $suffix, 5 );
+			if ( ! empty( $_POST[ $secret ] ) ) {
+				$post = $_POST[ $secret ];
+				unset( $_POST[ $secret ] );
+			}
+		}
+
+		return $post;
+	}
 
 	/**
 	* Prüfung und Rückgabe eines Array-Keys
@@ -1096,12 +1151,11 @@ class Antispam_Bee {
 
 		/* Form fields */
 		$hidden_field = self::get_key($_POST, 'comment');
-		$plugin_field = self::get_key($_POST, self::$_secret);
+		$plugin_field = self::_get_secret_post();
 
 		/* Hidden field check */
 		if ( empty($hidden_field) && ! empty($plugin_field) ) {
 			$_POST['comment'] = $plugin_field;
-			unset( $_POST[self::$_secret] );
 		} else {
 			$_POST['ab_spam__hidden_field'] = 1;
 		}
@@ -1249,7 +1303,7 @@ class Antispam_Bee {
 			'#<textarea(.+?)name=["\']comment["\'](.+?)</textarea>#s',
             sprintf(
                 '<textarea$1name="%s"$2</textarea><textarea name="comment" style="display:none" rows="1" cols="1"></textarea>%s',
-                self::$_secret,
+                self::_get_secret(),
                 $init_time_field
             ),
 			$data,
@@ -1339,7 +1393,7 @@ class Antispam_Bee {
 	* @return  array            Array mit dem Verdachtsgrund [optional]
 	*/
 
-	private static function _verify_comment_request($comment)
+	protected static function _verify_comment_request($comment)
 	{
 		/* Kommentarwerte */
 		$ip = self::get_key($comment, 'comment_author_IP');
@@ -1459,7 +1513,7 @@ class Antispam_Bee {
 	* @return  boolean       	Check status (true = Gravatar available)
 	*/
 
-    private static function _has_valid_gravatar($email) {
+	protected static function _has_valid_gravatar($email) {
         $response = wp_safe_remote_get(
             sprintf(
                 'https://www.gravatar.com/avatar/%s?d=404',
@@ -1488,7 +1542,7 @@ class Antispam_Bee {
 	* @return  boolean    TRUE if the action time is less than 5 seconds
 	*/
 
-	private static function _is_shortest_time()
+	protected static function _is_shortest_time()
 	{
 		/* Comment init time */
 		if ( ! $init_time = (int)self::get_key($_POST, 'ab_init_time') ) {
@@ -1514,7 +1568,7 @@ class Antispam_Bee {
 	* @return  boolean       	  TRUE bei verdächtigem Kommentar
 	*/
 
-	private static function _is_regexp_spam($comment)
+	protected static function _is_regexp_spam($comment)
 	{
 		/* Felder */
 		$fields = array(
@@ -1631,7 +1685,7 @@ class Antispam_Bee {
 	* @return  boolean          TRUE bei verdächtigem Kommentar
 	*/
 
-	private static function _is_db_spam($ip, $url = '', $email = '')
+	protected static function _is_db_spam($ip, $url = '', $email = '')
 	{
 		/* Global */
 		global $wpdb;
@@ -1749,7 +1803,7 @@ class Antispam_Bee {
 	* @return  boolean       TRUE bei gemeldeter IP
 	*/
 
-	private static function _is_dnsbl_spam($ip)
+	protected static function _is_dnsbl_spam($ip)
 	{
 		/* Start request */
 		$response = wp_safe_remote_request(
@@ -1793,7 +1847,7 @@ class Antispam_Bee {
 	* @return  boolean         TRUE bei BBCode im Inhalt
 	*/
 
-	private static function _is_bbcode_spam($body)
+	protected static function _is_bbcode_spam($body)
 	{
 		return (bool) preg_match('/\[url[=\]].*\[\/url\]/is', $body);
 	}
@@ -1809,7 +1863,7 @@ class Antispam_Bee {
 	* @return  boolean          TRUE bei einem gefundenen Eintrag
 	*/
 
-	private static function _is_approved_email($email)
+	protected static function _is_approved_email($email)
 	{
 		/* Global */
 		global $wpdb;
@@ -1827,6 +1881,23 @@ class Antispam_Bee {
 			return true;
 		}
 
+		/* bbPress DB */
+		if ( function_exists( 'bbpress' ) && Antispam_Bee::get_option( 'bbpress_allowed' ) ) {
+			$result = get_posts(
+				array(
+					'post_type' => array( 'topic', 'reply' ),
+					'post_status' => 'publish',
+					'meta_key' => '_bbp_anonymous_email',
+					'meta_value' => wp_unslash($email),
+					'numberposts' => 1
+				)
+			);
+
+			if ( ! empty( $result[0] ) ) {
+				return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -1842,7 +1913,7 @@ class Antispam_Bee {
 	* @return  boolean         TRUE if fake IP
 	*/
 
-	private static function _is_fake_ip($client_ip, $client_host = false)
+	protected static function _is_fake_ip($client_ip, $client_host = false)
 	{
 		/* Remote Host */
 		$host_by_ip = gethostbyaddr($client_ip);
@@ -2401,7 +2472,7 @@ class Antispam_Bee {
 	* @change  2.6.1
 	*/
 
-	private static function _update_spam_count()
+	public static function _update_spam_count()
 	{
 		/* Skip if not enabled */
 		if ( ! self::get_option('dashboard_count') ) {
@@ -2422,7 +2493,7 @@ class Antispam_Bee {
 	* @change  2.6.1
 	*/
 
-	private static function _update_daily_stats()
+	public static function _update_daily_stats()
 	{
 		/* Skip if not enabled */
 		if ( ! self::get_option('dashboard_chart') ) {
