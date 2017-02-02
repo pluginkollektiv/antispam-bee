@@ -1087,7 +1087,7 @@ class Antispam_Bee {
 
 		/* Request params */
 		$request_uri = self::get_key($_SERVER, 'REQUEST_URI');
-		$request_path = parse_url($request_uri, PHP_URL_PATH);
+		$request_path = wp_parse_url($request_uri, PHP_URL_PATH);
 
 		/* Request check */
 		if ( strpos($request_path, 'wp-comments-post.php') === false ) {
@@ -1135,7 +1135,7 @@ class Antispam_Bee {
 
 		/* Request params */
 		$request_uri = self::get_key($_SERVER, 'REQUEST_URI');
-		$request_path = parse_url($request_uri, PHP_URL_PATH);
+		$request_path = wp_parse_url($request_uri, PHP_URL_PATH);
 
 		/* Empty path? */
 		if ( empty($request_path) ) {
@@ -1300,7 +1300,7 @@ class Antispam_Bee {
 		}
 
 		/* IP != Server */
-		if ( $options['advanced_check'] && self::_is_fake_ip($ip, parse_url($url, PHP_URL_HOST)) ) {
+		if ( $options['advanced_check'] && self::_is_fake_ip($ip, wp_parse_url($url, PHP_URL_HOST)) ) {
 			return array(
 				'reason' => 'server'
 			);
@@ -1415,7 +1415,7 @@ class Antispam_Bee {
 			array(
 				'ip'	 => $ip,
 				'rawurl' => $url,
-				'host'	 => parse_url($url, PHP_URL_HOST),
+				'host'	 => wp_parse_url($url, PHP_URL_HOST),
 				'body'	 => $body,
 				'email'	 => $email,
 				'author' => $author
