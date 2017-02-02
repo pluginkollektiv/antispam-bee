@@ -1,7 +1,7 @@
 <?php
 
 /* Quit */
-defined( 'ABSPATH' ) OR exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Antispam_Bee_Columns
