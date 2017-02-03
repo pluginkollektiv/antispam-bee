@@ -221,14 +221,9 @@
 .ab-column--service {
     width: 342px;
     text-align: center;
-}
-.ab-column--service p:first-child{
-	padding-top: 10px;
-	border-top: 1px solid #e0e5e9;
-}
-.ab-column--service p:last-child{
-	border-bottom: 1px solid #e0e5e9;
-	padding-bottom: 10px;
+    border-top: 1px solid #e0e5e9;
+    border-bottom: 1px solid #e0e5e9;
+    margin-right: 20px;
 }
 .ab-column--service p {
     margin: 8px 0;
