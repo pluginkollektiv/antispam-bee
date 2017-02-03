@@ -76,11 +76,23 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'country_black'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_black')),
 			'country_white'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_white')),
 
+			'translate_api' 	=> (int)(!empty($_POST['ab_translate_api'])),
+			'translate_lang'	=> sanitize_text_field(self::get_key($_POST, 'ab_translate_lang'))
 		);
 
 		// No number of days indicated?
 		if ( empty($options['cronjob_interval']) ) {
 			$options['cronjob_enable'] = 0;
+		}
+
+		// Translate API
+		if ( !empty($options['translate_lang']) ) {
+			if ( !preg_match('/^(de|en|fr|it|es)$/', $options['translate_lang']) ) {
+				$options['translate_lang'] = '';
+			}
+		}
+		if ( empty($options['translate_lang']) ) {
+			$options['translate_api'] = 0;
 		}
 
 		// List of spam reasons
@@ -324,6 +336,27 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 													__( 'Whitelist  %sISO Codes</a> for this option.', 'antispam-bee' ),
 													$iso_codes_link );
 											?></span>
+										</label>
+									</li>
+								</ul>
+							</li>
+
+							<li>
+								<input type="checkbox" name="ab_translate_api" id="ab_translate_api" value="1" <?php checked($options['translate_api'], 1) ?> />
+								<label for="ab_translate_api">
+									<?php esc_html_e('Allow comments only in certain language', 'antispam_bee') ?>
+									<span><?php esc_html_e('Detection and approval in specified language', 'antispam_bee') ?></span>
+								</label>
+
+								<ul>
+									<li>
+										<select name="ab_translate_lang">
+											<?php foreach( array('de' => 'German', 'en' => 'English', 'fr' => 'French', 'it' => 'Italian', 'es' => 'Spanish') as $k => $v ) { ?>
+												<option <?php selected($options['translate_lang'], $k); ?> value="<?php echo esc_attr($k) ?>"><?php esc_html_e($v, 'antispam_bee') ?></option>
+											<?php } ?>
+										</select>
+										<label for="ab_translate_lang">
+											<?php esc_html_e('Language', 'antispam_bee') ?>
 										</label>
 									</li>
 								</ul>

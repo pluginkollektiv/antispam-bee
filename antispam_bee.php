@@ -367,6 +367,9 @@ class Antispam_Bee {
 				'country_black'		=> '',
 				'country_white'		=> '',
 
+				'translate_api' 	=> 0,
+				'translate_lang'	=> '',
+
 				'dnsbl_check'		=> 0,
 				'bbcode_check'		=> 1,
 
@@ -393,6 +396,7 @@ class Antispam_Bee {
 				'country'	=> 'Country Check',
 				'dnsbl'		=> 'DNSBL Spam',
 				'bbcode'	=> 'BBCode',
+				'lang'		=> 'Comment Language',
 				'regexp'	=> 'RegExp'
 			)
 		);
@@ -1375,6 +1379,13 @@ class Antispam_Bee {
 				'reason' => 'country'
 			);
 		}
+
+		// Translate API
+		if ( $options['translate_api'] && self::_is_lang_spam($body) ) {
+			return array(
+				'reason' => 'lang'
+			);
+		}
 	}
 
 
@@ -1493,6 +1504,13 @@ class Antispam_Bee {
 		if ( $options['country_code'] && self::_is_country_spam($ip) ) {
 			return array(
 				'reason' => 'country'
+			);
+		}
+
+		// Translate API
+		if ( $options['translate_api'] && self::_is_lang_spam($body) ) {
+			return array(
+				'reason' => 'lang'
 			);
 		}
 	}
@@ -1925,6 +1943,68 @@ class Antispam_Bee {
 		return false;
 	}
 
+	/**
+    * Check for unwanted languages
+    *
+    * @since   2.0
+    * @change  2.6.6
+	 * @change 2.7.0
+    *
+    * @param  string $comment_content Content of the comment.
+    * @return boolean TRUE if it is spam
+    */
+
+    private static function _is_lang_spam($comment_content)
+    {
+        /* User defined language */
+        $allowed_lang = self::get_option('translate_lang');
+
+        /* Make comment text plain */
+        $comment_text = wp_strip_all_tags($comment_content);
+
+        /* Skip if empty values */
+        if ( empty($allowed_lang) OR empty($comment_text) ) {
+            return false;
+        }
+
+        /* Trim comment text */
+        if ( ! $query_text = wp_trim_words($comment_text, 10, '') ) {
+            return false;
+        }
+
+        /* Start request */
+        $response = wp_safe_remote_request(
+            add_query_arg(
+                array(
+                    'q'   => rawurlencode($query_text),
+                    'key' => base64_decode( strrev('rl1NTlGNDFnNrZlQI5WLnhUcDJ0SZBlTZlWb6NUVu9FR5NVY6lUQ') )
+                ),
+                'https://www.googleapis.com' . '/language/translate/v2/detect'
+            )
+        );
+
+        /* Skip on error */
+        if ( is_wp_error($response) OR wp_remote_retrieve_response_code($response) !== 200 ) {
+            return false;
+        }
+
+        /* Get JSON from content */
+        if ( ! $json = wp_remote_retrieve_body($response) ) {
+            return false;
+        }
+
+        /* Decode JSON */
+        if ( ! $obj = json_decode($json, true) ) {
+            return false;
+        }
+
+        /* Get detected language */
+        if ( ! $detected_lang = @$obj['data']['detections'][0][0]['language'] ) {
+            return false;
+        }
+
+        return ( $detected_lang != $allowed_lang );
+    }
 
 	/**
 	* Trim IP addresses
