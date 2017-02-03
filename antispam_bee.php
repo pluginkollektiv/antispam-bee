@@ -345,7 +345,15 @@ class Antispam_Bee {
 		self::$_base   = plugin_basename(__FILE__);
 
 		$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
-		self::$_secret = substr( sha1( md5( $salt ) ), 0, 10 );
+		/**
+		 * Filters the secret.
+		 *
+		 * @param string $salt The salt.
+		 */
+		self::$_secret = apply_filters(
+			'ab_secret',
+			substr( sha1( $salt ), 0, 10 )
+		);
 
 		self::$defaults = array(
 			'options' => array(
@@ -384,7 +392,6 @@ class Antispam_Bee {
 				'ignore_type' 		=> 0,
 
 				'reasons_enable'	=> 0,
-				'secret'	        => self::$_secret,
 				'ignore_reasons'	=> array(),
 			),
 			'reasons' => array(

@@ -33,13 +33,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 		// Check referer
 		check_admin_referer('_antispam_bee__settings_nonce');
-
-		if ( ! empty( $_POST['ab_secret'] ) ) {
-			$secret = sanitize_text_field( wp_unslash( $_POST['ab_secret'] ) );
-		} else {
-			$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
-			$secret = substr( sha1( md5( $salt ) ), 0, 10 );
-		}
     
 		// Determine options
 		$options = array(
@@ -69,7 +62,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'bbcode_check'		=> (int)(!empty($_POST['ab_bbcode_check'])),
 			'gravatar_check'	=> (int)(!empty($_POST['ab_gravatar_check'])),
 			'dnsbl_check'		=> (int)(!empty($_POST['ab_dnsbl_check'])),
-			'secret'            => $secret,
 			'country_code' 		=> (int)(!empty($_POST['ab_country_code'])),
 			'country_black'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_black')),
 			'country_white'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_white')),
@@ -453,14 +445,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										</label>
 									</li>
 								</ul>
-							</li>
-							<li>
-								<label for="ab_secret">
-									<?php esc_html_e('Secret key', 'antispam-bee') ?>
-									<span><?php esc_html_e('Your personal secret key.', 'antispam-bee') ?></span>
-								</label>
-								<br>
-								<input type="text" name="ab_secret" id="ab_secret" value="<?php echo esc_attr( $options['secret'] ); ?>" />
 							</li>
 						</ul>
 					</div>
