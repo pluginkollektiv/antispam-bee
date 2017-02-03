@@ -1944,67 +1944,86 @@ class Antispam_Bee {
 	}
 
 	/**
-    * Check for unwanted languages
-    *
-    * @since   2.0
-    * @change  2.6.6
-	 * @change 2.7.0
-    *
-    * @param  string $comment_content Content of the comment.
-    * @return boolean TRUE if it is spam
-    */
+	 * Check for unwanted languages
+	 *
+	 * @since   2.0
+	 * @change  2.6.6
+	 * @change  2.7.0
+	 *
+	 * @param  string $comment_content Content of the comment.
+	 *
+	 * @return boolean TRUE if it is spam
+	 */
 
-    private static function _is_lang_spam($comment_content)
-    {
-        /* User defined language */
-        $allowed_lang = self::get_option('translate_lang');
+	private static function _is_lang_spam( $comment_content ) {
+		// User defined language
+		$allowed_lang = self::get_option( 'translate_lang' );
 
-        /* Make comment text plain */
-        $comment_text = wp_strip_all_tags($comment_content);
+		// Make comment text plain
+		$comment_text = wp_strip_all_tags( $comment_content );
 
-        /* Skip if empty values */
-        if ( empty($allowed_lang) OR empty($comment_text) ) {
-            return false;
-        }
+		// Skip if empty values
+		if ( empty( $allowed_lang )
+		     || empty( $comment_text )
+		) {
+			return false;
+		}
 
-        /* Trim comment text */
-        if ( ! $query_text = wp_trim_words($comment_text, 10, '') ) {
-            return false;
-        }
+		// Trim comment text
+		if ( ! $query_text = wp_trim_words( $comment_text, 10, '' ) ) {
+			return false;
+		}
 
-        /* Start request */
-        $response = wp_safe_remote_request(
-            add_query_arg(
-                array(
-                    'q'   => rawurlencode($query_text),
-                    'key' => base64_decode( strrev('rl1NTlGNDFnNrZlQI5WLnhUcDJ0SZBlTZlWb6NUVu9FR5NVY6lUQ') )
-                ),
-                'https://www.googleapis.com' . '/language/translate/v2/detect'
-            )
-        );
+		/**
+		 * Filter the Google Translate API key to be used.
+		 *
+		 * @since 2.7.0
+		 *
+		 * @param string $key API key to use.
+		 *
+		 * @return string Modified API key.
+		 */
+		$key = apply_filters(
+			'ab_google_translate_api_key',
+			base64_decode(
+				strrev( 'B9GcXFjbjdULkdDUfh1SOlzZ2FzMhF1Mt1kRWVTWoVHR5NVY6lUQ' )
+			)
+		);
 
-        /* Skip on error */
-        if ( is_wp_error($response) OR wp_remote_retrieve_response_code($response) !== 200 ) {
-            return false;
-        }
+		// Start request
+		$response = wp_safe_remote_request(
+			add_query_arg(
+				array(
+					'q'   => rawurlencode( $query_text ),
+					'key' => $key,
+				),
+				'https://www.googleapis.com/language/translate/v2/detect'
+			)
+		);
 
-        /* Get JSON from content */
-        if ( ! $json = wp_remote_retrieve_body($response) ) {
-            return false;
-        }
+		// Skip on error
+		if ( is_wp_error( $response )
+		     || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+			return false;
+		}
 
-        /* Decode JSON */
-        if ( ! $obj = json_decode($json, true) ) {
-            return false;
-        }
+		// Get JSON from content
+		if ( ! $json = wp_remote_retrieve_body( $response ) ) {
+			return false;
+		}
 
-        /* Get detected language */
-        if ( ! $detected_lang = @$obj['data']['detections'][0][0]['language'] ) {
-            return false;
-        }
+		// Decode JSON
+		if ( ! $obj = json_decode( $json, true ) ) {
+			return false;
+		}
 
-        return ( $detected_lang != $allowed_lang );
-    }
+		// Get detected language
+		if ( ! $detected_lang = @$obj['data']['detections'][0][0]['language'] ) {
+			return false;
+		}
+
+		return ( $detected_lang != $allowed_lang );
+	}
 
 	/**
 	* Trim IP addresses
