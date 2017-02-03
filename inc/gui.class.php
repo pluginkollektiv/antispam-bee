@@ -501,23 +501,25 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 						</ul>
 					</div>
 
-					<div class="ab-column ab-column--service">
-						<p>
-							<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Donate', 'antispam-bee' ); ?></a>
-						</p>
-						<p>
-							<a href="<?php esc_html_e( 'https://wordpress.org/plugins/antispam-bee/faq/', 'antispam-bee' ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FAQ', 'antispam-bee' ); ?></a>
-						</p>
-						<p>
-							<a href="https://github.com/pluginkollektiv/antispam-bee/wiki/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Manual', 'antispam-bee' ); ?></a>
-						</p>
-						<p>
-							<a href="https://wordpress.org/support/plugin/antispam-bee" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Support', 'antispam-bee' ); ?></a>
-						</p>
-					</div>
-
 					<div class="ab-column ab-column--submit">
-						<input type="submit" class="button button-primary" value="<?php esc_html_e( 'Save Changes', 'antispam-bee' ); ?>" />
+						<div class="ab-column ab-column--service">
+							<p>
+								<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Donate', 'antispam-bee' ); ?></a>
+							</p>
+							<p>
+								<a href="<?php esc_html_e( 'https://wordpress.org/plugins/antispam-bee/faq/', 'antispam-bee' ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FAQ', 'antispam-bee' ); ?></a>
+							</p>
+							<p>
+								<a href="https://github.com/pluginkollektiv/antispam-bee/wiki/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Manual', 'antispam-bee' ); ?></a>
+							</p>
+							<p>
+								<a href="https://wordpress.org/support/plugin/antispam-bee" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Support', 'antispam-bee' ); ?></a>
+							</p>
+						</div>
+
+						<div class="ab-column ab-column--submit">
+							<input type="submit" class="button button-primary" value="<?php esc_html_e( 'Save Changes', 'antispam-bee' ); ?>" />
+						</div>
 					</div>
 				</div>
 			</form>
