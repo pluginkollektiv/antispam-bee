@@ -2607,7 +2607,7 @@ class Antispam_Bee {
 	}
 
 	/**
-	 * Returns the secret of a post used in the textarea name attribute.
+	 * Returns the secret of a post used in the textarea id attribute.
 	 *
 	 * @param int $post_id
 	 *
