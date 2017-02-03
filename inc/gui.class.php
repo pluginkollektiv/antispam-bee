@@ -343,7 +343,16 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_translate_api" id="ab_translate_api" value="1" <?php checked($options['translate_api'], 1) ?> />
 								<label for="ab_translate_api">
 									<?php esc_html_e('Allow comments only in certain language', 'antispam_bee') ?>
-									<span><?php esc_html_e('Detection and approval in specified language', 'antispam_bee') ?></span>
+									<span><?php $link1 = sprintf(
+										'<a href="%s" target="_blank" rel="noopener noreferrer">',
+											esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#allow-comments-only-in-certain-language', 'antispam-bee' ),
+											       'https' )
+										);
+									/* translators: %s: <a> html tag with link to documentation */
+									echo sprintf(
+										__( 'Detect and approve only the specified language. Please note the %sprivacy notice</a> for this option.', 'antispam-bee' ),
+										$link1 );
+										?></span>
 								</label>
 
 								<ul>
