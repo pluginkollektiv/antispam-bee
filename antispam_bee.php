@@ -345,8 +345,8 @@ class Antispam_Bee {
 	private static function _init_internal_vars()
 	{
 		self::$_base   = plugin_basename(__FILE__);
-		self::$_secret = substr(md5(get_bloginfo('url')), 0, 5). '-comment';
 
+		$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
 		self::$defaults = array(
 			'options' => array(
 				// General
@@ -381,6 +381,7 @@ class Antispam_Bee {
 				'ignore_type' 		=> 0,
 
 				'reasons_enable'	=> 0,
+				'secret'	        => substr( sha1( md5( $salt ) ), 0, 10 ),
 				'ignore_reasons'	=> array()
 			),
 			'reasons' => array(
@@ -395,6 +396,9 @@ class Antispam_Bee {
 				'regexp'	=> 'RegExp'
 			)
 		);
+
+
+		self::$_secret = sha1( md5( self::get_option( 'secret' ) ) );
 	}
 
 
@@ -1095,16 +1099,16 @@ class Antispam_Bee {
 			return;
 		}
 
+		$post_id = (int) self::get_key( $_POST, 'comment_post_ID' );
 		// Form fields
 		$hidden_field = self::get_key($_POST, 'comment');
-		$plugin_field = self::get_key($_POST, self::$_secret);
+		$plugin_field = self::get_key( $_POST, self::get_secret_for_post( $post_id ) );
 
 		// Hidden field check
 		if ( empty($hidden_field) && ! empty($plugin_field) ) {
 			$_POST['comment'] = $plugin_field;
-			unset( $_POST[self::$_secret] );
-		}
-		else {
+			unset( $_POST[ self::get_secret_for_post( $post_id ) ] );
+		} else {
 			$_POST['ab_spam__hidden_field'] = 1;
 		}
 	}
@@ -1236,6 +1240,44 @@ class Antispam_Bee {
 			return $data;
 		}
 
+		/* Inject HTML */
+		return preg_replace_callback(
+			'/(?P<all>                                                              (?# match the whole textarea tag )
+				<textarea                                                           (?# the opening of the textarea and some optional attributes )
+				(                                                                   (?# match a id attribute followed by some optional ones and the name attribute )
+					(?P<before1>[^>]*)
+					(?P<id1>id=["\'](?P<id_value1>[^>"\']*)["\'])
+					(?P<between1>[^>]*)
+					name=["\']comment["\']
+					|                                                               (?# match same as before, but with the name attribute before the id attribute )
+					(?P<before2>[^>]*)
+					name=["\']comment["\']
+					(?P<between2>[^>]*)
+					(?P<id2>id=["\'](?P<id_value2>[^>"\']*)["\'])
+					|                                                               (?# match same as before, but with no id attribute )
+					(?P<before3>[^>]*)
+					name=["\']comment["\']
+					(?P<between3>[^>]*)
+				)
+				(?P<after>[^>]*)                                                    (?# match any additional optional attributes )
+				><\/textarea>                                                       (?# the closing of the textarea )
+			)/x',
+			array( 'Antispam_Bee', 'replace_comment_field_callback' ),
+			$data,
+			1
+		);
+	}
+
+	/**
+	 * The callback function for the preg_match_callback to modify the textarea tags.
+	 *
+	 * @since   2.6.10
+	 *
+	 * @param array $matches The regex matches.
+	 *
+	 * @return string The modified content string.
+	 */
+	public static function replace_comment_field_callback( $matches ) {
 		// Build init time field
 		if ( self::get_option('time_check') ) {
 			$init_time_field = sprintf(
@@ -1246,17 +1288,22 @@ class Antispam_Bee {
 			$init_time_field = '';
 		}
 
-		// Inject HTML
-		return preg_replace(
-			'#<textarea(.+?)name=["\']comment["\'](.+?)</textarea>#s',
-            		sprintf(
-                		'<textarea$1name="%s"$2</textarea><textarea name="comment" style="display:none" rows="1" cols="1"></textarea>%s',
-                		self::$_secret,
-               			$init_time_field
-            		),
-			$data,
-			1
-		);
+		$output = '<textarea ' . $matches['before1'] . $matches['before2'] . $matches['before3'];
+
+		$id_script = '';
+		if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
+			$output .= 'id="' . self::get_secret_id_for_post( get_the_ID() ) . '" ';
+			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "" );document.getElementById("' . esc_js( self::get_secret_id_for_post( get_the_ID() ) ) . '").setAttribute( "id", "comment" );</script>';
+		}
+
+		$output .= ' name="' . self::get_secret_for_post( get_the_ID() ) . '" ';
+		$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
+		$output .= $matches['after'] . '>';
+		$output .= '</textarea><textarea id="comment" aria-hidden="true" name="comment" style="width:10px !important;position:absolute !important;left:-10000000px !important"></textarea>';
+		$output .= $id_script;
+		$output .= $init_time_field;
+
+		return $output;
 	}
 
 
@@ -2448,6 +2495,30 @@ class Antispam_Bee {
 			'daily_stats',
 			array_slice($stats, 0, 31, true)
 		);
+	}
+
+	/**
+	 * Returns the secret of a post used in the textarea name attribute.
+	 *
+	 * @param int $post_id
+	 *
+	 * @return string
+	 */
+	public static function get_secret_for_post( $post_id ) {
+
+		return substr( sha1( md5( self::$_secret . get_the_title( (int) $post_id ) ) ), 0, 10 );
+	}
+
+	/**
+	 * Returns the secret of a post used in the textarea name attribute.
+	 *
+	 * @param int $post_id
+	 *
+	 * @return string
+	 */
+	public static function get_secret_id_for_post( $post_id ) {
+
+		return substr( sha1( md5( 'comment-id' . self::$_secret . get_the_title( (int) $post_id ) ) ), 0, 10 );
 	}
 }
 
