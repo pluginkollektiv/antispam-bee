@@ -23,7 +23,7 @@
         max = Math.max.apply(Math, data),
         Y = (height - bottomgutter - topgutter) / max;
 
-    /* Max Wert */
+    // Max value
     r
     .text(16, 16, max)
     .attr(

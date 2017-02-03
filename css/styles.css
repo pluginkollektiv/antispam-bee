@@ -9,7 +9,7 @@
 /* @end group */
 
 
-/* @group Allgemein */
+/* @group General */
 
 .ab-main *,
 .ab-main *:after,
@@ -38,7 +38,7 @@
 /* @end group */
 
 
-/* @group Spalten */
+/* @group Columns */
 
 .ab-wrap {
     margin: 0 0 0 -10px;
@@ -54,7 +54,7 @@
 /* @end group */
 
 
-/* @group Überschriften + Icons */
+/* @group Headlines + Icons */
 
 .ab-column h3 {
     margin: 0;
@@ -97,7 +97,7 @@
 /* @end group */
 
 
-/* @group Formular */
+/* @group Form */
 
 .ab-column input[type="text"],
 .ab-column input[type="number"],
@@ -129,7 +129,7 @@
 /* @end group */
 
 
-/* @group Spalteninhalte */
+/* @group Column contents */
 
 .ab-column > ul {
     padding: 0 20px 0 0;
@@ -174,7 +174,7 @@
 /* @end group */
 
 
-/* @group Trenner */
+/* @group Separator */
 
 .ab-column > ul > li:after,
 .ab-column > ul > li:before {
@@ -242,7 +242,7 @@
 /* @end group */
 
 
-/* @group 2. Ebene */
+/* @group 2nd level */
 
 .ab-column > ul > li:last-of-type:after,
 .ab-column > ul > li:last-of-type:before {
