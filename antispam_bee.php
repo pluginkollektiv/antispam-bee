@@ -1234,8 +1234,46 @@ class Antispam_Bee {
 			return $data;
 		}
 
+		/* Inject HTML */
+		return preg_replace_callback(
+			'/(?P<all>                                                              (?# match the whole textarea tag )
+				<textarea                                                           (?# the opening of the textarea and some optional attributes )
+				(                                                                   (?# match a id attribute followed by some optional ones and the name attribute )
+					(?P<before1>[^>]*)
+					(?P<id1>id=["\'](?P<id_value1>[^>"\']*)["\'])
+					(?P<between1>[^>]*)
+					name=["\']comment["\']
+					|                                                               (?# match same as before, but with the name attribute before the id attribute )
+					(?P<before2>[^>]*)
+					name=["\']comment["\']
+					(?P<between2>[^>]*)
+					(?P<id2>id=["\'](?P<id_value2>[^>"\']*)["\'])
+					|                                                               (?# match same as before, but with no id attribute )
+					(?P<before3>[^>]*)
+					name=["\']comment["\']
+					(?P<between3>[^>]*)
+				)
+				(?P<after>[^>]*)                                                    (?# match any additional optional attributes )
+				><\/textarea>                                                       (?# the closing of the textarea )
+			)/x',
+            array( 'Antispam_Bee', 'replace_comment_field_callback' ),
+			$data,
+			1
+		);
+	}
+
+	/**
+	 * The callback function for the preg_match_callback to modify the textarea tags.
+	 *
+	 * @since   2.6.10
+	 *
+	 * @param array $matches The regex matches.
+	 *
+	 * @return string The modified content string.
+	 */
+	public static function replace_comment_field_callback( $matches ) {
 		/* Build init time field */
-		if ( self::get_option('time_check') ) {
+		if ( self::get_option( 'time_check' ) ) {
 			$init_time_field = sprintf(
 				'<input type="hidden" name="ab_init_time" value="%d" />',
 				time()
@@ -1244,17 +1282,21 @@ class Antispam_Bee {
 			$init_time_field = '';
 		}
 
-		/* Inject HTML */
-		return preg_replace(
-			'#<textarea(.+?)name=["\']comment["\'](.+?)</textarea>#s',
-            sprintf(
-                '<textarea$1name="%s"$2</textarea><textarea name="comment" style="display:none" rows="1" cols="1"></textarea>%s',
-                self::$_secret,
-                $init_time_field
-            ),
-			$data,
-			1
-		);
+		$output = '<textarea ' . $matches['before1'] . $matches['before2'] . $matches['before3'];
+
+		if ( ! empty( $matches['id1'] ) ) {
+			$output .= 'id="' . $matches['id_value1'] . '" ';
+		} elseif ( ! empty( $matches['id2'] ) ) {
+			$output .= 'id="' . $matches['id_value2'] . '" ';
+		}
+
+		$output .= ' name="' . self::$_secret . '" ';
+		$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
+		$output .= $matches['after'] . '>';
+		$output .= '</textarea>';
+		$output .= $init_time_field;
+
+		return $output;
 	}
 
 
