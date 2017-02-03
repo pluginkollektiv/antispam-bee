@@ -385,7 +385,7 @@ class Antispam_Bee {
 
 				'reasons_enable'	=> 0,
 				'secret'	        => substr( sha1( md5( $salt ) ), 0, 10 ),
-				'ignore_reasons'	=> array()
+				'ignore_reasons'	=> array(),
 			),
 			'reasons' => array(
 				'css'		=> 'CSS Hack',
@@ -397,7 +397,7 @@ class Antispam_Bee {
 				'dnsbl'		=> 'DNSBL Spam',
 				'bbcode'	=> 'BBCode',
 				'lang'		=> 'Comment Language',
-				'regexp'	=> 'RegExp'
+				'regexp'	=> 'RegExp',
 			)
 		);
 
