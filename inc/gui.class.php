@@ -298,7 +298,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											'https' )
 										); ?>
 									<li>
-										<textarea name="ab_country_black" id="ab_country_black" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>">><?php echo esc_attr($options['country_black']); ?></textarea>
+										<textarea name="ab_country_black" id="ab_country_black" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr($options['country_black']); ?></textarea>
 										<label for="ab_country_black">
 											<span><?php
 												/* translators: %s: <a> html tag with link to ISO codes reference */
