@@ -3,11 +3,13 @@
 ### Unreleased ###
 * **English**
    * Country check is back again (thanks to Sergej Müller for his amazing work and the service page)
+   * Language check through Google Translate API is back again (thanks to Simon Kraft of https://krafit.de/ for offering to cover the costs)
    * More default Regexes
    * Accessibility and Gui improvements
    * An [english documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now available, too. Some corrections in the german documentation.
 * **Deutsch**
    * Die Länderprüfung ist wieder zurück (dank an Sergej Müller für seine fantastische Arbeit und die Service-Seite)
+   * Die Sprachenprüfung über die Google Translate API ist wieder zurück (Dank an Simon Kraft von https://krafit.de/ weil er sich angeboten hat die Kosten zu übernehmen)
    * Mehr Standard-Regexe
    * Verbesserungen an der Zugänglichkeit und der Oberfläche
    * Eine [englische Dokumentation](https://github.com/pluginkollektiv/antispam-bee/wiki) ist jetzt verfügbar. Einige Korrekturen in der deutschen Dokumentation.
