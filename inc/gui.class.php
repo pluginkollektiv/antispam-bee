@@ -1,7 +1,5 @@
 <?php
-
-
-/* Sicherheitsabfrage */
+// Security check
 if ( ! class_exists('Antispam_Bee') ) {
 	die();
 }
@@ -17,7 +15,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 
 	/**
-	* Speicherung der GUI
+	* Save the GUI
 	*
 	* @since   0.1
 	* @change  2.7.0
@@ -25,20 +23,20 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 	public static function save_changes()
 	{
-		/* Kein POST? */
+		// No POST?
 		if ( empty($_POST) ) {
 			wp_die(__('Cheatin&#8217; uh?', 'antispam-bee'));
 		}
 
-		/* Capability check */
+		// Capability check
 		if ( ! current_user_can('manage_options') ) {
 			wp_die(__('Cheatin&#8217; uh?', 'antispam-bee'));
 		}
 
-		/* Referer prüfen */
+		// Check referer
 		check_admin_referer('_antispam_bee__settings_nonce');
 
-		/* Optionen ermitteln */
+		// Determine options
 		$options = array(
 			'flag_spam' 		=> (int)(!empty($_POST['ab_flag_spam'])),
 			'email_notify' 		=> (int)(!empty($_POST['ab_email_notify'])),
@@ -72,17 +70,17 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'country_white'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_white')),
 		);
 
-		/* Keine Tagmenge eingetragen? */
+		// No number of days indicated?
 		if ( empty($options['cronjob_interval']) ) {
 			$options['cronjob_enable'] = 0;
 		}
 
-		/* Liste der Spamgründe */
+		// List of spam reasons
 		if ( empty($options['reasons_enable']) ) {
 			$options['ignore_reasons'] = array();
 		}
 
-		/* Blacklist reinigen */
+		// Blacklist clean
 		if ( !empty($options['country_black']) ) {
 			$options['country_black'] = preg_replace(
 				'/[^A-Z ]/',
@@ -91,7 +89,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			);
 		}
 
-		/* Whitelist reinigen */
+		// Whitelist clean
 		if ( !empty($options['country_white']) ) {
 			$options['country_white'] = preg_replace(
 				'/[^A-Z ]/',
@@ -100,22 +98,22 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			);
 		}
 
-		/* Leere Listen? */
+		// Empty lists?
 		if ( empty($options['country_black']) && empty($options['country_white']) ) {
 			$options['country_code'] = 0;
 		}
 
-		/* Cron stoppen? */
+		// Stop Cron?
 		if ( $options['cronjob_enable'] && !self::get_option('cronjob_enable') ) {
 			self::init_scheduled_hook();
 		} else if ( !$options['cronjob_enable'] && self::get_option('cronjob_enable') ) {
 			self::clear_scheduled_hook();
 		}
 
-		/* Optionen speichern */
+		// Save options
 		self::update_options($options);
 
-		/* Redirect */
+		// Redirect
 		wp_safe_redirect(
 			add_query_arg(
 				array(
@@ -130,28 +128,28 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 
 	/**
-	* Generierung eine Selectbox
+	* Generation of a selectbox
 	*
 	* @since   2.4.5
 	* @change  2.4.5
 	*
-	* @param   string  $name      Name der Selectbox
-	* @param   array   $data      Array mit Werten
-	* @param   string  $selected  Selektierter Wert
-	* @return  string  $html      Erzeugtes HTML
+	* @param   string  $name      Name of the Selectbox
+	* @param   array   $data      Array with values
+	* @param   string  $selected  Selected value
+	* @return  string  $html      Generated HTML
 	*/
 
 	private static function _build_select($name, $data, $selected)
 	{
-		/* Start HTML */
+		// Start HTML
 		$html = '<select name="' .$name. '">';
 
-		/* Loop options */
+		// Loop options
 		foreach( $data as $k => $v) {
 			$html .= '<option value="' .esc_attr($k). '" ' .selected($selected, $k, false). '>' .esc_html__($v, 'antispam-bee'). '</option>';
 		}
 
-		/* Close HTML */
+		// Close HTML
 		$html .= '</select>';
 
 		return $html;
@@ -159,7 +157,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 
 	/**
-	* Anzeige der GUI
+	* Display the GUI
 	*
 	* @since   0.1
 	* @change  2.7.0
