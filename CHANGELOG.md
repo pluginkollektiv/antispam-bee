@@ -1,5 +1,17 @@
 ## Changelog ##
 
+### Unreleased ###
+* **English**
+   * Country check is back again (thanks to Sergej Müller for his amazing work and the service page)
+   * More default Regexes
+   * Accessibility and Gui improvements
+   * An [english documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now available, too. Some corrections in the german documentation.
+* **Deutsch**
+   * Die Länderprüfung ist wieder zurück (dank an Sergej Müller für seine fantastische Arbeit und die Service-Seite)
+   * Mehr Standard-Regexe
+   * Verbesserungen an der Zugänglichkeit und der Oberfläche
+   * Eine [englische Dokumentation](https://github.com/pluginkollektiv/antispam-bee/wiki) ist jetzt verfügbar. Einige Korrekturen in der deutschen Dokumentation.
+
 ### 2.6.9 ###
 * **English**
    * Updates donation links throughout the plugin
