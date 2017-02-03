@@ -1294,7 +1294,7 @@ class Antispam_Bee {
 		$id_script = '';
 		if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
 			$output .= 'id="' . self::get_secret_id_for_post( get_the_ID() ) . '" ';
-			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "" );document.getElementById("' . esc_js( self::get_secret_id_for_post( get_the_ID() ) ) . '").setAttribute( "id", "comment" );</script>';
+			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "' . esc_js( md5( time() ) ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( get_the_ID() ) ) . '").setAttribute( "id", "comment" );</script>';
 		}
 
 		$output .= ' name="' . self::get_secret_for_post( get_the_ID() ) . '" ';
