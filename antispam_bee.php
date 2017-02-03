@@ -2053,8 +2053,6 @@ class Antispam_Bee {
 		if ( $ignore_reason ) {
 			self::_go_in_peace();
 		}
-
-		// Spam reason
 		self::$_reason = $reason;
 
 		// Mark spam
