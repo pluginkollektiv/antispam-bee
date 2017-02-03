@@ -382,13 +382,12 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 						<ul>
 							<li>
-								<label for="ab_flag_spam">
+								<label for="ab_secret">
 									<?php esc_html_e('Secret key', 'antispam-bee') ?>
 									<span><?php esc_html_e('Your personal secret key.', 'antispam-bee') ?></span>
 								</label>
 								<br>
 								<input type="text" name="ab_secret" id="ab_secret" value="<?php echo esc_attr( $options['secret'] ); ?>" />
-
 							</li>
 							<li>
 								<input type="checkbox" name="ab_flag_spam" id="ab_flag_spam" value="1" <?php checked($options['flag_spam'], 1) ?> />
