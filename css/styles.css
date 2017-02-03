@@ -220,17 +220,17 @@
 
 .ab-column--submit-service {
     width: 342px;
-	margin-top: 58px;
-	padding-right:20px;
+    margin-top: 58px;
+    padding-right:20px;
 }
 .ab-column--submit-service p {
     padding: 4px 0;
-	margin: 0;
-	text-align: center;
-	width: 100%;
+    margin: 0;
+    text-align: center;
+    width: 100%;
 }
 .ab-column--submit-service p:first-child {
-	border-top: 1px solid #e0e5e9;
+    border-top: 1px solid #e0e5e9;
 }
 .ab-column--submit-service p:last-of-type {
     border-bottom: 1px solid #e0e5e9;
