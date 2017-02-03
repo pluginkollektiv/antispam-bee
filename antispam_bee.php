@@ -31,10 +31,8 @@
 */
 
 
-// Security check
-if ( ! class_exists('WP') ) {
-	die();
-}
+// Make sure this file is only run from within the WordPress context.
+defined( 'ABSPATH' ) || exit;
 
 
 /**

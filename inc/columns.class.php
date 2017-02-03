@@ -1,6 +1,6 @@
 <?php
-// Quit
-defined('ABSPATH') OR exit;
+// Make sure this file is only run from within the WordPress context.
+defined( 'ABSPATH' ) || exit;
 
 
 // Antispam_Bee_Columns

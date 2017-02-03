@@ -1,8 +1,6 @@
 <?php
-// Security check
-if ( ! class_exists('Antispam_Bee') ) {
-	die();
-}
+// Make sure this file is only run from within the WordPress context.
+defined( 'ABSPATH' ) || exit;
 
 
 /**
