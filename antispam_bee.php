@@ -2013,12 +2013,12 @@ class Antispam_Bee {
 		}
 
 		// Decode JSON
-		if ( ! $obj = json_decode( $json, true ) ) {
+		if ( ! $data_array = json_decode( $json, true ) ) {
 			return false;
 		}
 
 		// Get detected language
-		if ( ! $detected_lang = @$obj['data']['detections'][0][0]['language'] ) {
+		if ( ! $detected_lang = @$data_array['data']['detections'][0][0]['language'] ) {
 			return false;
 		}
 
