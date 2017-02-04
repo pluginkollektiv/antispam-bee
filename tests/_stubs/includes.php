@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	define( 'ABSPATH', dirname( __DIR__ ) );
+}
+
 function register_activation_hook() { }
 
 function register_deactivation_hook() { }
