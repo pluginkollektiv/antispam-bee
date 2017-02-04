@@ -109,14 +109,14 @@
     padding: 0;
 }
 .ab-column select[multiple] {
-    width: 150px;
-    height: 56px;
+    width: 175px;
+    height: 60px;
 }
 .ab-column input.ab-mini-field {
     width: 40px;
 }
-.ab-column input.ab-medium-field {
-    width: 120px;
+.ab-column .ab-medium-field {
+    width: 200px;
 }
 .ab-column input[type="text"] + label,
 .ab-column select + label {
@@ -138,9 +138,9 @@
     border: 0;
 }
 .ab-column > ul > li {
-    width: 318px;
+    width: 330px;
     margin: 0 0 36px;
-    padding: 10px 12px 12px;
+    padding: 10px 0 12px 12px;
     position: relative;
     background: #fff;
 }
@@ -218,25 +218,27 @@
 
 /* @group Submit & Service */
 
-.ab-column--service {
+.ab-column--submit-service {
     width: 342px;
+    margin-top: 58px;
+    padding-right:20px;
+}
+.ab-column--submit-service p {
+    padding: 5px 0;
+    margin: 0;
     text-align: center;
-    border-top: 1px solid #e0e5e9;
-    border-bottom: 1px solid #e0e5e9;
-    margin-right: 20px;
-}
-.ab-column--service p {
-    margin: 8px 0;
-}
-.ab-column--service a {
-    padding: 0 2px;
-}
-.ab-column--submit {
-    width: 342px;
-    margin-top: 35px;
-}
-.ab-column--submit .button {
     width: 100%;
+    background:#f4f4f4;
+}
+.ab-column--submit-service p:first-child {
+    border-top: 1px solid #f7f7f7;
+}
+.ab-column--submit-service p:last-of-type {
+    border-bottom: 1px solid #f7f7f7;
+}
+.ab-column--submit-service .button {
+    width: 100%;
+    margin: 35px 0 10px;
 }
 
 /* @end group */
