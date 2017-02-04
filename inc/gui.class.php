@@ -472,7 +472,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							<?php esc_html_e( 'More', 'antispam-bee' ); ?>
 						</h3>
 						<h6>
-							<?php esc_html_e( 'Less relevant options', 'antispam-bee' ); ?>
+							<?php esc_html_e( 'Various options', 'antispam-bee' ); ?>
 						</h6>
 
 						<ul>
