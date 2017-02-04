@@ -121,6 +121,16 @@ class FactoryTest extends TestCase {
 				],
 				'bbcode',
 			],
+			// Detect spam word regex pattern combination content + mail.
+			// Attention, the order of the provided data here is important -.-, needs a rework of the codebase
+			// @ToDo: static $_reason
+			[
+				[
+					'comment_content' => "this is a pharmacy, why does it work now?.",
+					'comment_author_email' => 'test@yandex.ru',
+				],
+				'regexp',
+			],
 		];
 	}
 
