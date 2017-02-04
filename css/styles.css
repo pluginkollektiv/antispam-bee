@@ -109,14 +109,14 @@
     padding: 0;
 }
 .ab-column select[multiple] {
-    width: 150px;
-    height: 56px;
+    width: 175px;
+    height: 60px;
 }
 .ab-column input.ab-mini-field {
     width: 40px;
 }
-.ab-column input.ab-medium-field {
-    width: 120px;
+.ab-column .ab-medium-field {
+    width: 200px;
 }
 .ab-column input[type="text"] + label,
 .ab-column select + label {
