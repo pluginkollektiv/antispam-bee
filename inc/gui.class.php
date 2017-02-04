@@ -409,7 +409,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							<li>
 								<input type="checkbox" name="ab_no_notice" id="ab_no_notice" value="1" <?php checked($options['no_notice'], 1) ?> />
 								<label for="ab_no_notice">
-									<?php esc_html_e( 'Not save the spam reason', 'antispam-bee' ); ?>
+									<?php esc_html_e( 'Don\'t save the spam reason', 'antispam-bee' ); ?>
 									<span><?php esc_html_e( 'Spam reason as table column in the spam overview', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
