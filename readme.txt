@@ -91,12 +91,14 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 ## Changelog ##
 
 ### 2.7.0 ###
-    * Improved honeypot
-    * Improved regular expressions
-    * Added language check
-    * Added country check
-    * Unit test framework
-    * Wiki updated
+    * Improved Honeypot
+    * Country check is back again (thanks to Sergej Müller for his amazing work and the service page)
+    * Language check through Google Translate API is back again (thanks to Simon Kraft of https://krafit.de/ for offering to cover the costs)
+    * More default Regexes
+    * Unit Test Framework
+    * Accessibility and Gui improvements
+    * An [english documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now available, too. Some corrections in the german documentation.
+    * Some bugfixes - Among other things for WPML compatibility
     * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/3?closed=1
 
 ### 2.6.9 ###
