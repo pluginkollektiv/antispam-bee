@@ -228,6 +228,7 @@
     margin: 0;
     text-align: center;
     width: 100%;
+    background:#f4f4f4;
 }
 .ab-column--submit-service p:first-child {
     border-top: 1px solid #e0e5e9;
