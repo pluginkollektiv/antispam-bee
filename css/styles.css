@@ -231,10 +231,10 @@
     background:#f4f4f4;
 }
 .ab-column--submit-service p:first-child {
-    border-top: 1px solid #e0e5e9;
+    border-top: 1px solid #f7f7f7;
 }
 .ab-column--submit-service p:last-of-type {
-    border-bottom: 1px solid #e0e5e9;
+    border-bottom: 1px solid #f7f7f7;
 }
 .ab-column--submit-service .button {
     width: 100%;
