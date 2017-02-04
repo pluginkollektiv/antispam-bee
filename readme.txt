@@ -91,8 +91,8 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 ## Changelog ##
 
 ### 2.7.0 ###
-    * Improved Honeypot
     * Country check is back again (thanks to Sergej Müller for his amazing work and the service page)
+    * Improved Honeypot
     * Language check through Google Translate API is back again (thanks to Simon Kraft of https://krafit.de/ for offering to cover the costs)
     * More default Regexes
     * Unit Test Framework
