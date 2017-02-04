@@ -228,13 +228,13 @@
     margin: 0;
     text-align: center;
     width: 100%;
-    background:#f5f5f5;
+    background:#f6f6f6;
 }
 .ab-column--submit-service p:first-child {
-    border-top: 1px solid #f8f8f8;
+    border-top: 1px solid #f9f9f9;
 }
 .ab-column--submit-service p:last-of-type {
-    border-bottom: 1px solid #f8f8f8;
+    border-bottom: 1px solid #f9f9f9;
 }
 .ab-column--submit-service .button {
     width: 100%;
