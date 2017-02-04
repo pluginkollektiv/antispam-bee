@@ -106,7 +106,7 @@
     text-align: center;
     background: #f8f8f9;
 }
-.ab-column input[type="number" {
+.ab-column input[type="number"] {
     padding: 0;
 }
 .ab-column select[multiple] {
