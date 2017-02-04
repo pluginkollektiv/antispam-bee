@@ -213,7 +213,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_already_commented" id="ab_already_commented" value="1" <?php checked($options['already_commented'], 1) ?> />
 								<label for="ab_already_commented">
 									<?php esc_html_e( 'Trust approved commenters', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Always approve previously approved users', 'antispam-bee' ); ?></span>
+									<span><?php esc_html_e( 'No review of already commented users', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 
@@ -254,7 +254,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_advanced_check" id="ab_advanced_check" value="1" <?php checked($options['advanced_check'], 1) ?> />
 								<label for="ab_advanced_check">
 									<?php esc_html_e( 'Validate the ip address of commenters', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Validity check for used ip address', 'antispam-bee' ); ?></span>
+									<span><?php esc_html_e( 'Validation of the IP address used', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 
@@ -270,7 +270,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_spam_ip" id="ab_spam_ip" value="1" <?php checked($options['spam_ip'], 1) ?> />
 								<label for="ab_spam_ip">
 									<?php esc_html_e( 'Look in the local spam database', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Already marked as spam? Yes? No?', 'antispam-bee' ); ?></span>
+									<span><?php esc_html_e( 'Check for spam data on your own blog', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 
@@ -342,7 +342,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							<li>
 								<input type="checkbox" name="ab_translate_api" id="ab_translate_api" value="1" <?php checked($options['translate_api'], 1) ?> />
 								<label for="ab_translate_api">
-									<?php esc_html_e('Allow comments only in certain language', 'antispam_bee') ?>
+									<?php esc_html_e( 'Allow comments only in certain language', 'antispam_bee' ) ?>
 									<span><?php $link1 = sprintf(
 										'<a href="%s" target="_blank" rel="noopener noreferrer">',
 											esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#allow-comments-only-in-certain-language', 'antispam-bee' ),
@@ -384,7 +384,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							<li>
 								<label for="ab_flag_spam">
 									<?php esc_html_e('Secret key', 'antispam-bee') ?>
-									<span><?php esc_html_e('Your personal secret key.', 'antispam-bee') ?></span>
+									<span><?php esc_html_e( 'Your personal secret key.', 'antispam-bee' ) ?></span>
 								</label>
 								<br>
 								<input type="text" name="ab_secret" id="ab_secret" value="<?php echo esc_attr( $options['secret'] ); ?>" />
@@ -401,7 +401,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							<li>
 								<input type="checkbox" name="ab_email_notify" id="ab_email_notify" value="1" <?php checked($options['email_notify'], 1) ?> />
 								<label for="ab_email_notify">
-									<?php esc_html_e( 'Notification by email', 'antispam-bee' ); ?>
+									<?php esc_html_e( 'Spam-Notification by email', 'antispam-bee' ); ?>
 									<span><?php esc_html_e( 'Notify admins by e-mail about incoming spam', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
@@ -409,8 +409,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							<li>
 								<input type="checkbox" name="ab_no_notice" id="ab_no_notice" value="1" <?php checked($options['no_notice'], 1) ?> />
 								<label for="ab_no_notice">
-									<?php esc_html_e( 'Don\'t save the spam reason', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Spam reason as table column in the spam overview', 'antispam-bee' ); ?></span>
+									<?php esc_html_e( 'Do not save the spam reason', 'antispam-bee' ); ?>
+									<span><?php esc_html_e( 'Spam reason as a table column in the spam overview', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 
@@ -421,7 +421,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										esc_html__( 'Delete existing spam after %s days', 'antispam-bee' ),
 										'<input type="number" min="0" name="ab_cronjob_interval" value="' .esc_attr($options['cronjob_interval']). '" class="ab-mini-field" />'
 									) ?>
-									<span><?php esc_html_e('Cleaning up the database from old entries', 'antispam-bee') ?></span>
+									<span><?php esc_html_e( 'Cleaning up the database from old entries', 'antispam-bee' ) ?></span>
 								</label>
 							</li>
 
@@ -472,14 +472,14 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							<?php esc_html_e( 'More', 'antispam-bee' ); ?>
 						</h3>
 						<h6>
-							<?php esc_html_e( 'A few little things', 'antispam-bee' ); ?>
+							<?php esc_html_e( 'Various options', 'antispam-bee' ); ?>
 						</h6>
 
 						<ul>
 							<li>
 								<input type="checkbox" name="ab_dashboard_chart" id="ab_dashboard_chart" value="1" <?php checked($options['dashboard_chart'], 1) ?> />
 								<label for="ab_dashboard_chart">
-									<?php esc_html_e( 'Statistics on the dashboard', 'antispam-bee' ); ?>
+									<?php esc_html_e( 'Generate statistics as a dashboard widget', 'antispam-bee' ); ?>
 									<span><?php esc_html_e( 'Daily updates of spam detection rate', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
@@ -496,7 +496,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_ignore_pings" id="ab_ignore_pings" value="1" <?php checked($options['ignore_pings'], 1) ?> />
 								<label for="ab_ignore_pings">
 									<?php esc_html_e( 'Do not check trackbacks / pingbacks', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'No spam check for trackback notifications', 'antispam-bee' ); ?></span>
+									<span><?php esc_html_e( 'No spam check for link notifications', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 
