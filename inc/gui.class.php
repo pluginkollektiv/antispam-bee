@@ -33,13 +33,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 		// Check referer
 		check_admin_referer('_antispam_bee__settings_nonce');
-
-		if ( ! empty( $_POST['ab_secret'] ) ) {
-			$secret = sanitize_text_field( wp_unslash( $_POST['ab_secret'] ) );
-		} else {
-			$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
-			$secret = substr( sha1( md5( $salt ) ), 0, 10 );
-		}
     
 		// Determine options
 		$options = array(
@@ -69,7 +62,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'bbcode_check'		=> (int)(!empty($_POST['ab_bbcode_check'])),
 			'gravatar_check'	=> (int)(!empty($_POST['ab_gravatar_check'])),
 			'dnsbl_check'		=> (int)(!empty($_POST['ab_dnsbl_check'])),
-			'secret'            => $secret,
 			'country_code' 		=> (int)(!empty($_POST['ab_country_code'])),
 			'country_black'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_black')),
 			'country_white'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_white')),
@@ -382,15 +374,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 						<ul>
 							<li>
-								<label for="ab_flag_spam">
-									<?php esc_html_e('Secret key', 'antispam-bee') ?>
-									<span><?php esc_html_e( 'Your personal secret key.', 'antispam-bee' ) ?></span>
-								</label>
-								<br>
-								<input type="text" name="ab_secret" id="ab_secret" value="<?php echo esc_attr( $options['secret'] ); ?>" />
-
-							</li>
-							<li>
 								<input type="checkbox" name="ab_flag_spam" id="ab_flag_spam" value="1" <?php checked($options['flag_spam'], 1) ?> />
 								<label for="ab_flag_spam">
 									<?php esc_html_e( 'Mark as spam, do not delete', 'antispam-bee' ); ?>
@@ -398,7 +381,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								</label>
 							</li>
 
-							<li>
+							<li class="ab_flag_spam_child">
 								<input type="checkbox" name="ab_email_notify" id="ab_email_notify" value="1" <?php checked($options['email_notify'], 1) ?> />
 								<label for="ab_email_notify">
 									<?php esc_html_e( 'Spam-Notification by email', 'antispam-bee' ); ?>
@@ -406,7 +389,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								</label>
 							</li>
 
-							<li>
+							<li class="ab_flag_spam_child">
 								<input type="checkbox" name="ab_no_notice" id="ab_no_notice" value="1" <?php checked($options['no_notice'], 1) ?> />
 								<label for="ab_no_notice">
 									<?php esc_html_e( 'Do not save the spam reason', 'antispam-bee' ); ?>
@@ -414,7 +397,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								</label>
 							</li>
 
-							<li>
+							<li class="ab_flag_spam_child">
 								<input type="checkbox" name="ab_cronjob_enable" id="ab_cronjob_enable" value="1" <?php checked($options['cronjob_enable'], 1) ?> />
 								<label>
 									<?php echo sprintf(
@@ -425,7 +408,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								</label>
 							</li>
 
-							<li>
+							<li class="ab_flag_spam_child">
 								<input type="checkbox" name="ab_ignore_filter" id="ab_ignore_filter" value="1" <?php checked($options['ignore_filter'], 1) ?> />
 								<label>
 									<?php echo sprintf(
@@ -443,7 +426,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								</label>
 							</li>
 
-							<li>
+							<li class="ab_flag_spam_child">
 								<input type="checkbox" name="ab_reasons_enable" id="ab_reasons_enable" value="1" <?php checked($options['reasons_enable'], 1) ?> />
 								<label for="ab_reasons_enable">
 									<?php esc_html_e( 'Delete comments by spam reasons', 'antispam-bee' ); ?>

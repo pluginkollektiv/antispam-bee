@@ -48,7 +48,7 @@ class Antispam_Bee {
 	// Init
 	public static $defaults;
 	private static $_base;
-	private static $_secret;
+	private static $_salt;
 	private static $_reason;
 
 
@@ -345,7 +345,7 @@ class Antispam_Bee {
 		self::$_base   = plugin_basename(__FILE__);
 
 		$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
-		self::$_secret = substr( sha1( md5( $salt ) ), 0, 10 );
+		self::$_salt = substr( sha1( $salt ), 0, 10 );
 
 		self::$defaults = array(
 			'options' => array(
@@ -384,7 +384,6 @@ class Antispam_Bee {
 				'ignore_type' 		=> 0,
 
 				'reasons_enable'	=> 0,
-				'secret'	        => self::$_secret,
 				'ignore_reasons'	=> array(),
 			),
 			'reasons' => array(
@@ -1102,13 +1101,13 @@ class Antispam_Bee {
 
 		$post_id = (int) self::get_key( $_POST, 'comment_post_ID' );
 		// Form fields
-		$hidden_field = self::get_key($_POST, 'comment');
-		$plugin_field = self::get_key( $_POST, self::get_secret_for_post( $post_id ) );
+		$hidden_field = self::get_key( $_POST, 'comment' );
+		$plugin_field = self::get_key( $_POST, self::get_secret_name_for_post( $post_id ) );
 
 		// Hidden field check
 		if ( empty($hidden_field) && ! empty($plugin_field) ) {
 			$_POST['comment'] = $plugin_field;
-			unset( $_POST[ self::get_secret_for_post( $post_id ) ] );
+			unset( $_POST[ self::get_secret_name_for_post( $post_id ) ] );
 		} else {
 			$_POST['ab_spam__hidden_field'] = 1;
 		}
@@ -1297,7 +1296,7 @@ class Antispam_Bee {
 			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "' . esc_js( md5( time() ) ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( get_the_ID() ) ) . '").setAttribute( "id", "comment" );</script>';
 		}
 
-		$output .= ' name="' . self::get_secret_for_post( get_the_ID() ) . '" ';
+		$output .= ' name="' . esc_attr( self::get_secret_name_for_post( get_the_ID() ) ) . '" ';
 		$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
 		$output .= $matches['after'] . '>';
 		$output .= '</textarea><textarea id="comment" aria-hidden="true" name="comment" style="width:10px !important;position:absolute !important;left:-10000000px !important"></textarea>';
@@ -2600,9 +2599,22 @@ class Antispam_Bee {
 	 *
 	 * @return string
 	 */
-	public static function get_secret_for_post( $post_id ) {
+	public static function get_secret_name_for_post( $post_id ) {
 
-		return substr( sha1( md5( self::$_secret . get_the_title( (int) $post_id ) ) ), 0, 10 );
+		$secret = substr( sha1( md5( self::$_salt . get_the_title( (int) $post_id ) ) ), 0, 10 );
+
+		/**
+		 * Filters the secret for a post, which is used in the textarea name attribute.
+		 *
+		 * @param string $secret The secret.
+		 * @param int    $post_id The post ID.
+		 */
+		return apply_filters(
+			'ab_get_secret_name_for_post',
+			$secret,
+			(int) $post_id
+		);
+
 	}
 
 	/**
@@ -2614,7 +2626,19 @@ class Antispam_Bee {
 	 */
 	public static function get_secret_id_for_post( $post_id ) {
 
-		return substr( sha1( md5( 'comment-id' . self::$_secret . get_the_title( (int) $post_id ) ) ), 0, 10 );
+		$secret = substr( sha1( md5( 'comment-id' . self::$_salt . get_the_title( (int) $post_id ) ) ), 0, 10 );
+
+		/**
+		 * Filters the secret for a post, which is used in the textarea id attribute.
+		 *
+		 * @param string $secret The secret.
+		 * @param int    $post_id The post ID.
+		 */
+		return apply_filters(
+			'ab_get_secret_id_for_post',
+			$secret,
+			(int) $post_id
+		);
 	}
 }
 
