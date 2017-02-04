@@ -48,7 +48,7 @@ class Antispam_Bee {
 	// Init
 	public static $defaults;
 	private static $_base;
-	private static $_secret;
+	private static $_salt;
 	private static $_reason;
 
 
@@ -345,15 +345,7 @@ class Antispam_Bee {
 		self::$_base   = plugin_basename(__FILE__);
 
 		$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
-		/**
-		 * Filters the secret.
-		 *
-		 * @param string $salt The salt.
-		 */
-		self::$_secret = apply_filters(
-			'ab_secret',
-			substr( sha1( $salt ), 0, 10 )
-		);
+		self::$_salt = substr( sha1( $salt ), 0, 10 );
 
 		self::$defaults = array(
 			'options' => array(
@@ -1301,7 +1293,7 @@ class Antispam_Bee {
 		$id_script = '';
 		if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
 			$output .= 'id="' . self::get_secret_id_for_post( get_the_ID() ) . '" ';
-			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "" );document.getElementById("' . esc_js( self::get_secret_id_for_post( get_the_ID() ) ) . '").setAttribute( "id", "comment" );</script>';
+			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "' . esc_js( md5( time() ) ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( get_the_ID() ) ) . '").setAttribute( "id", "comment" );</script>';
 		}
 
 		$output .= ' name="' . self::get_secret_for_post( get_the_ID() ) . '" ';
@@ -2609,7 +2601,20 @@ class Antispam_Bee {
 	 */
 	public static function get_secret_for_post( $post_id ) {
 
-		return substr( sha1( md5( self::$_secret . get_the_title( (int) $post_id ) ) ), 0, 10 );
+		$secret = substr( sha1( md5( self::$_salt . get_the_title( (int) $post_id ) ) ), 0, 10 );
+
+		/**
+		 * Filters the secret for a post, which is used in the textarea name attribute.
+		 *
+		 * @param string $secret The secret.
+		 * @param int    $post_id The post ID.
+		 */
+		return apply_filters(
+			'ab_get_secret_for_post',
+			$secret,
+			(int) $post_id
+		);
+
 	}
 
 	/**
@@ -2621,7 +2626,19 @@ class Antispam_Bee {
 	 */
 	public static function get_secret_id_for_post( $post_id ) {
 
-		return substr( sha1( md5( 'comment-id' . self::$_secret . get_the_title( (int) $post_id ) ) ), 0, 10 );
+		$secret = substr( sha1( md5( 'comment-id' . self::$_salt . get_the_title( (int) $post_id ) ) ), 0, 10 );
+
+		/**
+		 * Filters the secret for a post, which is used in the textarea id attribute.
+		 *
+		 * @param string $secret The secret.
+		 * @param int    $post_id The post ID.
+		 */
+		return apply_filters(
+			'get_secret_id_for_post',
+			$secret,
+			(int) $post_id
+		);
 	}
 }
 
