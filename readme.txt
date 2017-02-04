@@ -95,6 +95,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
     * Improved regular expressions
     * Added language check
     * Added country check
+    * Unit test framework
     * Wiki updated
     * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/3?closed=1
 
