@@ -105,6 +105,8 @@
     font-size: 11px;
     text-align: center;
     background: #f8f8f9;
+}
+.ab-column input[type="number" {
     padding: 0;
 }
 .ab-column select[multiple] {
