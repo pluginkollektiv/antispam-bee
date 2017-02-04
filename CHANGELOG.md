@@ -7,12 +7,15 @@
    * More default Regexes
    * Accessibility and Gui improvements
    * An [english documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now available, too. Some corrections in the german documentation.
+   * Some bugfixes - Among other things for WPML compatibility
+
 * **Deutsch**
    * Die Länderprüfung ist wieder zurück (dank an Sergej Müller für seine fantastische Arbeit und die Service-Seite)
    * Die Sprachenprüfung über die Google Translate API ist wieder zurück (Dank an Simon Kraft von https://krafit.de/ weil er sich angeboten hat die Kosten zu übernehmen)
    * Mehr Standard-Regexe
    * Verbesserungen an der Zugänglichkeit und der Oberfläche
    * Eine [englische Dokumentation](https://github.com/pluginkollektiv/antispam-bee/wiki) ist jetzt verfügbar. Einige Korrekturen in der deutschen Dokumentation.
+   * Einige Fehlerkorrekturen - Unter anderem für WPML-Kompatibilität
 
 ### 2.6.9 ###
 * **English**
