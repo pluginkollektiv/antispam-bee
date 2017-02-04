@@ -110,7 +110,7 @@
 }
 .ab-column select[multiple] {
     width: 175px;
-    height: 60px;
+    min-height: 60px;
 }
 .ab-column input.ab-mini-field {
     width: 40px;
