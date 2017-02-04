@@ -510,7 +510,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 						</ul>
 					</div>
 
-					<div class="ab-column ab-column--service">
+					<div class="ab-column ab-column--submit-service">
 						<p>
 							<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Donate', 'antispam-bee' ); ?></a>
 						</p>
@@ -523,9 +523,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 						<p>
 							<a href="https://wordpress.org/support/plugin/antispam-bee" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Support', 'antispam-bee' ); ?></a>
 						</p>
-					</div>
 
-					<div class="ab-column ab-column--submit">
 						<input type="submit" class="button button-primary" value="<?php esc_html_e( 'Save Changes', 'antispam-bee' ); ?>" />
 					</div>
 				</div>
