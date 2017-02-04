@@ -4,7 +4,7 @@
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML
 * Requires at least: 3.8
 * Tested up to:      4.7
-* Stable tag:        2.6.9
+* Stable tag:        2.7.0
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,6 +17,8 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Trust approved commenters.
 * Trust commenters with a Gravatar.
 * Consider the comment time.
+* Allow comments only in a certain language.
+* Block or allow commenters from certain countries.
 * Treat BBCode as spam.
 * Validate the IP address of commenters.
 * Use regular expressions.
@@ -87,6 +89,13 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 A complete documentation is available in the [GitHub repository Wiki](https://github.com/pluginkollektiv/antispam-bee/wiki).
 
 ## Changelog ##
+
+### 2.7.0 ###
+    * Improved honeypot
+    * Improved regular expressions
+    * Added language check
+    * Added country check
+    * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/3?closed=1
 
 ### 2.6.9 ###
    * Updates donation links throughout the plugin
