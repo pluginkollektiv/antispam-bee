@@ -396,7 +396,7 @@ class Antispam_Bee {
 				'dnsbl'		=> __( 'DNSBL Spam', 'antispam-bee' ),
 				'bbcode'	=> __( 'BBCode', 'antispam-bee' ),
 				'lang'		=> __( 'Comment Language', 'antispam-bee' ),
-				'regexp'	=> __( 'RegExp', 'antispam-bee' ),
+				'regexp'	=> __( 'Regular Expression', 'antispam-bee' ),
 			)
 		);
 	}
