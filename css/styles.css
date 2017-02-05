@@ -41,11 +41,13 @@
 /* @group Columns */
 
 .ab-wrap {
-    margin: 20px 0 0 -30px;
+    margin: 0 0 0 -10px;
+    padding: 20px 0 0 0;
+    text-rendering: optimizeLegibility;
 }
 .ab-column {
     float: left;
-    margin: 0 0 0 30px;
+    margin: 0 0 0 10px;
     position: relative;
 }
 
@@ -58,15 +60,18 @@
     margin: 0;
     font-size: 14px;
     font-weight: normal;
+    line-height: 20px;
     text-transform: uppercase;
 }
 .ab-column h3.icon:before {
-    font: normal 28px/28px icons;
+    font: normal 30px/30px icons;
     top: 4px;
-    right: 0;
+    right: 20px;
     speak: none;
+    width: 1em;
     color: #8e959c;
     position: absolute;
+    text-align: center;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -81,6 +86,7 @@
 }
 
 .ab-column h6 {
+    clear: both;
     color: #8e959c;
     margin: 0 0 20px;
     font-size: 10px;
@@ -111,7 +117,8 @@
     width: 40px;
 }
 .ab-column .ab-medium-field {
-    width: 225px;
+    width: 100%;
+    max-width :285px;
 }
 .ab-column input[type="text"] + label,
 .ab-column select + label {
@@ -126,10 +133,16 @@
 
 /* @group Column contents */
 
+.ab-column > ul {
+    padding: 0 20px 0 0;
+}
+.ab-column:last-of-type > ul {
+    border: 0;
+}
 .ab-column > ul > li {
     width: 330px;
     margin: 0 0 36px;
-    padding: 10px 0 10px 12px;
+    padding: 10px 0 12px 12px;
     position: relative;
     background: #fff;
 }
@@ -145,12 +158,14 @@
 .ab-column > ul > li label {
     cursor: default;
     display: inline-block;
-    width: 286px;
+    line-height: 24px;
+    max-width: 286px;
 }
 .ab-column > ul > li label span {
     color: #8e959c;
     display: block;
     font-size: 12px;
+    line-height: 16px;
 }
 
 /* @end group */
@@ -160,6 +175,7 @@
 
 .ab-column > ul > li:after,
 .ab-column > ul > li:before {
+    width: 0;
     content: '';
     position: absolute;
 }
@@ -201,20 +217,21 @@
 
 .ab-column--submit-service {
     width: 342px;
-    margin-top: 56px;
+    margin-top: 20px;
+    padding-right:20px;
+	
 }
 .ab-column--submit-service p {
     padding: 5px 0;
     margin: 0;
     text-align: center;
     width: 100%;
-    background:#f6f6f6;
 }
-.ab-column--submit-service p:first-child {
-    border-top: 1px solid #f9f9f9;
+.ab-column--submit-service p:first-of-type {
+    border-top: 1px solid #e0e5e9;
 }
 .ab-column--submit-service p:last-of-type {
-    border-bottom: 1px solid #f9f9f9;
+    border-bottom: 1px solid #e0e5e9;
 }
 .ab-column--submit-service .button {
     width: 100%;
