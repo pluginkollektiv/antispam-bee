@@ -41,13 +41,11 @@
 /* @group Columns */
 
 .ab-wrap {
-    margin: 0 0 0 -10px;
-    padding: 20px 0 0 0;
-    text-rendering: optimizeLegibility;
+    margin: 20px 0 0 -30px;
 }
 .ab-column {
     float: left;
-    margin: 0 0 0 10px;
+    margin: 0 0 0 30px;
     position: relative;
 }
 
@@ -60,18 +58,15 @@
     margin: 0;
     font-size: 14px;
     font-weight: normal;
-    line-height: 20px;
     text-transform: uppercase;
 }
 .ab-column h3.icon:before {
-    font: normal 30px/30px icons;
+    font: normal 28px/28px icons;
     top: 4px;
-    right: 20px;
+    right: 0px;
     speak: none;
-    width: 1em;
     color: #8e959c;
     position: absolute;
-    text-align: center;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -86,7 +81,6 @@
 }
 
 .ab-column h6 {
-    clear: both;
     color: #8e959c;
     margin: 0 0 20px;
     font-size: 10px;
@@ -132,9 +126,6 @@
 
 /* @group Column contents */
 
-.ab-column > ul {
-    padding: 0 20px 0 0;
-}
 .ab-column:last-of-type > ul {
     border: 0;
 }
@@ -155,16 +146,13 @@
 }
 
 .ab-column > ul > li label {
-    cursor: default;
     display: inline-block;
-    line-height: 24px;
     width: 286px;
 }
 .ab-column > ul > li label span {
     color: #8e959c;
     display: block;
     font-size: 12px;
-    line-height: 16px;
 }
 
 /* @end group */
@@ -174,7 +162,6 @@
 
 .ab-column > ul > li:after,
 .ab-column > ul > li:before {
-    width: 0;
     content: '';
     position: absolute;
 }
@@ -216,8 +203,8 @@
 
 .ab-column--submit-service {
     width: 342px;
-    margin-top: 58px;
-    padding-right:20px;
+    margin-top: 56px;
+    padding-right: 20px;
 }
 .ab-column--submit-service p {
     padding: 5px 0;
