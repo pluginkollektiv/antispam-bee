@@ -63,7 +63,7 @@
 .ab-column h3.icon:before {
     font: normal 28px/28px icons;
     top: 4px;
-    right: 0px;
+    right: 0;
     speak: none;
     color: #8e959c;
     position: absolute;
@@ -126,9 +126,6 @@
 
 /* @group Column contents */
 
-.ab-column:last-of-type > ul {
-    border: 0;
-}
 .ab-column > ul > li {
     width: 330px;
     margin: 0 0 36px;
