@@ -143,6 +143,7 @@
 }
 
 .ab-column > ul > li label {
+    cursor: default;
     display: inline-block;
     width: 286px;
 }
