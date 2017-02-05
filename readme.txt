@@ -152,11 +152,5 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 For the complete changelog, check out our [GitHub repository](https://github.com/pluginkollektiv/antispam-bee).
 
-## Upgrade Notice ##
-
-### 2.6.9 ###
-
-This is mainly a maintenance release ensuring compatibility with the latest version of WordPress. Expect bigger changes in 2.7 soon!
-
 ## Screenshots ##
 1. Antispam Bee settings
