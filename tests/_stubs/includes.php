@@ -31,3 +31,5 @@ function wp_parse_args( $args, $defaults = '' ) {
 }
 
 function plugin_basename() { return dirname( dirname( __DIR__ ) ); }
+
+function __( $text, $domain ) { return $text; }
