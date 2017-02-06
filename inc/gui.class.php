@@ -63,12 +63,18 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'gravatar_check'	=> (int)(!empty($_POST['ab_gravatar_check'])),
 			'dnsbl_check'		=> (int)(!empty($_POST['ab_dnsbl_check'])),
 			'country_code' 		=> (int)(!empty($_POST['ab_country_code'])),
-			'country_black'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_black')),
-			'country_white'		=> sanitize_text_field(self::get_key($_POST, 'ab_country_white')),
+			'country_black'		=> sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_black' ) ) ),
+			'country_white'		=> sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_white' ) ) ),
 
 			'translate_api' 	=> (int)(!empty($_POST['ab_translate_api'])),
-			'translate_lang'	=> sanitize_text_field(self::get_key($_POST, 'ab_translate_lang')),
+			'translate_lang'	=> sanitize_text_field( wp_unslash( self::get_key($_POST, 'ab_translate_lang' ) ) ),
 		);
+
+		foreach( $options['ignore_reasons'] as $key => $val ) {
+			if ( ! isset( self::$defaults['reasons'][ $val ] ) ) {
+				unset( $options['ignore_reasons'][ $key ] );
+			}
+		}
 
 		// No number of days indicated?
 		if ( empty($options['cronjob_interval']) ) {
