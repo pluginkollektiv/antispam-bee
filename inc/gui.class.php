@@ -156,7 +156,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 		// Loop options
 		foreach( $data as $k => $v) {
-			$html .= '<option value="' .esc_attr($k). '" ' .selected($selected, $k, false). '>' .esc_html__($v, 'antispam-bee'). '</option>';
+			$html .= '<option value="' .esc_attr($k). '" ' .selected($selected, $k, false). '>' .esc_html( $v ). '</option>';
 		}
 
 		// Close HTML
@@ -416,8 +416,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										self::_build_select(
 											'ab_ignore_type',
 											array(
-												1 => esc_html__( 'Comments', 'antispam-bee' ),
-												2 => esc_html__( 'Pings', 'antispam-bee' )
+												1 => __( 'Comments', 'antispam-bee' ),
+												2 => __( 'Pings', 'antispam-bee' )
 											),
 											$options['ignore_type']
 										)
