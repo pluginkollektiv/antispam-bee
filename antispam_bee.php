@@ -393,7 +393,7 @@ class Antispam_Bee {
 				'server'	=> __( 'Fake IP', 'antispam-bee' ),
 				'localdb'	=> __( 'Local DB Spam', 'antispam-bee' ),
 				'country'	=> __( 'Country Check', 'antispam-bee' ),
-				'dnsbl'		=> __( 'DNSBL Spam', 'antispam-bee' ),
+				'dnsbl'		=> __( 'Public Antispam DB', 'antispam-bee' ),
 				'bbcode'	=> __( 'BBCode', 'antispam-bee' ),
 				'lang'		=> __( 'Comment Language', 'antispam-bee' ),
 				'regexp'	=> __( 'Regular Expression', 'antispam-bee' ),
