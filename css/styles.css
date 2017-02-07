@@ -102,21 +102,23 @@
 .ab-column input[type="text"],
 .ab-column input[type="number"],
 .ab-column select {
-    height: 20px;
-    font-size: 11px;
+    font-size: 12px;
     text-align: center;
     background: #f8f8f9;
+}
+.ab-column input[type="number"] {
     padding: 0;
 }
 .ab-column select[multiple] {
     width: 175px;
-    height: 60px;
+    min-height: 60px;
 }
 .ab-column input.ab-mini-field {
     width: 40px;
 }
 .ab-column .ab-medium-field {
-    width: 200px;
+    width: 100%;
+    max-width :285px;
 }
 .ab-column input[type="text"] + label,
 .ab-column select + label {
@@ -153,16 +155,11 @@
     border-color: inherit;
 }
 
-.ab-column > ul > li input[type="checkbox"] {
-    width: 16px;
-    min-width: 16px;
-    height: 16px;
-}
 .ab-column > ul > li label {
     cursor: default;
     display: inline-block;
     line-height: 24px;
-    width: 294px;
+    max-width: 286px;
 }
 .ab-column > ul > li label span {
     color: #8e959c;
@@ -220,21 +217,21 @@
 
 .ab-column--submit-service {
     width: 342px;
-    margin-top: 58px;
+    margin-top: 20px;
     padding-right:20px;
+	
 }
 .ab-column--submit-service p {
     padding: 5px 0;
     margin: 0;
     text-align: center;
     width: 100%;
-    background:#f4f4f4;
 }
-.ab-column--submit-service p:first-child {
-    border-top: 1px solid #f7f7f7;
+.ab-column--submit-service p:first-of-type {
+    border-top: 1px solid #e0e5e9;
 }
 .ab-column--submit-service p:last-of-type {
-    border-bottom: 1px solid #f7f7f7;
+    border-bottom: 1px solid #e0e5e9;
 }
 .ab-column--submit-service .button {
     width: 100%;
