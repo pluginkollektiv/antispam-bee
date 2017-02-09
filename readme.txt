@@ -93,10 +93,10 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 ### 2.7.0 ###
     * Country check is back again (thanks to Sergej Müller for his amazing work and the service page)
     * Improved Honeypot
-    * Language check through Google Translate API is back again (thanks to Simon Kraft of https://krafit.de/ for offering to cover the costs)
+    * Language check through Google Translate API is back again (thanks to Simon Kraft of https://moenus.net/ for offering to cover the costs)
     * More default Regexes
     * Unit Test Framework
-    * Accessibility and Gui improvements
+    * Accessibility and GUI improvements
     * An [english documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now available, too. Some corrections in the german documentation.
     * Some bugfixes - Among other things for WPML compatibility
     * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/3?closed=1
