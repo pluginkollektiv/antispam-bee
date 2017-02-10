@@ -387,16 +387,16 @@ class Antispam_Bee {
 				'ignore_reasons'	=> array(),
 			),
 			'reasons' => array(
-				'css'		=> 'CSS Hack',
-				'time'		=> 'Comment time',
-				'empty'		=> 'Empty Data',
-				'server'	=> 'Fake IP',
-				'localdb'	=> 'Local DB Spam',
-				'country'	=> 'Country Check',
-				'dnsbl'		=> 'DNSBL Spam',
-				'bbcode'	=> 'BBCode',
-				'lang'		=> 'Comment Language',
-				'regexp'	=> 'RegExp',
+				'css'		=> __( 'CSS Hack', 'antispam-bee' ),
+				'time'		=> __( 'Comment time', 'antispam-bee' ),
+				'empty'		=> __( 'Empty Data', 'antispam-bee' ),
+				'server'	=> __( 'Fake IP', 'antispam-bee' ),
+				'localdb'	=> __( 'Local DB Spam', 'antispam-bee' ),
+				'country'	=> __( 'Country Check', 'antispam-bee' ),
+				'dnsbl'		=> __( 'Public Antispam DB', 'antispam-bee' ),
+				'bbcode'	=> __( 'BBCode', 'antispam-bee' ),
+				'lang'		=> __( 'Comment Language', 'antispam-bee' ),
+				'regexp'	=> __( 'Regular Expression', 'antispam-bee' ),
 			)
 		);
 	}

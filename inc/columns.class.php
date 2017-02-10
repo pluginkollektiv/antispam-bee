@@ -56,10 +56,7 @@ final class Antispam_Bee_Columns {
 		}
 
 		// Escape & Print
-		echo esc_html__(
-			$spam_reasons[$spam_reason],
-			'antispam-bee'
-		);
+		echo esc_html( $spam_reasons[$spam_reason] );
 	}
 
 
