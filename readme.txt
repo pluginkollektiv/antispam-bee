@@ -3,8 +3,8 @@
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, prevention, protect, protection, spam, spam filter, trackback
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML
 * Requires at least: 3.8
-* Tested up to:      4.7
-* Stable tag:        2.7-beta
+* Tested up to:      4.7.2
+* Stable tag:        2.7.0
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,6 +17,8 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Trust approved commenters.
 * Trust commenters with a Gravatar.
 * Consider the comment time.
+* Allow comments only in a certain language.
+* Block or allow commenters from certain countries.
 * Treat BBCode as spam.
 * Validate the IP address of commenters.
 * Use regular expressions.
@@ -88,6 +90,17 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 ## Changelog ##
 
+### 2.7.0 ###
+    * Country check is back again (thanks to Sergej Müller for his amazing work and the service page)
+    * Improved Honeypot
+    * Language check through Google Translate API is back again (thanks to Simon Kraft of https://moenus.net/ for offering to cover the costs)
+    * More default Regexes
+    * Unit Test Framework
+    * Accessibility and GUI improvements
+    * An [english documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now available, too. Some corrections in the german documentation.
+    * Some bugfixes - Among other things for WPML compatibility
+    * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/3?closed=1
+
 ### 2.6.9 ###
    * Updates donation links throughout the plugin
    * Fixes an error were JavaScript on the dashboard was erroneously being enqueued
@@ -138,12 +151,6 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
    * Spam reason as a column in the table with spam comments
 
 For the complete changelog, check out our [GitHub repository](https://github.com/pluginkollektiv/antispam-bee).
-
-## Upgrade Notice ##
-
-### 2.6.9 ###
-
-This is mainly a maintenance release ensuring compatibility with the latest version of WordPress. Expect bigger changes in 2.7 soon!
 
 ## Screenshots ##
 1. Antispam Bee settings
