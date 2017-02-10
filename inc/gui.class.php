@@ -405,7 +405,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 							<li class="ab_flag_spam_child">
 								<input type="checkbox" name="ab_cronjob_enable" id="ab_cronjob_enable" value="1" <?php checked($options['cronjob_enable'], 1) ?> />
-								<label>
+								<label for="ab_cronjob_enable">
 									<?php echo sprintf(
 										esc_html__( 'Delete existing spam after %s days', 'antispam-bee' ),
 										'<input type="number" min="0" name="ab_cronjob_interval" value="' .esc_attr($options['cronjob_interval']). '" class="ab-mini-field" />'
@@ -416,7 +416,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 							<li class="ab_flag_spam_child">
 								<input type="checkbox" name="ab_ignore_filter" id="ab_ignore_filter" value="1" <?php checked($options['ignore_filter'], 1) ?> />
-								<label>
+								<label for="ab_ignore_filter">
 									<?php echo sprintf(
 										esc_html__( 'Limit approval to %s', 'antispam-bee' ),
 										self::_build_select(
