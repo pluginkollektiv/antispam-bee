@@ -99,7 +99,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		// Blacklist clean
 		if ( !empty($options['country_black']) ) {
 			$options['country_black'] = preg_replace(
-				'/[^A-Z ]/',
+				'/[^A-Z ,;]/',
 				'',
 				strtoupper($options['country_black'])
 			);
@@ -108,7 +108,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		// Whitelist clean
 		if ( !empty($options['country_white']) ) {
 			$options['country_white'] = preg_replace(
-				'/[^A-Z ]/',
+				'/[^A-Z ,;]/',
 				'',
 				strtoupper($options['country_white'])
 			);
