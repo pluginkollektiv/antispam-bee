@@ -33,3 +33,8 @@ function wp_parse_args( $args, $defaults = '' ) {
 function plugin_basename() { return dirname( dirname( __DIR__ ) ); }
 
 function __( $text, $domain ) { return $text; }
+function esc_attr__( $text, $domain ) { return $text; }
+function esc_html__( $text, $domain ) { return $text; }
+function _e( $text, $domain ) { echo $text; }
+function esc_attr_e( $text, $domain ) { echo $text; }
+function esc_html_e( $text, $domain ) { echo $text; }
