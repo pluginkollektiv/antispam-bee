@@ -19,7 +19,7 @@
 		"source": "https://github.com/pluginkollektiv/antispam-bee",
 		"docs": "https://github.com/pluginkollektiv/antispam-bee/blob/master/README.md"
 	},
-	"type": "project",
+	"type": "wordpress-plugin",
 	"license": "GPL-v2",
 	"require-dev": {
 		"phpunit/phpunit": "^4",
