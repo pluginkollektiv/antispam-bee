@@ -224,11 +224,12 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar', 'antispam-bee' ),
 											       'https' )
 										);
-									/* translators: %s: <a> html tag with link to documentation */
-									echo sprintf(
-										__( 'Check if commenter has a Gravatar image. Please note the %sprivacy notice</a> for this option.', 'antispam-bee' ),
-										$link1 );
-										?></span>
+									printf(
+										/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag */
+										__( 'Check if commenter has a Gravatar image. Please note the %1$ssprivacy notice%2$s for this option.', 'antispam-bee' ),
+										$link1,
+										'</a>'
+									); ?></span>
 								</label>
 							</li>
 
@@ -281,11 +282,14 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 												esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar', 'antispam-bee' ),
 												       'https' )
 										);
-										/* translators: %s: <a> html tag with link to Tornevall (%1$s) and documentation (%2$s) */
-										echo sprintf(
-											__( 'Matching the ip address with %1$sStop Forum Spam</a>. Please note the %2$sprivacy notice</a> for this option.', 'antispam-bee' ),
+										pprintf(
+											/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. 3: opening <a> tag with link to documentation. 4: closing </a> tag. */
+											__( 'Matching the ip address with %1$sStop Forum Spam%2$s. Please note the %3$sprivacy notice%4$s for this option.', 'antispam-bee' ),
 												'<a href="https://www.stopforumspam.com/" target="_blank" rel="noopener noreferrer">',
-												$link2 );
+												'</a>',
+												$link2,
+												'</a>'
+										);
 										?></span>
 								</label>
 							</li>
@@ -299,11 +303,11 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#block-comments-from-specific-countries', 'antispam-bee' ),
 											       'https' )
 										);
-									/* translators: %s: <a> html tag with link to documentation */
-									echo sprintf(
-										__( 'Filtering the requests depending on country. Please note the %sprivacy notice</a> for this option.', 'antispam-bee' ),
-										$link1 );
-										?></span>
+									printf(
+										/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
+										__( 'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
+										$link1, '</a>'
+									); ?></span>
 								</label>
 
 								<ul>
@@ -316,10 +320,11 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										<textarea name="ab_country_black" id="ab_country_black" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr($options['country_black']); ?></textarea>
 										<label for="ab_country_black">
 											<span><?php
-												/* translators: %s: <a> html tag with link to ISO codes reference */
-												echo sprintf(
-													__( 'Blacklist  %sISO Codes</a> for this option.', 'antispam-bee' ),
-													$iso_codes_link );
+												printf(
+													/* translators: 1: opening <a> tag with link to ISO codes reference. 2: closing </a> tag. */
+													__( 'Blacklist  %1$sISO Codes%2$s for this option.', 'antispam-bee' ),
+													$iso_codes_link,
+													'</a>' );
 											?></span>
 										</label>
 									</li>
@@ -327,10 +332,11 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										<textarea name="ab_country_white" id="ab_country_white" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr($options['country_white']); ?></textarea>
 										<label for="ab_country_white">
 											<span><?php
-												/* translators: %s: <a> html tag with link to ISO codes reference */
-												echo sprintf(
-													__( 'Whitelist  %sISO Codes</a> for this option.', 'antispam-bee' ),
-													$iso_codes_link );
+												printf(
+													/* translators: 1: opening <a> tag with link to ISO codes reference. 2: closing </a> tag. */
+													__( 'Whitelist  %1$sISO Codes%2$s for this option.', 'antispam-bee' ),
+													$iso_codes_link,
+													'</a>' );
 											?></span>
 										</label>
 									</li>
@@ -341,15 +347,18 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_translate_api" id="ab_translate_api" value="1" <?php checked($options['translate_api'], 1) ?> />
 								<label for="ab_translate_api">
 									<?php esc_html_e( 'Allow comments only in certain language', 'antispam_bee' ) ?>
-									<span><?php $link1 = sprintf(
-										'<a href="%s" target="_blank" rel="noopener noreferrer">',
+									<span><?php
+										$link1 = sprintf(
+											'<a href="%s" target="_blank" rel="noopener noreferrer">',
 											esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#allow-comments-only-in-certain-language', 'antispam-bee' ),
-											       'https' )
+												'https' )
 										);
-									/* translators: %s: <a> html tag with link to documentation */
-									echo sprintf(
-										__( 'Detect and approve only the specified language. Please note the %sprivacy notice</a> for this option.', 'antispam-bee' ),
-										$link1 );
+
+										printf(
+											/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
+											__( 'Detect and approve only the specified language. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
+											$link1,
+											'</a>' );
 										?></span>
 								</label>
 
