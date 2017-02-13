@@ -226,7 +226,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										);
 									printf(
 										/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag */
-										esc_html__( 'Check if commenter has a Gravatar image. Please note the %1$ssprivacy notice%2$s for this option.', 'antispam-bee' ),
+										esc_html__( 'Check if commenter has a Gravatar image. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
 										$link1,
 										'</a>'
 									); ?></span>
