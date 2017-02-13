@@ -387,16 +387,16 @@ class Antispam_Bee {
 				'ignore_reasons'	=> array(),
 			),
 			'reasons' => array(
-				'css'		=> __( 'CSS Hack', 'antispam-bee' ),
-				'time'		=> __( 'Comment time', 'antispam-bee' ),
-				'empty'		=> __( 'Empty Data', 'antispam-bee' ),
-				'server'	=> __( 'Fake IP', 'antispam-bee' ),
-				'localdb'	=> __( 'Local DB Spam', 'antispam-bee' ),
-				'country'	=> __( 'Country Check', 'antispam-bee' ),
-				'dnsbl'		=> __( 'Public Antispam DB', 'antispam-bee' ),
-				'bbcode'	=> __( 'BBCode', 'antispam-bee' ),
-				'lang'		=> __( 'Comment Language', 'antispam-bee' ),
-				'regexp'	=> __( 'Regular Expression', 'antispam-bee' ),
+				'css'		=> esc_attr__( 'CSS Hack', 'antispam-bee' ),
+				'time'		=> esc_attr__( 'Comment time', 'antispam-bee' ),
+				'empty'		=> esc_attr__( 'Empty Data', 'antispam-bee' ),
+				'server'	=> esc_attr__( 'Fake IP', 'antispam-bee' ),
+				'localdb'	=> esc_attr__( 'Local DB Spam', 'antispam-bee' ),
+				'country'	=> esc_attr__( 'Country Check', 'antispam-bee' ),
+				'dnsbl'		=> esc_attr__( 'Public Antispam DB', 'antispam-bee' ),
+				'bbcode'	=> esc_attr__( 'BBCode', 'antispam-bee' ),
+				'lang'		=> esc_attr__( 'Comment Language', 'antispam-bee' ),
+				'regexp'	=> esc_attr__( 'Regular Expression', 'antispam-bee' ),
 			)
 		);
 	}
@@ -499,7 +499,7 @@ class Antispam_Bee {
 						),
 						admin_url('options-general.php')
 					),
-					__('Settings', 'antispam-bee')
+					esc_attr__('Settings', 'antispam-bee')
 				)
 			)
 		);
@@ -2417,25 +2417,25 @@ class Antispam_Bee {
 					ENT_QUOTES
 				)
 			),
-			__('Comment marked as spam', 'antispam-bee')
+			esc_html__('Comment marked as spam', 'antispam-bee')
 		);
 
 		// Content
 		if ( !$content = strip_tags(stripslashes($comment['comment_content'])) ) {
 			$content = sprintf(
 				'-- %s --',
-				__('Content removed by Antispam Bee', 'antispam-bee')
+				esc_html__('Content removed by Antispam Bee', 'antispam-bee')
 			);
 		}
 
 		// Body
 		$body = sprintf(
 			"%s \"%s\"\r\n\r\n",
-			__('New spam comment on your post', 'antispam-bee'),
+			esc_html__('New spam comment on your post', 'antispam-bee'),
 			strip_tags($post->post_title)
 		).sprintf(
 			"%s: %s\r\n",
-			__('Author', 'antispam-bee'),
+			esc_html__('Author', 'antispam-bee'),
 			( empty($comment['comment_author']) ? '' : strip_tags($comment['comment_author']) )
 		).sprintf(
 			"URL: %s\r\n",
@@ -2443,15 +2443,15 @@ class Antispam_Bee {
 			esc_url($comment['comment_author_url'])
 		).sprintf(
 			"%s: %s\r\n",
-			__('Type', 'antispam-bee'),
-			__( ( empty($comment['comment_type']) ? 'Comment' : 'Trackback' ), 'antispam-bee' )
+			esc_html__('Type', 'antispam-bee'),
+			esc_html__( ( empty($comment['comment_type']) ? 'Comment' : 'Trackback' ), 'antispam-bee' )
 		).sprintf(
 			"Whois: http://whois.arin.net/rest/ip/%s\r\n",
 			$comment['comment_author_IP']
 		).sprintf(
 			"%s: %s\r\n\r\n",
-			__('Spam Reason', 'antispam-bee'),
-			__(self::$defaults['reasons'][self::$_reason], 'antispam-bee')
+			esc_html__('Spam Reason', 'antispam-bee'),
+			esc_html__(self::$defaults['reasons'][self::$_reason], 'antispam-bee')
 		).sprintf(
 			"%s\r\n\r\n\r\n",
 			$content
@@ -2459,28 +2459,28 @@ class Antispam_Bee {
 			EMPTY_TRASH_DAYS ? (
 				sprintf(
 					"%s: %s\r\n",
-					__('Trash it', 'antispam-bee'),
+					esc_html__('Trash it', 'antispam-bee'),
 					admin_url('comment.php?action=trash&c=' .$id)
 				)
 			) : (
 				sprintf(
 					"%s: %s\r\n",
-					__('Delete it', 'antispam-bee'),
+					esc_html__('Delete it', 'antispam-bee'),
 					admin_url('comment.php?action=delete&c=' .$id)
 				)
 			)
 		).sprintf(
 				"%s: %s\r\n",
-			__('Approve it', 'antispam-bee'),
+			esc_html__('Approve it', 'antispam-bee'),
 			admin_url('comment.php?action=approve&c=' .$id)
 		).sprintf(
 			"%s: %s\r\n\r\n",
-			__('Spam list', 'antispam-bee'),
+			esc_html__('Spam list', 'antispam-bee'),
 			admin_url('edit-comments.php?comment_status=spam')
 		).sprintf(
 			"%s\r\n%s\r\n",
-			__('Notify message by Antispam Bee', 'antispam-bee'),
-			__('http://antispambee.com', 'antispam-bee')
+			esc_html__('Notify message by Antispam Bee', 'antispam-bee'),
+			esc_html__('http://antispambee.com', 'antispam-bee')
 		);
 
 		// Send

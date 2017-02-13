@@ -23,12 +23,12 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	{
 		// No POST?
 		if ( empty($_POST) ) {
-			wp_die(__('Cheatin&#8217; uh?', 'antispam-bee'));
+			wp_die(esc_html__('Cheatin&#8217; uh?', 'antispam-bee'));
 		}
 
 		// Capability check
 		if ( ! current_user_can('manage_options') ) {
-			wp_die(__('Cheatin&#8217; uh?', 'antispam-bee'));
+			wp_die(esc_html__('Cheatin&#8217; uh?', 'antispam-bee'));
 		}
 
 		// Check referer
@@ -226,7 +226,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										);
 									printf(
 										/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag */
-										__( 'Check if commenter has a Gravatar image. Please note the %1$ssprivacy notice%2$s for this option.', 'antispam-bee' ),
+										esc_html__( 'Check if commenter has a Gravatar image. Please note the %1$ssprivacy notice%2$s for this option.', 'antispam-bee' ),
 										$link1,
 										'</a>'
 									); ?></span>
@@ -284,7 +284,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										);
 										printf(
 											/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. 3: opening <a> tag with link to documentation. 4: closing </a> tag. */
-											__( 'Matching the ip address with %1$sStop Forum Spam%2$s. Please note the %3$sprivacy notice%4$s for this option.', 'antispam-bee' ),
+											esc_html__( 'Matching the ip address with %1$sStop Forum Spam%2$s. Please note the %3$sprivacy notice%4$s for this option.', 'antispam-bee' ),
 												'<a href="https://www.stopforumspam.com/" target="_blank" rel="noopener noreferrer">',
 												'</a>',
 												$link2,
@@ -305,7 +305,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										);
 									printf(
 										/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
-										__( 'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
+										esc_html__( 'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
 										$link1, '</a>'
 									); ?></span>
 								</label>
@@ -322,7 +322,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											<span><?php
 												printf(
 													/* translators: 1: opening <a> tag with link to ISO codes reference. 2: closing </a> tag. */
-													__( 'Blacklist  %1$sISO Codes%2$s for this option.', 'antispam-bee' ),
+													esc_html__( 'Blacklist  %1$sISO Codes%2$s for this option.', 'antispam-bee' ),
 													$iso_codes_link,
 													'</a>' );
 											?></span>
@@ -334,7 +334,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											<span><?php
 												printf(
 													/* translators: 1: opening <a> tag with link to ISO codes reference. 2: closing </a> tag. */
-													__( 'Whitelist  %1$sISO Codes%2$s for this option.', 'antispam-bee' ),
+													esc_html__( 'Whitelist  %1$sISO Codes%2$s for this option.', 'antispam-bee' ),
 													$iso_codes_link,
 													'</a>' );
 											?></span>
@@ -356,7 +356,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 										printf(
 											/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
-											__( 'Detect and approve only the specified language. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
+											esc_html__( 'Detect and approve only the specified language. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
 											$link1,
 											'</a>' );
 										?></span>
@@ -431,8 +431,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										self::_build_select(
 											'ab_ignore_type',
 											array(
-												1 => __( 'Comments', 'antispam-bee' ),
-												2 => __( 'Pings', 'antispam-bee' )
+												1 => esc_attr__( 'Comments', 'antispam-bee' ),
+												2 => esc_attr__( 'Pings', 'antispam-bee' )
 											),
 											$options['ignore_type']
 										)
