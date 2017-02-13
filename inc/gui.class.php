@@ -282,7 +282,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 												esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar', 'antispam-bee' ),
 												       'https' )
 										);
-										pprintf(
+										printf(
 											/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. 3: opening <a> tag with link to documentation. 4: closing </a> tag. */
 											__( 'Matching the ip address with %1$sStop Forum Spam%2$s. Please note the %3$sprivacy notice%4$s for this option.', 'antispam-bee' ),
 												'<a href="https://www.stopforumspam.com/" target="_blank" rel="noopener noreferrer">',
