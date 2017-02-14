@@ -346,7 +346,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							<li>
 								<input type="checkbox" name="ab_translate_api" id="ab_translate_api" value="1" <?php checked($options['translate_api'], 1) ?> />
 								<label for="ab_translate_api">
-									<?php esc_html_e( 'Allow comments only in certain language', 'antispam_bee' ) ?>
+									<?php esc_html_e( 'Allow comments only in certain language', 'antispam-bee' ) ?>
 									<span><?php
 										$link1 = sprintf(
 											'<a href="%s" target="_blank" rel="noopener noreferrer">',
