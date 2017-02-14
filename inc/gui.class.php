@@ -366,11 +366,11 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									<li>
 										<select name="ab_translate_lang">
 											<?php foreach( array('de' => 'German', 'en' => 'English', 'fr' => 'French', 'it' => 'Italian', 'es' => 'Spanish') as $k => $v ) { ?>
-												<option <?php selected($options['translate_lang'], $k); ?> value="<?php echo esc_attr($k) ?>"><?php esc_html_e($v, 'antispam_bee') ?></option>
+												<option <?php selected($options['translate_lang'], $k); ?> value="<?php echo esc_attr($k) ?>"><?php esc_html_e($v, 'antispam-bee') ?></option>
 											<?php } ?>
 										</select>
 										<label for="ab_translate_lang">
-											<?php esc_html_e('Language', 'antispam_bee') ?>
+											<?php esc_html_e('Language', 'antispam-bee') ?>
 										</label>
 									</li>
 								</ul>
