@@ -1299,7 +1299,7 @@ class Antispam_Bee {
 		$output .= ' name="' . esc_attr( self::get_secret_name_for_post( get_the_ID() ) ) . '" ';
 		$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
 		$output .= $matches['after'] . '>';
-		$output .= '</textarea><textarea id="comment" aria-hidden="true" name="comment" style="width:10px !important;position:absolute !important;left:-10000000px !important"></textarea>';
+		$output .= '</textarea><textarea id="comment" aria-hidden="true" name="comment" style="clip:rect(1px, 1px, 1px, 1px);position:absolute !important;white-space:nowrap;height:1px;width:1px;overflow:hidden;" tabindex="-1"></textarea>';
 		$output .= $id_script;
 		$output .= $init_time_field;
 
