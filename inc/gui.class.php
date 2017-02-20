@@ -83,7 +83,9 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 		// Translate API
 		if ( !empty($options['translate_lang']) ) {
-			if ( !preg_match('/^(de|en|fr|it|es)$/', $options['translate_lang']) ) {
+			$lang = self::get_allowed_translate_languages();
+			$lang = array_keys( $lang );
+			if ( ! in_array( $options['translate_lang'], $lang, true ) ) {
 				$options['translate_lang'] = '';
 			}
 		}
@@ -365,7 +367,9 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<ul>
 									<li>
 										<select name="ab_translate_lang">
-											<?php foreach( array('de' => 'German', 'en' => 'English', 'fr' => 'French', 'it' => 'Italian', 'es' => 'Spanish') as $k => $v ) { ?>
+											<?php
+											$lang = self::get_allowed_translate_languages();
+											foreach( $lang as $k => $v ) { ?>
 												<option <?php selected($options['translate_lang'], $k); ?> value="<?php echo esc_attr($k) ?>"><?php esc_html_e($v, 'antispam-bee') ?></option>
 											<?php } ?>
 										</select>
@@ -528,4 +532,31 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			</form>
 		</div>
 	<?php }
+
+	/**
+	 * Get the languages, which are selectable to restrict the comment language to.
+	 *
+	 * @since 2.7.1
+	 * @return array $lang
+	 */
+	private static function get_allowed_translate_languages() {
+
+		$lang = array(
+			'de' => 'German',
+			'en' => 'English',
+			'fr' => 'French',
+			'it' => 'Italian',
+			'es' => 'Spanish',
+			'iw' => 'Hebrew',
+		);
+
+		/**
+		 * Filter the possible languages for the language spam test
+		 *
+		 * @since 2.7.1
+		 * @param (array) $lang The languages
+		 * @return (array)
+		 */
+		return apply_filters( 'ab_get_allowed_translate_languages', $lang );
+	}
 }
