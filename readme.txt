@@ -152,5 +152,10 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 For the complete changelog, check out our [GitHub repository](https://github.com/pluginkollektiv/antispam-bee).
 
+== Upgrade Notice ==
+
+= 2.7.1 =
+Please flush your cache, after you have updated.
+
 ## Screenshots ##
 1. Antispam Bee settings
