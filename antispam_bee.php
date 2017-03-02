@@ -2602,7 +2602,7 @@ class Antispam_Bee {
 	 */
 	public static function get_secret_name_for_post( $post_id ) {
 
-		$secret = substr( sha1( md5( self::$_salt . get_the_title( (int) $post_id ) ) ), 0, 10 );
+		$secret = substr( sha1( md5( self::$_salt . (int) $post_id ) ), 0, 10 );
 
 		/**
 		 * Filters the secret for a post, which is used in the textarea name attribute.
@@ -2627,7 +2627,7 @@ class Antispam_Bee {
 	 */
 	public static function get_secret_id_for_post( $post_id ) {
 
-		$secret = substr( sha1( md5( 'comment-id' . self::$_salt . get_the_title( (int) $post_id ) ) ), 0, 10 );
+		$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
 
 		/**
 		 * Filters the secret for a post, which is used in the textarea id attribute.
