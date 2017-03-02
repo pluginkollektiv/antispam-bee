@@ -547,7 +547,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'fr' => 'French',
 			'it' => 'Italian',
 			'es' => 'Spanish',
-			'iw' => 'Hebrew',
 		);
 
 		/**
