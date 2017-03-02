@@ -155,7 +155,7 @@ For the complete changelog, check out our [GitHub repository](https://github.com
 == Upgrade Notice ==
 
 = 2.7.1 =
-Please flush your cache, after you have updated.
+This update changes the actual markup of your comment fields. Please make sure that you flush your caches after the plugin was updated!
 
 ## Screenshots ##
 1. Antispam Bee settings
