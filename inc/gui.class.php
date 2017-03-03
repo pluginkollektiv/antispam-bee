@@ -370,7 +370,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											<?php
 											$lang = self::get_allowed_translate_languages();
 											foreach( $lang as $k => $v ) { ?>
-												<option <?php selected($options['translate_lang'], $k); ?> value="<?php echo esc_attr($k) ?>"><?php esc_html_e($v, 'antispam-bee') ?></option>
+												<option <?php selected( $options['translate_lang'], $k ); ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $v ); ?></option>
 											<?php } ?>
 										</select>
 										<label for="ab_translate_lang">
@@ -542,11 +542,11 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	private static function get_allowed_translate_languages() {
 
 		$lang = array(
-			'de' => 'German',
-			'en' => 'English',
-			'fr' => 'French',
-			'it' => 'Italian',
-			'es' => 'Spanish',
+			'de' => __( 'German', 'antispam-bee' ),
+			'en' => __( 'English', 'antispam-bee' ),
+			'fr' => __( 'French', 'antispam-bee' ),
+			'it' => __( 'Italian', 'antispam-bee' ),
+			'es' => __( 'Spanish', 'antispam-bee' ),
 		);
 
 		/**
