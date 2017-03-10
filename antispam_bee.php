@@ -50,6 +50,7 @@ class Antispam_Bee {
 	private static $_base;
 	private static $_salt;
 	private static $_reason;
+	private static $_current_post_id;
 
 
 	/**
@@ -229,6 +230,14 @@ class Antispam_Bee {
 
 		// Frontend
 		} else {
+			add_action(
+				'wp',
+				array(
+					__CLASS__,
+					'populate_post_id'
+				)
+			);
+
 			add_action(
 				'template_redirect',
 				array(
@@ -1292,11 +1301,11 @@ class Antispam_Bee {
 
 		$id_script = '';
 		if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
-			$output .= 'id="' . self::get_secret_id_for_post( get_the_ID() ) . '" ';
-			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "' . esc_js( md5( time() ) ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( get_the_ID() ) ) . '").setAttribute( "id", "comment" );</script>';
+			$output .= 'id="' . self::get_secret_id_for_post( self::$_current_post_id ) . '" ';
+			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "' . esc_js( md5( time() ) ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( self::$_current_post_id ) ) . '").setAttribute( "id", "comment" );</script>';
 		}
 
-		$output .= ' name="' . esc_attr( self::get_secret_name_for_post( get_the_ID() ) ) . '" ';
+		$output .= ' name="' . esc_attr( self::get_secret_name_for_post( self::$_current_post_id ) ) . '" ';
 		$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
 		$output .= $matches['after'] . '>';
 		$output .= '</textarea><textarea id="comment" aria-hidden="true" name="comment" autocomplete="nope" style="clip:rect(1px, 1px, 1px, 1px);position:absolute !important;white-space:nowrap;height:1px;width:1px;overflow:hidden;" tabindex="-1"></textarea>';
@@ -2368,6 +2377,20 @@ class Antispam_Bee {
 			$comment_id,
 			'antispam_bee_reason'
 		);
+	}
+
+	/**
+	 * Get the current post ID.
+	 *
+	 * @since   2.7.1
+	 *
+	 * @param   integer  $comment_id  Comment ID
+	 */
+	public static function populate_post_id() {
+
+		if ( null === self::$_current_post_id ) {
+			self::$_current_post_id = get_the_ID();
+		}
 	}
 
 
