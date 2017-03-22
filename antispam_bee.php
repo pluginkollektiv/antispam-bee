@@ -1151,7 +1151,9 @@ class Antispam_Bee {
 					(?P<between3>[^>]*)
 				)
 				(?P<after>[^>]*)                                                    (?# match any additional optional attributes )
-				><\/textarea>                                                       (?# the closing of the textarea )
+				>                                                                   (?# the closing of the textarea opening tag )
+				(?s)(?P<content>.*?)                                                (?# any textarea content )
+				<\/textarea>                                                        (?# the closing textarea tag )
 			)/x',
 			array( 'Antispam_Bee', 'replace_comment_field_callback' ),
 			$data,
@@ -1189,6 +1191,7 @@ class Antispam_Bee {
 		$output .= ' name="' . esc_attr( self::get_secret_name_for_post( self::$_current_post_id ) ) . '" ';
 		$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
 		$output .= $matches['after'] . '>';
+		$output .= $matches['content'];
 		$output .= '</textarea><textarea id="comment" aria-hidden="true" name="comment" autocomplete="nope" style="padding:0;clip:rect(1px, 1px, 1px, 1px);position:absolute !important;white-space:nowrap;height:1px;width:1px;overflow:hidden;" tabindex="-1"></textarea>';
 
 		$output .= $id_script;
