@@ -281,7 +281,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									<?php esc_html_e( 'Use a public antispam database', 'antispam-bee' ); ?>
 									<span><?php $link2 = sprintf(
 											'<a href="%s" target="_blank" rel="noopener noreferrer">',
-												esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar', 'antispam-bee' ),
+												esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#use-a-public-antispam-database', 'antispam-bee' ),
 												       'https' )
 										);
 										printf(
