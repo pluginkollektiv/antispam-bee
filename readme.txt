@@ -90,6 +90,14 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 ## Changelog ##
 
+### 2.7.1 ###
+   * Fixes an imcompatibility with Chrome autofill
+   * Fixes some imcompatibilities with other plugins/themes where the comment field was left empty.
+   * Support for RTL
+   * Solve some translation/language issues
+   * A new filter to add languages to the language check.
+   * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/6?closed=1
+
 ### 2.7.0 ###
    * Country check is back again (thanks to Sergej Müller for his amazing work and the service page)
    * Improved Honeypot
