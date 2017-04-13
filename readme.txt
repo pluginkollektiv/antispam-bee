@@ -3,7 +3,7 @@
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, prevention, protect, protection, spam, spam filter, trackback
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML
 * Requires at least: 3.8
-* Tested up to:      4.7.2
+* Tested up to:      4.7
 * Stable tag:        2.7.1
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -91,11 +91,11 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 ## Changelog ##
 
 ### 2.7.1 ###
-   * Fixes an imcompatibility with Chrome autofill
-   * Fixes some imcompatibilities with other plugins/themes where the comment field was left empty.
+   * Fixes an incompatibility with Chrome autofill
+   * Fixes some incompatibilities with other plugins/themes where the comment field was left empty
    * Support for RTL
    * Solve some translation/language issues
-   * A new filter to add languages to the language check.
+   * A new filter to add languages to the language check
    * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/6?closed=1
 
 ### 2.7.0 ###
