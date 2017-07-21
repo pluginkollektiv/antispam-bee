@@ -2210,10 +2210,9 @@ class Antispam_Bee {
 		// Mark spam
 		add_filter(
 			'pre_comment_approved',
-			create_function(
-				'',
-				'return "spam";'
-			)
+			function() {
+				return 'spam';
+			}
 		);
 
 		// Send e-mail
