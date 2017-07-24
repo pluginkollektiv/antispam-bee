@@ -2210,9 +2210,10 @@ class Antispam_Bee {
 		// Mark spam
 		add_filter(
 			'pre_comment_approved',
-			function() {
-				return 'spam';
-			}
+			array(
+				__CLASS__,
+				'return_spam'
+			)
 		);
 
 		// Send e-mail
@@ -2662,6 +2663,18 @@ class Antispam_Bee {
 			$secret,
 			(int) $post_id
 		);
+	}
+
+	/**
+	 * Returns 'spam'
+	 *
+	 * @since 2.7.3
+	 *
+	 * @return string
+	 */
+	public static function return_spam() {
+
+		return 'spam';
 	}
 }
 
