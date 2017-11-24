@@ -146,7 +146,7 @@
 
 .ab-column > ul > li {
     width: 330px;
-    margin: 0 0 36px;
+    margin: 0 0 25px;
     padding: 10px 0 12px 12px;
     position: relative;
     background: #fff;
@@ -177,47 +177,6 @@
 
 /* @end group */
 
-/* @group Separator */
-
-.ab-column > ul > li:after, .ab-column > ul > li:before {
-    width: 0;
-    content: '';
-    position: absolute;
-}
-
-.ab-column.ab-arrow > ul > li:before,
-.ab-column.ab-arrow > ul > li:after {
-    left: 157px;
-    border-width: 10px 10px 0;
-    border-style: solid;
-}
-
-.ab-column.ab-arrow > ul > li:before {
-    bottom: -24px;
-    border-color: #8e959c transparent;
-}
-
-.ab-column.ab-arrow > ul > li:after {
-    bottom: -22px;
-    border-color: #f1f1f1 transparent;
-}
-
-.ab-column.ab-join > ul > li:before {
-    left: 171px;
-    bottom: -27px;
-    height: 18px;
-    border-right: 2px solid #8e959c;
-}
-
-.ab-column.ab-diff > ul > li:before {
-    left: 162px;
-    bottom: -19px;
-    width: 18px;
-    height: 0;
-    border-bottom: 2px solid #8e959c;
-}
-
-/* @end group */
 
 /* @group Submit & Service */
 
