@@ -384,7 +384,7 @@ class Antispam_Bee {
 
 				// Advanced
 				'flag_spam' 		=> 1,
-				'email_notify' 		=> 1,
+				'email_notify' 		=> 0,
 				'no_notice' 		=> 0,
 				'cronjob_enable' 	=> 0,
 				'cronjob_interval'	=> 0,
