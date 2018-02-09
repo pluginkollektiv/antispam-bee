@@ -1,5 +1,15 @@
 ## Changelog ##
 
+### 2.7.2 ###
+
+* **English**
+  * PHP 7.2 compatibility
+  * Fixes small bug on mobile views
+  
+* **Deutsch**
+  - PHP 7.2 Kompatibilität hergestellt
+  - Kleiner CSS Bugfix für mobile Ansichten
+  
 ### 2.7.1 ###
 
 * **English**
