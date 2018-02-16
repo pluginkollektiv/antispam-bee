@@ -693,21 +693,15 @@ class Antispam_Bee {
 		return $items;
 		}
 
-        	// Icon styling
-        	echo '<style>#dashboard_right_now .ab-count:before {content: "\f117"}</style>';
+			// Icon styling
+			echo '<style>#dashboard_right_now .ab-count:before {content: "\f117"}</style>';
 
 		// Right now item
-		$items[] = sprintf(
-			'<a href="%s" class="ab-count">%s %s</a>',
-			add_query_arg(
-				array(
-					'page' => 'antispam_bee'
-					),
-				admin_url( 'options-general.php' )
-			),
-			esc_html( self::_get_spam_count() ),
-			esc_html__('Blocked', 'antispam-bee')
-		);
+		$items[] = '<span class="ab-count">' . esc_html( sprintf(
+					__( '%d Blocked',  'antispam-bee' ),
+					self::_get_spam_count()
+				)
+		) . '</span>';
 
 	return $items;
 	}
