@@ -2503,7 +2503,18 @@ class Antispam_Bee {
 
 		// Send
 		wp_mail(
-			get_bloginfo('admin_email'),
+			/**
+			 * Filters the recipients of the spam notification
+			 * @param array The recipients array.
+			 **/
+			apply_filters(
+				'antispam_bee_notification_recipients',
+				array( get_bloginfo('admin_email') )
+			),
+			/**
+			 * Filters the subject of the spam notification
+			 * @param string $subject subject line.
+			 **/
 			apply_filters(
 				'antispam_bee_notification_subject',
 				$subject
