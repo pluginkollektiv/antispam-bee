@@ -1822,10 +1822,10 @@ class Antispam_Bee {
 		$response = wp_safe_remote_request(
 			esc_url_raw(
 				sprintf(
-					'http://www.stopforumspam.com/api?ip=%s&f=json',
+					'https://www.stopforumspam.com/api?ip=%s&f=json',
 					$ip
 				),
-				'http'
+				'https'
 			)
 		);
 

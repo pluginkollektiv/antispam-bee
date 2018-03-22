@@ -5,10 +5,12 @@
 * **English**
   * PHP 7.2 compatibility
   * Fixes small bug on mobile views
+  * HTTPS for stopforumspam.com requests
   
 * **Deutsch**
   - PHP 7.2 Kompatibilität hergestellt
   - Kleiner CSS Bugfix für mobile Ansichten
+  - HTTPS-Verbindugn für stopforumspam.com-Anfragen
   
 ### 2.7.1 ###
 
