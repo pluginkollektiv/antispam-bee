@@ -3,7 +3,7 @@
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, prevention, protect, protection, spam, spam filter, trackback
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML
 * Requires at least: 3.8
-* Tested up to:      4.9.4
+* Tested up to:      4.9
 * Stable tag:        2.7.1
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
