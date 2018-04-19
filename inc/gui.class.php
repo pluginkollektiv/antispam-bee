@@ -61,7 +61,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 			'bbcode_check'		=> (int)(!empty($_POST['ab_bbcode_check'])),
 			'gravatar_check'	=> (int)(!empty($_POST['ab_gravatar_check'])),
-			'dnsbl_check'		=> (int)(!empty($_POST['ab_dnsbl_check'])),
 			'country_code' 		=> (int)(!empty($_POST['ab_country_code'])),
 			'country_black'		=> sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_black' ) ) ),
 			'country_white'		=> sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_white' ) ) ),
@@ -272,27 +271,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<label for="ab_spam_ip">
 									<?php esc_html_e( 'Look in the local spam database', 'antispam-bee' ); ?>
 									<span><?php esc_html_e( 'Check for spam data on your own blog', 'antispam-bee' ); ?></span>
-								</label>
-							</li>
-
-							<li>
-								<input type="checkbox" name="ab_dnsbl_check" id="ab_dnsbl_check" value="1" <?php checked($options['dnsbl_check'], 1) ?> />
-								<label for="ab_dnsbl_check">
-									<?php esc_html_e( 'Use a public antispam database', 'antispam-bee' ); ?>
-									<span><?php $link2 = sprintf(
-											'<a href="%s" target="_blank" rel="noopener noreferrer">',
-												esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#use-a-public-antispam-database', 'antispam-bee' ),
-												       'https' )
-										);
-										printf(
-											/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. 3: opening <a> tag with link to documentation. 4: closing </a> tag. */
-											esc_html__( 'Matching the ip address with %1$sStop Forum Spam%2$s. Please note the %3$sprivacy notice%4$s for this option.', 'antispam-bee' ),
-												'<a href="https://www.stopforumspam.com/" target="_blank" rel="noopener noreferrer">',
-												'</a>',
-												$link2,
-												'</a>'
-										);
-										?></span>
 								</label>
 							</li>
 

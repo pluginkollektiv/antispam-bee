@@ -379,7 +379,6 @@ class Antispam_Bee {
 				'translate_api' 	=> 0,
 				'translate_lang'	=> '',
 
-				'dnsbl_check'		=> 0,
 				'bbcode_check'		=> 1,
 
 				// Advanced
@@ -402,7 +401,6 @@ class Antispam_Bee {
 				'server'	=> esc_attr__( 'Fake IP', 'antispam-bee' ),
 				'localdb'	=> esc_attr__( 'Local DB Spam', 'antispam-bee' ),
 				'country'	=> esc_attr__( 'Country Check', 'antispam-bee' ),
-				'dnsbl'		=> esc_attr__( 'Public Antispam DB', 'antispam-bee' ),
 				'bbcode'	=> esc_attr__( 'BBCode', 'antispam-bee' ),
 				'lang'		=> esc_attr__( 'Comment Language', 'antispam-bee' ),
 				'regexp'	=> esc_attr__( 'Regular Expression', 'antispam-bee' ),
@@ -1366,13 +1364,6 @@ class Antispam_Bee {
 			);
 		}
 
-		// DNSBL spam
-		if ( $options['dnsbl_check'] && self::_is_dnsbl_spam($ip) ) {
-			return array(
-				'reason' => 'dnsbl'
-			);
-		}
-
 		// Check Country Code
 		if ( $options['country_code'] && self::_is_country_spam($ip) ) {
 			return array(
@@ -1490,13 +1481,6 @@ class Antispam_Bee {
 		if ( $options['spam_ip'] && self::_is_db_spam($ip, $url, $email) ) {
 			return array(
 				'reason' => 'localdb'
-			);
-		}
-
-		// DNSBL spam
-		if ( $options['dnsbl_check'] && self::_is_dnsbl_spam($ip) ) {
-			return array(
-				'reason' => 'dnsbl'
 			);
 		}
 
@@ -1805,50 +1789,7 @@ class Antispam_Bee {
 		// Dive into whitelist
 		return ( ! in_array($country, $white) );
 	}
-
-	/**
-	* Check for DNSBL spam
-	*
-	* @since   2.4.5
-	* @change  2.4.5
-	*
-	* @param   string   $ip  IP address
-	* @return  boolean       TRUE for reported IP
-	*/
-
-	private static function _is_dnsbl_spam($ip)
-	{
-		// Start request
-		$response = wp_safe_remote_request(
-			esc_url_raw(
-				sprintf(
-					'https://www.stopforumspam.com/api?ip=%s&f=json',
-					$ip
-				),
-				'https'
-			)
-		);
-
-		// Response error?
-		if ( is_wp_error($response) ) {
-			return false;
-		}
-
-		// Get JSON
-		$json = wp_remote_retrieve_body($response);
-
-		// Decode JSON
-		$result = json_decode($json);
-
-		// Empty data
-		if ( empty($result->success) ) {
-			return false;
-		}
-
-		// Return status
-		return (bool) $result->ip->appears;
-	}
-
+	
 
 	/**
 	* Check for BBCode spam
