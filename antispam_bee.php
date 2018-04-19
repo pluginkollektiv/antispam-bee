@@ -1789,7 +1789,7 @@ class Antispam_Bee {
 		// Dive into whitelist
 		return ( ! in_array($country, $white) );
 	}
-	
+
 
 	/**
 	* Check for BBCode spam
