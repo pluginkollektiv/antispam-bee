@@ -35,5 +35,10 @@
 		"psr-4": {
 			"AntispamBee\\Tests\\": "tests/"
 		}
+	},
+	"config": {
+		"platform": {
+			"php": "5.5"
+		}
 	}
 }
