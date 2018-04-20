@@ -17,7 +17,7 @@ before_script:
 script:
   - mkdir -p .build/logs
   - vendor/bin/phpunit -c phpunit.xml.dist
-  - vendor/bin/phpcs ./ --standard=./phpcs.config.xml
+  - vendor/bin/phpcs ./ --standard=./phpcs.config.xml -s
 
 # We should also add codecov.
 #after_success:
