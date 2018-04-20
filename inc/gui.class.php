@@ -277,7 +277,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							<li>
 								<input type="checkbox" name="ab_country_code" id="ab_country_code" value="1" <?php checked($options['country_code'], 1) ?> />
 								<label for="ab_country_code">
-									<?php esc_html_e('Block comments from specific countries', 'antispam-bee') ?>
+									<?php esc_html_e('Block or allow comments from specific countries', 'antispam-bee') ?>
 									<span><?php $link1 = sprintf(
 										'<a href="%s" target="_blank" rel="noopener noreferrer">',
 											esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#block-comments-from-specific-countries', 'antispam-bee' ),
