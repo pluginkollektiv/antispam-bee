@@ -35,6 +35,19 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		check_admin_referer('_antispam_bee__settings_nonce');
     
 		// Determine options
+		$selected_languages_raw = self::get_key($_POST, 'ab_translate_lang' );
+		if(!is_array($selected_languages_raw)) {
+			$selected_languages_raw = [];
+		}
+		$selected_languages = [];
+		$lang               = self::get_allowed_translate_languages();
+		$lang               = array_keys( $lang );
+		foreach ( $selected_languages_raw as $value ) {
+			if ( ! in_array( $value, $lang, true ) ) {
+				continue;
+			}
+			$selected_languages[] = $value;
+		}
 		$options = array(
 			'flag_spam' 		=> (int)(!empty($_POST['ab_flag_spam'])),
 			'email_notify' 		=> (int)(!empty($_POST['ab_email_notify'])),
@@ -66,7 +79,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'country_white'		=> sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_white' ) ) ),
 
 			'translate_api' 	=> (int)(!empty($_POST['ab_translate_api'])),
-			'translate_lang'	=> sanitize_text_field( wp_unslash( self::get_key($_POST, 'ab_translate_lang' ) ) ),
+			'translate_lang'	=> $selected_languages,
 		);
 
 		foreach( $options['ignore_reasons'] as $key => $val ) {
@@ -81,13 +94,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		}
 
 		// Translate API
-		if ( !empty($options['translate_lang']) ) {
-			$lang = self::get_allowed_translate_languages();
-			$lang = array_keys( $lang );
-			if ( ! in_array( $options['translate_lang'], $lang, true ) ) {
-				$options['translate_lang'] = '';
-			}
-		}
 		if ( empty($options['translate_lang']) ) {
 			$options['translate_api'] = 0;
 		}
@@ -344,11 +350,12 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 								<ul>
 									<li>
-										<select name="ab_translate_lang">
+										<select multiple name="ab_translate_lang[]">
 											<?php
 											$lang = self::get_allowed_translate_languages();
+											$selected_languages = (array) $options['translate_lang'];
 											foreach( $lang as $k => $v ) { ?>
-												<option <?php selected( $options['translate_lang'], $k ); ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $v ); ?></option>
+												<option <?php echo in_array( $k, $selected_languages, true ) ? 'selected="selected"' : ''; ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $v ); ?></option>
 											<?php } ?>
 										</select>
 										<label for="ab_translate_lang">
