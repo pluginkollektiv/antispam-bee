@@ -1,16 +1,18 @@
 <?php
-// Make sure this file is only run from within the WordPress context.
-defined( 'ABSPATH' ) || exit;
+/**
+ * The Antispam Bee GUI
+ *
+ * @package Antispam Bee
+ */
 
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Antispam_Bee_GUI
  *
  * @since  2.4
  */
-
 class Antispam_Bee_GUI extends Antispam_Bee {
-
 
 	/**
 	 * Save the GUI
@@ -18,22 +20,17 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	 * @since   0.1
 	 * @change  2.7.0
 	 */
-
 	public static function save_changes() {
-		// No POST?
 		if ( empty( $_POST ) ) {
 			wp_die( esc_html__( 'Cheatin&#8217; uh?', 'antispam-bee' ) );
 		}
 
-		// Capability check
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'Cheatin&#8217; uh?', 'antispam-bee' ) );
 		}
 
-		// Check referer
 		check_admin_referer( '_antispam_bee__settings_nonce' );
 
-		// Determine options
 		$options = array(
 			'flag_spam'         => (int) ( ! empty( $_POST['ab_flag_spam'] ) ),
 			'email_notify'      => (int) ( ! empty( $_POST['ab_email_notify'] ) ),
@@ -74,12 +71,10 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			}
 		}
 
-		// No number of days indicated?
 		if ( empty( $options['cronjob_interval'] ) ) {
 			$options['cronjob_enable'] = 0;
 		}
 
-		// Translate API
 		if ( ! empty( $options['translate_lang'] ) ) {
 			$lang = self::get_allowed_translate_languages();
 			$lang = array_keys( $lang );
@@ -91,12 +86,10 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			$options['translate_api'] = 0;
 		}
 
-		// List of spam reasons
 		if ( empty( $options['reasons_enable'] ) ) {
 			$options['ignore_reasons'] = array();
 		}
 
-		// Blacklist clean
 		if ( ! empty( $options['country_black'] ) ) {
 			$options['country_black'] = preg_replace(
 				'/[^A-Z ,;]/',
@@ -105,7 +98,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			);
 		}
 
-		// Whitelist clean
 		if ( ! empty( $options['country_white'] ) ) {
 			$options['country_white'] = preg_replace(
 				'/[^A-Z ,;]/',
@@ -114,22 +106,18 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			);
 		}
 
-		// Empty lists?
 		if ( empty( $options['country_black'] ) && empty( $options['country_white'] ) ) {
 			$options['country_code'] = 0;
 		}
 
-		// Stop Cron?
 		if ( $options['cronjob_enable'] && ! self::get_option( 'cronjob_enable' ) ) {
 			self::init_scheduled_hook();
 		} elseif ( ! $options['cronjob_enable'] && self::get_option( 'cronjob_enable' ) ) {
 			self::clear_scheduled_hook();
 		}
 
-		// Save options
 		self::update_options( $options );
 
-		// Redirect
 		wp_safe_redirect(
 			add_query_arg(
 				array(
@@ -142,29 +130,22 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		die();
 	}
 
-
 	/**
 	 * Generation of a selectbox
 	 *
 	 * @since   2.4.5
 	 * @change  2.4.5
 	 *
-	 * @param   string $name      Name of the Selectbox
-	 * @param   array  $data      Array with values
-	 * @param   string $selected  Selected value
-	 * @return  string  $html      Generated HTML
+	 * @param   string $name      Name of the Selectbox.
+	 * @param   array  $data      Array with values.
+	 * @param   string $selected  Selected value.
+	 * @return  string  $html     Generated HTML.
 	 */
-
 	private static function _build_select( $name, $data, $selected ) {
-		// Start HTML
-		$html = '<select name="' . $name . '">';
-
-		// Loop options
+		$html = '<select name="' . esc_attr( $name ) . '">';
 		foreach ( $data as $k => $v ) {
 			$html .= '<option value="' . esc_attr( $k ) . '" ' . selected( $selected, $k, false ) . '>' . esc_html( $v ) . '</option>';
 		}
-
-		// Close HTML
 		$html .= '</select>';
 
 		return $html;
@@ -177,14 +158,13 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	 * @since   0.1
 	 * @change  2.7.0
 	 */
-
 	public static function options_page() { ?>
 		<div class="wrap" id="ab_main">
 			<h2>
 				Antispam Bee
 			</h2>
 
-			<form action="<?php echo admin_url( 'admin-post.php' ); ?>" method="post">
+			<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
 				<input type="hidden" name="action" value="ab_save_changes" />
 
 				<?php wp_nonce_field( '_antispam_bee__settings_nonce' ); ?>
@@ -230,7 +210,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										printf(
 											/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag */
 											esc_html__( 'Check if commenter has a Gravatar image. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
-											$link1,
+											wp_kses_post( $link1 ),
 											'</a>'
 										);
 									?>
@@ -294,7 +274,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										printf(
 											/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
 											esc_html__( 'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
-											$link1, '</a>'
+											wp_kses_post( $link1 ), '</a>'
 										);
 									?>
 									</span>
@@ -318,7 +298,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 												printf(
 													/* translators: 1: opening <a> tag with link to ISO codes reference. 2: closing </a> tag. */
 													esc_html__( 'Blacklist  %1$sISO Codes%2$s for this option.', 'antispam-bee' ),
-													$iso_codes_link,
+													wp_kses_post( $iso_codes_link ),
 													'</a>'
 												);
 											?>
@@ -333,7 +313,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 												printf(
 													/* translators: 1: opening <a> tag with link to ISO codes reference. 2: closing </a> tag. */
 													esc_html__( 'Whitelist  %1$sISO Codes%2$s for this option.', 'antispam-bee' ),
-													$iso_codes_link,
+													wp_kses_post( $iso_codes_link ),
 													'</a>'
 												);
 											?>
@@ -360,7 +340,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										printf(
 											/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
 											esc_html__( 'Detect and approve only the specified language. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
-											$link1,
+											wp_kses_post( $link1 ),
 											'</a>'
 										);
 										?>
@@ -425,6 +405,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<label for="ab_cronjob_enable">
 									<?php
 									echo sprintf(
+										// translators: $s is an input field containing the number of days.
 										esc_html__( 'Delete existing spam after %s days', 'antispam-bee' ),
 										'<input type="number" min="0" name="ab_cronjob_interval" value="' . esc_attr( $options['cronjob_interval'] ) . '" class="ab-mini-field" />'
 									)
@@ -438,6 +419,9 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<label for="ab_ignore_filter">
 									<?php
 									echo sprintf(
+										// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
+										// Output gets escaped in _build_select()
+										// translators: %s is the select field.
 										esc_html__( 'Limit approval to %s', 'antispam-bee' ),
 										self::_build_select(
 											'ab_ignore_type',
@@ -447,6 +431,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											),
 											$options['ignore_type']
 										)
+										// phpcs:enable _build_select
 									);
 									?>
 									<span><?php esc_html_e( 'Other types of spam will be deleted immediately', 'antispam-bee' ); ?></span>
@@ -464,7 +449,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									<li>
 										<select name="ab_ignore_reasons[]" id="ab_ignore_reasons" size="2" multiple>
 											<?php foreach ( self::$defaults['reasons'] as $k => $v ) { ?>
-												<option <?php selected( in_array( $k, $options['ignore_reasons'] ), true ); ?> value="<?php echo $k; ?>"><?php esc_html_e( $v, 'antispam-bee' ); ?></option>
+												<option <?php selected( in_array( $k, $options['ignore_reasons'], true ), true ); ?> value="<?php echo esc_attr( $k ); ?>"><?php esc_html_e( $v, 'antispam-bee' ); ?></option>
 											<?php } ?>
 										</select>
 										<label for="ab_ignore_reasons">
