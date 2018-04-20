@@ -33,9 +33,9 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 		// Check referer
 		check_admin_referer('_antispam_bee__settings_nonce');
-    
+
 		// Determine options
-		$selected_languages_raw = self::get_key($_POST, 'ab_translate_lang' );
+		$selected_languages_raw = wp_unslash( self::get_key($_POST, 'ab_translate_lang' ) );
 		if(!is_array($selected_languages_raw)) {
 			$selected_languages_raw = [];
 		}
