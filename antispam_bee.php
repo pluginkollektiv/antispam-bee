@@ -474,9 +474,7 @@ class Antispam_Bee {
 	public static function load_plugin_lang()
 	{
 		load_plugin_textdomain(
-			'antispam-bee',
-			false,
-			'antispam-bee/lang'
+			'antispam-bee'
 		);
 	}
 
