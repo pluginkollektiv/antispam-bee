@@ -29,12 +29,10 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			wp_die( esc_html__( 'Cheatin&#8217; uh?', 'antispam-bee' ) );
 		}
 
-		// Check referer
-		check_admin_referer('_antispam_bee__settings_nonce');
+		check_admin_referer( '_antispam_bee__settings_nonce' );
 
-		// Determine options
-		$selected_languages_raw = wp_unslash( self::get_key($_POST, 'ab_translate_lang' ) );
-		if(!is_array($selected_languages_raw)) {
+		$selected_languages_raw = wp_unslash( self::get_key( $_POST, 'ab_translate_lang' ) );
+		if ( ! is_array( $selected_languages_raw ) ) {
 			$selected_languages_raw = [];
 		}
 		$selected_languages = [];
@@ -47,37 +45,37 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			$selected_languages[] = $value;
 		}
 		$options = array(
-			'flag_spam' 		=> (int)(!empty($_POST['ab_flag_spam'])),
-			'email_notify' 		=> (int)(!empty($_POST['ab_email_notify'])),
-			'cronjob_enable' 	=> (int)(!empty($_POST['ab_cronjob_enable'])),
-			'cronjob_interval'	=> (int)self::get_key($_POST, 'ab_cronjob_interval'),
+			'flag_spam'         => (int) ( ! empty( $_POST['ab_flag_spam'] ) ),
+			'email_notify'      => (int) ( ! empty( $_POST['ab_email_notify'] ) ),
+			'cronjob_enable'    => (int) ( ! empty( $_POST['ab_cronjob_enable'] ) ),
+			'cronjob_interval'  => (int) self::get_key( $_POST, 'ab_cronjob_interval' ),
 
-			'no_notice' 		=> (int)(!empty($_POST['ab_no_notice'])),
+			'no_notice'         => (int) ( ! empty( $_POST['ab_no_notice'] ) ),
 
-			'dashboard_count' 	=> (int)(!empty($_POST['ab_dashboard_count'])),
-			'dashboard_chart' 	=> (int)(!empty($_POST['ab_dashboard_chart'])),
-			'advanced_check' 	=> (int)(!empty($_POST['ab_advanced_check'])),
-			'regexp_check' 		=> (int)(!empty($_POST['ab_regexp_check'])),
-			'spam_ip' 			=> (int)(!empty($_POST['ab_spam_ip'])),
-			'already_commented'	=> (int)(!empty($_POST['ab_already_commented'])),
-			'time_check'		=> (int)(!empty($_POST['ab_time_check'])),
-			'always_allowed' 	=> (int)(!empty($_POST['ab_always_allowed'])),
+			'dashboard_count'   => (int) ( ! empty( $_POST['ab_dashboard_count'] ) ),
+			'dashboard_chart'   => (int) ( ! empty( $_POST['ab_dashboard_chart'] ) ),
+			'advanced_check'    => (int) ( ! empty( $_POST['ab_advanced_check'] ) ),
+			'regexp_check'      => (int) ( ! empty( $_POST['ab_regexp_check'] ) ),
+			'spam_ip'           => (int) ( ! empty( $_POST['ab_spam_ip'] ) ),
+			'already_commented' => (int) ( ! empty( $_POST['ab_already_commented'] ) ),
+			'time_check'        => (int) ( ! empty( $_POST['ab_time_check'] ) ),
+			'always_allowed'    => (int) ( ! empty( $_POST['ab_always_allowed'] ) ),
 
-			'ignore_pings' 		=> (int)(!empty($_POST['ab_ignore_pings'])),
-			'ignore_filter' 	=> (int)(!empty($_POST['ab_ignore_filter'])),
-			'ignore_type' 		=> (int)self::get_key($_POST, 'ab_ignore_type'),
+			'ignore_pings'      => (int) ( ! empty( $_POST['ab_ignore_pings'] ) ),
+			'ignore_filter'     => (int) ( ! empty( $_POST['ab_ignore_filter'] ) ),
+			'ignore_type'       => (int) self::get_key( $_POST, 'ab_ignore_type' ),
 
-			'reasons_enable' 	=> (int)(!empty($_POST['ab_reasons_enable'])),
-			'ignore_reasons' 	=> (array)self::get_key($_POST, 'ab_ignore_reasons'),
+			'reasons_enable'    => (int) ( ! empty( $_POST['ab_reasons_enable'] ) ),
+			'ignore_reasons'    => (array) self::get_key( $_POST, 'ab_ignore_reasons' ),
 
-			'bbcode_check'		=> (int)(!empty($_POST['ab_bbcode_check'])),
-			'gravatar_check'	=> (int)(!empty($_POST['ab_gravatar_check'])),
-			'country_code' 		=> (int)(!empty($_POST['ab_country_code'])),
-			'country_black'		=> sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_black' ) ) ),
-			'country_white'		=> sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_white' ) ) ),
+			'bbcode_check'      => (int) ( ! empty( $_POST['ab_bbcode_check'] ) ),
+			'gravatar_check'    => (int) ( ! empty( $_POST['ab_gravatar_check'] ) ),
+			'country_code'      => (int) ( ! empty( $_POST['ab_country_code'] ) ),
+			'country_black'     => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_black' ) ) ),
+			'country_white'     => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_white' ) ) ),
 
-			'translate_api' 	=> (int)(!empty($_POST['ab_translate_api'])),
-			'translate_lang'	=> $selected_languages,
+			'translate_api'     => (int) ( ! empty( $_POST['ab_translate_api'] ) ),
+			'translate_lang'    => $selected_languages,
 
 		);
 
@@ -91,8 +89,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			$options['cronjob_enable'] = 0;
 		}
 
-		// Translate API
-		if ( empty($options['translate_lang']) ) {
+		if ( empty( $options['translate_lang'] ) ) {
 			$options['translate_api'] = 0;
 		}
 
@@ -361,9 +358,10 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									<li>
 										<select multiple name="ab_translate_lang[]">
 											<?php
-											$lang = self::get_allowed_translate_languages();
+											$lang               = self::get_allowed_translate_languages();
 											$selected_languages = (array) $options['translate_lang'];
-											foreach( $lang as $k => $v ) { ?>
+											foreach ( $lang as $k => $v ) {
+											?>
 												<option <?php echo in_array( $k, $selected_languages, true ) ? 'selected="selected"' : ''; ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $v ); ?></option>
 
 											<?php } ?>

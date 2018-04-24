@@ -356,41 +356,38 @@ class Antispam_Bee {
 
 		self::$defaults = array(
 			'options' => array(
-				// General
-				'advanced_check' 	=> 1,
-				'regexp_check'		=> 1,
-				'spam_ip' 			=> 1,
-				'already_commented'	=> 1,
-				'gravatar_check'	=> 0,
-				'time_check'		=> 0,
-				'ignore_pings' 		=> 0,
-				'always_allowed' 	=> 0,
+				'advanced_check'    => 1,
+				'regexp_check'      => 1,
+				'spam_ip'           => 1,
+				'already_commented' => 1,
+				'gravatar_check'    => 0,
+				'time_check'        => 0,
+				'ignore_pings'      => 0,
+				'always_allowed'    => 0,
 
-				'dashboard_chart' 	=> 0,
-				'dashboard_count' 	=> 0,
+				'dashboard_chart'   => 0,
+				'dashboard_count'   => 0,
 
-				// Filter
-				'country_code' 		=> 0,
-				'country_black'		=> '',
-				'country_white'		=> '',
+				'country_code'      => 0,
+				'country_black'     => '',
+				'country_white'     => '',
 
-				'translate_api' 	=> 0,
-				'translate_lang'	=> array(),
+				'translate_api'     => 0,
+				'translate_lang'    => array(),
 
-				'bbcode_check'		=> 1,
+				'bbcode_check'      => 1,
 
-				// Advanced
-				'flag_spam' 		=> 1,
-				'email_notify' 		=> 0,
-				'no_notice' 		=> 0,
-				'cronjob_enable' 	=> 0,
-				'cronjob_interval'	=> 0,
+				'flag_spam'         => 1,
+				'email_notify'      => 0,
+				'no_notice'         => 0,
+				'cronjob_enable'    => 0,
+				'cronjob_interval'  => 0,
 
-				'ignore_filter' 	=> 0,
-				'ignore_type' 		=> 0,
+				'ignore_filter'     => 0,
+				'ignore_type'       => 0,
 
-				'reasons_enable'	=> 0,
-				'ignore_reasons'	=> array(),
+				'reasons_enable'    => 0,
+				'ignore_reasons'    => array(),
 			),
 			'reasons' => array(
 				'css'     => esc_attr__( 'CSS Hack', 'antispam-bee' ),
@@ -1710,7 +1707,6 @@ class Antispam_Bee {
 	 * @return boolean TRUE if it is spam.
 	 */
 	private static function _is_lang_spam( $comment_content ) {
-		// User defined language
 		$allowed_lang = (array) self::get_option( 'translate_lang' );
 
 		$comment_text = wp_strip_all_tags( $comment_content );
@@ -1759,11 +1755,7 @@ class Antispam_Bee {
 			return false;
 		}
 
-		if( ! isset( $data_array['data']['detections'][0][0]['language'] ) ) {
-			return false;
-		}
-		// Get detected language
-		if ( ! $detected_lang = $data_array['data']['detections'][0][0]['language'] ) {
+		if ( ! isset( $data_array['data']['detections'][0][0]['language'] ) ) {
 			return false;
 		}
 		$detected_lang = $data_array['data']['detections'][0][0]['language'];
