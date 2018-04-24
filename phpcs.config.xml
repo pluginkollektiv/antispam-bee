@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<ruleset name="Coding Standards">
+    <rule ref="WordPress">
+        <exclude name="WordPress.VIP.RestrictedVariables.cache_constraints___SERVER__REMOTE_ADDR__" />
+        <exclude name="WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents" />
+        <exclude name="WordPress.VIP.FileSystemWritesDisallow.file_ops_file_put_contents" />
+        <exclude name="WordPress.VIP.FileSystemWritesDisallow.file_ops_is_writable" />
+        <exclude name="WordPress.VIP.DirectDatabaseQuery.NoCaching" />
+        <exclude name="WordPress.VIP.DirectDatabaseQuery.DirectQuery" />
+        <exclude name="WordPress.VIP.SuperGlobalInputUsage.AccessDetected" />
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+
+
+        <!-- tmp exclude -->
+        <exclude name="WordPress.WP.I18n.NonSingularStringLiteralText" />
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore" />
+        <exclude name="WordPress.WP.AlternativeFunctions.parse_url_parse_url" /><!-- see https://github.com/pluginkollektiv/antispam-bee/pull/85 -->
+    </rule>
+    <file>.</file>
+    <exclude-pattern>/vendor/*</exclude-pattern>
+    <exclude-pattern>/node_modules/*</exclude-pattern>
+    <exclude-pattern>/tests/*</exclude-pattern>
+    <exclude-pattern>*.js</exclude-pattern>
+    <exclude-pattern>*.css</exclude-pattern>
+</ruleset>
