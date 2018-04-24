@@ -377,7 +377,7 @@ class Antispam_Bee {
 				'country_white'		=> '',
 
 				'translate_api' 	=> 0,
-				'translate_lang'	=> '',
+				'translate_lang'	=> array(),
 
 				'bbcode_check'		=> 1,
 
@@ -1898,7 +1898,7 @@ class Antispam_Bee {
 
 	private static function _is_lang_spam( $comment_content ) {
 		// User defined language
-		$allowed_lang = self::get_option( 'translate_lang' );
+		$allowed_lang = (array) self::get_option( 'translate_lang' );
 
 		// Make comment text plain
 		$comment_text = wp_strip_all_tags( $comment_content );
@@ -1958,12 +1958,15 @@ class Antispam_Bee {
 			return false;
 		}
 
+		if( ! isset( $data_array['data']['detections'][0][0]['language'] ) ) {
+			return false;
+		}
 		// Get detected language
-		if ( ! $detected_lang = @$data_array['data']['detections'][0][0]['language'] ) {
+		if ( ! $detected_lang = $data_array['data']['detections'][0][0]['language'] ) {
 			return false;
 		}
 
-		return ( $detected_lang != $allowed_lang );
+		return ! in_array( $detected_lang, $allowed_lang, true );
 	}
 
 	/**
