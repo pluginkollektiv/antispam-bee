@@ -569,7 +569,7 @@ class Antispam_Bee {
 		// Integrate CSS
 		wp_register_style(
 			'ab_style',
-			plugins_url('css/styles.min.css', __FILE__),
+			plugins_url('css/styles.css', __FILE__),
 			array(),
 			$plugin['Version']
 		);
