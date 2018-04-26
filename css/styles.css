@@ -1,14 +1,3 @@
-/* @group Webfont */
-
-@font-face {
-    font-family: icons;
-    src: url('../font/icons.woff2') format('woff2'),
-         url('../font/icons.woff') format('woff');
-}
-
-/* @end group */
-
-
 /* @group General */
 
 .ab-main *,
@@ -64,7 +53,7 @@
     text-transform: uppercase;
 }
 .ab-column h3.icon:before {
-    font: normal 30px/30px icons;
+    font: normal 30px/30px Dashicons;
     top: 4px;
     right: 20px;
     speak: none;
@@ -76,13 +65,13 @@
     -moz-osx-font-smoothing: grayscale;
 }
 .ab-column.ab-arrow h3.icon:before {
-    content: '\2387';
+    content: '\f536';
 }
 .ab-column.ab-join h3.icon:before {
-    content: '\e795';
+    content: '\f108';
 }
 .ab-column.ab-diff h3.icon:before {
-    content: '\e73c';
+    content: '\f237';
 }
 
 .ab-column h6 {

@@ -570,7 +570,7 @@ class Antispam_Bee {
 		wp_register_style(
 			'ab_style',
 			plugins_url('css/styles.min.css', __FILE__),
-			array(),
+			array( 'dashicons' ),
 			$plugin['Version']
 		);
 	}
