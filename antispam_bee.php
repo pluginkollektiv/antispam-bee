@@ -395,7 +395,7 @@ class Antispam_Bee {
 				'ignore_reasons'	=> array(),
 			),
 			'reasons' => array(
-				'css'		=> esc_attr__( 'CSS Hack', 'antispam-bee' ),
+				'css'		=> esc_attr__( 'Honeypot', 'antispam-bee' ),
 				'time'		=> esc_attr__( 'Comment time', 'antispam-bee' ),
 				'empty'		=> esc_attr__( 'Empty Data', 'antispam-bee' ),
 				'server'	=> esc_attr__( 'Fake IP', 'antispam-bee' ),
