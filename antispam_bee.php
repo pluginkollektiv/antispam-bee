@@ -390,7 +390,7 @@ class Antispam_Bee {
 				'ignore_reasons'    => array(),
 			),
 			'reasons' => array(
-				'css'     => esc_attr__( 'CSS Hack', 'antispam-bee' ),
+				'css'     => esc_attr__( 'Honeypot', 'antispam-bee' ),
 				'time'    => esc_attr__( 'Comment time', 'antispam-bee' ),
 				'empty'   => esc_attr__( 'Empty Data', 'antispam-bee' ),
 				'server'  => esc_attr__( 'Fake IP', 'antispam-bee' ),
@@ -464,9 +464,7 @@ class Antispam_Bee {
 	 */
 	public static function load_plugin_lang() {
 		load_plugin_textdomain(
-			'antispam-bee',
-			false,
-			'antispam-bee/lang'
+			'antispam-bee'
 		);
 	}
 
@@ -551,7 +549,7 @@ class Antispam_Bee {
 		wp_register_style(
 			'ab_style',
 			plugins_url( 'css/styles.min.css', __FILE__ ),
-			array(),
+			array( 'dashicons' ),
 			$plugin['Version']
 		);
 	}
@@ -655,7 +653,7 @@ class Antispam_Bee {
 			return $items;
 		}
 
-			echo '<style>#dashboard_right_now .ab-count:before {content: "\f117"}</style>';
+		echo '<style>#dashboard_right_now .ab-count:before {content: "\f117"}</style>';
 
 		$items[] = '<span class="ab-count">' . esc_html(
 			sprintf(
