@@ -1689,11 +1689,11 @@ class Antispam_Bee {
 
 		$hashed_ip = self::hash_ip( wp_unslash($ip) );
 
-		$args = [
+		$args = array(
 			'meta_key' => 'antispam_bee_iphash',
 			'meta_value' => $hashed_ip,
 			'status' => 'spam',
-		];
+		);
 		$query = new WP_Comment_Query($args);
 
 		if ( ! empty( $query->get_comments() ) ) {
