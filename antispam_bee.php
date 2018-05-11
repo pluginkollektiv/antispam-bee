@@ -1687,18 +1687,25 @@ class Antispam_Bee {
 		// Global
 		global $wpdb;
 
-		$hashed_ip = self::hash_ip( wp_unslash($ip) );
-
-		$args = array(
-			'meta_key' => 'antispam_bee_iphash',
-			'meta_value' => $hashed_ip,
-			'status' => 'spam',
-		);
-		$query = new WP_Comment_Query($args);
-
-		if ( ! empty( $query->get_comments() ) ) {
-			return true;
+		$sql = '
+			select 
+				meta_value as ip
+			from
+			 	' . $wpdb->commentmeta . ' as meta,
+			 	' . $wpdb->comments . ' as comments
+			where
+			    comments.comment_ID = meta.comment_id
+			    AND meta.meta_key = "antispam_bee_iphash"
+			    AND comments.comment_approved="spam"';
+		$hashed_ips = $wpdb->get_col( $sql );
+		if( ! empty( $hashed_ips) ) {
+			foreach ( $hashed_ips as $hash ) {
+				if( wp_check_password($ip, $hash) ) {
+					return true;
+				}
+			}
 		}
+
 		$params = array();
 		$filter = array();
 		// Match the URL
@@ -2345,7 +2352,7 @@ class Antispam_Bee {
 
 	public static function hash_ip($ip)
 	{
-		return substr( sha1( md5( self::$_salt . $ip ) ), 0, 10 );
+		return wp_hash_password( $ip );
 	}
 
 
