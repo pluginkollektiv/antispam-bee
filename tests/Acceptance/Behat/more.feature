@@ -1,6 +1,6 @@
 Feature: More settings
 
-  @javascript
+  @javascript @db
   Scenario: Spam counter enabled
     Given the option "dashboard_count,dashboard_chart,regexp_check,spam_count" is set
 
@@ -9,7 +9,7 @@ Feature: More settings
     Then I should see "No data available."
     Then I should not see an "#ab_chart" element
 
-  @javascript
+  @javascript @db
   Scenario: Spam counter works
     Given I am on "/?p=1"
     Given the option "dashboard_count,dashboard_chart,regexp_check" is set
