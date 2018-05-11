@@ -1,0 +1,39 @@
+default:
+  suites:
+    default:
+      paths:
+        features: tests/Acceptance/Behat
+        bootstrap: tests/Acceptance/Behat/bootstrap
+      contexts:
+        # Keep WordpressContext first!
+        - PaulGibbs\WordpressBehatExtension\Context\WordpressContext
+        - FeatureContext
+        - PluginContext
+        - Behat\MinkExtension\Context\MinkContext
+        - PaulGibbs\WordpressBehatExtension\Context\ContentContext
+        - PaulGibbs\WordpressBehatExtension\Context\DashboardContext
+        - PaulGibbs\WordpressBehatExtension\Context\UserContext
+        - PaulGibbs\WordpressBehatExtension\Context\EditPostContext
+  extensions:
+    Behat\MinkExtension:
+      base_url: http://antispambee.pluginkollektiv    # [!] Change this for your local development.
+      browser_name: chrome
+      default_session: default
+      javascript_session: selenium2
+      sessions:
+        default:
+          goutte:
+            guzzle_parameters:
+              verify: false               # Allow self-signed SSL certificates
+        selenium2:
+          selenium2: ~
+
+    PaulGibbs\WordpressBehatExtension:
+      path: /var/www/html/antispambee/     # [!] Change this for your local development.
+      default_driver: wpcli
+      wpcli:
+        binary: %paths.base%/vendor/bin/wp
+      users:
+        admin:
+          username: admin
+          password: abc
