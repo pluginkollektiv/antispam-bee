@@ -1,13 +1,15 @@
 default:
+  autoload:
+    '': tests/Acceptance/Behat/bootstrap
   suites:
     default:
       paths:
         features: tests/Acceptance/Behat
-        bootstrap: tests/Acceptance/Behat/bootstrap
       contexts:
         # Keep WordpressContext first!
         - PaulGibbs\WordpressBehatExtension\Context\WordpressContext
         - FeatureContext
+        - CommentContext
         - PluginContext
         - Behat\MinkExtension\Context\MinkContext
         - PaulGibbs\WordpressBehatExtension\Context\ContentContext
@@ -33,6 +35,8 @@ default:
       default_driver: wpcli
       wpcli:
         binary: %paths.base%/vendor/bin/wp
+      database:
+        restore_after_test: true
       users:
         admin:
           username: admin
