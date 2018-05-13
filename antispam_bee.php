@@ -1,15 +1,15 @@
 <?php
 /*
 * Plugin Name: Antispam Bee
-* Description: Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes privacy hints and protection against trackback spam.
+* Description: Antispam plugin with a sophisticated tool set for effective day to day comment and trackback spam-fighting. Build with data protection and privacy in mind.
 * Author:      pluginkollektiv
-* Author URI:  http://pluginkollektiv.org
+* Author URI:  https://pluginkollektiv.org
 * Plugin URI:  https://wordpress.org/plugins/antispam-bee/
 * Text Domain: antispam-bee
 * Domain Path: /lang
 * License:     GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
-* Version:     2.7.1
+* Version:     2.8.0-beta1
 */
 
 /*
@@ -532,7 +532,7 @@ class Antispam_Bee {
 		return array_merge(
 			$input,
 			array(
-				'<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Donate', 'antispam-bee' ) . '</a>',
+				'<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Donate', 'antispam-bee' ) . '</a>',
 				'<a href="https://wordpress.org/support/plugin/antispam-bee" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Support', 'antispam-bee' ) . '</a>',
 			)
 		);

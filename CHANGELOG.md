@@ -1,16 +1,24 @@
 ## Changelog ##
 
-### 2.7.2 ###
+### 2.8.0 ###
 
 * **English**
-  * PHP 7.2 compatibility
+  * Removed stopforumspam.com to avoid potential GDPR violation
+  * Improves IP handling to comply with GDPR
+  * Improves PHP7.2 compatibility improved
   * Fixes small bug on mobile views
-  * HTTPS for stopforumspam.com requests
+  * Minor interface improvements
+  * Remove old russian and Dutch translation files
+  * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
   
 * **Deutsch**
-  - PHP 7.2 Kompatibilität hergestellt
-  - Kleiner CSS Bugfix für mobile Ansichten
-  - HTTPS-Verbindugn für stopforumspam.com-Anfragen
+  - Entfernt stopforumspam.com zur Vorbeugung möglicher DSGVO-Verletzungen
+  - Verändert den Umgang mit IP-Adressen um der DSGVO zu entsprechen
+  - Verbessert PHP7.2-Kompatibilität
+  - Behebt einen CSS-Bugfix der mobilen Darstellung
+  - Verberesserungen an der Benutzeroberfläche
+  - Entfernt alte russische und holländische Sprachversionen
+  - Mehr Details: https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
   
 ### 2.7.1 ###
 
@@ -33,7 +41,7 @@
 * **English**
    * Country check is back again (thanks to Sergej Müller for his amazing work and the service page)
    * Improved Honeypot
-   * Language check through Google Translate API is back again (thanks to Simon Kraft of https://moenus.net/ for offering to cover the costs)
+   * Language check through Google Translate API is back again (thanks to [Simon Kraft](https://simonkraft.de/) for offering to cover the costs)
    * More default Regexes
    * Unit Test Framework
    * Accessibility and GUI improvements
@@ -44,7 +52,7 @@
 * **Deutsch**
    * Die Länderprüfung ist wieder zurück (dank an Sergej Müller für seine fantastische Arbeit und die Service-Seite)
    * Der Honeypot wurde verbessert
-   * Die Sprachenprüfung über die Google Translate API ist wieder zurück (Dank an Simon Kraft von https://moenus.net/ weil er sich angeboten hat die Kosten zu übernehmen)
+   * Die Sprachenprüfung über die Google Translate API ist wieder zurück (Dank an [Simon Kraft](https://simonkraft.de/), der sich angeboten hat, die Kosten zu übernehmen)
    * Mehr Standard-Regexe
    * Verbesserungen an Barrierefreiheit und Benutzer-Oberfläche
    * Eine [englische Dokumentation](https://github.com/pluginkollektiv/antispam-bee/wiki) ist jetzt verfügbar. Einige Korrekturen in der deutschen Dokumentation.
