@@ -4,8 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c6052e1281f7a7a089a57647b2bb193b",
-    "packages": [],
+    "content-hash": "7bec7935c54a8781a70cc7c709f5f71b",
+    "packages": [
+        {
+            "name": "joomla-projects/selenium-server-standalone",
+            "version": "v3.11.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joomla-projects/selenium-server-standalone.git",
+                "reference": "e5f77040063bf9f6b115f0ea6b92ff527aeaca5e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joomla-projects/selenium-server-standalone/zipball/e5f77040063bf9f6b115f0ea6b92ff527aeaca5e",
+                "reference": "e5f77040063bf9f6b115f0ea6b92ff527aeaca5e",
+                "shasum": ""
+            },
+            "bin": [
+                "bin/selenium-server-standalone"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Selenium.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sven Eisenschmidt",
+                    "email": "sven.eisenschmidt@gmail.com"
+                },
+                {
+                    "name": "Puneet Kala",
+                    "email": "puneet.kala@community.joomla.org"
+                },
+                {
+                    "name": "Javier Gómez",
+                    "email": "javier.gomez@community.joomla.org"
+                }
+            ],
+            "description": "Composer distribution of Selenium Server Standalone, the browser automation framework. Adds a executable to your composer bin directory.",
+            "homepage": "https://github.com/joomla-projects/selenium-server-standalone",
+            "keywords": [
+                "selenium",
+                "testing"
+            ],
+            "time": "2018-04-23T07:07:31+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "antecedent/patchwork",

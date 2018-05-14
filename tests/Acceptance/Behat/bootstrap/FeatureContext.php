@@ -19,6 +19,8 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
         parent::__construct();
     }
 
+    private $options;
+
 	/**
 	 * @Given the option :option has the value :value
 	 */
@@ -42,6 +44,22 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 	}
 
 	/**
+	 * @Then the value of the option :option is :value
+	 */
+	public function theValueOfTheOptionIs($key, $value)
+	{
+		$wpcli_args = [
+			"'antispam_bee'",
+			'--format=json',
+		];
+		$options = $this->getDriver()->wpcli('option', 'get', $wpcli_args );
+		$options = json_decode($options['stdout']);
+		if( $options->{ $key } != $value ) {
+			throw new \Exception('values do not match.');
+		}
+	}
+
+	/**
 	 * @Given the option :option is set
 	 */
 	public function theOptionIsSet($option)
@@ -62,6 +80,7 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 
 	private function updateOptions($options) {
 
+		$this->options = $options;
 		$options = "'" . json_encode($options) . "'";
 
 		$wpcli_args = [
@@ -97,7 +116,10 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 
 	private function defaultOptions() {
 
-		return [
+		if( ! empty( $this->options ) ) {
+			return $this->options;
+		}
+		$this->options = [
 				// General
 				'advanced_check' 	=> 1,
 				'regexp_check'		=> 1,
@@ -134,6 +156,8 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 				'reasons_enable'	=> 0,
 				'ignore_reasons'	=> array()
 			];
+
+			return $this->options;
 	}
 
 	/**

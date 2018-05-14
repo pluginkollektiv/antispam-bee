@@ -5,7 +5,7 @@ Feature: Advanced settings
     Given I am on "/?p=1"
     Given the option "flag_spam" is set
     Then I fill in "comment" with "Release the hounds!"
-    Then I fill in "23b968f9bc" with "Release the hounds!"
+    Then I fill in "secret" with "Release the hounds!"
     Then I fill in "author" with "Mr. Burns"
     Then I fill in "email" with "montgomery.c.burns.1866@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"
@@ -21,7 +21,7 @@ Feature: Advanced settings
     Given I am on "/?p=1"
     Given the option "flag_spam" is not set
     Then I fill in "comment" with "Release the hounds!"
-    Then I fill in "23b968f9bc" with "Release the hounds!"
+    Then I fill in "secret" with "Release the hounds!"
     Then I fill in "author" with "Mr. Burns"
     Then I fill in "email" with "montgomery.c.burns.1866@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"
@@ -39,7 +39,7 @@ Feature: Advanced settings
     Given the option "flag_spam" is set
     Given the option "no_notice" is not set
     Then I fill in "comment" with "Release the hounds!"
-    Then I fill in "23b968f9bc" with "Release the hounds!"
+    Then I fill in "secret" with "Release the hounds!"
     Then I fill in "author" with "Mr. Burns"
     Then I fill in "email" with "montgomery.c.burns.1866@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"
@@ -55,7 +55,7 @@ Feature: Advanced settings
     Given I am on "/?p=1"
     Given the option "flag_spam,no_notice" is set
     Then I fill in "comment" with "Release the hounds!"
-    Then I fill in "23b968f9bc" with "Release the hounds!"
+    Then I fill in "secret" with "Release the hounds!"
     Then I fill in "author" with "Mr. Burns"
     Then I fill in "email" with "montgomery.c.burns.1866@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"

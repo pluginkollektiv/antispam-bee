@@ -38,5 +38,8 @@
 		"psr-4": {
 			"AntispamBee\\Tests\\": "tests/"
 		}
+	},
+	"require": {
+		"joomla-projects/selenium-server-standalone": "v3.11.0.5"
 	}
 }

@@ -1489,6 +1489,7 @@ class Antispam_Bee {
 			);
 		}
 
+
 		// Translate API
 		if ( $options['translate_api'] && self::_is_lang_spam($body) ) {
 			return array(
