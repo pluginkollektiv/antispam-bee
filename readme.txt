@@ -4,7 +4,7 @@
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 3.8
 * Tested up to:      4.9
-* Stable tag:        2.8-beta1
+* Stable tag:        2.8
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
