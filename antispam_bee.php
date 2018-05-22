@@ -9,7 +9,7 @@
 * Domain Path: /lang
 * License:     GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
-* Version:     2.8.0-beta1
+* Version:     2.8.0
 */
 
 /*
@@ -1685,10 +1685,27 @@ class Antispam_Bee {
 		// Global
 		global $wpdb;
 
-		// Default
-		$filter = array('`comment_author_IP` = %s');
-		$params = array( wp_unslash($ip) );
+		$sql = '
+			select 
+				meta_value as ip
+			from
+			 	' . $wpdb->commentmeta . ' as meta,
+			 	' . $wpdb->comments . ' as comments
+			where
+			    comments.comment_ID = meta.comment_id
+			    AND meta.meta_key = "antispam_bee_iphash"
+			    AND comments.comment_approved="spam"';
+		$hashed_ips = $wpdb->get_col( $sql );
+		if( ! empty( $hashed_ips) ) {
+			foreach ( $hashed_ips as $hash ) {
+				if( wp_check_password($ip, $hash) ) {
+					return true;
+				}
+			}
+		}
 
+		$params = array();
+		$filter = array();
 		// Match the URL
 		if ( ! empty($url) ) {
 			$filter[] = '`comment_author_url` = %s';
@@ -1699,6 +1716,10 @@ class Antispam_Bee {
 		if ( ! empty($email) ) {
 			$filter[] = '`comment_author_email` = %s';
 			$params[] = wp_unslash($email);
+		}
+
+		if( empty( $params ) ) {
+			return false;
 		}
 
 		// Perform query
@@ -2132,6 +2153,26 @@ class Antispam_Bee {
 			self::_go_in_peace();
 		}
 
+		// Save IP hash, if comment is spam.
+		add_action(
+			'trackback_post',
+			array(
+				__CLASS__,
+				'save_ip_hash',
+			),
+			10,
+			3
+		);
+		add_action(
+			'comment_post',
+			array(
+				__CLASS__,
+				'save_ip_hash',
+			),
+			10,
+			3
+		);
+
 		// Handle types
 		if ( $ignore_filter && (( $ignore_type == 1 && $is_ping ) or ( $ignore_type == 2 && !$is_ping )) ) {
 			self::_go_in_peace();
@@ -2295,6 +2336,21 @@ class Antispam_Bee {
 			'antispam_bee_reason',
 			self::$_reason
 		);
+	}
+
+	public static function save_ip_hash( $comment_id, $approved, $comment_data )
+	{
+		$hashed_ip = self::hash_ip( $comment_data['comment_author_IP'] );
+		add_comment_meta(
+			$comment_id,
+			'antispam_bee_iphash',
+			$hashed_ip
+		);
+	}
+
+	public static function hash_ip($ip)
+	{
+		return wp_hash_password( $ip );
 	}
 
 

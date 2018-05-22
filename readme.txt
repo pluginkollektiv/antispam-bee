@@ -4,7 +4,7 @@
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 3.8
 * Tested up to:      4.9
-* Stable tag:        2.8-beta1
+* Stable tag:        2.8
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
    * Improves IP handling to comply with GDPR
    * Improves PHP7.2 compatibility
    * Fixes small bug on mobile views
+   * Allow more than one language in language check
    * Minor interface improvements
    * Remove old russian and Dutch translation files
    * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
