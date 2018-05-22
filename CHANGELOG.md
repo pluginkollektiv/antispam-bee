@@ -5,7 +5,7 @@
 * **English**
   * Removed stopforumspam.com to avoid potential GDPR violation
   * Improves IP handling to comply with GDPR
-  * Improves PHP7.2 compatibility improved
+  * Improves PHP7.2 compatibility
   * Fixes small bug on mobile views
   * Allow more than one language in language check
   * Minor interface improvements
