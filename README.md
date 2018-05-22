@@ -13,7 +13,6 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Validate the IP address of commenters.
 * Use regular expressions.
 * Search local spam database for commenters previously marked as spammers.
-* Match against a public anti-spam database.
 * Notify admins by e-mail about incoming spam.
 * Delete existing spam after n days.
 * Limit approval to comments/pings (will delete other comment types).

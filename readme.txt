@@ -55,9 +55,6 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 ### Settings ###
 After you have activated *Antispam Bee* the plugin will block spam comments out of the box. However, you may want to visit *Settings → Antispam Bee* to configure your custom set of anti-spam options that works best for your site.
 
-### Privacy Notice ###
-On sites operating from within the EU the option *Use a public antispam database* should not be activated for privacy reasons. When that option has been activated, *Antispam Bee* will match full IP addresses from comments against a public spam database. Technically it is not possible to encrypt those IPs, because spam databases only store and operate with complete, unencrypted IP addresses.
-
 ## Frequently Asked Questions ##
 
 ### Does Antispam Bee work with Jetpack, Disqus Comments and other comment plugins? ###
