@@ -94,6 +94,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
    * Improves IP handling to comply with GDPR
    * Improves PHP7.2 compatibility
    * Fixes small bug on mobile views
+   * Allow more than one language in language check
    * Minor interface improvements
    * Remove old russian and Dutch translation files
    * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
