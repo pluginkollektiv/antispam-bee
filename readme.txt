@@ -61,7 +61,7 @@ After you have activated *Antispam Bee* the plugin will block spam comments out 
 Antispam Bee works best with default WordPress comments. It is not compatible with Jetpack or Disqus Comments as those plugins load the comment form within an iframe. Thus Antispam Bee can not access the comment form directly.
 It also won’t work with any AJAX-powered comment forms.
 
-### Does Antispam Bee store any private user data, and is it copmliant with GDPR? ###
+### Does Antispam Bee store any private user data, and is it compliant with GDPR? ###
 Antispam Bee is developed in Europe. You might have heard we can be a bit nitpicky over here when it comes to privacy. The plugin does not save private user data and is 100% compliant with GDPR.
 
 ### Will I have to edit any theme templates to get Antispam Bee to work? ###
