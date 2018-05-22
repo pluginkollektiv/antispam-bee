@@ -7,6 +7,7 @@
   * Improves IP handling to comply with GDPR
   * Improves PHP7.2 compatibility improved
   * Fixes small bug on mobile views
+  * Allow more than one language in language check
   * Minor interface improvements
   * Remove old russian and Dutch translation files
   * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
@@ -16,6 +17,7 @@
   - Verändert den Umgang mit IP-Adressen um der DSGVO zu entsprechen
   - Verbessert PHP7.2-Kompatibilität
   - Behebt einen CSS-Bugfix der mobilen Darstellung
+  - Erlaube mehr als eine Sprache im Sprachencheck
   - Verberesserungen an der Benutzeroberfläche
   - Entfernt alte russische und holländische Sprachversionen
   - Mehr Details: https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
