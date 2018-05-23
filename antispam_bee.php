@@ -1,16 +1,18 @@
 <?php
-/*
-* Plugin Name: Antispam Bee
-* Description: Antispam plugin with a sophisticated toolset for effective day to day comment and trackback spam-fighting. Built with data protection and privacy in mind.
-* Author:      pluginkollektiv
-* Author URI:  https://pluginkollektiv.org
-* Plugin URI:  https://wordpress.org/plugins/antispam-bee/
-* Text Domain: antispam-bee
-* Domain Path: /lang
-* License:     GPLv2 or later
-* License URI: http://www.gnu.org/licenses/gpl-2.0.html
-* Version:     2.8.0
-*/
+/**
+ * Plugin Name: Antispam Bee
+ * Description: Antispam plugin with a sophisticated toolset for effective day to day comment and trackback spam-fighting. Built with data protection and privacy in mind.
+ * Author:      pluginkollektiv
+ * Author URI:  https://pluginkollektiv.org
+ * Plugin URI:  https://wordpress.org/plugins/antispam-bee/
+ * Text Domain: antispam-bee
+ * Domain Path: /lang
+ * License:     GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * Version:     2.8.0
+ *
+ * @package Antispam Bee
+ **/
 
 /*
 * Copyright (C)  2009-2015 Sergej Müller
@@ -1518,7 +1520,8 @@ class Antispam_Bee {
 	private static function _is_db_spam( $ip, $url = '', $email = '' ) {
 		global $wpdb;
 
-		$sql = '
+        // phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
+		$sql        = '
 			select 
 				meta_value as ip
 			from
@@ -1529,9 +1532,9 @@ class Antispam_Bee {
 			    AND meta.meta_key = "antispam_bee_iphash"
 			    AND comments.comment_approved="spam"';
 		$hashed_ips = $wpdb->get_col( $sql );
-		if( ! empty( $hashed_ips) ) {
+		if ( ! empty( $hashed_ips ) ) {
 			foreach ( $hashed_ips as $hash ) {
-				if( wp_check_password($ip, $hash) ) {
+				if ( wp_check_password( $ip, $hash ) ) {
 					return true;
 				}
 			}
@@ -1539,8 +1542,7 @@ class Antispam_Bee {
 
 		$params = array();
 		$filter = array();
-		// Match the URL
-		if ( ! empty($url) ) {
+		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';
 			$params[] = wp_unslash( $url );
 		}
@@ -1549,11 +1551,10 @@ class Antispam_Bee {
 			$filter[] = '`comment_author_email` = %s';
 			$params[] = wp_unslash( $email );
 		}
-        if( empty( $params ) ) {
-            return false;
-        }
+		if ( empty( $params ) ) {
+			return false;
+		}
 
-		// phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
 		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		// ToDo: Have a closer look on this SQL Query.
 		$filter_sql = implode( ' OR ', $filter );
@@ -1952,8 +1953,7 @@ class Antispam_Bee {
 			3
 		);
 
-		// Handle types
-		if ( $ignore_filter && (( $ignore_type == 1 && $is_ping ) or ( $ignore_type == 2 && !$is_ping )) ) {
+		if ( $ignore_filter && ( ( 1 === (int) $ignore_type && $is_ping ) || ( 2 === (int) $ignore_type && ! $is_ping ) ) ) {
 			self::_go_in_peace();
 		}
 
@@ -2108,8 +2108,14 @@ class Antispam_Bee {
 		);
 	}
 
-	public static function save_ip_hash( $comment_id, $approved, $comment_data )
-	{
+	/**
+	 * Saves the IP address.
+	 *
+	 * @param int    $comment_id The ID of the comment.
+	 * @param string $approved The approved value.
+	 * @param array  $comment_data The comment data array.
+	 */
+	public static function save_ip_hash( $comment_id, $approved, $comment_data ) {
 		$hashed_ip = self::hash_ip( $comment_data['comment_author_IP'] );
 		add_comment_meta(
 			$comment_id,
@@ -2118,8 +2124,14 @@ class Antispam_Bee {
 		);
 	}
 
-	public static function hash_ip($ip)
-	{
+	/**
+	 * Hashes an IP address
+	 *
+	 * @param string $ip The IP address to hash.
+	 *
+	 * @return string
+	 */
+	public static function hash_ip( $ip ) {
 		return wp_hash_password( $ip );
 	}
 
