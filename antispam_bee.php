@@ -2155,15 +2155,6 @@ class Antispam_Bee {
 
 		// Save IP hash, if comment is spam.
 		add_action(
-			'trackback_post',
-			array(
-				__CLASS__,
-				'save_ip_hash',
-			),
-			10,
-			3
-		);
-		add_action(
 			'comment_post',
 			array(
 				__CLASS__,
@@ -2194,14 +2185,7 @@ class Antispam_Bee {
 		);
 
 		// Send e-mail
-		add_filter(
-			'trackback_post',
-			array(
-				__CLASS__,
-				'send_mail_notification'
-			)
-		);
-		add_filter(
+		add_action(
 			'comment_post',
 			array(
 				__CLASS__,
@@ -2211,7 +2195,7 @@ class Antispam_Bee {
 
 		// Spam reason as comment meta
 		if ( $spam_notice ) {
-			add_filter(
+			add_action(
 				'comment_post',
 				array(
 					__CLASS__,
