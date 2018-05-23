@@ -1,6 +1,6 @@
 # Antispam Bee #
 
-Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes privacy hints and protection against trackback spam.
+Antispam plugin with a sophisticated toolset for effective day to day comment and trackback spam-fighting. Built with data protection and privacy in mind.
 
 ## Description ##
 Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively and without captchas. It is free of charge, ad-free and compliant with European data privacy standards.
@@ -13,7 +13,6 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Validate the IP address of commenters.
 * Use regular expressions.
 * Search local spam database for commenters previously marked as spammers.
-* Match against a public anti-spam database.
 * Notify admins by e-mail about incoming spam.
 * Delete existing spam after n days.
 * Limit approval to comments/pings (will delete other comment types).
@@ -33,11 +32,11 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * If you want to help us translate this plugin you can do so [on WordPress Translate](https://translate.wordpress.org/projects/wp-plugins/antispam-bee).
 
 ### Donate
-[Donate for us via Paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML)
+[Donate for us via Paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW)
 
 ### Credits ###
 * Author: [Sergej Müller](https://sergejmueller.github.io/)
-* Maintainers: [pluginkollektiv](http://pluginkollektiv.org)
+* Maintainers: [pluginkollektiv](https://pluginkollektiv.org)
 
 ## Installation ##
 * If you don’t know how to install a plugin for WordPress, [here’s how](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
