@@ -32,7 +32,7 @@ default:
           selenium2: ~
 
     PaulGibbs\WordpressBehatExtension:
-      path: /tmp/antispam-bee/     # [!] Change this for your local development.
+      path: %paths.base%/tmp/antispam-bee/     # [!] Change this for your local development.
       default_driver: wpcli
       wpcli:
         binary: %paths.base%/vendor/bin/wp
