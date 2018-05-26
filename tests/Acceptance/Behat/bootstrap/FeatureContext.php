@@ -21,6 +21,13 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 
     private $options;
 
+    /**
+     * @Then I wait :seconds seconds
+     */
+    public function iWaitSeconds( $seconds ) {
+        $this->getSession()->wait( $seconds * 1000 );
+    }
+
 	/**
 	 * @Given the option :option has the value :value
 	 */
