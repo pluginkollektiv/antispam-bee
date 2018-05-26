@@ -28,6 +28,8 @@ sh -e /etc/init.d/xvfb start
 sleep 1
 
 wget -c -nc --retry-connrefused --tries=0 https://goo.gl/tbd1NS -O selenium-server-standalone.jar
+wget -c -n- --retry-connrefused --tries=0 https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz -O driver.tar.gz
+tar xvzf driver.tar.gz
 echo "Run selenium server - background process"
 nohup bash -c "java -jar selenium-server-standalone.jar &" && sleep 1; cat nohup.out
 
