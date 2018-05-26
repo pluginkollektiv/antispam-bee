@@ -1,17 +1,17 @@
 # Antispam Bee #
 * Contributors:      pluginkollektiv
-* Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, prevention, protect, protection, spam, spam filter, trackback
-* Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CH5FPR88QYML
-* Requires at least: 3.8
+* Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
+* Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
+* Requires at least: 4.5
 * Tested up to:      4.9
-* Stable tag:        2.7.1
+* Stable tag:        2.8
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Easy and extremely productive spam-fighting plugin with many sophisticated solutions. Includes protection against trackback spam and privacy hints.
+Antispam plugin with a sophisticated tool set for effective day to day comment and trackback spam-fighting. Build with data protection and privacy in mind.
 
 ## Description ##
-Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively and without captchas. It is free of charge, ad-free and compliant with European data privacy standards.
+Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively, without captchas and without sending personal information to third party services. It is free of charge, ad-free and 100% GDPR compliant.
 
 ### Feature/Settings Overview ###
 * Trust approved commenters.
@@ -43,7 +43,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 
 ### Credits ###
 * Author: [Sergej Müller](https://sergejmueller.github.io/)
-* Maintainers: [pluginkollektiv](http://pluginkollektiv.org)
+* Maintainers: [pluginkollektiv](https://pluginkollektiv.org)
 
 ## Installation ##
 * If you don’t know how to install a plugin for WordPress, [here’s how](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
@@ -55,17 +55,14 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 ### Settings ###
 After you have activated *Antispam Bee* the plugin will block spam comments out of the box. However, you may want to visit *Settings → Antispam Bee* to configure your custom set of anti-spam options that works best for your site.
 
-### Privacy Notice ###
-On sites operating from within the EU the option *Use a public antispam database* should not be activated for privacy reasons. When that option has been activated, *Antispam Bee* will match full IP addresses from comments against a public spam database. Technically it is not possible to encrypt those IPs, because spam databases only store and operate with complete, unencrypted IP addresses.
-
 ## Frequently Asked Questions ##
 
 ### Does Antispam Bee work with Jetpack, Disqus Comments and other comment plugins? ###
 Antispam Bee works best with default WordPress comments. It is not compatible with Jetpack or Disqus Comments as those plugins load the comment form within an iframe. Thus Antispam Bee can not access the comment form directly.
 It also won’t work with any AJAX-powered comment forms.
 
-### Does Antispam Bee store any private user data, IP addresses or the like? ###
-Nope. Antispam Bee is developed in Germany and Switzerland. You might have heard we can be a bit nitpicky over here when it comes to privacy.
+### Does Antispam Bee store any private user data, and is it compliant with GDPR? ###
+Antispam Bee is developed in Europe. You might have heard we can be a bit nitpicky over here when it comes to privacy. The plugin does not save private user data and is 100% compliant with GDPR.
 
 ### Will I have to edit any theme templates to get Antispam Bee to work? ###
 No, the plugin works as is. You may want to configure your favorite settings, though.
@@ -89,6 +86,16 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 ## Changelog ##
 
+### 2.8.0 ###
+   * Removed stopforumspam.com to avoid potential GDPR violation
+   * Improves IP handling to comply with GDPR
+   * Improves PHP7.2 compatibility
+   * Fixes small bug on mobile views
+   * Allow more than one language in language check
+   * Minor interface improvements
+   * Remove old russian and Dutch translation files
+   * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
+  
 ### 2.7.1 ###
    * Fixes an incompatibility with Chrome autofill
    * Fixes some incompatibilities with other plugins/themes where the comment field was left empty
@@ -161,8 +168,8 @@ For the complete changelog, check out our [GitHub repository](https://github.com
 
 == Upgrade Notice ==
 
-= 2.7.1 =
-This update changes the actual markup of your comment fields. Please make sure that you flush your caches after the plugin was updated!
+= 2.8.0 =
+This update makes sure your spam check is GDPR compliant, no matter the options you choose. Please make sure to update before May 25th!
 
 ## Screenshots ##
 1. Antispam Bee settings
