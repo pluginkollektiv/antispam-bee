@@ -2,7 +2,7 @@
 
 WORDPRESS_URL=localhost:8080;
 WORDPRESS_PATH=/tmp/antispam-bee/;
-PLUGIN_PATH=/var/www/html/antispambee/wp-content/plugins/antispam-bee;
+PLUGIN_PATH=$TRAVIS_BUILD_DIR;
 WORDPRESS_VERSION=latest;
 DB_NAME=pluginkollektiv_antispambee_behat;
 DB_USER=root;
@@ -15,6 +15,7 @@ rm -f ${WORDPRESS_PATH}wp-config.php
 vendor/bin/wp config create --path=$WORDPRESS_PATH --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS --dbhost=$DB_HOST --skip-salts
 vendor/bin/wp db create --path=$WORDPRESS_PATH
 vendor/bin/wp core install --path=$WORDPRESS_PATH --url=$WORDPRESS_URL --title="wordpress.dev" --admin_user="admin" --admin_password="abc" --admin_email="admin@example.com"
+
 wait_for_port() {
   while echo | telnet localhost 4444 2>&1 | grep -qe 'Connection refused'; do
     echo "Connection refused on port 4444. Waiting $NAP_LENGTH seconds..."
