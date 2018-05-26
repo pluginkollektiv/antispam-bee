@@ -6,7 +6,7 @@ PLUGIN_PATH=/var/www/html/antispambee/wp-content/plugins/antispam-bee;
 WORDPRESS_VERSION=latest;
 DB_NAME=pluginkollektiv_antispambee_behat;
 DB_USER=root;
-DB_PASS=eregi2008;
+DB_PASS=;
 DB_HOST=localhost;
 
 mkdir -p $WORDPRESS_PATH

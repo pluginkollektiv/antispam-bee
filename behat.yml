@@ -19,7 +19,7 @@ default:
         - PaulGibbs\WordpressBehatExtension\Context\EditPostContext
   extensions:
     Behat\MinkExtension:
-      base_url: http://antispambee.pluginkollektiv    # [!] Change this for your local development.
+      base_url: http://localhost:8080    # [!] Change this for your local development.
       browser_name: chrome
       default_session: default
       javascript_session: selenium2
