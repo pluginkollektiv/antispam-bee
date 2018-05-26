@@ -4,7 +4,7 @@
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
 * Tested up to:      4.9
-* Stable tag:        2.8
+* Stable tag:        2.8.1
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,11 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 A complete documentation is available in the [GitHub repository Wiki](https://github.com/pluginkollektiv/antispam-bee/wiki).
 
 ## Changelog ##
+
+### 2.8.1 ###
+  * PHP 5.3 compatibility
+  * Bugfix where a spam trackback produced a fatal error
+  * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/8?closed=1
 
 ### 2.8.0 ###
    * Removed stopforumspam.com to avoid potential GDPR violation

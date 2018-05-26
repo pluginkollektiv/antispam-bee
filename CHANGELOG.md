@@ -1,5 +1,17 @@
 ## Changelog ##
 
+### 2.8.1 ###
+
+* **English**
+  * PHP 5.3 compatibility
+  * Bugfix where a spam trackback produced a fatal error
+  * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/8?closed=1
+
+* **Deutsch**
+  * PHP 5.3 Kompatibilität wieder hergestellt
+  * Bugfix: Ein Spam Trackback produzierte einen Fatal Error
+  * Mehr Details: https://github.com/pluginkollektiv/antispam-bee/milestone/8?closed=1
+
 ### 2.8.0 ###
 
 * **English**
