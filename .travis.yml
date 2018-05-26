@@ -13,7 +13,7 @@ php:
 
 sudo: required
 addons:
-  chrome: stable
+  firefox: stable
 
 before_script:
   - composer install
