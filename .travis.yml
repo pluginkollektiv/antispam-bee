@@ -16,7 +16,8 @@ before_script:
 
 script:
   - mkdir -p .build/logs
-  - vendor/bin/phpunit -c phpunit.xml.dist
+  - ./vendor/bin/phpunit -c phpunit.xml.dist
+  - ./bin/behat.sh
 
 # We should also add codecov.
 #after_success:
