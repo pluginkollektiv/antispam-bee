@@ -3,7 +3,6 @@
 WORDPRESS_URL=localhost:8080;
 WORDPRESS_PATH=tmp/antispam-bee/;
 PLUGIN_PATH=$TRAVIS_BUILD_DIR;
-WORDPRESS_VERSION=latest;
 DB_NAME=pluginkollektiv_antispambee_behat;
 DB_USER=root;
 DB_PASS=;
