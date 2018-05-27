@@ -1,6 +1,6 @@
 Feature: Trackbacks
 
-  @db @test
+  @db
   Scenario: BBCode
 	Given the option "bbcode_check,flag_spam" is set
 	Given I send a trackback with the title "Nuclear Power Plants" and the excerpt "use [url='http://example.com']bbCode[/url]" and the url "http://nuclear-power.rocks" and the blog_name "Mr. Burns Spam Corp." to the post 1

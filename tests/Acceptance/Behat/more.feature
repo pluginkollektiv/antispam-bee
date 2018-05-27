@@ -7,6 +7,8 @@ Feature: More settings
     Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then I should not see "0 Blocked"
+	Then I should not see "Fatal"
+	Then I should not see "Notice"
 
   @javascript @db
   Scenario: Spam counter enabled
@@ -15,6 +17,8 @@ Feature: More settings
     Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then I should see "0 Blocked"
+	Then I should not see "Fatal"
+	Then I should not see "Notice"
 
   @javascript @db
   Scenario: Spam counter works
@@ -32,12 +36,16 @@ Feature: More settings
     Then I fill in "email" with "montgomery.c.burns.1866@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"
     Then I press "submit"
+	Then I should not see "Fatal"
+	Then I should not see "Notice"
 
     Then the value of the option "spam_count" is "2"
 
     Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then I should see "2 Blocked"
+	Then I should not see "Fatal"
+	Then I should not see "Notice"
 
   @javascript @db
   Scenario: Dashboard chart enabled
@@ -45,6 +53,8 @@ Feature: More settings
     Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then the "#ab_chart" element should contain "No data available."
+	Then I should not see "Fatal"
+	Then I should not see "Notice"
 
   @javascript @db
   Scenario: Dashboard chart disabled
@@ -52,6 +62,8 @@ Feature: More settings
     Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then I should not see "No data available."
+	Then I should not see "Fatal"
+	Then I should not see "Notice"
 
   @javascript @db
   Scenario: Spam counter works
@@ -72,3 +84,5 @@ Feature: More settings
     Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then the "#ab_chart_data td" element should contain "2"
+	Then I should not see "Fatal"
+	Then I should not see "Notice"

@@ -10,6 +10,9 @@ Feature: Advanced settings
     Then I fill in "email" with "montgomery.c.burns.1866@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"
     Then I press "submit"
+	Then I should not see "Fatal"
+	Then I should see "Hello world"
+	Then I should not see "Notice"
 
     Given I am logged in as admin
     Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
@@ -26,6 +29,9 @@ Feature: Advanced settings
     Then I fill in "email" with "montgomery.c.burns.1866@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"
     Then I press "submit"
+	Then I should not see "Fatal"
+	Then I should not see "Hello world"
+	Then I should not see "Notice"
     Then I should see "Spam deleted."
 
     Given I am logged in as admin
@@ -44,6 +50,9 @@ Feature: Advanced settings
     Then I fill in "email" with "montgomery.c.burns.1866@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"
     Then I press "submit"
+	Then I should not see "Fatal"
+	Then I should see "Hello world"
+	Then I should not see "Notice"
 
     Given I am logged in as admin
     Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
@@ -60,6 +69,9 @@ Feature: Advanced settings
     Then I fill in "email" with "montgomery.c.burns.1866@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"
     Then I press "submit"
+	Then I should not see "Fatal"
+	Then I should see "Hello world"
+	Then I should not see "Notice"
 
     Given I am logged in as admin
     Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
