@@ -11,7 +11,7 @@ DB_HOST=localhost;
 mkdir -p $WORDPRESS_PATH
 vendor/bin/wp core download --force --version=$WORDPRESS_VERSION --path=$WORDPRESS_PATH
 rm -f ${WORDPRESS_PATH}wp-config.php
-vendor/bin/wp config create --path=$WORDPRESS_PATH --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS --dbhost=$DB_HOST --skip-salts
+vendor/bin/wp config create --path=$WORDPRESS_PATH --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS --dbhost=$DB_HOST --skip-salts  --extra-php="define('WP_DEBUG', true);"
 vendor/bin/wp db create --path=$WORDPRESS_PATH
 vendor/bin/wp core install --path=$WORDPRESS_PATH --url=$WORDPRESS_URL --title="wordpress.dev" --admin_user="admin" --admin_password="abc" --admin_email="admin@example.com"
 
