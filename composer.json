@@ -23,7 +23,9 @@
 	"license": "GPL-v2",
 	"require-dev": {
 		"phpunit/phpunit": "^4",
-		"brain/monkey": "^1.4"
+		"brain/monkey": "^1.4",
+		"wp-coding-standards/wpcs": "^0.14.1",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.4.4"
 	},
 	"autoload-dev": {
 		"classmap": [
@@ -32,6 +34,11 @@
 		],
 		"psr-4": {
 			"AntispamBee\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"platform": {
+			"php": "5.5"
 		}
 	}
 }

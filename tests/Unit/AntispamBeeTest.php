@@ -23,6 +23,12 @@ class FactoryTest extends TestCase {
 
 		Functions::when( 'get_bloginfo' )->justReturn( 'https://domain.com/' );
 		Functions::when( 'is_admin' )->justReturn( false );
+		Functions::expect( 'wp_unslash' )
+			->andReturnUsing(
+				function( $data ) {
+					return $data;
+				}
+			);
 
 		Functions::when( 'get_option' )->justReturn( $this->get_options() );
 
