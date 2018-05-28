@@ -1,16 +1,18 @@
 <?php
 /**
-* Plugin Name: Antispam Bee
-* Description: Antispam plugin with a sophisticated toolset for effective day to day comment and trackback spam-fighting. Built with data protection and privacy in mind.
-* Author:      pluginkollektiv
-* Author URI:  https://pluginkollektiv.org
-* Plugin URI:  https://wordpress.org/plugins/antispam-bee/
-* Text Domain: antispam-bee
-* Domain Path: /lang
-* License:     GPLv2 or later
-* License URI: http://www.gnu.org/licenses/gpl-2.0.html
-* Version:     2.8.1
-**/
+ * Plugin Name: Antispam Bee
+ * Description: Antispam plugin with a sophisticated toolset for effective day to day comment and trackback spam-fighting. Built with data protection and privacy in mind.
+ * Author:      pluginkollektiv
+ * Author URI:  https://pluginkollektiv.org
+ * Plugin URI:  https://wordpress.org/plugins/antispam-bee/
+ * Text Domain: antispam-bee
+ * Domain Path: /lang
+ * License:     GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * Version:     2.8.1
+ *
+ * @package Antispam Bee
+ **/
 
 /*
 * Copyright (C)  2009-2015 Sergej Müller
