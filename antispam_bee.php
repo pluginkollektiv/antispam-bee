@@ -1775,6 +1775,7 @@ class Antispam_Bee {
 			return false;
 		}
 
+        $data_array = json_decode( $json, true );
 		if ( ! isset( $data_array['data']['detections'][0][0]['language'] ) ) {
 			return false;
 		}
