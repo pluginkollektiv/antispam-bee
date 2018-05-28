@@ -33,9 +33,9 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 		$selected_languages_raw = wp_unslash( self::get_key( $_POST, 'ab_translate_lang' ) );
 		if ( ! is_array( $selected_languages_raw ) ) {
-			$selected_languages_raw = [];
+			$selected_languages_raw = array();
 		}
-		$selected_languages = [];
+		$selected_languages = array();
 		$lang               = self::get_allowed_translate_languages();
 		$lang               = array_keys( $lang );
 		foreach ( $selected_languages_raw as $value ) {

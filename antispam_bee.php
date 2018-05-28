@@ -1,18 +1,16 @@
 <?php
 /**
- * Plugin Name: Antispam Bee
- * Description: Antispam plugin with a sophisticated toolset for effective day to day comment and trackback spam-fighting. Built with data protection and privacy in mind.
- * Author:      pluginkollektiv
- * Author URI:  https://pluginkollektiv.org
- * Plugin URI:  https://wordpress.org/plugins/antispam-bee/
- * Text Domain: antispam-bee
- * Domain Path: /lang
- * License:     GPLv2 or later
- * License URI: http://www.gnu.org/licenses/gpl-2.0.html
- * Version:     2.8.0
- *
- * @package Antispam Bee
- **/
+* Plugin Name: Antispam Bee
+* Description: Antispam plugin with a sophisticated toolset for effective day to day comment and trackback spam-fighting. Built with data protection and privacy in mind.
+* Author:      pluginkollektiv
+* Author URI:  https://pluginkollektiv.org
+* Plugin URI:  https://wordpress.org/plugins/antispam-bee/
+* Text Domain: antispam-bee
+* Domain Path: /lang
+* License:     GPLv2 or later
+* License URI: http://www.gnu.org/licenses/gpl-2.0.html
+* Version:     2.8.1
+**/
 
 /*
 * Copyright (C)  2009-2015 Sergej Müller
@@ -1935,15 +1933,6 @@ class Antispam_Bee {
 
 		// Save IP hash, if comment is spam.
 		add_action(
-			'trackback_post',
-			array(
-				__CLASS__,
-				'save_ip_hash',
-			),
-			10,
-			3
-		);
-		add_action(
 			'comment_post',
 			array(
 				__CLASS__,
@@ -1973,14 +1962,7 @@ class Antispam_Bee {
 		);
 
 		// Send e-mail.
-		add_filter(
-			'trackback_post',
-			array(
-				__CLASS__,
-				'send_mail_notification',
-			)
-		);
-		add_filter(
+		add_action(
 			'comment_post',
 			array(
 				__CLASS__,
@@ -1990,7 +1972,7 @@ class Antispam_Bee {
 
 		// Spam reason as comment meta.
 		if ( $spam_notice ) {
-			add_filter(
+			add_action(
 				'comment_post',
 				array(
 					__CLASS__,
