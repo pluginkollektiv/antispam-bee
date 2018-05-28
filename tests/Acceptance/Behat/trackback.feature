@@ -21,7 +21,7 @@ Feature: Trackbacks
 	Then I should see "Nuclear Power Plants"
 	Then I should see "Local DB Spam"
 
-  @javascript @db @test
+  @javascript @db
   Scenario: Local Spam DB IP
 	Given the option "regexp_check,spam_ip,flag_spam" is set
 	Given I am on "/?p=1"
