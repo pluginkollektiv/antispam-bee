@@ -1284,7 +1284,7 @@ class Antispam_Bee {
 			return;
 		}
 
-		if ( $options['gravatar_check'] && ! empty( $email ) && self::_has_valid_gravatar( $email ) ) {
+		if ( $options['gravatar_check'] && ! empty( $email ) && 1 === (int) get_option( 'show_avatars', 0 ) && self::_has_valid_gravatar( $email ) ) {
 			return;
 		}
 
@@ -1359,6 +1359,9 @@ class Antispam_Bee {
 	 * @return  boolean       Check status (true = Gravatar available).
 	 */
 	private static function _has_valid_gravatar( $email ) {
+		if ( 1 !== (int) get_option( 'show_avatars', 0 ) ) {
+			return null;
+		}
 		$response = wp_safe_remote_get(
 			sprintf(
 				'https://www.gravatar.com/avatar/%s?d=404',
