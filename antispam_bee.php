@@ -400,7 +400,7 @@ class Antispam_Bee {
 				'lang'          => esc_attr__( 'Comment Language', 'antispam-bee' ),
 				'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
 				'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
-				'title_is_name' => esc_attr( 'Identical Post title and blog title', 'antispam-bee' ),
+				'title_is_name' => esc_attr__( 'Identical Post title and blog title', 'antispam-bee' ),
 			),
 		);
 	}
