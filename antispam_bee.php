@@ -1863,7 +1863,7 @@ class Antispam_Bee {
 			'lin' => 'ln',
 			'som' => 'so',
 			'hms' => 'hms', // Seems not to have a ISO 639-1 code.
-			'hnj' => 'hmn', // Seems not to have a ISO 639-1 code. Google seems to use hmn
+			'hnj' => 'hmn', // Seems not to have a ISO 639-1 code. Google seems to use hmn.
 			'ilo' => 'ilo', // Seems not to have a ISO 639-1 code.
 			'kaz' => 'kk',
 		);
