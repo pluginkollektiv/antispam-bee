@@ -2096,7 +2096,7 @@ class Antispam_Bee {
 	/**
 	 * Saves the IP address.
 	 *
-	 * @param int    $comment_id The ID of the comment.
+	 * @param int $comment_id The ID of the comment.
 	 */
 	public static function save_ip_hash( $comment_id ) {
 		$hashed_ip = self::hash_ip( self::get_client_ip() );
