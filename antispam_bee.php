@@ -1750,29 +1750,27 @@ class Antispam_Bee {
 			return ! in_array( $detected_lang, $allowed_lang, true );
 		}
 
-		// Too short.
 		if ( mb_strlen( $comment_text ) < 10 ) {
 			return false;
 		}
 
-		// Trim comment text
-		if ( ! $query_text = wp_trim_words( $comment_text, 20, '' ) ) {
+		$query_text = wp_trim_words( $comment_text, 20, '' );
+		if ( ! $query_text ) {
 			return false;
 		}
-		// Start request
+
 		$response = wp_safe_remote_post(
 			'https://6yq7rnw72h.execute-api.eu-central-1.amazonaws.com/latest',
 			array( 'body' => array( 'data' => $query_text ) )
 		);
 
-		// Skip on error
 		if ( is_wp_error( $response )
-		     || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+			|| wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			return false;
 		}
 
-		// Get detected language from body
-		if ( ! $detected_lang = wp_remote_retrieve_body( $response ) ) {
+		$detected_lang = wp_remote_retrieve_body( $response );
+		if ( ! $detected_lang ) {
 			return false;
 		}
 
@@ -1785,12 +1783,11 @@ class Antispam_Bee {
 	 * @since   2.7.1
 	 * @change  2.7.1
 	 *
-	 * @param  string $franc_code franc code
+	 * @param  string $franc_code The franc code, received from the service.
 	 *
-	 * @return string 			  Mapped ISO code
+	 * @return string             Mapped ISO code
 	 */
-	private static function _map_lang_code( $franc_code )
-	{
+	private static function _map_lang_code( $franc_code ) {
 		$codes = array(
 			'cmn' => 'zh',
 			'spa' => 'es',
@@ -1811,8 +1808,8 @@ class Antispam_Bee {
 			'mar' => 'mr',
 			'ita' => 'it',
 		);
-		if ( array_key_exists($franc_code, $codes) ) {
-			return $codes[$franc_code];
+		if ( array_key_exists( $franc_code, $codes ) ) {
+			return $codes[ $franc_code ];
 		}
 		return $franc_code;
 	}
