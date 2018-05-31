@@ -1720,7 +1720,7 @@ class Antispam_Bee {
 	 *
 	 * @since   2.0
 	 * @change  2.6.6
-	 * @change  2.7.0
+	 * @change  2.7.2
 	 *
 	 * @param  string $comment_content Content of the comment.
 	 *
@@ -1735,53 +1735,58 @@ class Antispam_Bee {
 			return false;
 		}
 
-		$query_text = wp_trim_words( $comment_text, 10, '' );
-		if ( ! $query_text ) {
+		// Too short.
+		if ( mb_strlen( $comment_text ) < 10 ) {
 			return false;
 		}
 
-		/**
-		 * Filter the Google Translate API key to be used.
-		 *
-		 * @since 2.7.0
-		 *
-		 * @param string $key API key to use.
-		 *
-		 * @return string Modified API key.
-		 */
-		$key = apply_filters(
-			'ab_google_translate_api_key',
-			base64_decode(
-				strrev( 'B9GcXFjbjdULkdDUfh1SOlzZ2FzMhF1Mt1kRWVTWoVHR5NVY6lUQ' )
-			)
+		// Trim comment text
+		if ( ! $query_text = wp_trim_words( $comment_text, 20, '' ) ) {
+			return false;
+		}
+		// Start request
+		$response = wp_safe_remote_post(
+			'https://6yq7rnw72h.execute-api.eu-central-1.amazonaws.com/latest',
+			array( 'body' => array( 'data' => $query_text ) )
 		);
 
-		$response = wp_safe_remote_request(
-			add_query_arg(
-				array(
-					'q'   => rawurlencode( $query_text ),
-					'key' => $key,
-				),
-				'https://www.googleapis.com/language/translate/v2/detect'
-			)
+		// Skip on error
+		if ( is_wp_error( $response )
+		     || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+			return false;
+		}
+
+		// Get detected language from body
+		if ( ! $detected_lang = wp_remote_retrieve_body( $response ) ) {
+			return false;
+		}
+
+		return ! in_array( self::_map_lang_code( $detected_lang ), $allowed_lang, true );
+	}
+
+	/**
+	 * Map franc language codes
+	 *
+	 * @since   2.7.1
+	 * @change  2.7.1
+	 *
+	 * @param  string $franc_code franc code
+	 *
+	 * @return string 			  Mapped ISO code
+	 */
+	private static function _map_lang_code( $franc_code )
+	{
+		$codes = array(
+			'deu' => 'de',
+			'eng' => 'en',
+			'fra' => 'fr',
+			'ita' => 'it',
+			'spa' => 'es'
 		);
-
-		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
-			return false;
+		if ( array_key_exists($franc_code, $codes) ) {
+			return $codes[$franc_code];
 		}
-
-		$json = wp_remote_retrieve_body( $response );
-		if ( ! $json ) {
-			return false;
-		}
-
-		$data_array = json_decode( $json, true );
-		if ( ! isset( $data_array['data']['detections'][0][0]['language'] ) ) {
-			return false;
-		}
-		$detected_lang = $data_array['data']['detections'][0][0]['language'];
-
-		return ! in_array( $detected_lang, $allowed_lang, true );
+		return $franc_code;
 	}
 
 	/**
