@@ -201,7 +201,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								</label>
 							</li>
 
-							<?php if( 1 === (int) get_option( 'show_avatars', 0 ) ) : ?>
+							<?php if ( 1 === (int) get_option( 'show_avatars', 0 ) ) : ?>
 							<li>
 								<input type="checkbox" name="ab_gravatar_check" id="ab_gravatar_check" value="1" <?php checked( $options['gravatar_check'], 1 ); ?> />
 								<label for="ab_gravatar_check">
