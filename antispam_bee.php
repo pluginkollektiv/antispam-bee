@@ -251,6 +251,17 @@ class Antispam_Bee {
 				)
 			);
 
+			// Save IP hash, if comment is spam.
+			add_action(
+				'comment_post',
+				array(
+					__CLASS__,
+					'save_ip_hash',
+				),
+				10,
+				1
+			);
+
 			add_action(
 				'template_redirect',
 				array(
@@ -1934,17 +1945,6 @@ class Antispam_Bee {
 			self::_go_in_peace();
 		}
 
-		// Save IP hash, if comment is spam.
-		add_action(
-			'comment_post',
-			array(
-				__CLASS__,
-				'save_ip_hash',
-			),
-			10,
-			3
-		);
-
 		if ( $ignore_filter && ( ( 1 === (int) $ignore_type && $is_ping ) || ( 2 === (int) $ignore_type && ! $is_ping ) ) ) {
 			self::_go_in_peace();
 		}
@@ -2097,11 +2097,9 @@ class Antispam_Bee {
 	 * Saves the IP address.
 	 *
 	 * @param int    $comment_id The ID of the comment.
-	 * @param string $approved The approved value.
-	 * @param array  $comment_data The comment data array.
 	 */
-	public static function save_ip_hash( $comment_id, $approved, $comment_data ) {
-		$hashed_ip = self::hash_ip( $comment_data['comment_author_IP'] );
+	public static function save_ip_hash( $comment_id ) {
+		$hashed_ip = self::hash_ip( self::get_client_ip() );
 		add_comment_meta(
 			$comment_id,
 			'antispam_bee_iphash',
