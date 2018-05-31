@@ -1720,7 +1720,7 @@ class Antispam_Bee {
 	 *
 	 * @since   2.0
 	 * @change  2.6.6
-	 * @change  2.7.2
+	 * @change  2.8.2
 	 *
 	 * @param  string $comment_content Content of the comment.
 	 *
@@ -1733,6 +1733,21 @@ class Antispam_Bee {
 
 		if ( empty( $allowed_lang ) || empty( $comment_text ) ) {
 			return false;
+		}
+
+		/**
+		 * Filters the detected language. With this filter, other detection methods can skip in and detect the language.
+		 *
+		 * @since 2.8.2
+		 *
+		 * @param null   $detected_lang The detected language.
+		 * @param string $comment_text  The text, to detect the language.
+		 *
+		 * @return null|string The detected language or null.
+		 */
+		$detected_lang = apply_filters( 'antispam_bee_detected_lang', null, $comment_text );
+		if ( null !== $detected_lang ) {
+			return ! in_array( $detected_lang, $allowed_lang, true );
 		}
 
 		// Too short.
@@ -1777,11 +1792,24 @@ class Antispam_Bee {
 	private static function _map_lang_code( $franc_code )
 	{
 		$codes = array(
-			'deu' => 'de',
+			'cmn' => 'zh',
+			'spa' => 'es',
 			'eng' => 'en',
+			'rus' => 'ru',
+			'arb' => 'ar',
+			'ben' => 'bn',
+			'hin' => 'hi',
+			'por' => 'pt',
+			'ind' => 'id',
+			'jpn' => 'ja',
 			'fra' => 'fr',
+			'deu' => 'de',
+			'jav' => 'jw',
+			'kor' => 'ko',
+			'tel' => 'te',
+			'vie' => 'vi',
+			'mar' => 'mr',
 			'ita' => 'it',
-			'spa' => 'es'
 		);
 		if ( array_key_exists($franc_code, $codes) ) {
 			return $codes[$franc_code];
