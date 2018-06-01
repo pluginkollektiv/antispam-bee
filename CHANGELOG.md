@@ -3,9 +3,11 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Switch to franc language detection API for the language check.
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Wechsel auf die Franc Spracherkennungs API für den Sprach-Check.
 
 ### 2.8.1 ###
 

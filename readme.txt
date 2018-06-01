@@ -88,6 +88,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 ### dev-master ###
   * Introduction of coding standards.
+  * Switch to franc language detection API for the language check.
   
 ### 2.8.1 ###
   * PHP 5.3 compatibility
