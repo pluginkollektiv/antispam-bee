@@ -3,9 +3,11 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Fixes some wrong usages of the translation functions.
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Repariert einige falsche Verwendungsweisen der Übersetzungsfunktionalitäten.
 
 ### 2.8.1 ###
 
