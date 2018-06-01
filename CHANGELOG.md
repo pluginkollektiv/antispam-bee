@@ -3,9 +3,11 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * New check for incoming Trackbacks.
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Ein neuer Check für eingehende Trackbacks.
 
 ### 2.8.1 ###
 
