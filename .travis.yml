@@ -13,20 +13,16 @@ stages:
 jobs:
   include:
     - stage: test
-      php: '5.3'
-      env: COMPOSER=composer-unittest.json
-      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
-    - stage: test
       php: '5.4'
-      env: COMPOSER=composer-unittest.json
+      env: COMPOSER=composer-php-5-4.json
       script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
     - stage: test
       php: '5.5'
-      env: COMPOSER=composer-unittest.json
+      env: COMPOSER=composer-php-5-4.json
       script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
     - stage: test
       php: '5.6'
-      env: COMPOSER=composer-unittest.json
+      env: COMPOSER=composer-php-5-4.json
       script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
     - stage: test
       php: '7.0'

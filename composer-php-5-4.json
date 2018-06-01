@@ -28,7 +28,7 @@
     "config": {
         "optimize-autoloader": true,
         "platform": {
-            "php": "5.3.3"
+            "php": "5.4.*"
         }
     },
     "autoload-dev": {
