@@ -3,9 +3,11 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Use the regular expressions check also for trackbacks. 
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Wende den reguläre Ausdrücke Check auch auf Trackbacks an.
 
 ### 2.8.1 ###
 
