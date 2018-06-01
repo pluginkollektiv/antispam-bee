@@ -1,16 +1,5 @@
 language: php
 
-php:
-#  - '5.2'
-#  - '5.3'
-#  - '5.4'
-#  - '5.5'
-#  - '5.6'
-  - '7.0'
-  - '7.1'
-  - '7.2'
-  - nightly
-
 sudo: required
 addons:
   chrome: stable
@@ -22,6 +11,22 @@ stages:
 
 jobs:
   include:
+    - stage: test
+      php: '5.3'
+      env: COMPOSER=composer-unittest.json
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '5.4'
+      env: COMPOSER=composer-unittest.json
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '5.5'
+      env: COMPOSER=composer-unittest.json
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '5.6'
+      env: COMPOSER=composer-unittest.json
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
     - stage: test
       php: '7.0'
       script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
