@@ -86,6 +86,9 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 ## Changelog ##
 
+### dev-master ###
+  * Introduction of coding standards.
+  
 ### 2.8.1 ###
   * PHP 5.3 compatibility
   * Bugfix where a spam trackback produced a fatal error
