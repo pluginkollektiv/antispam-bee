@@ -3,9 +3,11 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Do not longer overwrite the IP address WordPress saves with the comment by using `pre_comment_user_ip`.
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Beendet das Überschreiben der IP Adresse via `pre_comment_user_ip`, welche WordPress mit dem Kommentar speichert.
 
 ### 2.8.1 ###
 

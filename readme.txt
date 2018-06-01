@@ -88,6 +88,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 ### dev-master ###
   * Introduction of coding standards.
+  * Do not longer overwrite the IP address WordPress saves with the comment by using `pre_comment_user_ip`.
   
 ### 2.8.1 ###
   * PHP 5.3 compatibility
