@@ -3,9 +3,11 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Introduction of behat tests.
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Einführung von Behat tests.
 
 ### 2.8.1 ###
 
