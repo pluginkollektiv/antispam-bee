@@ -2216,7 +2216,7 @@ class Antispam_Bee {
 		) . sprintf(
 			"%s: %s\r\n",
 			esc_html__( 'Type', 'antispam-bee' ),
-			esc_html__( ( empty( $comment['comment_type'] ) ? 'Comment' : 'Trackback' ), 'antispam-bee' )
+			esc_html( ( empty( $comment['comment_type'] ) ? __( 'Comment', 'antispam-bee' ) : __( 'Trackback', 'antispam-bee' ) ) )
 		) . sprintf(
 			"Whois: http://whois.arin.net/rest/ip/%s\r\n",
 			$comment['comment_author_IP']
