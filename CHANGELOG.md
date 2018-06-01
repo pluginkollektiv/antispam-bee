@@ -3,9 +3,11 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Skip the checks, when I ping myself.
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Überspringe die Filter, wenn ich mich selbst anpinge.
 
 ### 2.8.1 ###
 

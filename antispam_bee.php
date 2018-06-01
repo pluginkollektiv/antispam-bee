@@ -1194,9 +1194,11 @@ class Antispam_Bee {
 	 * @return  array          Array with suspected reason.
 	 */
 	private static function _verify_trackback_request( $comment ) {
-		$ip   = self::get_key( $comment, 'comment_author_IP' );
-		$url  = self::get_key( $comment, 'comment_author_url' );
-		$body = self::get_key( $comment, 'comment_content' );
+		$ip      = self::get_key( $comment, 'comment_author_IP' );
+		$url     = self::get_key( $comment, 'comment_author_url' );
+		$body    = self::get_key( $comment, 'comment_content' );
+		$post_id = self::get_key( $comment, 'comment_post_ID' );
+		$type    = self::get_key( $comment, 'comment_type' );
 
 		if ( empty( $url ) || empty( $body ) ) {
 			return array(
@@ -1208,6 +1210,10 @@ class Antispam_Bee {
 			return array(
 				'reason' => 'empty',
 			);
+		}
+
+		if ( 'pingback' === $type && self::_pingback_from_myself( $url, $post_id ) ) {
+			return;
 		}
 
 		$options = self::get_options();
@@ -1243,6 +1249,44 @@ class Antispam_Bee {
 		}
 	}
 
+	/**
+	 * Check, if I pinged myself.
+	 *
+	 * @since 2.8.2
+	 *
+	 * @param string $url            The URL from where the ping came.
+	 * @param int    $target_post_id The post ID which has been pinged.
+	 *
+	 * @return bool
+	 */
+	private static function _pingback_from_myself( $url, $target_post_id ) {
+
+		if ( 0 !== strpos( $url, home_url() ) ) {
+			return false;
+		}
+
+		$original_post_id = (int) url_to_postid( $url );
+		if ( ! $original_post_id ) {
+			return false;
+		}
+
+		$post = get_post( $original_post_id );
+		if ( ! $post ) {
+			return false;
+		}
+
+		$urls        = wp_extract_urls( $post->post_content );
+		$url_to_find = get_permalink( $target_post_id );
+		if ( ! $url_to_find ) {
+			return false;
+		}
+		foreach ( $urls as $url ) {
+			if ( strpos( $url, $url_to_find ) === 0 ) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Check the comment
