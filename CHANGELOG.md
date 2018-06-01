@@ -1,5 +1,12 @@
 ## Changelog ##
 
+### dev-master ###
+* **English**
+  * Introduction of coding standards.
+
+* **Deutsch**
+  * Einführung von Coding Standards.
+
 ### 2.8.1 ###
 
 * **English**
