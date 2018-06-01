@@ -3,9 +3,11 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Save a hashed + salted IP for every comment
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Speichere für jeden Kommentar eine salted Hash der IP Adresse.
 
 ### 2.8.1 ###
 
