@@ -88,6 +88,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 ### dev-master ###
   * Introduction of coding standards.
+  * Do not show "Trust commenters with a Gravatar" if the "Show Gravatar" option is not set.
   
 ### 2.8.1 ###
   * PHP 5.3 compatibility

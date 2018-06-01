@@ -3,9 +3,11 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Do not show "Trust commenters with a Gravatar" if the "Show Gravatar" option is not set.
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Zeige die Option "Vertraue Kommentaren mit Gravatar" nur an wenn die Option "Zeige Gravatar" aktiviert ist.
 
 ### 2.8.1 ###
 
