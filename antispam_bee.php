@@ -1363,7 +1363,7 @@ class Antispam_Bee {
 			return;
 		}
 
-		if ( $options['gravatar_check'] && ! empty( $email ) && self::_has_valid_gravatar( $email ) ) {
+		if ( $options['gravatar_check'] && ! empty( $email ) && 1 === (int) get_option( 'show_avatars', 0 ) && self::_has_valid_gravatar( $email ) ) {
 			return;
 		}
 

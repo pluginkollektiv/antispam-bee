@@ -3,6 +3,7 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Do not show "Trust commenters with a Gravatar" if the "Show Gravatar" option is not set.
   * Skip the checks, when I ping myself.
   * Fixes some wrong usages of the translation functions.
   * Use the regular expressions check also for trackbacks. 
@@ -12,6 +13,7 @@
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Zeige die Option "Vertraue Kommentaren mit Gravatar" nur an wenn die Option "Zeige Gravatar" aktiviert ist.
   * Überspringe die Filter, wenn ich mich selbst anpinge.
   * Repariert einige falsche Verwendungsweisen der Übersetzungsfunktionalitäten.
   * Wende den reguläre Ausdrücke Check auch auf Trackbacks an.
