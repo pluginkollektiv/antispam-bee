@@ -390,15 +390,17 @@ class Antispam_Bee {
 				'ignore_reasons'    => array(),
 			),
 			'reasons' => array(
-				'css'     => esc_attr__( 'Honeypot', 'antispam-bee' ),
-				'time'    => esc_attr__( 'Comment time', 'antispam-bee' ),
-				'empty'   => esc_attr__( 'Empty Data', 'antispam-bee' ),
-				'server'  => esc_attr__( 'Fake IP', 'antispam-bee' ),
-				'localdb' => esc_attr__( 'Local DB Spam', 'antispam-bee' ),
-				'country' => esc_attr__( 'Country Check', 'antispam-bee' ),
-				'bbcode'  => esc_attr__( 'BBCode', 'antispam-bee' ),
-				'lang'    => esc_attr__( 'Comment Language', 'antispam-bee' ),
-				'regexp'  => esc_attr__( 'Regular Expression', 'antispam-bee' ),
+				'css'           => esc_attr__( 'Honeypot', 'antispam-bee' ),
+				'time'          => esc_attr__( 'Comment time', 'antispam-bee' ),
+				'empty'         => esc_attr__( 'Empty Data', 'antispam-bee' ),
+				'server'        => esc_attr__( 'Fake IP', 'antispam-bee' ),
+				'localdb'       => esc_attr__( 'Local DB Spam', 'antispam-bee' ),
+				'country'       => esc_attr__( 'Country Check', 'antispam-bee' ),
+				'bbcode'        => esc_attr__( 'BBCode', 'antispam-bee' ),
+				'lang'          => esc_attr__( 'Comment Language', 'antispam-bee' ),
+				'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
+				'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
+				'title_is_name' => esc_attr__( 'Identical Post title and blog title', 'antispam-bee' ),
 			),
 		);
 	}
@@ -1194,9 +1196,10 @@ class Antispam_Bee {
 	 * @return  array          Array with suspected reason.
 	 */
 	private static function _verify_trackback_request( $comment ) {
-		$ip   = self::get_key( $comment, 'comment_author_IP' );
-		$url  = self::get_key( $comment, 'comment_author_url' );
-		$body = self::get_key( $comment, 'comment_content' );
+		$ip        = self::get_key( $comment, 'comment_author_IP' );
+		$url       = self::get_key( $comment, 'comment_author_url' );
+		$body      = self::get_key( $comment, 'comment_content' );
+		$blog_name = self::get_key( $comment, 'comment_author' );
 
 		if ( empty( $url ) || empty( $body ) ) {
 			return array(
@@ -1207,6 +1210,12 @@ class Antispam_Bee {
 		if ( empty( $ip ) ) {
 			return array(
 				'reason' => 'empty',
+			);
+		}
+
+		if ( self::is_trackback_post_title_blog_name_spam( $body, $blog_name ) ) {
+			return array(
+				'reason' => 'title_is_name',
 			);
 		}
 
@@ -1400,6 +1409,24 @@ class Antispam_Bee {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if the blog name and the title of the blog post from which the trackback originates are equal.
+	 *
+	 * @since   2.6.4
+	 *
+	 * @param string $body      The comment body.
+	 * @param string $blog_name The name of the blog.
+	 *
+	 * @return bool
+	 */
+	private static function is_trackback_post_title_blog_name_spam( $body, $blog_name ) {
+		preg_match( '/<strong>(.*)<\/strong>\\n\\n/', $body, $matches );
+		if ( ! isset( $matches[1] ) ) {
+			return false;
+		}
+		return trim( $matches[1] ) === trim( $blog_name );
 	}
 
 
