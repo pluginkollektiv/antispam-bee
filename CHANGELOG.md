@@ -3,11 +3,13 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Save a hashed + salted IP for every comment
   * New check for incoming Trackbacks.
   * Introduction of behat tests.
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Speichere für jeden Kommentar eine salted Hash der IP Adresse.
   * Ein neuer Check für eingehende Trackbacks.
   * Einführung von Behat tests.
 
