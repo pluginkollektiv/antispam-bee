@@ -10,6 +10,7 @@
         <exclude name="WordPress.VIP.SuperGlobalInputUsage.AccessDetected" />
         <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
         <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+		<exclude name="WordPress.VIP.RestrictedFunctions.url_to_postid_url_to_postid" />
 
 
         <!-- tmp exclude -->

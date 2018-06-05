@@ -88,6 +88,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 ### dev-master ###
   * Introduction of coding standards.
+  * Skip the checks, when I ping myself.
   * Fixes some wrong usages of the translation functions.
   * Use the regular expressions check also for trackbacks.
   * Save a hashed + salted IP for every comment
