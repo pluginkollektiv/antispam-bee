@@ -89,6 +89,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 ### dev-master ###
   * Introduction of coding standards.
   * New check for incoming Trackbacks.
+  * Introduction of behat tests.
   
 ### 2.8.1 ###
   * PHP 5.3 compatibility

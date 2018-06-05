@@ -4,10 +4,12 @@
 * **English**
   * Introduction of coding standards.
   * New check for incoming Trackbacks.
+  * Introduction of behat tests.
 
 * **Deutsch**
   * Einführung von Coding Standards.
   * Ein neuer Check für eingehende Trackbacks.
+  * Einführung von Behat tests.
 
 ### 2.8.1 ###
 
