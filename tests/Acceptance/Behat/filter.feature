@@ -278,3 +278,40 @@ Feature: Filter settings
     Then I should not see "Monty"
     Then I should not see "Comment Language"
 
+	@db @javascript @test
+	Scenario: Later marked spam still works for spam db
+	  Given the option "flag_spam,spam_ip" is set
+	  Given I am on "/?p=1"
+	  Then I fill in "comment" with "Just a normal comment!"
+	  Then I fill in "author" with "Monty"
+	  Then I fill in "email" with "monty.1983@nuclear-secrets.com"
+	  Then I fill in "url" with "http://nuclear-secrets.com"
+	  Then I press "submit"
+	  Then I should not see "Fatal"
+	  Then I should see "Hello world"
+	  Then I should not see "Notice"
+
+	  Given I am logged in as admin
+	  Given I am on "/wp-admin/edit-comments.php"
+	  Then I should see "Monty"
+	  Then I check "cb-select-all-1"
+	  Then I select "Mark as Spam" from "bulk-action-selector-top"
+	  Then I press "doaction"
+	  Then I should see "1 comment marked as spam"
+
+	  Given I am an anonymous user
+	  Then I wait 15 seconds
+	  Given I am on "/?p=1"
+	  Then I fill in "comment" with "This is another comment from me, you will never guess!"
+	  Then I fill in "author" with "Montgomery"
+	  Then I fill in "email" with "monty.1982@nuclear-secrets.com"
+	  Then I fill in "url" with "http://nuclear-secrets-2000.com"
+	  Then I press "submit"
+	  Then I should not see "Fatal"
+	  Then I should see "Hello world"
+	  Then I should not see "Notice"
+
+	  Given I am logged in as admin
+	  Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
+	  Then I should see "Montgomery"
+	  Then I should see "Local DB Spam"

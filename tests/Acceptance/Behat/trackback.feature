@@ -37,3 +37,34 @@ Feature: Trackbacks
 	Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
 	Then I should see "Nuclear Power Plants"
 	Then I should see "Local DB Spam"
+
+  @db
+  Scenario: Regex
+	Given the option "regexp_check,flag_spam" is set
+	Given I send a trackback with the title "Viagra" and the excerpt "has more use cases than you think" and the url "http://explore.viagra" and the blog_name "Mr. Burns Spam Corp." to the post 1
+
+	Given I am logged in as admin
+	Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
+	Then I should see "Mr. Burns Spam Corp."
+	Then I should see "Regular Expression"
+
+  @db
+  Scenario: Title is name
+	Given the option "flag_spam" is set
+	Given I send a trackback with the title "Mr. Burns Spam Corp." and the excerpt "has more use cases than you think" and the url "http://explore.viagra" and the blog_name "Mr. Burns Spam Corp." to the post 1
+
+	Given I am logged in as admin
+	Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
+	Then I should see "Mr. Burns Spam Corp."
+	Then I should see "Identical Post title and blog title"
+
+  @db
+  Scenario: Comment Language
+	Given the option "translate_api,flag_spam" is set
+	Given the option "translate_lang" has the array value "de"
+	Given I send a trackback with the title "The English language" and the excerpt "has more use cases than you think" and the url "http://explore.co.uk" and the blog_name "Mr. Burns Spam Corp." to the post 1
+
+	Given I am logged in as admin
+	Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
+	Then I should see "Mr. Burns Spam Corp."
+	Then I should see "Comment Language"
