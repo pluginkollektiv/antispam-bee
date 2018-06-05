@@ -4,10 +4,20 @@
 * **English**
   * Introduction of coding standards.
   * Skip the checks, when I ping myself.
+  * Fixes some wrong usages of the translation functions.
+  * Use the regular expressions check also for trackbacks. 
+  * Save a hashed + salted IP for every comment
+  * New check for incoming Trackbacks.
+  * Introduction of behat tests.
 
 * **Deutsch**
   * Einführung von Coding Standards.
   * Überspringe die Filter, wenn ich mich selbst anpinge.
+  * Repariert einige falsche Verwendungsweisen der Übersetzungsfunktionalitäten.
+  * Wende den reguläre Ausdrücke Check auch auf Trackbacks an.
+  * Speichere für jeden Kommentar eine salted Hash der IP Adresse.
+  * Ein neuer Check für eingehende Trackbacks.
+  * Einführung von Behat tests.
 
 ### 2.8.1 ###
 
