@@ -89,6 +89,10 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 ### dev-master ###
   * Introduction of coding standards.
   * Fixes some wrong usages of the translation functions.
+  * Use the regular expressions check also for trackbacks.
+  * Save a hashed + salted IP for every comment
+  * New check for incoming Trackbacks.
+  * Introduction of behat tests.
   
 ### 2.8.1 ###
   * PHP 5.3 compatibility

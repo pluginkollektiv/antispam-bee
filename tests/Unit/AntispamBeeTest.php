@@ -112,32 +112,32 @@ class FactoryTest extends TestCase {
 	 * @return array
 	 */
 	public function spam_reasons_data_provider() {
-		return [
-			[
+		return array(
+			array(
 				// Detect spam word regex pattern in author.
-				[
+				array(
 					'comment_author' => 'Buy Viagra',
-				],
+				),
 				'regexp',
-			],
-			[
+			),
+			array(
 				// Detect BBCode spam in content.
-				[
+				array(
 					'comment_content' => "Test BB Spam\n[url=www.google.com]Link[/url]",
-				],
+				),
 				'bbcode',
-			],
+			),
 			// Detect spam word regex pattern combination content + mail.
 			// Attention, the order of the provided data here is important -.-, needs a rework of the codebase
 			// @ToDo: static $_reason
-			[
-				[
+			array(
+				array(
 					'comment_content' => "this is a pharmacy, why does it work now?.",
 					'comment_author_email' => 'test@yandex.ru',
-				],
+				),
 				'regexp',
-			],
-		];
+			),
+		);
 	}
 
 	/**
@@ -148,13 +148,13 @@ class FactoryTest extends TestCase {
 	 * @return array
 	 */
 	private function get_base_comment() {
-		return [
+		return array(
 			'comment_ID'           => 1,
 			'comment_author'       => 'Test Author',
 			'comment_author_email' => 'test.author@mail.server',
 			'comment_author_url'   => 'www.testdomain.com',
 			'comment_author_IP'    => '128.0.0.1',
 			'comment_content'      => 'This is the base test comment.',
-		];
+		);
 	}
 }

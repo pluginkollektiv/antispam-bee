@@ -1,23 +1,76 @@
 language: php
 
-php:
-#  - '5.2'
-#  - '5.3'
-#  - '5.4'
-  - '5.5'
-  - '5.6'
-  - '7.0'
-  - '7.1'
-  - '7.2'
-  - nightly
+sudo: required
+addons:
+  chrome: stable
 
-before_script:
+stages:
+  - test
+  - behat
+  - quality
+
+jobs:
+  include:
+    - stage: test
+      php: '5.4'
+      env: COMPOSER=composer-php-5-4.json
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '5.5'
+      env: COMPOSER=composer-php-5-4.json
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '5.6'
+      env: COMPOSER=composer-php-5-4.json
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '7.0'
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: 'nightly'
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '7.2'
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: behat
+      php: '7.2'
+      env: WORDPRESS_VERSION=nightly
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.1'
+      env: WORDPRESS_VERSION=latest
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.1'
+      env: WORDPRESS_VERSION=4.8
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.1'
+      env: WORDPRESS_VERSION=4.7
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.0'
+      env: WORDPRESS_VERSION=4.6
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.0'
+      env: WORDPRESS_VERSION=4.5
+      script: ./bin/behat.sh
+    - stage: quality
+      php: '7.0'
+      script: ./vendor/bin/phpcs ./ --standard=./phpcs.config.xml -s
+
+cache:
+  directories:
+  - vendor
+  - $HOME/.composer/cache
+
+before_install:
+  - phpenv config-rm xdebug.ini || true
+  - composer self-update
+
+install:
   - composer install
-
-script:
-  - mkdir -p .build/logs
-  - vendor/bin/phpunit -c phpunit.xml.dist
-  - vendor/bin/phpcs ./ --standard=./phpcs.config.xml -s
 
 # We should also add codecov.
 #after_success:
