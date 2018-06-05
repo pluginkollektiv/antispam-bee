@@ -251,6 +251,17 @@ class Antispam_Bee {
 				)
 			);
 
+			// Save IP hash, if comment is spam.
+			add_action(
+				'comment_post',
+				array(
+					__CLASS__,
+					'save_ip_hash',
+				),
+				10,
+				1
+			);
+
 			add_action(
 				'template_redirect',
 				array(
@@ -390,15 +401,17 @@ class Antispam_Bee {
 				'ignore_reasons'    => array(),
 			),
 			'reasons' => array(
-				'css'     => esc_attr__( 'Honeypot', 'antispam-bee' ),
-				'time'    => esc_attr__( 'Comment time', 'antispam-bee' ),
-				'empty'   => esc_attr__( 'Empty Data', 'antispam-bee' ),
-				'server'  => esc_attr__( 'Fake IP', 'antispam-bee' ),
-				'localdb' => esc_attr__( 'Local DB Spam', 'antispam-bee' ),
-				'country' => esc_attr__( 'Country Check', 'antispam-bee' ),
-				'bbcode'  => esc_attr__( 'BBCode', 'antispam-bee' ),
-				'lang'    => esc_attr__( 'Comment Language', 'antispam-bee' ),
-				'regexp'  => esc_attr__( 'Regular Expression', 'antispam-bee' ),
+				'css'           => esc_attr__( 'Honeypot', 'antispam-bee' ),
+				'time'          => esc_attr__( 'Comment time', 'antispam-bee' ),
+				'empty'         => esc_attr__( 'Empty Data', 'antispam-bee' ),
+				'server'        => esc_attr__( 'Fake IP', 'antispam-bee' ),
+				'localdb'       => esc_attr__( 'Local DB Spam', 'antispam-bee' ),
+				'country'       => esc_attr__( 'Country Check', 'antispam-bee' ),
+				'bbcode'        => esc_attr__( 'BBCode', 'antispam-bee' ),
+				'lang'          => esc_attr__( 'Comment Language', 'antispam-bee' ),
+				'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
+				'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
+				'title_is_name' => esc_attr__( 'Identical Post title and blog title', 'antispam-bee' ),
 			),
 		);
 	}
@@ -1194,9 +1207,12 @@ class Antispam_Bee {
 	 * @return  array          Array with suspected reason.
 	 */
 	private static function _verify_trackback_request( $comment ) {
-		$ip   = self::get_key( $comment, 'comment_author_IP' );
-		$url  = self::get_key( $comment, 'comment_author_url' );
-		$body = self::get_key( $comment, 'comment_content' );
+		$ip        = self::get_key( $comment, 'comment_author_IP' );
+		$url       = self::get_key( $comment, 'comment_author_url' );
+		$body      = self::get_key( $comment, 'comment_content' );
+		$post_id   = self::get_key( $comment, 'comment_post_ID' );
+		$type      = self::get_key( $comment, 'comment_type' );
+		$blog_name = self::get_key( $comment, 'comment_author' );
 
 		if ( empty( $url ) || empty( $body ) ) {
 			return array(
@@ -1207,6 +1223,16 @@ class Antispam_Bee {
 		if ( empty( $ip ) ) {
 			return array(
 				'reason' => 'empty',
+			);
+		}
+
+		if ( 'pingback' === $type && self::_pingback_from_myself( $url, $post_id ) ) {
+			return;
+		}
+
+		if ( self::is_trackback_post_title_blog_name_spam( $body, $blog_name ) ) {
+			return array(
+				'reason' => 'title_is_name',
 			);
 		}
 
@@ -1241,8 +1267,61 @@ class Antispam_Bee {
 				'reason' => 'lang',
 			);
 		}
+
+		if ( $options['regexp_check'] && self::_is_regexp_spam(
+			array(
+				'ip'     => $ip,
+				'rawurl' => $url,
+				'host'   => parse_url( $url, PHP_URL_HOST ),
+				'body'   => $body,
+				'email'  => '',
+				'author' => '',
+			)
+		) ) {
+			return array(
+				'reason' => 'regexp',
+			);
+		}
 	}
 
+	/**
+	 * Check, if I pinged myself.
+	 *
+	 * @since 2.8.2
+	 *
+	 * @param string $url            The URL from where the ping came.
+	 * @param int    $target_post_id The post ID which has been pinged.
+	 *
+	 * @return bool
+	 */
+	private static function _pingback_from_myself( $url, $target_post_id ) {
+
+		if ( 0 !== strpos( $url, home_url() ) ) {
+			return false;
+		}
+
+		$original_post_id = (int) url_to_postid( $url );
+		if ( ! $original_post_id ) {
+			return false;
+		}
+
+		$post = get_post( $original_post_id );
+		if ( ! $post ) {
+			return false;
+		}
+
+		$urls        = wp_extract_urls( $post->post_content );
+		$url_to_find = get_permalink( $target_post_id );
+		if ( ! $url_to_find ) {
+			return false;
+		}
+		foreach ( $urls as $url ) {
+			if ( strpos( $url, $url_to_find ) === 0 ) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Check the comment
@@ -1400,6 +1479,24 @@ class Antispam_Bee {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if the blog name and the title of the blog post from which the trackback originates are equal.
+	 *
+	 * @since   2.6.4
+	 *
+	 * @param string $body      The comment body.
+	 * @param string $blog_name The name of the blog.
+	 *
+	 * @return bool
+	 */
+	private static function is_trackback_post_title_blog_name_spam( $body, $blog_name ) {
+		preg_match( '/<strong>(.*)<\/strong>\\n\\n/', $body, $matches );
+		if ( ! isset( $matches[1] ) ) {
+			return false;
+		}
+		return trim( $matches[1] ) === trim( $blog_name );
 	}
 
 
@@ -1934,17 +2031,6 @@ class Antispam_Bee {
 			self::_go_in_peace();
 		}
 
-		// Save IP hash, if comment is spam.
-		add_action(
-			'comment_post',
-			array(
-				__CLASS__,
-				'save_ip_hash',
-			),
-			10,
-			3
-		);
-
 		if ( $ignore_filter && ( ( 1 === (int) $ignore_type && $is_ping ) || ( 2 === (int) $ignore_type && ! $is_ping ) ) ) {
 			self::_go_in_peace();
 		}
@@ -2096,12 +2182,10 @@ class Antispam_Bee {
 	/**
 	 * Saves the IP address.
 	 *
-	 * @param int    $comment_id The ID of the comment.
-	 * @param string $approved The approved value.
-	 * @param array  $comment_data The comment data array.
+	 * @param int $comment_id The ID of the comment.
 	 */
-	public static function save_ip_hash( $comment_id, $approved, $comment_data ) {
-		$hashed_ip = self::hash_ip( $comment_data['comment_author_IP'] );
+	public static function save_ip_hash( $comment_id ) {
+		$hashed_ip = self::hash_ip( self::get_client_ip() );
 		add_comment_meta(
 			$comment_id,
 			'antispam_bee_iphash',
@@ -2216,14 +2300,14 @@ class Antispam_Bee {
 		) . sprintf(
 			"%s: %s\r\n",
 			esc_html__( 'Type', 'antispam-bee' ),
-			esc_html__( ( empty( $comment['comment_type'] ) ? 'Comment' : 'Trackback' ), 'antispam-bee' )
+			esc_html( ( empty( $comment['comment_type'] ) ? __( 'Comment', 'antispam-bee' ) : __( 'Trackback', 'antispam-bee' ) ) )
 		) . sprintf(
 			"Whois: http://whois.arin.net/rest/ip/%s\r\n",
 			$comment['comment_author_IP']
 		) . sprintf(
 			"%s: %s\r\n\r\n",
 			esc_html__( 'Spam Reason', 'antispam-bee' ),
-			esc_html__( self::$defaults['reasons'][ self::$_reason ], 'antispam-bee' )
+			esc_html( self::$defaults['reasons'][ self::$_reason ] )
 		) . sprintf(
 			"%s\r\n\r\n\r\n",
 			$content
