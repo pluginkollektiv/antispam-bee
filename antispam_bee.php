@@ -1261,8 +1261,22 @@ class Antispam_Bee {
 				'reason' => 'lang',
 			);
 		}
-	}
 
+		if ( $options['regexp_check'] && self::_is_regexp_spam(
+			array(
+				'ip'     => $ip,
+				'rawurl' => $url,
+				'host'   => parse_url( $url, PHP_URL_HOST ),
+				'body'   => $body,
+				'email'  => '',
+				'author' => '',
+			)
+		) ) {
+			return array(
+				'reason' => 'regexp',
+			);
+		}
+	}
 
 	/**
 	 * Check the comment
