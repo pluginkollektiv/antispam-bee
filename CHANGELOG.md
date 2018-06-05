@@ -3,6 +3,7 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Do not longer overwrite the IP address WordPress saves with the comment by using `pre_comment_user_ip`.
   * Do not show "Trust commenters with a Gravatar" if the "Show Gravatar" option is not set.
   * Skip the checks, when I ping myself.
   * Fixes some wrong usages of the translation functions.
@@ -13,6 +14,7 @@
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Beendet das Überschreiben der IP Adresse via `pre_comment_user_ip`, welche WordPress mit dem Kommentar speichert.
   * Zeige die Option "Vertraue Kommentaren mit Gravatar" nur an wenn die Option "Zeige Gravatar" aktiviert ist.
   * Überspringe die Filter, wenn ich mich selbst anpinge.
   * Repariert einige falsche Verwendungsweisen der Übersetzungsfunktionalitäten.

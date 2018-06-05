@@ -1037,15 +1037,6 @@ class Antispam_Bee {
 	public static function handle_incoming_request( $comment ) {
 		$comment['comment_author_IP'] = self::get_client_ip();
 
-		add_filter(
-			'pre_comment_user_ip',
-			array(
-				__CLASS__,
-				'get_client_ip',
-			),
-			1
-		);
-
 		$request_uri  = self::get_key( $_SERVER, 'REQUEST_URI' );
 		$request_path = parse_url( $request_uri, PHP_URL_PATH );
 
