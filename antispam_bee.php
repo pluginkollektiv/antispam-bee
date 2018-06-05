@@ -1228,7 +1228,7 @@ class Antispam_Bee {
 
 		if ( 'pingback' === $type && self::_pingback_from_myself( $url, $post_id ) ) {
 			return;
-    }
+		}
 
 		if ( self::is_trackback_post_title_blog_name_spam( $body, $blog_name ) ) {
 			return array(
@@ -1268,7 +1268,7 @@ class Antispam_Bee {
 			);
 		}
 
-    if ( $options['regexp_check'] && self::_is_regexp_spam(
+		if ( $options['regexp_check'] && self::_is_regexp_spam(
 			array(
 				'ip'     => $ip,
 				'rawurl' => $url,
@@ -1282,7 +1282,7 @@ class Antispam_Bee {
 				'reason' => 'regexp',
 			);
 		}
-  }
+	}
 
 	/**
 	 * Check, if I pinged myself.
