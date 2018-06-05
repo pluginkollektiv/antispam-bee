@@ -4,10 +4,24 @@
 * **English**
   * Introduction of coding standards.
   * Do not longer overwrite the IP address WordPress saves with the comment by using `pre_comment_user_ip`.
+  * Do not show "Trust commenters with a Gravatar" if the "Show Gravatar" option is not set.
+  * Skip the checks, when I ping myself.
+  * Fixes some wrong usages of the translation functions.
+  * Use the regular expressions check also for trackbacks. 
+  * Save a hashed + salted IP for every comment
+  * New check for incoming Trackbacks.
+  * Introduction of behat tests.
 
 * **Deutsch**
   * Einführung von Coding Standards.
   * Beendet das Überschreiben der IP Adresse via `pre_comment_user_ip`, welche WordPress mit dem Kommentar speichert.
+  * Zeige die Option "Vertraue Kommentaren mit Gravatar" nur an wenn die Option "Zeige Gravatar" aktiviert ist.
+  * Überspringe die Filter, wenn ich mich selbst anpinge.
+  * Repariert einige falsche Verwendungsweisen der Übersetzungsfunktionalitäten.
+  * Wende den reguläre Ausdrücke Check auch auf Trackbacks an.
+  * Speichere für jeden Kommentar eine salted Hash der IP Adresse.
+  * Ein neuer Check für eingehende Trackbacks.
+  * Einführung von Behat tests.
 
 ### 2.8.1 ###
 

@@ -10,10 +10,10 @@
         <exclude name="WordPress.VIP.SuperGlobalInputUsage.AccessDetected" />
         <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
         <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+		<exclude name="WordPress.VIP.RestrictedFunctions.url_to_postid_url_to_postid" />
 
 
         <!-- tmp exclude -->
-        <exclude name="WordPress.WP.I18n.NonSingularStringLiteralText" />
         <exclude name="PSR2.Methods.MethodDeclaration.Underscore" />
         <exclude name="WordPress.WP.AlternativeFunctions.parse_url_parse_url" /><!-- see https://github.com/pluginkollektiv/antispam-bee/pull/85 -->
     </rule>
