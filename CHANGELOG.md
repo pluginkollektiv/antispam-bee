@@ -3,6 +3,7 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Fixes some wrong usages of the translation functions.
   * Use the regular expressions check also for trackbacks. 
   * Save a hashed + salted IP for every comment
   * New check for incoming Trackbacks.
@@ -10,6 +11,7 @@
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Repariert einige falsche Verwendungsweisen der Übersetzungsfunktionalitäten.
   * Wende den reguläre Ausdrücke Check auch auf Trackbacks an.
   * Speichere für jeden Kommentar eine salted Hash der IP Adresse.
   * Ein neuer Check für eingehende Trackbacks.
