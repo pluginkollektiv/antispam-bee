@@ -77,6 +77,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'translate_api'     => (int) ( ! empty( $_POST['ab_translate_api'] ) ),
 			'translate_lang'    => $selected_languages,
 
+			'delete_data_on_uninstall' => (int) ( ! empty( $_POST['delete_data_on_uninstall'] ) ),
+
 		);
 
 		foreach ( $options['ignore_reasons'] as $key => $val ) {
@@ -469,7 +471,16 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									</li>
 								</ul>
 							</li>
+
+							<li class="delete_data_on_uninstall">
+								<input type="checkbox" name="delete_data_on_uninstall" id="delete_data_on_uninstall" value="1" <?php checked( $options['delete_data_on_uninstall'], 1 ); ?> />
+								<label for="delete_data_on_uninstall">
+									<?php esc_html_e( 'Delete Antispamm Bee data when uninstalling', 'antispam-bee' ); ?>
+									<span><?php esc_html_e( 'If checked, you will delete all data Antispam Bee creates, when uninstalling the plugin.', 'antispam-bee' ); ?></span>
+								</label>
+							</li>
 						</ul>
+
 					</div>
 
 

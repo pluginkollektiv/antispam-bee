@@ -340,7 +340,11 @@ class Antispam_Bee {
 	 * @change  2.4
 	 */
 	public static function uninstall() {
+		if ( ! self::get_option('delete_data_on_uninstall') ) {
+			return;
+		}
 		global $wpdb;
+
 		delete_option( 'antispam_bee' );
 		$wpdb->query( 'OPTIMIZE TABLE `' . $wpdb->options . '`' );
 
@@ -402,6 +406,8 @@ class Antispam_Bee {
 
 				'reasons_enable'    => 0,
 				'ignore_reasons'    => array(),
+
+				'delete_data_on_uninstall' => 1,
 			),
 			'reasons' => array(
 				'css'           => esc_attr__( 'Honeypot', 'antispam-bee' ),
