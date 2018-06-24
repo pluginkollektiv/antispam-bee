@@ -343,6 +343,9 @@ class Antispam_Bee {
 		global $wpdb;
 		delete_option( 'antispam_bee' );
 		$wpdb->query( 'OPTIMIZE TABLE `' . $wpdb->options . '`' );
+
+		$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")';
+		$wpdb->query( $sql );
 	}
 
 
