@@ -297,7 +297,6 @@ Feature: Filter settings
     Then I check "cb-select-all-1"
     Then I select "Mark as Spam" from "bulk-action-selector-top"
     Then I press "doaction"
-    Then I should see "1 comment marked as spam"
 
     Given I am an anonymous user
     Then I wait 15 seconds
