@@ -100,6 +100,6 @@ final class Antispam_Bee_Columns {
 				width: 10%;
 			}
 		</style>
-	<?php
+		<?php
 	}
 }
