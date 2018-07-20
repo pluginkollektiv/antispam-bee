@@ -2501,10 +2501,20 @@ class Antispam_Bee {
 		return 'spam';
 	}
 
+	/**
+	 * A wrapper around wp_parse_url().
+	 *
+	 * @since 2.8.2
+	 *
+	 * @param string $url The URL to parse.
+	 * @param string $component The component to get back.
+	 *
+	 * @return string
+	 */
 	private static function parse_url( $url, $component = 'host' ) {
 
-		$parts = wp_parse_url($url);
-		return (is_array($parts) && isset($parts[$component]))?$parts[$component] : '';
+		$parts = wp_parse_url( $url );
+		return ( is_array( $parts ) && isset( $parts[ $component ] ) ) ? $parts[ $component ] : '';
 	}
 }
 
