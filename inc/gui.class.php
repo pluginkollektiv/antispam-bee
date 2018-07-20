@@ -201,6 +201,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								</label>
 							</li>
 
+							<?php if ( 1 === (int) get_option( 'show_avatars', 0 ) ) : ?>
 							<li>
 								<input type="checkbox" name="ab_gravatar_check" id="ab_gravatar_check" value="1" <?php checked( $options['gravatar_check'], 1 ); ?> />
 								<label for="ab_gravatar_check">
@@ -224,6 +225,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									</span>
 								</label>
 							</li>
+							<?php endif; ?>
 
 							<li>
 								<input type="checkbox" name="ab_time_check" id="ab_time_check" value="1" <?php checked( $options['time_check'], 1 ); ?> />
@@ -296,7 +298,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											'https'
 										)
 									);
-										?>
+									?>
 									<li>
 										<textarea name="ab_country_black" id="ab_country_black" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr( $options['country_black'] ); ?></textarea>
 										<label for="ab_country_black">
@@ -350,7 +352,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											wp_kses_post( $link1 ),
 											'</a>'
 										);
-										?>
+									?>
 										</span>
 								</label>
 
@@ -361,7 +363,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											$lang               = self::get_allowed_translate_languages();
 											$selected_languages = (array) $options['translate_lang'];
 											foreach ( $lang as $k => $v ) {
-											?>
+												?>
 												<option <?php echo in_array( $k, $selected_languages, true ) ? 'selected="selected"' : ''; ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $v ); ?></option>
 
 											<?php } ?>
@@ -374,7 +376,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							</li>
 						</ul>
 					</div>
-
 
 					<div class="ab-column ab-join">
 						<h3 class="icon advanced">
@@ -458,7 +459,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									<li>
 										<select name="ab_ignore_reasons[]" id="ab_ignore_reasons" size="2" multiple>
 											<?php foreach ( self::$defaults['reasons'] as $k => $v ) { ?>
-												<option <?php selected( in_array( $k, $options['ignore_reasons'], true ), true ); ?> value="<?php echo esc_attr( $k ); ?>"><?php esc_html_e( $v, 'antispam-bee' ); ?></option>
+												<option <?php selected( in_array( $k, $options['ignore_reasons'], true ), true ); ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $v ); ?></option>
 											<?php } ?>
 										</select>
 										<label for="ab_ignore_reasons">
@@ -533,7 +534,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 				</div>
 			</form>
 		</div>
-	<?php
+		<?php
 	}
 
 	/**

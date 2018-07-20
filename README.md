@@ -1,5 +1,7 @@
 # Antispam Bee #
 
+[![Build Status](https://travis-ci.org/pluginkollektiv/antispam-bee.svg?branch=master)](https://travis-ci.org/pluginkollektiv/antispam-bee)
+
 Antispam plugin with a sophisticated toolset for effective day to day comment and trackback spam-fighting. Built with data protection and privacy in mind.
 
 ## Description ##
