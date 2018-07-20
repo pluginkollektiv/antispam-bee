@@ -2061,9 +2061,11 @@ class Antispam_Bee {
 			'aym' => 'ay',
 			'aze' => 'az',
 		);
+
 		if ( array_key_exists( $franc_code, $codes ) ) {
 			return $codes[ $franc_code ];
 		}
+
 		return $franc_code;
 	}
 
