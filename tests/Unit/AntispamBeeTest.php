@@ -22,6 +22,7 @@ class FactoryTest extends TestCase {
 		parent::setUp();
 
 		Functions::when( 'get_bloginfo' )->justReturn( 'https://domain.com/' );
+		Functions::when( 'wp_parse_url' )->alias('parse_url');
 		Functions::when( 'is_admin' )->justReturn( false );
 		Functions::expect( 'wp_unslash' )
 			->andReturnUsing(
