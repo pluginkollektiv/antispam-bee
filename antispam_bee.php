@@ -1038,7 +1038,7 @@ class Antispam_Bee {
 		$comment['comment_author_IP'] = self::get_client_ip();
 
 		$request_uri  = self::get_key( $_SERVER, 'REQUEST_URI' );
-		$request_path = self::parse_url( $request_uri, 'url' );
+		$request_path = self::parse_url( $request_uri, 'path' );
 
 		if ( empty( $request_path ) ) {
 			return self::_handle_spam_request(
