@@ -11,6 +11,7 @@
   * Save a hashed + salted IP for every comment
   * New check for incoming Trackbacks.
   * Introduction of behat tests.
+  * Updates the used JavaScript library for the statistics widget.
 
 * **Deutsch**
   * Einführung von Coding Standards.
@@ -22,6 +23,7 @@
   * Speichere für jeden Kommentar eine salted Hash der IP Adresse.
   * Ein neuer Check für eingehende Trackbacks.
   * Einführung von Behat tests.
+  * Aktualisiert die genutzte JavaScript Bibliothek für das Statistik Widget.
 
 ### 2.8.1 ###
 
