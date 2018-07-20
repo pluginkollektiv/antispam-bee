@@ -45,7 +45,7 @@ Feature: Filter settings
   Scenario: Local Spam DB IP
     Given the option "regexp_check,spam_ip,flag_spam" is set
 	Given I am on "/?p=1"
-	Then I fill in "comment" with "Viagra is the way to go!"
+	Then I fill in "comment" with "you can Buy amazing Neutrons here!"
 	Then I fill in "author" with "Montgomery"
 	Then I fill in "email" with "montgomery.c.burns.1866@aol.com"
 	Then I fill in "url" with "http://nuclear-secrets.com"
