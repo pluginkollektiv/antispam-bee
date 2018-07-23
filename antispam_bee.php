@@ -1848,8 +1848,8 @@ class Antispam_Bee {
 		}
 
 		$response = wp_safe_remote_post(
-			'https://6yq7rnw72h.execute-api.eu-central-1.amazonaws.com/latest',
-			array( 'body' => array( 'data' => $query_text ) )
+			'https://api.pluginkollektiv.org/language/v1/',
+			array( 'body' => json_encode( array( 'body' => $query_text ) ) )
 		);
 
 		if ( is_wp_error( $response )
@@ -1861,6 +1861,12 @@ class Antispam_Bee {
 		if ( ! $detected_lang ) {
 			return false;
 		}
+
+		$detected_lang = json_decode( $detected_lang );
+		if ( ! $detected_lang ) {
+			return false;
+		}
+		$detected_lang= $detected_lang->code;
 
 		return ! in_array( self::_map_lang_code( $detected_lang ), $allowed_lang, true );
 	}
