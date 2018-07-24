@@ -1842,14 +1842,9 @@ class Antispam_Bee {
 			return false;
 		}
 
-		$query_text = wp_trim_words( $comment_text, 20, '' );
-		if ( ! $query_text ) {
-			return false;
-		}
-
 		$response = wp_safe_remote_post(
 			'https://api.pluginkollektiv.org/language/v1/',
-			array( 'body' => wp_json_encode( array( 'body' => $query_text ) ) )
+			array( 'body' => wp_json_encode( array( 'body' => $comment_text ) ) )
 		);
 
 		if ( is_wp_error( $response )
