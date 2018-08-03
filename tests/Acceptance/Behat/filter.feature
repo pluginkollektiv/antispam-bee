@@ -218,7 +218,7 @@ Feature: Filter settings
 
     Given I am logged in as admin
     Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
-    Then I should see "Monty"
+    Then I should see "Monty" --debug-mode
     Then I should see "Comment Language"
 
   @javascript @db
