@@ -5,8 +5,8 @@ addons:
   chrome: stable
 
 stages:
-  - test
   - behat
+  - test
   - quality
 
 jobs:
@@ -34,6 +34,10 @@ jobs:
       script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
     - stage: behat
       php: '7.2'
+      env: WORDPRESS_VERSION=4.5
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.2'
       env: WORDPRESS_VERSION=nightly
       script: ./bin/behat.sh
     - stage: behat
@@ -51,10 +55,6 @@ jobs:
     - stage: behat
       php: '7.0'
       env: WORDPRESS_VERSION=4.6
-      script: ./bin/behat.sh
-    - stage: behat
-      php: '7.2'
-      env: WORDPRESS_VERSION=4.5
       script: ./bin/behat.sh
     - stage: quality
       php: '7.0'
