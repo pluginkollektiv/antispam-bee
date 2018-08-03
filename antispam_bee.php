@@ -1851,7 +1851,7 @@ class Antispam_Bee {
 
 		$response = wp_safe_remote_post(
 			'https://api.pluginkollektiv.org/language/v1/',
-			array( 'body' => wp_json_encode( array( 'body' => $comment_text ) ) )
+			array( 'sslverify' => false, 'body' => wp_json_encode( array( 'body' => $comment_text ) ) )
 		);
 		echo __LINE__ . PHP_EOL;
 		var_dump($response);
