@@ -53,7 +53,7 @@ jobs:
     #  env: WORDPRESS_VERSION=4.6
     #  script: ./bin/behat.sh
     - stage: behat
-      php: '7.0'
+      php: '7.2'
       env: WORDPRESS_VERSION=4.5
       script: ./bin/behat.sh --tags=test
     #- stage: quality
