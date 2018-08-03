@@ -202,7 +202,7 @@ Feature: Filter settings
     Then I should not see "Monty"
     Then I should not see "BBCode"
 
-  @javascript @db @test
+  @javascript @db
   Scenario: Comment Language
     Given the option "translate_api,flag_spam" is set
     Given the option "translate_lang" has the array value "de"

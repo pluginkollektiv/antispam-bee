@@ -11,54 +11,54 @@ stages:
 
 jobs:
   include:
-    #- stage: test
-    #  php: '5.4'
-    #  env: COMPOSER=composer-php-5-4.json
-    #  script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
-    #- stage: test
-    #  php: '5.5'
-    #  env: COMPOSER=composer-php-5-4.json
-    #  script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
-    #- stage: test
-    #  php: '5.6'
-    #  env: COMPOSER=composer-php-5-4.json
-    #  script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
-    #- stage: test
-    #  php: '7.0'
-    #  script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
-    #- stage: test
-    #  php: 'nightly'
-    #  script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
-    #- stage: test
-    #  php: '7.2'
-    #  script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
-    #- stage: behat
-    #  php: '7.2'
-    #  env: WORDPRESS_VERSION=nightly
-    #  script: ./bin/behat.sh
-    #- stage: behat
-    #  php: '7.1'
-    #  env: WORDPRESS_VERSION=latest
-    #  script: ./bin/behat.sh
-    #- stage: behat
-    #  php: '7.1'
-    #  env: WORDPRESS_VERSION=4.8
-    #  script: ./bin/behat.sh
-    #- stage: behat
-    #  php: '7.1'
-    #  env: WORDPRESS_VERSION=4.7
-    #  script: ./bin/behat.sh
-    #- stage: behat
-    #  php: '7.0'
-    #  env: WORDPRESS_VERSION=4.6
-    #  script: ./bin/behat.sh
+    - stage: test
+      php: '5.4'
+      env: COMPOSER=composer-php-5-4.json
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '5.5'
+      env: COMPOSER=composer-php-5-4.json
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '5.6'
+      env: COMPOSER=composer-php-5-4.json
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '7.0'
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: 'nightly'
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '7.2'
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: behat
+      php: '7.2'
+      env: WORDPRESS_VERSION=nightly
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.1'
+      env: WORDPRESS_VERSION=latest
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.1'
+      env: WORDPRESS_VERSION=4.8
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.1'
+      env: WORDPRESS_VERSION=4.7
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.0'
+      env: WORDPRESS_VERSION=4.6
+      script: ./bin/behat.sh
     - stage: behat
       php: '7.2'
       env: WORDPRESS_VERSION=4.5
-      script: ./bin/behat.sh --tags=test
-    #- stage: quality
-    #  php: '7.0'
-    #  script: ./vendor/bin/phpcs ./ --standard=./phpcs.config.xml -s
+      script: ./bin/behat.sh
+    - stage: quality
+      php: '7.0'
+      script: ./vendor/bin/phpcs ./ --standard=./phpcs.config.xml -s
 
 cache:
   directories:
