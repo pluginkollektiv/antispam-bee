@@ -19,7 +19,8 @@ default:
         - PaulGibbs\WordpressBehatExtension\Context\EditPostContext
   extensions:
     Behat\MinkExtension:
-      base_url: http://antispambee.pluginkollektiv    # [!] Change this for your local development.
+      base_url: http://localhost:8080    # [!] Change this for your local development.
+      site_url: http://localhost:8080    # [!] Change this for your local development.
       browser_name: chrome
       default_session: default
       javascript_session: selenium2
@@ -32,7 +33,7 @@ default:
           selenium2: ~
 
     PaulGibbs\WordpressBehatExtension:
-      path: /var/www/html/antispambee/     # [!] Change this for your local development.
+      path: %paths.base%/tmp/antispam-bee/     # [!] Change this for your local development.
       default_driver: wpcli
       wpcli:
         binary: %paths.base%/vendor/bin/wp
