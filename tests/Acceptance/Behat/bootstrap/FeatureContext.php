@@ -184,14 +184,7 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 		$element->mouseOver();
 	}
 
-	/**
-	 * Checks, that page contains specified text
-	 * Example: Then I should see "Who is the Batman?"
-	 * Example: And I should see "Who is the Batman?"
-	 *
-	 * @Then /^(?:|I )should see "(?P<text>(?:[^"]|\\")*)" --debug-mode$/
-	 */
-	public function assertPageContainsTextDebugMode($text)
+	public function assertPageContainsText($text)
 	{
 		try {
 			$this->assertSession()

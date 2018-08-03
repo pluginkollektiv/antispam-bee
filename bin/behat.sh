@@ -44,4 +44,4 @@ ls $WORDPRESS_PATH/wp-content/plugins
 
 vendor/bin/wp --path=$WORDPRESS_PATH plugin activate antispam-bee
 
-vendor/bin/behat --tags=test
+vendor/bin/behat
