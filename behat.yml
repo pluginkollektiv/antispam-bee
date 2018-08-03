@@ -34,7 +34,6 @@ default:
     PaulGibbs\WordpressBehatExtension:
       path: %paths.base%/tmp/antispam-bee/     # [!] Change this for your local development.
       default_driver: wpcli
-      site_url: http://localhost:8080    # [!] Change this for your local development.
       wpcli:
         binary: %paths.base%/vendor/bin/wp
       database:
