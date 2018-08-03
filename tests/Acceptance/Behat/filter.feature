@@ -212,7 +212,6 @@ Feature: Filter settings
     Then I fill in "email" with "monty.1983@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"
     Then I press "submit"
-    Then I should see "I-will-not-see-this-bug-get-the-vardumps" --debug-mode
     Then I should not see "Fatal"
     Then I should see "Hello world"
     Then I should not see "Notice"
