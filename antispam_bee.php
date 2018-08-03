@@ -1822,6 +1822,7 @@ class Antispam_Bee {
 		$comment_text = wp_strip_all_tags( $comment_content );
 
 		if ( empty( $allowed_lang ) || empty( $comment_text ) ) {
+			echo __LINE__ . PHP_EOL;die();
 			return false;
 		}
 
@@ -1837,10 +1838,12 @@ class Antispam_Bee {
 		 */
 		$detected_lang = apply_filters( 'antispam_bee_detected_lang', null, $comment_text );
 		if ( null !== $detected_lang ) {
+			echo __LINE__ . PHP_EOL;die();
 			return ! in_array( $detected_lang, $allowed_lang, true );
 		}
 
 		if ( mb_strlen( $comment_text ) < 10 ) {
+			echo __LINE__ . PHP_EOL;die();
 			return false;
 		}
 		echo __LINE__ . PHP_EOL;
@@ -1855,22 +1858,28 @@ class Antispam_Bee {
 
 		if ( is_wp_error( $response )
 			|| wp_remote_retrieve_response_code( $response ) !== 200 ) {
+			echo __LINE__ . PHP_EOL;die();
 			return false;
 		}
 
 		$detected_lang = wp_remote_retrieve_body( $response );
 		if ( ! $detected_lang ) {
+			echo __LINE__ . PHP_EOL;die();
 			return false;
 		}
 
 		$detected_lang = json_decode( $detected_lang );
 		if ( ! $detected_lang || ! isset( $detected_lang->code ) ) {
+			echo __LINE__ . PHP_EOL;die();
 			return false;
 		}
 		echo __LINE__ . PHP_EOL;
 		var_dump($detected_lang);
 
-		return ! in_array( self::_map_lang_code( $detected_lang->code ), $allowed_lang, true );
+		$return = ! in_array( self::_map_lang_code( $detected_lang->code ), $allowed_lang, true );
+		var_dump($return);
+		echo __LINE__ . PHP_EOL;die();
+		return $return;
 	}
 
 	/**
