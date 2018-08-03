@@ -1817,6 +1817,8 @@ class Antispam_Bee {
 	private static function _is_lang_spam( $comment_content ) {
 		$allowed_lang = (array) self::get_option( 'translate_lang' );
 
+		echo __LINE__ . PHP_EOL;
+		var_dump($allowed_lang);
 		$comment_text = wp_strip_all_tags( $comment_content );
 
 		if ( empty( $allowed_lang ) || empty( $comment_text ) ) {
@@ -1841,11 +1843,15 @@ class Antispam_Bee {
 		if ( mb_strlen( $comment_text ) < 10 ) {
 			return false;
 		}
+		echo __LINE__ . PHP_EOL;
+		var_dump($comment_text);
 
 		$response = wp_safe_remote_post(
 			'https://api.pluginkollektiv.org/language/v1/',
 			array( 'body' => wp_json_encode( array( 'body' => $comment_text ) ) )
 		);
+		echo __LINE__ . PHP_EOL;
+		var_dump($response);
 
 		if ( is_wp_error( $response )
 			|| wp_remote_retrieve_response_code( $response ) !== 200 ) {
@@ -1861,6 +1867,8 @@ class Antispam_Bee {
 		if ( ! $detected_lang || ! isset( $detected_lang->code ) ) {
 			return false;
 		}
+		echo __LINE__ . PHP_EOL;
+		var_dump($detected_lang);
 
 		return ! in_array( self::_map_lang_code( $detected_lang->code ), $allowed_lang, true );
 	}
