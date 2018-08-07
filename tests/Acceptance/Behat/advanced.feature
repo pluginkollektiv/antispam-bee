@@ -14,7 +14,7 @@ Feature: Advanced settings
     Then I should see "Hello world"
     Then I should not see "Notice"
 
-    Given I am logged in with the name admin and the password abc
+    Given I am logged in as admin
     Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
     Then I should see "Mr. Burns"
     Then I should see "Honeypot"

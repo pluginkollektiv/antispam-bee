@@ -8,7 +8,6 @@ use function PaulGibbs\WordpressBehatExtension\Util\buildCLIArgs;
  * Define application features from the specific context.
  */
 class FeatureContext extends RawWordpressContext implements SnippetAcceptingContext {
-	use \PaulGibbs\WordpressBehatExtension\Context\Traits\UserAwareContextTrait;
 
     /**
      * Initialise context.
@@ -183,20 +182,5 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 
 		// ok, let's hover it
 		$element->mouseOver();
-	}
-
-	/**
-	 * @Given I am logged in with the name :username and the password :password
-	 */
-	public function iAmLoggedInWithTheNameAndThePassword( $username, $password, $counter = 0 ) {
-		// Workaround: We loop this, since this seems to fail randomly, when we log in several times in one feature.
-		try {
-			$this->logIn( $username, $password );
-		} catch ( ExpectationException $e ) {
-			$this->iAmLoggedInWithTheNameAndThePassword( $username, $password, $counter+1 );
-			if ( 10 === $counter ) {
-				throw $e;
-			}
-		}
 	}
 }
