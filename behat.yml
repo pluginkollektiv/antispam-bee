@@ -20,6 +20,7 @@ default:
   extensions:
     Behat\MinkExtension:
       base_url: http://localhost:8080    # [!] Change this for your local development.
+      site_url: http://localhost:8080    # [!] Change this for your local development.
       browser_name: chrome
       default_session: default
       javascript_session: selenium2
@@ -34,7 +35,6 @@ default:
     PaulGibbs\WordpressBehatExtension:
       path: %paths.base%/tmp/antispam-bee/     # [!] Change this for your local development.
       default_driver: wpcli
-      site_url: http://localhost:8080    # [!] Change this for your local development.
       wpcli:
         binary: %paths.base%/vendor/bin/wp
       database:
