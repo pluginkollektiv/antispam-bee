@@ -194,7 +194,7 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 			$this->visitPath('wp-login.php');
 			sleep(1);
 			$page = $this->getSession()->getPage();
-			var_dump($page)
+			var_dump($page);
 			$node = $page->findField('user_login');
 			var_dump($node);
 			try {
