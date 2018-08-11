@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WORDPRESS_URL=localhost;
+WORDPRESS_URL=localhost:8080;
 WORDPRESS_PATH=tmp/antispam-bee/;
 PLUGIN_PATH=$TRAVIS_BUILD_DIR;
 DB_NAME=pluginkollektiv_antispambee_behat;
