@@ -2,7 +2,8 @@
 use PaulGibbs\WordpressBehatExtension\Context\RawWordpressContext;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
-use function PaulGibbs\WordpressBehatExtension\Util\buildCLIArgs;
+use Behat\Mink\Exception\ExpectationException;
+use \Behat\Mink\Exception\UnsupportedDriverActionException;
 
 /**
  * Define application features from the specific context.
@@ -189,14 +190,38 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 	 * @Given I am logged in with the name :username and the password :password
 	 */
 	public function iAmLoggedInWithTheNameAndThePassword( $username, $password, $counter = 0 ) {
-		// Workaround: We loop this, since this seems to fail randomly, when we log in several times in one feature.
-		try {
-			$this->logIn( $username, $password );
-		} catch ( Behat\Testwork\Call\Exception\FatalThrowableError $e ) {
-			$this->iAmLoggedInWithTheNameAndThePassword( $username, $password, $counter+1 );
-			if ( 10 === $counter ) {
-				throw $e;
+
+			if ($this->loggedIn()) {
+				$this->logOut();
 			}
-		}
+			$this->visitPath('wp-login.php');
+			sleep(1);
+			$page = $this->getSession()->getPage();
+			$node = $page->findField('user_login');
+			var_dump($node);
+			try {
+				$node->focus();
+			} catch ( UnsupportedDriverActionException $e) {
+				// This will fail for GoutteDriver but neither is it necessary.
+			}
+			// This is to make sure value is set properly.
+			$node->setValue('');
+			$node->setValue($username);
+			$node->setValue($username);
+			$node = $page->findField('user_pass');
+			try {
+				$node->focus();
+			} catch (UnsupportedDriverActionException $e) {
+				// This will fail for GoutteDriver but neither is it necessary.
+			}
+			// This is to make sure value is set properly.
+			$node->setValue('');
+			$node->setValue($password);
+			$node->setValue($password);
+			$page->findButton('wp-submit')->click();
+			if (! $this->loggedIn()) {
+				throw new ExpectationException('[W803] The user could not be logged-in.', $this->getSession()->getDriver());
+			}
+
 	}
 }
