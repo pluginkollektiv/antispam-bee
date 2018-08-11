@@ -192,7 +192,7 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 		// Workaround: We loop this, since this seems to fail randomly, when we log in several times in one feature.
 		try {
 			$this->logIn( $username, $password );
-		} catch ( ExpectationException $e ) {
+		} catch ( Behat\Testwork\Call\Exception\FatalThrowableError $e ) {
 			$this->iAmLoggedInWithTheNameAndThePassword( $username, $password, $counter+1 );
 			if ( 10 === $counter ) {
 				throw $e;
