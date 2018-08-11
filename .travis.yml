@@ -35,27 +35,27 @@ jobs:
     - stage: behat
       php: '7.2'
       env: WORDPRESS_VERSION=4.5
-      script: sudo ./bin/behat.sh
+      script: ./bin/behat.sh
     - stage: behat
       php: '7.2'
       env: WORDPRESS_VERSION=nightly
-      script: sudo ./bin/behat.sh
+      script: ./bin/behat.sh
     - stage: behat
       php: '7.1'
       env: WORDPRESS_VERSION=latest
-      script: sudo ./bin/behat.sh
+      script: ./bin/behat.sh
     - stage: behat
       php: '7.1'
       env: WORDPRESS_VERSION=4.8
-      script: sudo ./bin/behat.sh
+      script: ./bin/behat.sh
     - stage: behat
       php: '7.1'
       env: WORDPRESS_VERSION=4.7
-      script: sudo ./bin/behat.sh
+      script: ./bin/behat.sh
     - stage: behat
       php: '7.0'
       env: WORDPRESS_VERSION=4.6
-      script: sudo ./bin/behat.sh
+      script: ./bin/behat.sh
     - stage: quality
       php: '7.0'
       script: ./vendor/bin/phpcs ./ --standard=./phpcs.config.xml -s
