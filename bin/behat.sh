@@ -35,7 +35,7 @@ nohup bash -c "java -jar selenium-server-standalone.jar &" && sleep 1; cat nohup
 wait_for_port
 sleep 5
 
-sudo php -S "localhost:80" -t "$WORDPRESS_PATH" >/dev/null 2>&1 &
+php -S "$WORDPRESS_URL" -t "$WORDPRESS_PATH" >/dev/null 2>&1 &
 
 ln -s $PLUGIN_PATH $WORDPRESS_PATH/wp-content/plugins/antispam-bee
 ln -s $PLUGIN_PATH/tests/Acceptance/Behat/env/mu-plugins/ $WORDPRESS_PATH/wp-content/mu-plugins
