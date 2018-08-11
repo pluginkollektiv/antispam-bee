@@ -191,12 +191,10 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 	 */
 	public function iAmLoggedInWithTheNameAndThePassword( $username, $password, $counter = 0 ) {
 
-			if ($this->loggedIn()) {
-				$this->logOut();
-			}
 			$this->visitPath('wp-login.php');
 			sleep(1);
 			$page = $this->getSession()->getPage();
+			var_dump($page)
 			$node = $page->findField('user_login');
 			var_dump($node);
 			try {
