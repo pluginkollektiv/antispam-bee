@@ -185,42 +185,4 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 		// ok, let's hover it
 		$element->mouseOver();
 	}
-
-	/**
-	 * @Given I am logged in with the name :username and the password :password
-	 */
-	public function iAmLoggedInWithTheNameAndThePassword( $username, $password, $counter = 0 ) {
-
-		$this->visitPath('wp-login.php');
-		$session = $this->getSession();
-		if (! $session->isStarted()) {
-			$session->start();
-		}
-		sleep(1);
-		$page = $session->getPage();
-		$node = $page->findField('user_login');
-		try {
-			$node->focus();
-		} catch ( UnsupportedDriverActionException $e) {
-			// This will fail for GoutteDriver but neither is it necessary.
-		}
-		// This is to make sure value is set properly.
-		$node->setValue('');
-		$node->setValue($username);
-		$node->setValue($username);
-		$node = $page->findField('user_pass');
-		try {
-			$node->focus();
-		} catch (UnsupportedDriverActionException $e) {
-			// This will fail for GoutteDriver but neither is it necessary.
-		}
-		// This is to make sure value is set properly.
-		$node->setValue('');
-		$node->setValue($password);
-		$node->setValue($password);
-		$page->findButton('wp-submit')->click();
-		if (! $this->loggedIn()) {
-			throw new ExpectationException('[W803] The user could not be logged-in.', $this->getSession()->getDriver());
-		}
-	}
 }

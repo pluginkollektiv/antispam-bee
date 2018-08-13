@@ -4,7 +4,8 @@ Feature: More settings
   Scenario: Spam counter disabled
     Given the option "dashboard_count" is not set
 
-    Given I am logged in with the name admin and the password abc
+
+    Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then I should not see "0 Blocked"
     Then I should not see "Fatal"
@@ -14,7 +15,7 @@ Feature: More settings
   Scenario: Spam counter enabled
     Given the option "dashboard_count" is set
 
-    Given I am logged in with the name admin and the password abc
+    Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then I should see "0 Blocked"
     Then I should not see "Fatal"
@@ -41,7 +42,7 @@ Feature: More settings
 
     Then the value of the option "spam_count" is "2"
 
-    Given I am logged in with the name admin and the password abc
+    Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then I should see "2 Blocked"
     Then I should not see "Fatal"
@@ -50,7 +51,7 @@ Feature: More settings
   @javascript @db
   Scenario: Dashboard chart enabled
     Given the option "dashboard_chart" is set
-    Given I am logged in with the name admin and the password abc
+    Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then the "#ab_chart" element should contain "No data available."
     Then I should not see "Fatal"
@@ -59,7 +60,7 @@ Feature: More settings
   @javascript @db
   Scenario: Dashboard chart disabled
     Given the option "dashboard_chart" is not set
-    Given I am logged in with the name admin and the password abc
+    Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then I should not see "No data available."
     Then I should not see "Fatal"
@@ -81,7 +82,7 @@ Feature: More settings
     Then I fill in "url" with "http://nuclear-secrets.com"
     Then I press "submit"
 
-    Given I am logged in with the name admin and the password abc
+    Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then the "#ab_chart_data td" element should contain "2"
     Then I should not see "Fatal"
