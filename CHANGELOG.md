@@ -8,7 +8,8 @@
   * Do not show "Trust commenters with a Gravatar" if the "Show Gravatar" option is not set.
   * Skip the checks, when I ping myself.
   * Fixes some wrong usages of the translation functions.
-  * Use the regular expressions check also for trackbacks. 
+  * Use the regular expressions check also for trackbacks.
+  * Add option to delete Antispam Bee related data when plugin gets deleted via the admin interface.
   * Save a hashed + salted IP for every comment
   * New check for incoming Trackbacks.
   * Introduction of behat tests.
@@ -22,6 +23,7 @@
   * Überspringe die Filter, wenn ich mich selbst anpinge.
   * Repariert einige falsche Verwendungsweisen der Übersetzungsfunktionalitäten.
   * Wende den reguläre Ausdrücke Check auch auf Trackbacks an.
+  * Option hinzugefügt, dass Daten von Antispam Bee gelöscht werden, wenn das Plugin über das Admin Interface gelöscht wird.
   * Speichere für jeden Kommentar eine salted Hash der IP Adresse.
   * Ein neuer Check für eingehende Trackbacks.
   * Einführung von Behat tests.

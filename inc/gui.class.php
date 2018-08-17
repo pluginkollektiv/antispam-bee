@@ -45,37 +45,39 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			$selected_languages[] = $value;
 		}
 		$options = array(
-			'flag_spam'         => (int) ( ! empty( $_POST['ab_flag_spam'] ) ),
-			'email_notify'      => (int) ( ! empty( $_POST['ab_email_notify'] ) ),
-			'cronjob_enable'    => (int) ( ! empty( $_POST['ab_cronjob_enable'] ) ),
-			'cronjob_interval'  => (int) self::get_key( $_POST, 'ab_cronjob_interval' ),
+			'flag_spam'                => (int) ( ! empty( $_POST['ab_flag_spam'] ) ),
+			'email_notify'             => (int) ( ! empty( $_POST['ab_email_notify'] ) ),
+			'cronjob_enable'           => (int) ( ! empty( $_POST['ab_cronjob_enable'] ) ),
+			'cronjob_interval'         => (int) self::get_key( $_POST, 'ab_cronjob_interval' ),
 
-			'no_notice'         => (int) ( ! empty( $_POST['ab_no_notice'] ) ),
+			'no_notice'                => (int) ( ! empty( $_POST['ab_no_notice'] ) ),
 
-			'dashboard_count'   => (int) ( ! empty( $_POST['ab_dashboard_count'] ) ),
-			'dashboard_chart'   => (int) ( ! empty( $_POST['ab_dashboard_chart'] ) ),
-			'advanced_check'    => (int) ( ! empty( $_POST['ab_advanced_check'] ) ),
-			'regexp_check'      => (int) ( ! empty( $_POST['ab_regexp_check'] ) ),
-			'spam_ip'           => (int) ( ! empty( $_POST['ab_spam_ip'] ) ),
-			'already_commented' => (int) ( ! empty( $_POST['ab_already_commented'] ) ),
-			'time_check'        => (int) ( ! empty( $_POST['ab_time_check'] ) ),
-			'always_allowed'    => (int) ( ! empty( $_POST['ab_always_allowed'] ) ),
+			'dashboard_count'          => (int) ( ! empty( $_POST['ab_dashboard_count'] ) ),
+			'dashboard_chart'          => (int) ( ! empty( $_POST['ab_dashboard_chart'] ) ),
+			'advanced_check'           => (int) ( ! empty( $_POST['ab_advanced_check'] ) ),
+			'regexp_check'             => (int) ( ! empty( $_POST['ab_regexp_check'] ) ),
+			'spam_ip'                  => (int) ( ! empty( $_POST['ab_spam_ip'] ) ),
+			'already_commented'        => (int) ( ! empty( $_POST['ab_already_commented'] ) ),
+			'time_check'               => (int) ( ! empty( $_POST['ab_time_check'] ) ),
+			'always_allowed'           => (int) ( ! empty( $_POST['ab_always_allowed'] ) ),
 
-			'ignore_pings'      => (int) ( ! empty( $_POST['ab_ignore_pings'] ) ),
-			'ignore_filter'     => (int) ( ! empty( $_POST['ab_ignore_filter'] ) ),
-			'ignore_type'       => (int) self::get_key( $_POST, 'ab_ignore_type' ),
+			'ignore_pings'             => (int) ( ! empty( $_POST['ab_ignore_pings'] ) ),
+			'ignore_filter'            => (int) ( ! empty( $_POST['ab_ignore_filter'] ) ),
+			'ignore_type'              => (int) self::get_key( $_POST, 'ab_ignore_type' ),
 
-			'reasons_enable'    => (int) ( ! empty( $_POST['ab_reasons_enable'] ) ),
-			'ignore_reasons'    => (array) self::get_key( $_POST, 'ab_ignore_reasons' ),
+			'reasons_enable'           => (int) ( ! empty( $_POST['ab_reasons_enable'] ) ),
+			'ignore_reasons'           => (array) self::get_key( $_POST, 'ab_ignore_reasons' ),
 
-			'bbcode_check'      => (int) ( ! empty( $_POST['ab_bbcode_check'] ) ),
-			'gravatar_check'    => (int) ( ! empty( $_POST['ab_gravatar_check'] ) ),
-			'country_code'      => (int) ( ! empty( $_POST['ab_country_code'] ) ),
-			'country_black'     => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_black' ) ) ),
-			'country_white'     => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_white' ) ) ),
+			'bbcode_check'             => (int) ( ! empty( $_POST['ab_bbcode_check'] ) ),
+			'gravatar_check'           => (int) ( ! empty( $_POST['ab_gravatar_check'] ) ),
+			'country_code'             => (int) ( ! empty( $_POST['ab_country_code'] ) ),
+			'country_black'            => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_black' ) ) ),
+			'country_white'            => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_white' ) ) ),
 
-			'translate_api'     => (int) ( ! empty( $_POST['ab_translate_api'] ) ),
-			'translate_lang'    => $selected_languages,
+			'translate_api'            => (int) ( ! empty( $_POST['ab_translate_api'] ) ),
+			'translate_lang'           => $selected_languages,
+
+			'delete_data_on_uninstall' => (int) ( ! empty( $_POST['delete_data_on_uninstall'] ) ),
 
 		);
 
@@ -468,7 +470,16 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									</li>
 								</ul>
 							</li>
+
+							<li class="delete_data_on_uninstall">
+								<input type="checkbox" name="delete_data_on_uninstall" id="delete_data_on_uninstall" value="1" <?php checked( $options['delete_data_on_uninstall'], 1 ); ?> />
+								<label for="delete_data_on_uninstall">
+									<?php esc_html_e( 'Delete Antispam Bee data when uninstalling', 'antispam-bee' ); ?>
+									<span><?php esc_html_e( 'If checked, you will delete all data Antispam Bee creates, when uninstalling the plugin.', 'antispam-bee' ); ?></span>
+								</label>
+							</li>
 						</ul>
+
 					</div>
 
 

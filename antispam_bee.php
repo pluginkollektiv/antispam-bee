@@ -340,9 +340,18 @@ class Antispam_Bee {
 	 * @change  2.4
 	 */
 	public static function uninstall() {
+		if ( ! self::get_option( 'delete_data_on_uninstall' ) ) {
+			return;
+		}
 		global $wpdb;
+
 		delete_option( 'antispam_bee' );
 		$wpdb->query( 'OPTIMIZE TABLE `' . $wpdb->options . '`' );
+
+		//phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
+		$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")';
+		$wpdb->query( $sql );
+		//phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
 	}
 
 
@@ -367,38 +376,40 @@ class Antispam_Bee {
 
 		self::$defaults = array(
 			'options' => array(
-				'advanced_check'    => 1,
-				'regexp_check'      => 1,
-				'spam_ip'           => 1,
-				'already_commented' => 1,
-				'gravatar_check'    => 0,
-				'time_check'        => 0,
-				'ignore_pings'      => 0,
-				'always_allowed'    => 0,
+				'advanced_check'           => 1,
+				'regexp_check'             => 1,
+				'spam_ip'                  => 1,
+				'already_commented'        => 1,
+				'gravatar_check'           => 0,
+				'time_check'               => 0,
+				'ignore_pings'             => 0,
+				'always_allowed'           => 0,
 
-				'dashboard_chart'   => 0,
-				'dashboard_count'   => 0,
+				'dashboard_chart'          => 0,
+				'dashboard_count'          => 0,
 
-				'country_code'      => 0,
-				'country_black'     => '',
-				'country_white'     => '',
+				'country_code'             => 0,
+				'country_black'            => '',
+				'country_white'            => '',
 
-				'translate_api'     => 0,
-				'translate_lang'    => array(),
+				'translate_api'            => 0,
+				'translate_lang'           => array(),
 
-				'bbcode_check'      => 1,
+				'bbcode_check'             => 1,
 
-				'flag_spam'         => 1,
-				'email_notify'      => 0,
-				'no_notice'         => 0,
-				'cronjob_enable'    => 0,
-				'cronjob_interval'  => 0,
+				'flag_spam'                => 1,
+				'email_notify'             => 0,
+				'no_notice'                => 0,
+				'cronjob_enable'           => 0,
+				'cronjob_interval'         => 0,
 
-				'ignore_filter'     => 0,
-				'ignore_type'       => 0,
+				'ignore_filter'            => 0,
+				'ignore_type'              => 0,
 
-				'reasons_enable'    => 0,
-				'ignore_reasons'    => array(),
+				'reasons_enable'           => 0,
+				'ignore_reasons'           => array(),
+
+				'delete_data_on_uninstall' => 1,
 			),
 			'reasons' => array(
 				'css'           => esc_attr__( 'Honeypot', 'antispam-bee' ),
@@ -409,7 +420,6 @@ class Antispam_Bee {
 				'country'       => esc_attr__( 'Country Check', 'antispam-bee' ),
 				'bbcode'        => esc_attr__( 'BBCode', 'antispam-bee' ),
 				'lang'          => esc_attr__( 'Comment Language', 'antispam-bee' ),
-				'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
 				'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
 				'title_is_name' => esc_attr__( 'Identical Post title and blog title', 'antispam-bee' ),
 			),

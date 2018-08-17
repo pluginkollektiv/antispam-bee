@@ -94,6 +94,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
   * Skip the checks, when I ping myself.
   * Fixes some wrong usages of the translation functions.
   * Use the regular expressions check also for trackbacks.
+  * Add option to delete Antispam Bee related data when plugin gets deleted via the admin interface.
   * Save a hashed + salted IP for every comment
   * New check for incoming Trackbacks.
   * Introduction of behat tests.
