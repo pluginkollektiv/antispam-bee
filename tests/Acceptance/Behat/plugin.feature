@@ -1,7 +1,7 @@
 Feature: Basics
 
   Background:
-    Given I am logged in as an admin
+    Given I am logged in as admin
 
   Scenario: I can see the plugin
     And I am on the plugins-page

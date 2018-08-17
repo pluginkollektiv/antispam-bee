@@ -1808,7 +1808,7 @@ class Antispam_Bee {
 	 *
 	 * @since   2.0
 	 * @change  2.6.6
-	 * @change  2.7.0
+	 * @change  2.8.2
 	 *
 	 * @param  string $comment_content Content of the comment.
 	 *
@@ -1823,53 +1823,250 @@ class Antispam_Bee {
 			return false;
 		}
 
-		$query_text = wp_trim_words( $comment_text, 10, '' );
-		if ( ! $query_text ) {
-			return false;
-		}
-
 		/**
-		 * Filter the Google Translate API key to be used.
+		 * Filters the detected language. With this filter, other detection methods can skip in and detect the language.
 		 *
-		 * @since 2.7.0
+		 * @since 2.8.2
 		 *
-		 * @param string $key API key to use.
+		 * @param null   $detected_lang The detected language.
+		 * @param string $comment_text  The text, to detect the language.
 		 *
-		 * @return string Modified API key.
+		 * @return null|string The detected language or null.
 		 */
-		$key = apply_filters(
-			'ab_google_translate_api_key',
-			base64_decode(
-				strrev( 'B9GcXFjbjdULkdDUfh1SOlzZ2FzMhF1Mt1kRWVTWoVHR5NVY6lUQ' )
-			)
+		$detected_lang = apply_filters( 'antispam_bee_detected_lang', null, $comment_text );
+		if ( null !== $detected_lang ) {
+			return ! in_array( $detected_lang, $allowed_lang, true );
+		}
+
+		if ( mb_strlen( $comment_text ) < 10 ) {
+			return false;
+		}
+
+		$response = wp_safe_remote_post(
+			'https://api.pluginkollektiv.org/language/v1/',
+			array( 'body' => wp_json_encode( array( 'body' => $comment_text ) ) )
 		);
 
-		$response = wp_safe_remote_request(
-			add_query_arg(
-				array(
-					'q'   => rawurlencode( $query_text ),
-					'key' => $key,
-				),
-				'https://www.googleapis.com/language/translate/v2/detect'
-			)
+		if ( is_wp_error( $response )
+			|| wp_remote_retrieve_response_code( $response ) !== 200 ) {
+			return false;
+		}
+
+		$detected_lang = wp_remote_retrieve_body( $response );
+		if ( ! $detected_lang ) {
+			return false;
+		}
+
+		$detected_lang = json_decode( $detected_lang );
+		if ( ! $detected_lang || ! isset( $detected_lang->code ) ) {
+			return false;
+		}
+
+		return ! in_array( self::_map_lang_code( $detected_lang->code ), $allowed_lang, true );
+	}
+
+	/**
+	 * Map franc language codes
+	 *
+	 * @since   2.9.0
+	 *
+	 * @param  string $franc_code The franc code, received from the service.
+	 *
+	 * @return string             Mapped ISO code
+	 */
+	private static function _map_lang_code( $franc_code ) {
+		$codes = array(
+			'zha' => 'za',
+			'zho' => 'zh',
+			'zul' => 'zu',
+			'yid' => 'yi',
+			'yor' => 'yo',
+			'xho' => 'xh',
+			'wln' => 'wa',
+			'wol' => 'wo',
+			'ven' => 've',
+			'vie' => 'vi',
+			'vol' => 'vo',
+			'uig' => 'ug',
+			'ukr' => 'uk',
+			'urd' => 'ur',
+			'uzb' => 'uz',
+			'tah' => 'ty',
+			'tam' => 'ta',
+			'tat' => 'tt',
+			'tel' => 'te',
+			'tgk' => 'tg',
+			'tgl' => 'tl',
+			'tha' => 'th',
+			'tir' => 'ti',
+			'ton' => 'to',
+			'tsn' => 'tn',
+			'tso' => 'ts',
+			'tuk' => 'tk',
+			'tur' => 'tr',
+			'twi' => 'tw',
+			'sag' => 'sg',
+			'san' => 'sa',
+			'sin' => 'si',
+			'slk' => 'sk',
+			'slv' => 'sl',
+			'sme' => 'se',
+			'smo' => 'sm',
+			'sna' => 'sn',
+			'snd' => 'sd',
+			'som' => 'so',
+			'sot' => 'st',
+			'spa' => 'es',
+			'sqi' => 'sq',
+			'srd' => 'sc',
+			'srp' => 'sr',
+			'ssw' => 'ss',
+			'sun' => 'su',
+			'swa' => 'sw',
+			'swe' => 'sv',
+			'roh' => 'rm',
+			'ron' => 'ro',
+			'run' => 'rn',
+			'rus' => 'ru',
+			'que' => 'qu',
+			'pan' => 'pa',
+			'pli' => 'pi',
+			'pol' => 'pl',
+			'por' => 'pt',
+			'pus' => 'ps',
+			'oci' => 'oc',
+			'oji' => 'oj',
+			'ori' => 'or',
+			'orm' => 'om',
+			'oss' => 'os',
+			'nau' => 'na',
+			'nav' => 'nv',
+			'nbl' => 'nr',
+			'nde' => 'nd',
+			'ndo' => 'ng',
+			'nep' => 'ne',
+			'nld' => 'nl',
+			'nno' => 'nn',
+			'nob' => 'nb',
+			'nor' => 'no',
+			'nya' => 'ny',
+			'mah' => 'mh',
+			'mal' => 'ml',
+			'mar' => 'mr',
+			'mkd' => 'mk',
+			'mlg' => 'mg',
+			'mlt' => 'mt',
+			'mon' => 'mn',
+			'mri' => 'mi',
+			'msa' => 'ms',
+			'mya' => 'my',
+			'lao' => 'lo',
+			'lat' => 'la',
+			'lav' => 'lv',
+			'lim' => 'li',
+			'lin' => 'ln',
+			'lit' => 'lt',
+			'ltz' => 'lb',
+			'lub' => 'lu',
+			'lug' => 'lg',
+			'kal' => 'kl',
+			'kan' => 'kn',
+			'kas' => 'ks',
+			'kat' => 'ka',
+			'kau' => 'kr',
+			'kaz' => 'kk',
+			'khm' => 'km',
+			'kik' => 'ki',
+			'kin' => 'rw',
+			'kir' => 'ky',
+			'kom' => 'kv',
+			'kon' => 'kg',
+			'kor' => 'ko',
+			'kua' => 'kj',
+			'kur' => 'ku',
+			'jav' => 'jv',
+			'jpn' => 'ja',
+			'ibo' => 'ig',
+			'ido' => 'io',
+			'iii' => 'ii',
+			'iku' => 'iu',
+			'ile' => 'ie',
+			'ina' => 'ia',
+			'ind' => 'id',
+			'ipk' => 'ik',
+			'isl' => 'is',
+			'ita' => 'it',
+			'hat' => 'ht',
+			'hau' => 'ha',
+			'hbs' => 'sh',
+			'heb' => 'he',
+			'her' => 'hz',
+			'hin' => 'hi',
+			'hmo' => 'ho',
+			'hrv' => 'hr',
+			'hun' => 'hu',
+			'hye' => 'hy',
+			'gla' => 'gd',
+			'gle' => 'ga',
+			'glg' => 'gl',
+			'glv' => 'gv',
+			'grn' => 'gn',
+			'guj' => 'gu',
+			'fao' => 'fo',
+			'fas' => 'fa',
+			'fij' => 'fj',
+			'fin' => 'fi',
+			'fra' => 'fr',
+			'fry' => 'fy',
+			'ful' => 'ff',
+			'ell' => 'el',
+			'eng' => 'en',
+			'epo' => 'eo',
+			'est' => 'et',
+			'eus' => 'eu',
+			'ewe' => 'ee',
+			'dan' => 'da',
+			'deu' => 'de',
+			'div' => 'dv',
+			'dzo' => 'dz',
+			'cat' => 'ca',
+			'ces' => 'cs',
+			'cha' => 'ch',
+			'che' => 'ce',
+			'chu' => 'cu',
+			'chv' => 'cv',
+			'cor' => 'kw',
+			'cos' => 'co',
+			'cre' => 'cr',
+			'cym' => 'cy',
+			'bak' => 'ba',
+			'bam' => 'bm',
+			'bel' => 'be',
+			'ben' => 'bn',
+			'bis' => 'bi',
+			'bod' => 'bo',
+			'bos' => 'bs',
+			'bre' => 'br',
+			'bul' => 'bg',
+			'aar' => 'aa',
+			'abk' => 'ab',
+			'afr' => 'af',
+			'aka' => 'ak',
+			'amh' => 'am',
+			'ara' => 'ar',
+			'arg' => 'an',
+			'asm' => 'as',
+			'ava' => 'av',
+			'ave' => 'ae',
+			'aym' => 'ay',
+			'aze' => 'az',
 		);
 
-		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
-			return false;
+		if ( array_key_exists( $franc_code, $codes ) ) {
+			return $codes[ $franc_code ];
 		}
 
-		$json = wp_remote_retrieve_body( $response );
-		if ( ! $json ) {
-			return false;
-		}
-
-		$data_array = json_decode( $json, true );
-		if ( ! isset( $data_array['data']['detections'][0][0]['language'] ) ) {
-			return false;
-		}
-		$detected_lang = $data_array['data']['detections'][0][0]['language'];
-
-		return ! in_array( $detected_lang, $allowed_lang, true );
+		return $franc_code;
 	}
 
 	/**

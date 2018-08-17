@@ -4,6 +4,7 @@ Feature: More settings
   Scenario: Spam counter disabled
     Given the option "dashboard_count" is not set
 
+
     Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then I should not see "0 Blocked"

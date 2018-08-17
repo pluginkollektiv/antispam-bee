@@ -3,6 +3,7 @@
 ### dev-master ###
 * **English**
   * Introduction of coding standards.
+  * Switch to franc language detection API for the language check.
   * Do not longer overwrite the IP address WordPress saves with the comment by using `pre_comment_user_ip`.
   * Do not show "Trust commenters with a Gravatar" if the "Show Gravatar" option is not set.
   * Skip the checks, when I ping myself.
@@ -15,6 +16,7 @@
 
 * **Deutsch**
   * Einführung von Coding Standards.
+  * Wechsel auf die Franc Spracherkennungs API für den Sprach-Check.
   * Beendet das Überschreiben der IP Adresse via `pre_comment_user_ip`, welche WordPress mit dem Kommentar speichert.
   * Zeige die Option "Vertraue Kommentaren mit Gravatar" nur an wenn die Option "Zeige Gravatar" aktiviert ist.
   * Überspringe die Filter, wenn ich mich selbst anpinge.

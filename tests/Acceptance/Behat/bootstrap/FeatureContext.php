@@ -2,12 +2,14 @@
 use PaulGibbs\WordpressBehatExtension\Context\RawWordpressContext;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
-use function PaulGibbs\WordpressBehatExtension\Util\buildCLIArgs;
+use Behat\Mink\Exception\ExpectationException;
+use \Behat\Mink\Exception\UnsupportedDriverActionException;
 
 /**
  * Define application features from the specific context.
  */
 class FeatureContext extends RawWordpressContext implements SnippetAcceptingContext {
+	use \PaulGibbs\WordpressBehatExtension\Context\Traits\UserAwareContextTrait;
 
     /**
      * Initialise context.
