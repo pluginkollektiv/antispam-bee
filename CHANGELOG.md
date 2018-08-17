@@ -14,6 +14,7 @@
   * New check for incoming Trackbacks.
   * Introduction of behat tests.
   * Updates the used JavaScript library for the statistics widget.
+  * Bugfix in the "Comment form used outside of posts" option.
 
 * **Deutsch**
   * Einführung von Coding Standards.
@@ -28,6 +29,7 @@
   * Ein neuer Check für eingehende Trackbacks.
   * Einführung von Behat tests.
   * Aktualisiert die genutzte JavaScript Bibliothek für das Statistik Widget.
+  * Bugfix in der "Kommentarformular wird außerhalb von Beiträgen verwendet" Einstellung
 
 ### 2.8.1 ###
 
