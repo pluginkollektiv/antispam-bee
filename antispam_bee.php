@@ -1155,7 +1155,7 @@ class Antispam_Bee {
 			)/x',
 			array( 'Antispam_Bee', 'replace_comment_field_callback' ),
 			$data,
-			1
+			-1
 		);
 	}
 
@@ -2656,18 +2656,24 @@ class Antispam_Bee {
 	 */
 	public static function get_secret_name_for_post( $post_id ) {
 
-		$secret = substr( sha1( md5( self::$_salt . (int) $post_id ) ), 0, 10 );
+		if ( self::get_option( 'always_allowed' ) ) {
+			$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
+		} else {
+			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
+		}
 
 		/**
 		 * Filters the secret for a post, which is used in the textarea name attribute.
 		 *
 		 * @param string $secret The secret.
 		 * @param int    $post_id The post ID.
+		 * @param bool   $always_allowed Whether the comment form is used outside of the single post view or not.
 		 */
 		return apply_filters(
 			'ab_get_secret_name_for_post',
 			$secret,
-			(int) $post_id
+			(int) $post_id,
+			(bool) self::get_option( 'always_allowed' )
 		);
 
 	}
@@ -2681,18 +2687,24 @@ class Antispam_Bee {
 	 */
 	public static function get_secret_id_for_post( $post_id ) {
 
-		$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
+		if ( self::get_option( 'always_allowed' ) ) {
+			$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
+		} else {
+			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
+		}
 
 		/**
 		 * Filters the secret for a post, which is used in the textarea id attribute.
 		 *
 		 * @param string $secret The secret.
 		 * @param int    $post_id The post ID.
+		 * @param bool   $always_allowed Whether the comment form is used outside of the single post view or not.
 		 */
 		return apply_filters(
 			'ab_get_secret_id_for_post',
 			$secret,
-			(int) $post_id
+			(int) $post_id,
+			(bool) self::get_option( 'always_allowed' )
 		);
 	}
 
