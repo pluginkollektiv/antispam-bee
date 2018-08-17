@@ -33,10 +33,6 @@ jobs:
       php: '7.2'
       script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
     - stage: behat
-      php: '7.0'
-      env: WORDPRESS_VERSION=4.5
-      script: ./bin/behat.sh
-    - stage: behat
       php: '7.2'
       env: WORDPRESS_VERSION=nightly
       script: ./bin/behat.sh
