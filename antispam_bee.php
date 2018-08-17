@@ -1538,6 +1538,9 @@ class Antispam_Bee {
 				'body' => 'target[t]?ed (visitors|traffic)|viagra|cialis',
 			),
 			array(
+				'body' => 'purchase amazing|buy amazing',
+			),
+			array(
 				'body'  => 'dating|sex|lotto|pharmacy',
 				'email' => '@mail\.ru|@yandex\.',
 			),
