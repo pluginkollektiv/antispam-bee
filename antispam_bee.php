@@ -1005,7 +1005,7 @@ class Antispam_Bee {
 		}
 
 		$request_uri  = self::get_key( $_SERVER, 'REQUEST_URI' );
-		$request_path = parse_url( $request_uri, PHP_URL_PATH );
+		$request_path = self::parse_url( $request_uri, 'path' );
 
 		if ( strpos( $request_path, 'wp-comments-post.php' ) === false ) {
 			return;
@@ -1038,7 +1038,7 @@ class Antispam_Bee {
 		$comment['comment_author_IP'] = self::get_client_ip();
 
 		$request_uri  = self::get_key( $_SERVER, 'REQUEST_URI' );
-		$request_path = parse_url( $request_uri, PHP_URL_PATH );
+		$request_path = self::parse_url( $request_uri, 'path' );
 
 		if ( empty( $request_path ) ) {
 			return self::_handle_spam_request(
@@ -1235,7 +1235,7 @@ class Antispam_Bee {
 			);
 		}
 
-		if ( $options['advanced_check'] && self::_is_fake_ip( $ip, parse_url( $url, PHP_URL_HOST ) ) ) {
+		if ( $options['advanced_check'] && self::_is_fake_ip( $ip, self::parse_url( $url, 'host' ) ) ) {
 			return array(
 				'reason' => 'server',
 			);
@@ -1263,7 +1263,7 @@ class Antispam_Bee {
 			array(
 				'ip'     => $ip,
 				'rawurl' => $url,
-				'host'   => parse_url( $url, PHP_URL_HOST ),
+				'host'   => self::parse_url( $url, 'host' ),
 				'body'   => $body,
 				'email'  => '',
 				'author' => '',
@@ -1388,7 +1388,7 @@ class Antispam_Bee {
 			array(
 				'ip'     => $ip,
 				'rawurl' => $url,
-				'host'   => parse_url( $url, PHP_URL_HOST ),
+				'host'   => self::parse_url( $url, 'host' ),
 				'body'   => $body,
 				'email'  => $email,
 				'author' => $author,
@@ -2696,6 +2696,22 @@ class Antispam_Bee {
 	public static function return_spam() {
 
 		return 'spam';
+	}
+
+	/**
+	 * A wrapper around wp_parse_url().
+	 *
+	 * @since 2.8.2
+	 *
+	 * @param string $url The URL to parse.
+	 * @param string $component The component to get back.
+	 *
+	 * @return string
+	 */
+	private static function parse_url( $url, $component = 'host' ) {
+
+		$parts = wp_parse_url( $url );
+		return ( is_array( $parts ) && isset( $parts[ $component ] ) ) ? $parts[ $component ] : '';
 	}
 }
 
