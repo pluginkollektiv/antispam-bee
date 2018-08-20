@@ -9,7 +9,7 @@
  * Domain Path: /lang
  * License:     GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
- * Version:     2.8.1
+ * Version:     2.9.0-beta
  *
  * @package Antispam Bee
  **/
