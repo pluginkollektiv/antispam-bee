@@ -99,6 +99,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
   * New check for incoming Trackbacks.
   * Introduction of behat tests.
   * Updates the used JavaScript library for the statistics widget.
+  * Bugfix in the "Comment form used outside of posts" option.
   
 ### 2.8.1 ###
   * PHP 5.3 compatibility
