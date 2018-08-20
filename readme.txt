@@ -86,7 +86,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 ## Changelog ##
 
-### dev-master ###
+### 2.9.0 ###
   * Introduction of coding standards.
   * Switch to franc language detection API for the language check.
   * Do not longer overwrite the IP address WordPress saves with the comment by using `pre_comment_user_ip`.

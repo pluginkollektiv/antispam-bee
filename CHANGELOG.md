@@ -1,6 +1,6 @@
 ## Changelog ##
 
-### dev-master ###
+### 2.9.0 ###
 * **English**
   * Introduction of coding standards.
   * Switch to franc language detection API for the language check.
