@@ -65,7 +65,6 @@ class Antispam_Bee {
 	 */
 	private static $_salt;
 
-
 	/**
 	 * The spam reason.
 	 *
@@ -1183,7 +1182,7 @@ class Antispam_Bee {
 		$id_script = '';
 		if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
 			$output   .= 'id="' . self::get_secret_id_for_post( self::$_current_post_id ) . '" ';
-			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "' . esc_js( md5( time() ) ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( self::$_current_post_id ) ) . '").setAttribute( "id", "comment" );</script>';
+			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "a' . substr( esc_js( md5( time() ) ), 0, 31 ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( self::$_current_post_id ) ) . '").setAttribute( "id", "comment" );</script>';
 		}
 
 		$output .= ' name="' . esc_attr( self::get_secret_name_for_post( self::$_current_post_id ) ) . '" ';
@@ -2665,6 +2664,8 @@ class Antispam_Bee {
 			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
 		}
 
+		$secret = self::ensure_secret_starts_with_letter( $secret );
+
 		/**
 		 * Filters the secret for a post, which is used in the textarea name attribute.
 		 *
@@ -2696,6 +2697,8 @@ class Antispam_Bee {
 			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
 		}
 
+		$secret = self::ensure_secret_starts_with_letter( $secret );
+
 		/**
 		 * Filters the secret for a post, which is used in the textarea id attribute.
 		 *
@@ -2709,6 +2712,23 @@ class Antispam_Bee {
 			(int) $post_id,
 			(bool) self::get_option( 'always_allowed' )
 		);
+	}
+
+	/**
+	 * Ensures that the secret starts with a letter.
+	 *
+	 * @param string $secret The secret.
+	 *
+	 * @return string
+	 */
+	public static function ensure_secret_starts_with_letter( $secret ) {
+
+		$first_char = substr( $secret, 0, 1 );
+		if ( is_numeric( $first_char ) ) {
+			return chr( $first_char + 97 ) . substr( $secret, 1 );
+		} else {
+			return $secret;
+		}
 	}
 
 	/**
