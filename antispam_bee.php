@@ -65,6 +65,12 @@ class Antispam_Bee {
 	 */
 	private static $_salt;
 
+	/**
+	 * Prefix letter for secret id/name.
+	 *
+	 * @var string
+	 */
+	private static $_secret_prefix;
 
 	/**
 	 * The spam reason.
@@ -373,6 +379,8 @@ class Antispam_Bee {
 
 		$salt        = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
 		self::$_salt = substr( sha1( $salt ), 0, 10 );
+
+		self::$_secret_prefix = chr(rand(97,122));
 
 		self::$defaults = array(
 			'options' => array(
@@ -1183,7 +1191,7 @@ class Antispam_Bee {
 		$id_script = '';
 		if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
 			$output   .= 'id="' . self::get_secret_id_for_post( self::$_current_post_id ) . '" ';
-			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "' . esc_js( md5( time() ) ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( self::$_current_post_id ) ) . '").setAttribute( "id", "comment" );</script>';
+			$id_script = '<script type="text/javascript">document.getElementById("comment").setAttribute( "id", "' . self::$_secret_prefix . substr( esc_js( md5( time() ) ), 0, 31 ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( self::$_current_post_id ) ) . '").setAttribute( "id", "comment" );</script>';
 		}
 
 		$output .= ' name="' . esc_attr( self::get_secret_name_for_post( self::$_current_post_id ) ) . '" ';
@@ -2660,9 +2668,9 @@ class Antispam_Bee {
 	public static function get_secret_name_for_post( $post_id ) {
 
 		if ( self::get_option( 'always_allowed' ) ) {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
+			$secret = self::$_secret_prefix . substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 9 );
 		} else {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
+			$secret = self::$_secret_prefix . substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 9 );
 		}
 
 		/**
@@ -2691,9 +2699,9 @@ class Antispam_Bee {
 	public static function get_secret_id_for_post( $post_id ) {
 
 		if ( self::get_option( 'always_allowed' ) ) {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
+			$secret = self::$_secret_prefix . substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 9 );
 		} else {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
+			$secret = self::$_secret_prefix . substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 9 );
 		}
 
 		/**
