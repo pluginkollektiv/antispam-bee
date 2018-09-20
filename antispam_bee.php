@@ -2664,7 +2664,7 @@ class Antispam_Bee {
 			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
 		}
 
-        $secret = self::ensure_secret_starts_with_letter( $secret );
+		$secret = self::ensure_secret_starts_with_letter( $secret );
 
 		/**
 		 * Filters the secret for a post, which is used in the textarea name attribute.
