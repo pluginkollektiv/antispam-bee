@@ -75,9 +75,12 @@ If the antispam plugin has passed some spam comments, these comments can be repo
 
 ### Antispam Bee with Varnish? ###
 If WordPress is operated with Apache + Varnish, the actual IP address of the visitors does not appear in WordPress. Accordingly the Antispam-Plugin lacks the base for the correct functionality. An adaptation in the Varnish configuration file /etc/varnish/default.vcl provides a remedy and forwards the original (not from Apache) IP address in the HTTP header X-Forwarded-For:
-`if (req.restarts == 0) {`
-    `set req.http.X-Forwarded-For = client.ip;`
-`}`
+
+```
+if (req.restarts == 0) {
+    set req.http.X-Forwarded-For = client.ip;
+}
+```
 
 ### Are there some paid services or limitations? ###
 No, Antispam Bee is free forever, for both private and commercial projects. You can use it on as many sites as you want. There is no limitation to the number of sites you use the plugin on.
@@ -85,6 +88,9 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 A complete documentation is available in the [GitHub repository Wiki](https://github.com/pluginkollektiv/antispam-bee/wiki).
 
 ## Changelog ##
+
+### 2.9.1 ###
+  * Update screenshot
 
 ### 2.9.0 ###
   * Introduction of coding standards.
@@ -96,7 +102,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
   * Use the regular expressions check also for trackbacks.
   * Add option to delete Antispam Bee related data when plugin gets deleted via the admin interface.
   * Save a hashed + salted IP for every comment
-  * New check for incoming Trackbacks.
+  * New check for incoming trackbacks.
   * Introduction of behat tests.
   * Updates the used JavaScript library for the statistics widget.
   * Bugfix in the "Comment form used outside of posts" option.
