@@ -33,6 +33,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 
 ### Support ###
 * Community support via the [support forums on wordpress.org](https://wordpress.org/support/plugin/antispam-bee)
+* Read [the documentation](https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation)
 * We don’t handle support via e-mail, Twitter, GitHub issues etc.
 
 ### Contribute ###
