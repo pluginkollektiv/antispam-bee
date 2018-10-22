@@ -40,8 +40,8 @@
         is_label_visible = false,
         leave_timer,
         blanket = r.set();
-    label.push(r.text(60, 12, "24× Spam").attr(txt));
-    label.push(r.text(60, 27, "23.12.2013").attr(txt).attr({fill: color}));
+    label.push(r.text(60, 12, "").attr(txt));
+    label.push(r.text(60, 27, "").attr(txt).attr({fill: color}));
     label.hide();
     var frame = r.popup(100, 100, label, "right").attr({fill: "#fff", stroke: "#444", "stroke-width": 1}).hide();
 
@@ -65,7 +65,7 @@
         var dot = r.circle(x, y, 4).attr({fill: "#fff", stroke: color, "stroke-width": 1});
         blanket.push(r.rect(leftgutter + X * i, 0, X, height - bottomgutter).attr({stroke: "none", fill: '#fff', opacity: .2}));
         var rect = blanket[blanket.length - 1];
-        (function (x, y, data, lbl, dot) {
+        (function (x, y, data, date, dot) {
             var timer, i = 0;
             rect.hover(function () {
                 clearTimeout(leave_timer);
@@ -73,6 +73,9 @@
                 if (x + frame.getBBox().width > width) {
                     side = "left";
                 }
+                // set label content to determine correct dimensions
+                label[0].attr({text: date });
+                label[1].attr({text: data + "× Spam"});
                 var ppp = r.popup(x, y, label, side, 1),
                     anim = Raphael.animation({
                         path: ppp.path,
@@ -82,13 +85,8 @@
                 ly = label[0].transform()[0][2] + ppp.dy;
                 frame.show().stop().animate(anim);
 
-                var date = new Date(lbl * 1000),
-                    day = ( date.getDate() < 10 ? '0' : '' ) + date.getDate(),
-                    month = ( date.getMonth() + 1 < 10 ? '0' : '' ) + (date.getMonth() + 1),
-                    year = date.getFullYear();
-
-                label[0].attr({text: data + "× Spam"}).show().stop().animateWith(frame, anim, {transform: ["t", lx, ly]}, 200 * is_label_visible);
-                label[1].attr({text: ( day + '.' + month + '.' + year ) }).show().stop().animateWith(frame, anim, {transform: ["t", lx, ly]}, 200 * is_label_visible);
+                label[0].show().stop().animateWith(frame, anim, {transform: ["t", lx, ly]}, 200 * is_label_visible);
+                label[1].show().stop().animateWith(frame, anim, {transform: ["t", lx, ly]}, 200 * is_label_visible);
                 dot.attr("r", 6);
                 is_label_visible = true;
             }, function () {
