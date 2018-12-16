@@ -801,7 +801,7 @@ class Antispam_Bee {
 
 		$html .= "<tfoot><tr>\n";
 		foreach ( $items as $date => $count ) {
-			$html .= '<th>' . $date . "</th>\n";
+			$html .= '<th>' . date_i18n( 'j. F Y', $date ) . "</th>\n";
 		}
 		$html .= "</tr></tfoot>\n";
 
