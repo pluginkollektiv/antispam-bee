@@ -2,6 +2,7 @@ Feature: Filter settings
 
   @db
   Scenario: Honeypot
+    Given the secret is fixed
     Given I am on "/?p=1"
     Given the option "flag_spam" is set
     Then I fill in "comment" with "Release the hounds!"
@@ -21,6 +22,7 @@ Feature: Filter settings
 
   @db
   Scenario: Spam is not saved in database
+    Given the secret is fixed
     Given I am on "/?p=1"
     Given the option "flag_spam" is not set
     Then I fill in "comment" with "Release the hounds!"
