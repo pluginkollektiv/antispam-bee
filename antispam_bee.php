@@ -52,6 +52,13 @@ class Antispam_Bee {
 	public static $defaults;
 
 	/**
+	 * Which internal datastructure version we are running on.
+	 *
+	 * @var int
+	 */
+	private static $db_version = 1;
+
+	/**
 	 * The base.
 	 *
 	 * @var string
@@ -179,6 +186,13 @@ class Antispam_Bee {
 					array(
 						__CLASS__,
 						'init_plugin_sources',
+					)
+				);
+				add_action(
+					'admin_init',
+					array(
+						__CLASS__,
+						'update_database',
 					)
 				);
 
@@ -2741,6 +2755,40 @@ class Antispam_Bee {
 
 		$parts = wp_parse_url( $url );
 		return ( is_array( $parts ) && isset( $parts[ $component ] ) ) ? $parts[ $component ] : '';
+	}
+
+	/**
+	 * Updates the database structure if necessary
+	 */
+	public static function update_database() {
+		if ( self::db_version_is_current() ) {
+			return;
+		}
+
+		global $wpdb;
+
+		/**
+		 * In Version 2.9 the IP of the commenter was saved as a hash. We reverted this solution.
+		 * Therefore, we need to delete this unused data.
+		 */
+		//phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
+		$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash")';
+		$wpdb->query( $sql );
+		//phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
+
+		update_option( 'antispambee_db_version', self::$db_version );
+	}
+
+	/**
+	 * Whether the database structure is up to date.
+	 *
+	 * @return bool
+	 */
+	private static function db_version_is_current() {
+
+		$current_version = absint( get_option( 'antispambee_db_version', 0 ) );
+		return $current_version === self::$db_version;
+
 	}
 }
 
