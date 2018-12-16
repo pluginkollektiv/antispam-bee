@@ -2,6 +2,7 @@ Feature: Advanced settings
 
   @db
   Scenario: Spam is saved in database
+    Given the secret is fixed
     Given I am on "/?p=1"
     Given the option "flag_spam" is set
     Then I fill in "comment" with "Release the hounds!"
@@ -21,6 +22,7 @@ Feature: Advanced settings
 
   @db
   Scenario: Spam is not saved in database
+    Given the secret is fixed
     Given I am on "/?p=1"
     Given the option "flag_spam" is not set
     Then I fill in "comment" with "Release the hounds!"
@@ -41,6 +43,7 @@ Feature: Advanced settings
 
   @db
   Scenario: Save spam reason
+    Given the secret is fixed
     Given I am on "/?p=1"
     Given the option "flag_spam" is set
     Given the option "no_notice" is not set
@@ -61,6 +64,7 @@ Feature: Advanced settings
 
   @db
   Scenario: Do not save spam reason
+    Given the secret is fixed
     Given I am on "/?p=1"
     Given the option "flag_spam,no_notice" is set
     Then I fill in "comment" with "Release the hounds!"

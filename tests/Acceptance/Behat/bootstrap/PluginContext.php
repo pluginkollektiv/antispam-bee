@@ -77,4 +77,17 @@ class PluginContext extends RawWordpressContext implements Context {
 		$this->getDriver()->plugin->deactivate( $pluginSlug );
 	}
 
+	/**
+	 * @Given the secret is fixed
+	 */
+	public function secretPluginIsActive()
+	{
+		$wpcli_args = [
+			'secret_plugin_option',
+			'--format=json',
+			"'" . json_encode(1) . "'",
+		];
+		$this->getDriver()->wpcli('option', 'set', $wpcli_args );
+	}
+
 }
