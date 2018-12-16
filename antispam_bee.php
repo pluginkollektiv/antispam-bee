@@ -1620,31 +1620,15 @@ class Antispam_Bee {
 	private static function _is_db_spam( $ip, $url = '', $email = '' ) {
 		global $wpdb;
 
-        // phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
-		$sql        = '
-			select 
-				meta_value as ip
-			from
-			 	' . $wpdb->commentmeta . ' as meta,
-			 	' . $wpdb->comments . ' as comments
-			where
-			    comments.comment_ID = meta.comment_id
-			    AND meta.meta_key = "antispam_bee_iphash"
-			    AND comments.comment_approved="spam"';
-		$hashed_ips = $wpdb->get_col( $sql );
-		if ( ! empty( $hashed_ips ) ) {
-			foreach ( $hashed_ips as $hash ) {
-				if ( wp_check_password( $ip, $hash ) ) {
-					return true;
-				}
-			}
-		}
-
 		$params = array();
 		$filter = array();
 		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';
 			$params[] = wp_unslash( $url );
+		}
+		if ( ! empty( $ip ) ) {
+			$filter[] = '`comment_author_IP` = %s';
+			$params[] = wp_unslash( $ip );
 		}
 
 		if ( ! empty( $email ) ) {
@@ -1655,8 +1639,8 @@ class Antispam_Bee {
 			return false;
 		}
 
+		// phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
 		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
-		// ToDo: Have a closer look on this SQL Query.
 		$filter_sql = implode( ' OR ', $filter );
 
 		$result = $wpdb->get_var(
@@ -1669,7 +1653,6 @@ class Antispam_Bee {
 			)
 		);
 		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
-		// phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
 
 		return ! empty( $result );
 	}
@@ -2664,7 +2647,7 @@ class Antispam_Bee {
 			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
 		}
 
-        $secret = self::ensure_secret_starts_with_letter( $secret );
+		$secret = self::ensure_secret_starts_with_letter( $secret );
 
 		/**
 		 * Filters the secret for a post, which is used in the textarea name attribute.
