@@ -209,7 +209,7 @@ Feature: Filter settings
     Given the option "translate_api,flag_spam" is set
     Given the option "translate_lang" has the array value "de"
     Given I am on "/?p=1"
-    Then I fill in "comment" with "But English is my mothers tongue! This is outrageous! I send a comment anyway"
+    Then I fill in "comment" with "But English is my mothers tongue! This is outrageous! I send a comment anyway."
     Then I fill in "author" with "Monty"
     Then I fill in "email" with "monty.1983@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"
@@ -249,7 +249,7 @@ Feature: Filter settings
     Given the option "translate_api,flag_spam" is set
     Given the option "translate_lang" has the array value "de,it"
     Given I am on "/?p=1"
-    Then I fill in "comment" with "But English is my mothers tongue! This is outrageous!"
+    Then I fill in "comment" with "But English is my mothers tongue! This is outrageous! I send a comment anyway."
     Then I fill in "author" with "Monty"
     Then I fill in "email" with "monty.1983@nuclear-secrets.com"
     Then I fill in "url" with "http://nuclear-secrets.com"
