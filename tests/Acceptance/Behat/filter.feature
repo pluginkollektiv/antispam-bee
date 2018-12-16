@@ -221,6 +221,7 @@ Feature: Filter settings
     Then I should see "Monty"
     Then I should see "Comment Language"
 
+  @javascript @db
   Scenario: Comment Language Too Short
     Given the option "translate_api,flag_spam" is set
     Given the option "translate_lang" has the array value "de"
