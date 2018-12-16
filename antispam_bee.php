@@ -1851,7 +1851,8 @@ class Antispam_Bee {
 		}
 
 		$word_count = 0;
-		$text = trim( preg_replace( "/[\n\r\t ]+/", ' ', $comment_text ), ' ' );
+		$text       = trim( preg_replace( "/[\n\r\t ]+/", ' ', $comment_text ), ' ' );
+
 		/*
 		 * translators: If your word count is based on single characters (e.g. East Asian characters),
 		 * enter 'characters_excluding_spaces' or 'characters_including_spaces'. Otherwise, enter 'words'.
@@ -1860,11 +1861,11 @@ class Antispam_Bee {
 		if ( strpos( _x( 'words', 'Word count type. Do not translate!' ), 'characters' ) === 0 && preg_match( '/^utf\-?8$/i', get_option( 'blog_charset' ) ) ) {
 			preg_match_all( '/./u', $text, $words_array );
 			if ( isset( $words_array[0] ) ) {
-				$word_count = count($words_array[0]);
+				$word_count = count( $words_array[0] );
 			}
 		} else {
 			$words_array = preg_split( "/[\n\r\t ]+/", $text, -1, PREG_SPLIT_NO_EMPTY );
-			$word_count = count($words_array);
+			$word_count  = count( $words_array );
 		}
 
 		if ( $word_count < 10 ) {
