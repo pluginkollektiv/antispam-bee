@@ -1653,6 +1653,7 @@ class Antispam_Bee {
 			)
 		);
 		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+		// phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
 
 		return ! empty( $result );
 	}
