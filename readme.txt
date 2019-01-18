@@ -92,6 +92,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 
 ### 2.9.1 ###
   * Update screenshot
+  * Improve backend accessibility
 
 ### 2.9.0 ###
   * Introduction of coding standards.
