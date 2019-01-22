@@ -224,6 +224,27 @@ Feature: Filter settings
     Then I should see "Comment Language"
 
   @javascript @db
+  Scenario: Comment Language
+    Given the option "translate_api,flag_spam" is set
+    Given the option "translate_lang" has the array value "de"
+    Given I am on "/?p=1"
+    Then I fill in "comment" with "Well over d' Hund kummt, de kummt ok over d' Steert"
+    Then I fill in "author" with "Monty"
+    Then I fill in "email" with "monty.1983@nuclear-secrets.com"
+    Then I fill in "url" with "http://nuclear-secrets.com"
+    Then I press "submit"
+    Then I should not see "Fatal"
+    Then I should see "Hello world"
+    Then I should not see "Notice"
+
+    Given I am logged in as admin
+    Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
+    Then I should not see "Monty"
+    Then I should not see "Comment Language"
+    Given I am on "/wp-admin/edit-comments.php"
+    Then I should see "Monty"
+
+  @javascript @db
   Scenario: Comment Language Too Short
     Given the option "translate_api,flag_spam" is set
     Given the option "translate_lang" has the array value "de"
