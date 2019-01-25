@@ -12,10 +12,10 @@
 
 
 * **Deutsch**
-  + Verbesserte Accessibility im Backend
-  * Vorausgefüllte Kommentartextfelder arbeiten jetzt mit dem Honeypot zusammen
+  * Verbesserte Barrierefreiheit im Backend
+  * Vorausgefüllte Kommentarfelder arbeiten jetzt mit dem Honeypot zusammen
   * Kompatibilität mit AMP
-  * Verbessterte Tooltips im Dashboard
+  * Verbesserte Tooltips im Dashboard
   * Verbesserte Kommunikation mit der Spracherkennungs-API
   * Skalierbarer IP-Abgleich für den lokalen Datenbank-Check.
 
