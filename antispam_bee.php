@@ -52,6 +52,13 @@ class Antispam_Bee {
 	public static $defaults;
 
 	/**
+	 * Which internal datastructure version we are running on.
+	 *
+	 * @var int
+	 */
+	private static $db_version = 1;
+
+	/**
 	 * The base.
 	 *
 	 * @var string
@@ -179,6 +186,13 @@ class Antispam_Bee {
 					array(
 						__CLASS__,
 						'init_plugin_sources',
+					)
+				);
+				add_action(
+					'admin_init',
+					array(
+						__CLASS__,
+						'update_database',
 					)
 				);
 
@@ -1623,31 +1637,15 @@ class Antispam_Bee {
 	private static function _is_db_spam( $ip, $url = '', $email = '' ) {
 		global $wpdb;
 
-        // phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
-		$sql        = '
-			select 
-				meta_value as ip
-			from
-			 	' . $wpdb->commentmeta . ' as meta,
-			 	' . $wpdb->comments . ' as comments
-			where
-			    comments.comment_ID = meta.comment_id
-			    AND meta.meta_key = "antispam_bee_iphash"
-			    AND comments.comment_approved="spam"';
-		$hashed_ips = $wpdb->get_col( $sql );
-		if ( ! empty( $hashed_ips ) ) {
-			foreach ( $hashed_ips as $hash ) {
-				if ( wp_check_password( $ip, $hash ) ) {
-					return true;
-				}
-			}
-		}
-
 		$params = array();
 		$filter = array();
 		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';
 			$params[] = wp_unslash( $url );
+		}
+		if ( ! empty( $ip ) ) {
+			$filter[] = '`comment_author_IP` = %s';
+			$params[] = wp_unslash( $ip );
 		}
 
 		if ( ! empty( $email ) ) {
@@ -1658,8 +1656,8 @@ class Antispam_Bee {
 			return false;
 		}
 
+		// phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
 		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
-		// ToDo: Have a closer look on this SQL Query.
 		$filter_sql = implode( ' OR ', $filter );
 
 		$result = $wpdb->get_var(
@@ -2093,6 +2091,7 @@ class Antispam_Bee {
 			'ave' => 'ae',
 			'aym' => 'ay',
 			'aze' => 'az',
+			'nds' => 'de',
 		);
 
 		if ( array_key_exists( $franc_code, $codes ) ) {
@@ -2778,6 +2777,40 @@ class Antispam_Bee {
 
 		$parts = wp_parse_url( $url );
 		return ( is_array( $parts ) && isset( $parts[ $component ] ) ) ? $parts[ $component ] : '';
+	}
+
+	/**
+	 * Updates the database structure if necessary
+	 */
+	public static function update_database() {
+		if ( self::db_version_is_current() ) {
+			return;
+		}
+
+		global $wpdb;
+
+		/**
+		 * In Version 2.9 the IP of the commenter was saved as a hash. We reverted this solution.
+		 * Therefore, we need to delete this unused data.
+		 */
+		//phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
+		$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash")';
+		$wpdb->query( $sql );
+		//phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
+
+		update_option( 'antispambee_db_version', self::$db_version );
+	}
+
+	/**
+	 * Whether the database structure is up to date.
+	 *
+	 * @return bool
+	 */
+	private static function db_version_is_current() {
+
+		$current_version = absint( get_option( 'antispambee_db_version', 0 ) );
+		return $current_version === self::$db_version;
+
 	}
 }
 
