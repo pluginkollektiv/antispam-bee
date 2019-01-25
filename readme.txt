@@ -91,7 +91,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 ## Changelog ##
 
 ### 2.9.1 ###
-  * Improve backend accessibility
+  * Improved backend accessibility
   * Prefilled comment textareas do now work with the honeypot
   * AMP compatibility
   * Improved dashboard tooltips

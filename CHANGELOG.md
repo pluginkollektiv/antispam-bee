@@ -3,7 +3,7 @@
 
 ### 2.9.1 ###
 * **English**
-  * Improve backend accessibility
+  * Improved backend accessibility
   * Prefilled comment textareas do now work with the honeypot
   * AMP compatibility
   * Improved dashboard tooltips
