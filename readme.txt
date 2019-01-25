@@ -91,8 +91,12 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 ## Changelog ##
 
 ### 2.9.1 ###
-  * Update screenshot
   * Improve backend accessibility
+  * Prefilled comment textareas do now work with the honeypot
+  * AMP compatibility
+  * Improved dashboard tooltips
+  * Improvements for the language detection API
+  * Scalable IP look up for local spam database
 
 ### 2.9.0 ###
   * Introduction of coding standards.

@@ -1,5 +1,24 @@
 ## Changelog ##
 
+
+### 2.9.1 ###
+* **English**
+  * Improve backend accessibility
+  * Prefilled comment textareas do now work with the honeypot
+  * AMP compatibility
+  * Improved dashboard tooltips
+  * Improvements for the language detection API
+  * Scalable IP look up for local spam database
+
+
+* **Deutsch**
+  + Verbesserte Accessibility im Backend
+  * Vorausgefüllte Kommentartextfelder arbeiten jetzt mit dem Honeypot zusammen
+  * Kompatibilität mit AMP
+  * Verbessterte Tooltips im Dashboard
+  * Verbesserte Kommunikation mit der Spracherkennungs-API
+  * Skalierbarer IP-Abgleich für den lokalen Datenbank-Check.
+
 ### 2.9.0 ###
 * **English**
   * Introduction of coding standards.
