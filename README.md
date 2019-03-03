@@ -99,7 +99,7 @@ the logger wouldn't be executed.
 Two thoughts: We could hook later to die, something like. This is basically the option, I did choose for now in
 `RestInPeace`:
 ```
-public function execute(string $reason, DataInterface $data ) : bool {
+public function execute(ReasonRepository $reason, DataInterface $data ) : bool {
 
     return false !== add_action('a-later-hook', function() { die(); };
 }

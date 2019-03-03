@@ -55,7 +55,7 @@ class CountrySpam implements SpamFilterInterface {
 	 * CountrySpam constructor.
 	 *
 	 * @param OptionFactory $option_factory
-	 * @param IP $ip
+	 * @param IP            $ip
 	 */
 	public function __construct(
 		OptionFactory $option_factory,
@@ -185,6 +185,7 @@ class CountrySpam implements SpamFilterInterface {
 
 	/**
 	 * Returns the ID of this filter.
+	 *
 	 * @return string
 	 */
 	public function id() : string {

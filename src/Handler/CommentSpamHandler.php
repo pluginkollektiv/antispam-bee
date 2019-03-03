@@ -6,6 +6,7 @@ namespace Pluginkollektiv\AntispamBee\Handler;
 use Pluginkollektiv\AntispamBee\Config\AntispamBeeConfig;
 use Pluginkollektiv\AntispamBee\Entity\DataInterface;
 use Pluginkollektiv\AntispamBee\Repository\PostProcessorRepository;
+use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
 /**
  * Class CommentSpamHandler
@@ -30,12 +31,12 @@ class CommentSpamHandler implements SpamHandlerInterface {
 	/**
 	 * Once a spam has been detected, this method will handle the rest.
 	 *
-	 * @param string        $reason The spam reason.
-	 * @param DataInterface $data The spam data.
+	 * @param ReasonsRepository $reason The spam reason.
+	 * @param DataInterface     $data The spam data.
 	 *
 	 * @return bool
 	 */
-	public function execute( string $reason, DataInterface $data ) : bool {
+	public function execute( ReasonsRepository $reason, DataInterface $data ) : bool {
 
 		$success = true;
 		foreach ( $this->repository->active_processors() as $processor ) {

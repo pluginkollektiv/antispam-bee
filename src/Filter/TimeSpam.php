@@ -51,7 +51,7 @@ class TimeSpam implements SpamFilterInterface {
 	/**
 	 * TimeSpam constructor.
 	 *
-	 * @param OptionFactory $option_factory
+	 * @param OptionFactory     $option_factory
 	 * @param PreparerInterface $preparer
 	 */
 	public function __construct( OptionFactory $option_factory, PreparerInterface $preparer ) {

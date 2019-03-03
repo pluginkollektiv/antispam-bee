@@ -31,6 +31,7 @@ class BBCodeSpam implements SpamFilterInterface {
 
 	/**
 	 * Creates the OptionInterface.
+	 *
 	 * @var OptionFactory $option_factory
 	 */
 	private $option_factory;

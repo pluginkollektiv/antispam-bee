@@ -6,17 +6,23 @@ namespace Pluginkollektiv\AntispamBee;
 use Pluginkollektiv\AntispamBee\Entity\DataInterface;
 use Pluginkollektiv\AntispamBee\Handler\SpamHandlerInterface;
 use Pluginkollektiv\AntispamBee\Repository\FilterRepository;
+use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
 class SpamChecker {
 
 
 	private $spamHandler;
 	private $repository;
-	private $spam_reason;
+	private $reasons;
 
-	public function __construct( SpamHandlerInterface $spamHandler, FilterRepository $repository ) {
+	public function __construct(
+		SpamHandlerInterface $spamHandler,
+		FilterRepository $repository,
+		ReasonsRepository $reasons
+	) {
 		$this->repository  = $repository;
 		$this->spamHandler = $spamHandler;
+		$this->reasons     = $reasons;
 	}
 
 	/**
@@ -35,7 +41,7 @@ class SpamChecker {
 		$is_spam = $this->spam_check( $data );
 
 		if ( $is_spam ) {
-			$this->spamHandler->execute( $this->spam_reason, $data );
+			$this->spamHandler->execute( $this->reasons, $data );
 		}
 		return $is_spam;
 
@@ -57,23 +63,14 @@ class SpamChecker {
 	}
 
 	private function spam_check( DataInterface $data ) {
-		$probability = 0;
-
 		foreach ( $this->repository->active_spam_filters() as $filter ) {
-			if ( $probability >= 1 ) {
-				continue;
-			}
-			if ( $probability >= 1 ) {
+			if ( $this->reasons->total_probability() >= 1 ) {
 				continue;
 			}
 
-			$propability_for_filter = $filter->filter( $data );
-			$probability           += $propability_for_filter;
-			if ( $probability >= 1 ) {
-				$this->spam_reason = $filter->id();
-			}
+			$this->reasons->add_reason( $filter->id(), $filter->filter( $data ) );
 		}
 
-		return $probability > .5;
+		return $this->reasons->total_probability() > .5;
 	}
 }

@@ -32,6 +32,7 @@ use Pluginkollektiv\AntispamBee\PostProcessor\PostProcessorFactory;
 use Pluginkollektiv\AntispamBee\PostProcessor\PostProcessorInterface;
 use Pluginkollektiv\AntispamBee\Repository\FilterRepository;
 use Pluginkollektiv\AntispamBee\Repository\PostProcessorRepository;
+use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 use Pluginkollektiv\AntispamBee\Settings\Controller;
 
 add_action(
@@ -144,8 +145,9 @@ add_action(
 					return $approved;
 				}
 
+				$reasons = new ReasonsRepository();
 				$spam_handler = new CommentSpamHandler( $config, $post_processor_repository );
-				$spam_checker = new SpamChecker( $spam_handler, $filter_repository );
+				$spam_checker = new SpamChecker( $spam_handler, $filter_repository, $reasons );
 
 				return ( $spam_checker->check( $data ) ) ? 'spam' : $approved;
 			},

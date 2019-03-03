@@ -6,6 +6,7 @@ namespace Pluginkollektiv\AntispamBee\PostProcessor;
 use Pluginkollektiv\AntispamBee\Entity\DataInterface;
 use Pluginkollektiv\AntispamBee\Option\OptionFactory;
 use Pluginkollektiv\AntispamBee\Option\OptionInterface;
+use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
 class RestInPeace implements PostProcessorInterface {
 
@@ -16,7 +17,7 @@ class RestInPeace implements PostProcessorInterface {
 		$this->option_factory = $option_factory;
 	}
 
-	public function execute( string $reason, DataInterface $data ) : bool {
+	public function execute( ReasonsRepository $reason, DataInterface $data ) : bool {
 
 		return false !== add_action(
 			'pre_comment_approved',

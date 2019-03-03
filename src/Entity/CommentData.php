@@ -20,6 +20,7 @@ class CommentData implements DataInterface {
 
 	/**
 	 * The data.
+	 *
 	 * @var array $data
 	 */
 	private $data;

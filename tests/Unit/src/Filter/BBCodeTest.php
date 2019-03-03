@@ -6,7 +6,7 @@ namespace Pluginkollektiv\AntispamBee\Tests\Filter;
 use PHPUnit\Framework\TestCase;
 use Pluginkollektiv\AntispamBee\Entity\DataInterface;
 use Pluginkollektiv\AntispamBee\Filter\BBCodeSpam;
-use Pluginkollektiv\AntispamBee\Filter\Option\OptionFactory;
+use Pluginkollektiv\AntispamBee\Option\OptionFactory;
 
 class BBCodeTest extends TestCase {
 

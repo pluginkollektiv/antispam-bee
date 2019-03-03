@@ -5,10 +5,11 @@ namespace Pluginkollektiv\AntispamBee\PostProcessor;
 
 use Pluginkollektiv\AntispamBee\Entity\DataInterface;
 use Pluginkollektiv\AntispamBee\Option\OptionInterface;
+use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
 interface PostProcessorInterface {
 
-	public function execute( string $reason, DataInterface $data) : bool;
+	public function execute( ReasonsRepository $reason, DataInterface $data) : bool;
 
 	public function id() : string;
 

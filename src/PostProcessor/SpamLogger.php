@@ -7,6 +7,7 @@ use Pluginkollektiv\AntispamBee\Entity\DataInterface;
 use Pluginkollektiv\AntispamBee\Option\OptionFactory;
 use Pluginkollektiv\AntispamBee\Option\OptionInterface;
 use Pluginkollektiv\AntispamBee\Logger\LoggerInterface;
+use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
 class SpamLogger implements PostProcessorInterface {
 
@@ -19,7 +20,7 @@ class SpamLogger implements PostProcessorInterface {
 		$this->option_factory = $option_factory;
 	}
 
-	public function execute( string $reason, DataInterface $data ) : bool {
+	public function execute( ReasonsRepository $reason, DataInterface $data ) : bool {
 
 		if ( ! $this->logger->is_ready() ) {
 			return false;
@@ -37,7 +38,7 @@ class SpamLogger implements PostProcessorInterface {
 		return 'spamlog';
 	}
 
-	public function register() {
+	public function register() : bool {
 		return true;
 	}
 

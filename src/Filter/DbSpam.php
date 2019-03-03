@@ -48,7 +48,7 @@ class DbSpam implements SpamFilterInterface {
 	 * DbSpam constructor.
 	 *
 	 * @param OptionFactory $option_factory
-	 * @param \wpdb $wpdb
+	 * @param \wpdb         $wpdb
 	 */
 	public function __construct( OptionFactory $option_factory, \wpdb $wpdb ) {
 		$this->option_factory = $option_factory;

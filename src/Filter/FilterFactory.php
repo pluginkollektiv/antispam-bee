@@ -44,8 +44,8 @@ class FilterFactory {
 	/**
 	 * FilterFactory constructor.
 	 *
-	 * @param IP $ip
-	 * @param \wpdb $wpdb
+	 * @param IP            $ip
+	 * @param \wpdb         $wpdb
 	 * @param OptionFactory $option_factory
 	 */
 	public function __construct( IP $ip, \wpdb $wpdb, OptionFactory $option_factory ) {
