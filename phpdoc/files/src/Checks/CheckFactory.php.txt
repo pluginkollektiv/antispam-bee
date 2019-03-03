@@ -1,0 +1,60 @@
+<?php
+declare( strict_types = 1 );
+
+namespace Pluginkollektiv\AntispamBee\Checks;
+
+use Pluginkollektiv\AntispamBee\Filter\BBCodeSpam;
+use Pluginkollektiv\AntispamBee\Filter\CountrySpam;
+use Pluginkollektiv\AntispamBee\Filter\DbSpam;
+use Pluginkollektiv\AntispamBee\Filter\FilterCollection;
+use Pluginkollektiv\AntispamBee\Filter\TimeSpam;
+use Pluginkollektiv\AntispamBee\Filter\ValidGravatar;
+use Pluginkollektiv\AntispamBee\Helper\IP;
+use Pluginkollektiv\AntispamBee\Options;
+use Pluginkollektiv\AntispamBee\Preparer\PreparerCollection;
+use Pluginkollektiv\AntispamBee\Preparer\TimeSpamPreparer;
+
+class CheckFactory {
+
+	private $wpdb;
+	private $ip;
+	private $options;
+
+	public function __construct( \wpdb $wpdb, IP $ip, Options $options ) {
+		$this->wpdb    = $wpdb;
+		$this->ip      = $ip;
+		$this->options = $options;
+	}
+
+	public function for_type( string $type ) {
+
+		switch ( $type ) {
+			case 'time':
+				$filter   = new FilterCollection( [ new TimeSpam() ] );
+				$preparer = new PreparerCollection( [ new TimeSpamPreparer() ] );
+				break;
+			case 'country':
+				$filter   = new FilterCollection( [ new CountrySpam( $ip, $options ) ] );
+				$preparer = PreparerCollection::as_null();
+				break;
+			case 'bbcode':
+				$filter   = new FilterCollection( [ new BBCodeSpam() ] );
+				$preparer = PreparerCollection::as_null();
+				break;
+			case 'dbspam':
+				$filter   = new FilterCollection( [ new DbSpam( $this->wpdb ) ] );
+				$preparer = PreparerCollection::as_null();
+				break;
+			case 'gravatar_check':
+				$filter   = new FilterCollection( [ new ValidGravatar() ] );
+				$preparer = PreparerCollection::as_null();
+				break;
+			default:
+				$filter   = FilterCollection::as_null();
+				$preparer = PreparerCollection::as_null();
+		}
+
+		return new Check( $type, $filter, $preparer );
+	}
+}
+

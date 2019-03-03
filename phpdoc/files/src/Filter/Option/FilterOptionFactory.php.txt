@@ -1,0 +1,51 @@
+<?php
+declare( strict_types = 1 );
+
+namespace Pluginkollektiv\AntispamBee\Filter\Option;
+
+use Pluginkollektiv\AntispamBee\Config\ConfigInterface;
+use Pluginkollektiv\AntispamBee\Field\FieldInterface;
+use Pluginkollektiv\AntispamBee\Field\NullField;
+use Pluginkollektiv\AntispamBee\Field\TextField;
+
+class FilterOptionFactory {
+
+	private $config;
+
+	public function __construct( ConfigInterface $config ) {
+		$this->config = $config;
+	}
+
+	public function from_args( array $args ) : FilterOption {
+		$activateable = isset( $args['activateable'] ) ? $args['activateable'] : true;
+		$fields       = isset( $args['fields'] ) ? $args['fields'] : [];
+		$fields       = array_map(
+			[
+				$this,
+				'cast_fields',
+			],
+			array_keys( $fields ),
+			array_values( $fields )
+		);
+		return new FilterOption(
+			$args['name'],
+			$args['description'],
+			$activateable,
+			...$fields
+		);
+	}
+
+	private function cast_fields( $key, $definitions ) : FieldInterface {
+		switch ( $definitions['type'] ) {
+			case 'text':
+				$value = ( $this->config->has( $key ) ) ? $this->config->get( $key ) : '';
+				$field = new TextField( $key, $value, $definitions['label'] );
+				break;
+			default:
+				$field = new NullField();
+		}
+
+		return $field;
+	}
+}
+

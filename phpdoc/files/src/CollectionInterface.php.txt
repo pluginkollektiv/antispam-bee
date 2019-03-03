@@ -1,0 +1,9 @@
+<?php
+
+namespace Pluginkollektiv\AntispamBee;
+
+interface CollectionInterface {
+
+	public static function as_null();
+}
+

@@ -1,0 +1,34 @@
+{
+    "name": "pluginkollektiv/antispam-bee",
+    "description": "Antispam Bee blocks spam comments and trackbacks effectively and without captchas.",
+    "keywords": [
+        "WordPress",
+        "antispam",
+        "honeypot"
+    ],
+    "homepage": "https://pluginkollektiv.github.io/antispam-bee/",
+    "authors": [
+        {
+            "name": "pluginkollektiv",
+            "homepage": "https://github.com/pluginkollektiv",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/pluginkollektiv/antispam-bee/issues",
+        "source": "https://github.com/pluginkollektiv/antispam-bee",
+        "docs": "https://github.com/pluginkollektiv/antispam-bee/blob/master/README.md"
+    },
+    "type": "wordpress-plugin",
+    "license": "GPL-v2",
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^0.14.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "5.3"
+        }
+    }
+}

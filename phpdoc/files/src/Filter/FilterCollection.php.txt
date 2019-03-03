@@ -1,0 +1,51 @@
+<?php
+declare( strict_types = 1 );
+
+namespace Pluginkollektiv\AntispamBee\Filter;
+
+use Pluginkollektiv\AntispamBee\CollectionInterface;
+use Pluginkollektiv\AntispamBee\Exceptions\InvalidArgument;
+use Pluginkollektiv\AntispamBee\Exceptions\Runtime;
+
+/**
+ * Class FilterCollection
+ *
+ * @package Pluginkollektiv\AntispamBee\Filter
+ */
+class FilterCollection implements CollectionInterface {
+
+
+	/**
+	 * The hook-filter map.
+	 *
+	 * @var FilterInterface[]
+	 */
+	private $filter = [];
+
+	/**
+	 * FilterCollection constructor.
+	 *
+	 * @param FilterInterface[] ...$filter
+	 */
+	public function __construct( FilterInterface ... $filter ) {
+
+			$this->filter = $filter;
+	}
+
+	/**
+	 * @return FilterInterface[]
+	 */
+	public function filter() {
+		return $this->filter;
+	}
+
+	/**
+	 * Returns an empty FilterCollection.
+	 *
+	 * @return FilterCollection
+	 */
+	public static function as_null() {
+		return new self( [] );
+	}
+}
+

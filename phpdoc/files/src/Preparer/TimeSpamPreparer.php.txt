@@ -1,0 +1,58 @@
+<?php
+declare(strict_types = 1);
+
+namespace Pluginkollektiv\AntispamBee\Preparer;
+
+use Pluginkollektiv\AntispamBee\Checks\CheckInterface;
+
+/**
+ * Class TimeSpamPreparer
+ *
+ * @package Pluginkollektiv\AntispamBee\Preparer
+ */
+class TimeSpamPreparer implements PreparerInterface {
+
+
+	/**
+	 * @var CheckInterface|null
+	 */
+	private $check = null;
+
+	/**
+	 * Hooks into 'comment_form'.
+	 *
+	 * @param CheckInterface $check The Check for which the preparer has been registered.
+	 */
+	public function register( CheckInterface $check ) : bool {
+
+		$this->check = $check;
+
+		add_action(
+			'comment_form',
+			[
+				$this,
+				'prepare',
+			]
+		);
+
+		return true;
+	}
+
+	/**
+	 * Renders the time field for the TimeSpamFilter.
+	 *
+	 * @return bool
+	 */
+	public function prepare() {
+		if ( ! $this->check ) {
+			return false;
+		}
+		echo '<input
+            type="hidden"
+            name="' . esc_attr( $this->check->type() ) . '"
+            value="' . (int) time() . '"
+        />';
+		return true;
+	}
+}
+

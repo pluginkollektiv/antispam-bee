@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <title>Antispam Bee</title>
+    <parser>
+        <default-package-name>antispam-bee</default-package-name>
+        <target>./phpdoc</target>
+        <markers>
+            <item>TODO</item>
+        </markers>
+        <extensions>
+            <extension>php</extension>
+        </extensions>
+    </parser>
+    <transformer>
+        <target>./phpdoc</target>
+    </transformer>
+    <logging>
+        <level>warn</level>
+        <paths>
+            <default>./phpdoc/{DATE}.log</default>
+            <errors>./phpdoc/{DATE}.errors.log</errors>
+        </paths>
+    </logging>
+    <files>
+        <directory>.</directory>
+        <ignore>tests/*</ignore>
+        <ignore>vendor/*</ignore>
+    </files>
+</phpdoc>

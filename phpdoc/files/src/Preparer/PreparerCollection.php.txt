@@ -1,0 +1,53 @@
+<?php
+declare( strict_types = 1 );
+
+namespace Pluginkollektiv\AntispamBee\Preparer;
+
+use Pluginkollektiv\AntispamBee\CollectionInterface;
+use Pluginkollektiv\AntispamBee\Entity\Hook;
+use Pluginkollektiv\AntispamBee\Exceptions\InvalidArgument;
+use Pluginkollektiv\AntispamBee\Exceptions\Runtime;
+
+/**
+ * Class PreparerCollection
+ *
+ * @package Pluginkollektiv\AntispamBee\Preparer
+ */
+class PreparerCollection implements CollectionInterface {
+
+
+	/**
+	 * The hook-preparer list.
+	 *
+	 * @var PreparerInterface[]
+	 */
+	private $preparer = [];
+
+	/**
+	 * PreparerCollection constructor.
+	 *
+	 * @param PreparerInterface[] ...$preparer
+	 */
+	public function __construct( PreparerInterface ... $preparer ) {
+		$this->preparer = $preparer;
+	}
+
+	/**
+	 * Returns the preparer of the collection.#
+	 *
+	 * @return PreparerInterface[]
+	 */
+	public function preparer() {
+		return $this->preparer;
+	}
+
+	/**
+	 * Returns an empty PreparerCollection.
+	 *
+	 * @return PreparerCollection
+	 */
+	public static function as_null() {
+		return new self( [] );
+	}
+}
+
