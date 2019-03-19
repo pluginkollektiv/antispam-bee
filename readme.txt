@@ -161,10 +161,10 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
    * updated [plugin authors](https://gist.github.com/glueckpress/f058c0ab973d45a72720)
 
 ### 2.6.7 ###
-   * Removal of functions *Block comments from specific countries* and *Allow comments only in certain language* for financial reasons - [more information](https://plus.google.com/u/0/+SergejMüller/posts/ZyquhoYjUyF) (only german)
+   * Removal of functions *Block comments from specific countries* and *Allow comments only in certain language* for financial reasons - [more information](https://github.com/pluginkollektiv/antispam-bee/wiki/de-News-2015-04-10) (only german)
 
 ### 2.6.6 ###
-   * Switch to the official Google Translation API - [more information](https://plus.google.com/u/0/+SergejMüller/posts/ZyquhoYjUyF) (only german)
+   * Switch to the official Google Translation API - [more information](https://github.com/pluginkollektiv/antispam-bee/wiki/de-News-2015-04-10) (only german)
    * *Release time investment (Development & QA): 2.5 h*
 
 ### 2.6.5 ###
@@ -174,7 +174,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
    * *Release time investment (Development & QA): 12 h*
 
 ### 2.6.4 ###
-   * Consideration of the comment time (Spam if a comment was written in less than 5 seconds) - [more information on Google+](https://plus.google.com/+SergejMüller/posts/73EbP6F1BgC) (only german)
+   * Consideration of the comment time (Spam if a comment was written in less than 5 seconds) - [more information on ~~Google+~~_GitHub_](https://github.com/pluginkollektiv/antispam-bee/wiki/de-News-2014-11-17) (only german)
    * *Release time investment (Development & QA): 6.25 h*
 
 ### 2.6.3 ###
