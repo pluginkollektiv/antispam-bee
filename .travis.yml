@@ -27,13 +27,13 @@ jobs:
       php: '7.0'
       script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
     - stage: test
-      php: 'nightly'
+      php: '7.2'
       script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
     - stage: test
-      php: '7.2'
+      php: '7.3'
       script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
     - stage: behat
-      php: '7.2'
+      php: '7.3'
       env: WORDPRESS_VERSION=nightly
       script: ./bin/behat.sh
     - stage: behat
@@ -55,6 +55,14 @@ jobs:
     - stage: behat
       php: '7.0'
       env: WORDPRESS_VERSION=4.6
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.0'
+      env: WORDPRESS_VERSION=5.0
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.0'
+      env: WORDPRESS_VERSION=5.1
       script: ./bin/behat.sh
     - stage: quality
       php: '7.0'
