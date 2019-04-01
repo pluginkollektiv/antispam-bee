@@ -12,6 +12,7 @@
  * Version:     2.9.1
  *
  * [](http://coderisk.com/wp/plugin/antispam-bee/RIPS-lAHLcgvqY8)
+ *
  * @package Antispam Bee
  **/
 
