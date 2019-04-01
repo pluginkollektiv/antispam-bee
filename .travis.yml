@@ -29,8 +29,11 @@ jobs:
     - stage: test
       php: '7.2'
       script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - stage: test
+      php: '7.3'
+      script: ./vendor/bin/phpunit -c ./phpunit.xml.dist
     - stage: behat
-      php: '7.2'
+      php: '7.3'
       env: WORDPRESS_VERSION=nightly
       script: ./bin/behat.sh
     - stage: behat
