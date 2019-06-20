@@ -5,7 +5,7 @@
 * **English**
   * Improved backend accessibility
   * Prefilled comment textareas do now work with the honeypot
-  * AMP compatibility
+  * Compatible with the AMP plugin (https://wordpress.org/plugins/amp/)
   * Improved dashboard tooltips
   * Improvements for the language detection API
   * Scalable IP look up for local spam database
@@ -14,7 +14,7 @@
 * **Deutsch**
   * Verbesserte Barrierefreiheit im Backend
   * Vorausgefüllte Kommentarfelder arbeiten jetzt mit dem Honeypot zusammen
-  * Kompatibilität mit AMP
+  * Kompatibel mit dem AMP Plugin (https://wordpress.org/plugins/amp/)
   * Verbesserte Tooltips im Dashboard
   * Verbesserte Kommunikation mit der Spracherkennungs-API
   * Skalierbarer IP-Abgleich für den lokalen Datenbank-Check.
