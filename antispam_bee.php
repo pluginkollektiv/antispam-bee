@@ -58,7 +58,7 @@ class Antispam_Bee {
 	 *
 	 * @var int
 	 */
-	private static $db_version = 1;
+	private static $db_version = 1.01;
 
 	/**
 	 * The base.
