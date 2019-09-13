@@ -4,6 +4,9 @@ sudo: required
 addons:
   chrome: stable
 
+services:
+  - mysql
+
 stages:
   - behat
   - test
