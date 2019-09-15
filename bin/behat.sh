@@ -11,7 +11,6 @@ DB_HOST=localhost;
 echo "Chrome version:"
 google-chrome --version
 which google-chrome
-exit 0
 mkdir -p $WORDPRESS_PATH
 vendor/bin/wp core download --force --version=$WORDPRESS_VERSION --path=$WORDPRESS_PATH
 rm -f ${WORDPRESS_PATH}wp-config.php

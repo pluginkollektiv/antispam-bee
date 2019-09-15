@@ -29,13 +29,7 @@ default:
             guzzle_parameters:
               verify: false               # Allow self-signed SSL certificates
         selenium2:
-          selenium2:
-            browser: chrome
-            wd_host: http://127.0.0.1:4444/wd/hub
-            capabilities:
-              chrome:
-                switches:
-                  - "--headless"
+          selenium2: ~
 
     PaulGibbs\WordpressBehatExtension:
       path: %paths.base%/tmp/antispam-bee/     # [!] Change this for your local development.
