@@ -35,7 +35,8 @@ default:
             capabilities:
               chrome:
                 switches:
-                  - "--window-size=1920,1080"
+                  - "--headless"
+
     PaulGibbs\WordpressBehatExtension:
       path: %paths.base%/tmp/antispam-bee/     # [!] Change this for your local development.
       default_driver: wpcli
