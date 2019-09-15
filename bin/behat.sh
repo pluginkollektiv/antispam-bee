@@ -9,7 +9,7 @@ DB_PASS=;
 DB_HOST=localhost;
 
 echo "Chrome version:"
-echo google-chrome --version
+google-chrome --version
 mkdir -p $WORDPRESS_PATH
 vendor/bin/wp core download --force --version=$WORDPRESS_VERSION --path=$WORDPRESS_PATH
 rm -f ${WORDPRESS_PATH}wp-config.php
@@ -23,6 +23,9 @@ wait_for_port() {
     sleep $NAP_LENGTH
   done
 }
+export DISPLAY=:99.0
+sh -e /etc/init.d/xvfb start
+sleep 1
 
 wget -c -nc --retry-connrefused --tries=0 https://bit.ly/2TlkRyu -O selenium-server-standalone.jar
 wget -c -nc --retry-connrefused --tries=0 https://chromedriver.storage.googleapis.com/77.0.3865.10/chromedriver_linux64.zip -O driver.zip
