@@ -27,7 +27,7 @@ sh -e /etc/init.d/xvfb start
 sleep 1
 
 wget -c -nc --retry-connrefused --tries=0 https://goo.gl/tbd1NS -O selenium-server-standalone.jar
-wget -c -nc --retry-connrefused --tries=0 https://chromedriver.storage.googleapis.com/2.38/chromedriver_linux64.zip -O driver.zip
+wget -c -nc --retry-connrefused --tries=0 https://chromedriver.storage.googleapis.com/78.0.3904.11/chromedriver_linux64.zip -O driver.zip
 unzip driver.zip
 echo "Run selenium server - background process"
 nohup bash -c "java -jar selenium-server-standalone.jar &" && sleep 1; cat nohup.out
