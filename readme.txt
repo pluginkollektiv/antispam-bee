@@ -93,7 +93,7 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 ### 2.9.1 ###
   * Improved backend accessibility
   * Prefilled comment textareas do now work with the honeypot
-  * AMP compatibility
+  * Compatible with the AMP plugin (https://wordpress.org/plugins/amp/)
   * Improved dashboard tooltips
   * Improvements for the language detection API
   * Scalable IP look up for local spam database
