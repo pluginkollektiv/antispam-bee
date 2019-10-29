@@ -696,7 +696,7 @@ class Antispam_Bee {
 		$items[] = '<span class="ab-count">' . esc_html(
 			sprintf(
 				// translators: The number of spam comments Antispam Bee blocked so far.
-				__( '%d Blocked', 'antispam-bee' ),
+				__( '%s Blocked', 'antispam-bee' ),
 				self::_get_spam_count()
 			)
 		) . '</span>';
