@@ -2351,6 +2351,8 @@ class Antispam_Bee {
 		// Sanitization of $ip takes place further down.
 		if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 			$ip = wp_unslash( $_SERVER['HTTP_CLIENT_IP'] );
+		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+			$ip = wp_unslash( $_SERVER['REMOTE_ADDR'] );
 		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 			$ip = wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] );
 		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
@@ -2359,8 +2361,6 @@ class Antispam_Bee {
 			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] );
 		} elseif ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
 			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED'] );
-		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
-			$ip = wp_unslash( $_SERVER['REMOTE_ADDR'] );
 		} else {
 			return '';
 		}
