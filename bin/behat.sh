@@ -29,7 +29,8 @@ sh -e /etc/init.d/xvfb start
 sleep 1
 
 wget -c -nc --retry-connrefused --tries=0 https://bit.ly/2TlkRyu -O selenium-server-standalone.jar
-wget -c -nc --retry-connrefused --tries=0 https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip -O driver.zip
+#wget -c -nc --retry-connrefused --tries=0 https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip -O driver.zip
+wget -c -nc --retry-connrefused --tries=0 https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux32.tar.gz -O driver.zip
 unzip driver.zip
 echo "Run selenium server - background process"
 nohup bash -c "java -jar selenium-server-standalone.jar &" && sleep 1; cat nohup.out
