@@ -2361,16 +2361,7 @@ class Antispam_Bee {
 			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] );
 		} elseif ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
 			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED'] );
-		} 
-		/*
-		elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
-			$ip = wp_unslash( $_SERVER['REMOTE_ADDR'] );
-		} else {
-			return '';
 		}
-		*/
-
-		// phpcs:enable WordPress.VIP.ValidatedSanitizedInput.InputNotSanitized
 
 		preg_match_all ('/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g', $ip, $matches );
 
