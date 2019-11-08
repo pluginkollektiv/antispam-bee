@@ -2349,6 +2349,8 @@ class Antispam_Bee {
 	public static function get_client_ip() {
 		// phpcs:disable WordPress.VIP.ValidatedSanitizedInput.InputNotSanitized
 		// Sanitization of $ip takes place further down.
+		$ip = '';
+
 		if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 			$ip = wp_unslash( $_SERVER['HTTP_CLIENT_IP'] );
 		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
@@ -2359,12 +2361,26 @@ class Antispam_Bee {
 			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] );
 		} elseif ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
 			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED'] );
-		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+		} 
+		/*
+		elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
 			$ip = wp_unslash( $_SERVER['REMOTE_ADDR'] );
 		} else {
 			return '';
 		}
+		*/
+
 		// phpcs:enable WordPress.VIP.ValidatedSanitizedInput.InputNotSanitized
+
+		preg_match_all ('/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g', $ip, $matches );
+
+		if ( $matches[0] != '' ) {
+			$ip = $ip;
+		} elseif ( isset( $_SERVER['REMOTE_ADDR']) ) {
+			$ip = wp_unslash( $_SERVER['REMOTE_ADDR'] );
+		} else {
+			return '';
+		}
 
 		if ( strpos( $ip, ',' ) !== false ) {
 			$ips = explode( ',', $ip );
