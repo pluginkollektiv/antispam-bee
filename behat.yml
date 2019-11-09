@@ -22,18 +22,14 @@ default:
       base_url: http://localhost:8080    # [!] Change this for your local development.
       default_session: default
       javascript_session: selenium2
+      browser_name: 'chrome'
       sessions:
         default:
           goutte:
             guzzle_parameters:
               verify: false               # Allow self-signed SSL certificates
         selenium2:
-          browser: chrome
-          capabilities:
-            extra_capabilities:
-              chromeOptions:
-                args:
-                  - "--no-sandbox"
+          capabilities: { "browserName": "chrome", "browser": "chrome", 'chrome': {'switches':['--no-sandbox']}}
 
     PaulGibbs\WordpressBehatExtension:
       path: %paths.base%/tmp/antispam-bee/     # [!] Change this for your local development.
