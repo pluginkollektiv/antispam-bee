@@ -20,7 +20,6 @@ default:
   extensions:
     Behat\MinkExtension:
       base_url: http://localhost:8080    # [!] Change this for your local development.
-      browser_name: firefox
       default_session: default
       javascript_session: selenium2
       sessions:
@@ -29,7 +28,12 @@ default:
             guzzle_parameters:
               verify: false               # Allow self-signed SSL certificates
         selenium2:
-          selenium2: ~
+          browser: chrome
+          capabilities:
+            extra_capabilities:
+              chromeOptions:
+                args:
+                  - "--no-sandbox"
 
     PaulGibbs\WordpressBehatExtension:
       path: %paths.base%/tmp/antispam-bee/     # [!] Change this for your local development.
