@@ -28,7 +28,13 @@ default:
           goutte:
             guzzle_parameters:
               verify: false               # Allow self-signed SSL certificates
-        selenium2: ~
+        selenium2:
+          selenium2:
+            browser: chrome
+            capabilities:
+              chrome:
+                switches:
+                  - "--no-sandbox"
 
     PaulGibbs\WordpressBehatExtension:
       path: %paths.base%/tmp/antispam-bee/     # [!] Change this for your local development.
