@@ -971,7 +971,7 @@ class Antispam_Bee {
 
 		$wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM `$wpdb->comments` WHERE `comment_approved` = 'spam' AND SUBDATE(NOW(), %d) > comment_date_gmt",
+				"DELETE c, cm FROM `$wpdb->comments` AS c LEFT JOIN `$wpdb->commentmeta` AS cm ON (c.comment_ID = cm.comment_id) WHERE c.comment_approved = 'spam' AND SUBDATE(NOW(), %d) > c.comment_date_gmt",
 				$days
 			)
 		);
@@ -1195,7 +1195,7 @@ class Antispam_Bee {
 			$init_time_field = '';
 		}
 
-		$output = '<textarea autocomplete="nope" ' . $matches['before1'] . $matches['before2'] . $matches['before3'];
+		$output = '<textarea autocomplete="new-password" ' . $matches['before1'] . $matches['before2'] . $matches['before3'];
 
 		$id_script = '';
 		if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
@@ -1207,7 +1207,7 @@ class Antispam_Bee {
 		$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
 		$output .= $matches['after'] . '>';
 		$output .= $matches['content'];
-		$output .= '</textarea><textarea id="comment" aria-hidden="true" name="comment" autocomplete="nope" style="padding:0;clip:rect(1px, 1px, 1px, 1px);position:absolute !important;white-space:nowrap;height:1px;width:1px;overflow:hidden;" tabindex="-1"></textarea>';
+		$output .= '</textarea><textarea id="comment" aria-hidden="true" name="comment" autocomplete="new-password" style="padding:0;clip:rect(1px, 1px, 1px, 1px);position:absolute !important;white-space:nowrap;height:1px;width:1px;overflow:hidden;" tabindex="-1"></textarea>';
 
 		$output .= $id_script;
 		$output .= $init_time_field;
