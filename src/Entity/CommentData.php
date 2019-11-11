@@ -59,7 +59,7 @@ class CommentData implements DataInterface {
 			'comment_author_IP'    => 'is_string',
 			'comment_post_ID'      => 'is_int',
 			'comment_type'         => function( $type ) : bool {
-				return in_array( (string) $type, [ 'trackback', 'pingback', 'comment' ], true );
+				return in_array( (string) $type, CommentDataTypes::ALL, true );
 			},
 		];
 
