@@ -89,6 +89,45 @@ final class Antispam_Bee_Columns {
 	}
 
 	/**
+	 * Filter comments by the spam reason
+	 *
+	 * @global \wpdb $wpdb
+	 */
+	public static function filter_columns() {
+		global $wpdb;
+		?>
+		<label class="screen-reader-text" for="filter-by-comment-spam-reason"><?php _e( 'Filter by spam reason' ); ?></label>
+		<select id="filter-by-comment-spam-reason" name="comment_spam_reason">
+			<option value=""><?php _e( 'All spam reasons' ); ?></option>
+			<?php
+			$spam_reason = isset( $_GET['comment_spam_reason'] ) ? wp_unslash( sanitize_text_field( $_GET['comment_spam_reason'] ) ) : '';
+			$reasons = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}commentmeta WHERE meta_key = 'antispam_bee_reason'", ARRAY_A );
+
+			foreach ( $reasons as $reason ) {
+				$label = Antispam_Bee::$defaults['reasons'][ $reason['meta_value'] ];
+				echo "\t" . '<option value="' . esc_attr( $reason['meta_value'] ) . '"' . selected( $spam_reason, $reason['meta_value'], false ) . ">$label</option>\n";
+			}
+			?>
+		</select>
+		<?php
+	}
+
+	/**
+	 * Filter comments by the spam reason
+	 *
+	 * @param \WP_Comment_Query $query  Current WordPress query.
+	 */
+	public static function filter_by_spam_reason( $query ) {
+		$spam_reason = isset( $_GET['comment_spam_reason'] ) ? wp_unslash( sanitize_text_field( $_GET['comment_spam_reason'] ) ) : '';
+		if ( empty( $spam_reason ) || ! in_array( $spam_reason, array_keys( Antispam_Bee::$defaults['reasons'] ) ) ) {
+			return;
+		}
+
+		$query->query_vars['meta_key'] = 'antispam_bee_reason';
+		$query->query_vars['meta_value'] = $spam_reason;
+	}
+
+	/**
 	 * Print CSS for the plugin column
 	 *
 	 * @since   2.6.1
