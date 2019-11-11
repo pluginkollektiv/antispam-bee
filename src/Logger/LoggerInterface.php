@@ -5,9 +5,10 @@ namespace Pluginkollektiv\AntispamBee\Logger;
 
 use Pluginkollektiv\AntispamBee\Entity\DataInterface;
 
-interface LoggerInterface {
+interface LoggerInterface
+{
 
-	public function log( string $entry) : bool;
+    public function log( string $entry) : bool;
 
-	public function is_ready() : bool;
+    public function is_ready() : bool;
 }

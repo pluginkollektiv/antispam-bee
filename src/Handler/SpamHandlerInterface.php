@@ -6,8 +6,9 @@ namespace Pluginkollektiv\AntispamBee\Handler;
 use Pluginkollektiv\AntispamBee\Entity\DataInterface;
 use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
-interface SpamHandlerInterface {
+interface SpamHandlerInterface
+{
 
 
-	public function execute( ReasonsRepository $reason, DataInterface $data) : bool;
+    public function execute( ReasonsRepository $reason, DataInterface $data) : bool;
 }

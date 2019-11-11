@@ -8,7 +8,8 @@ namespace Pluginkollektiv\AntispamBee\Exceptions;
  *
  * @package Pluginkollektiv\AntispamBee\Exceptions
  */
-class Runtime extends \RuntimeException {
+class Runtime extends \RuntimeException
+{
 
 
 }

@@ -15,21 +15,22 @@ namespace Pluginkollektiv\AntispamBee\Filter\Preparer;
  *
  * @package Pluginkollektiv\AntispamBee\Preparer
  */
-interface PreparerInterface {
+interface PreparerInterface
+{
 
-	/**
-	 * Registers the Preparer for a specific check.
-	 *
-	 * @param mixed $args The arguments.
-	 *
-	 * @return bool
-	 */
-	public function register( $args = null) : bool;
+    /**
+     * Registers the Preparer for a specific check.
+     *
+     * @param mixed $args The arguments.
+     *
+     * @return bool
+     */
+    public function register( $args = null) : bool;
 
-	/**
-	 * Runs the preparation.
-	 *
-	 * @return bool
-	 */
-	public function prepare() : bool;
+    /**
+     * Runs the preparation.
+     *
+     * @return bool
+     */
+    public function prepare() : bool;
 }

@@ -12,6 +12,7 @@ declare( strict_types = 1 );
 
 namespace Pluginkollektiv\AntispamBee\Filter;
 
-interface SpamFilterInterface extends FilterInterface {
+interface SpamFilterInterface extends FilterInterface
+{
 
 }

@@ -8,27 +8,33 @@ use Pluginkollektiv\AntispamBee\Option\OptionInterface;
 use Pluginkollektiv\AntispamBee\Option\OptionFactory;
 use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
-class NullPostProcessor implements PostProcessorInterface {
+class NullPostProcessor implements PostProcessorInterface
+{
 
-	private $option_factory;
+    private $option_factory;
 
 
-	public function __construct( OptionFactory $option_factory ) {
-		$this->option_factory = $option_factory;
-	}
-	public function execute( ReasonsRepository $reason, DataInterface $data ) : bool {
-		return false;
-	}
+    public function __construct( OptionFactory $option_factory )
+    {
+        $this->option_factory = $option_factory;
+    }
+    public function execute( ReasonsRepository $reason, DataInterface $data ) : bool
+    {
+        return false;
+    }
 
-	public function id() : string {
-		return '';
-	}
+    public function id() : string
+    {
+        return '';
+    }
 
-	public function register() : bool {
-		return true;
-	}
+    public function register() : bool
+    {
+        return true;
+    }
 
-	public function options() : OptionInterface {
-		return $this->option_factory->null();
-	}
+    public function options() : OptionInterface
+    {
+        return $this->option_factory->null();
+    }
 }

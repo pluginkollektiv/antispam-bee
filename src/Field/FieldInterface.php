@@ -3,17 +3,18 @@ declare( strict_types = 1 );
 
 namespace Pluginkollektiv\AntispamBee\Field;
 
-interface FieldInterface {
+interface FieldInterface
+{
 
-	public function label(): string;
+    public function label(): string;
 
-	public function type() : string;
+    public function type() : string;
 
-	public function key() : string;
+    public function key() : string;
 
-	public function value();
+    public function value();
 
-	public function options() : array;
+    public function options() : array;
 
-	public function with_value( $value ) : FieldInterface;
+    public function with_value( $value ) : FieldInterface;
 }

@@ -16,64 +16,68 @@ namespace Pluginkollektiv\AntispamBee\Filter\Preparer;
  *
  * @package Pluginkollektiv\AntispamBee\Preparer
  */
-class TimeSpamPreparer implements PreparerInterface {
+class TimeSpamPreparer implements PreparerInterface
+{
 
-	/**
-	 * The arguments needed to render the field.
-	 *
-	 * @var mixed
-	 */
-	private $args;
+    /**
+     * The arguments needed to render the field.
+     *
+     * @var mixed
+     */
+    private $args;
 
-	/**
-	 * The action hook.
-	 *
-	 * @var string
-	 */
-	private $action_hook;
+    /**
+     * The action hook.
+     *
+     * @var string
+     */
+    private $action_hook;
 
-	/**
-	 * TimeSpamPreparer constructor.
-	 *
-	 * @param string $action_hook The action, in which the method should hook into.
-	 */
-	public function __construct( string $action_hook ) {
-		$this->action_hook = $action_hook;
-	}
+    /**
+     * TimeSpamPreparer constructor.
+     *
+     * @param string $action_hook The action, in which the method should hook into.
+     */
+    public function __construct( string $action_hook )
+    {
+        $this->action_hook = $action_hook;
+    }
 
-	/**
-	 * Hooks into 'comment_form'.
-	 *
-	 * @param mixed $args The arguments.
-	 *
-	 * @return bool.
-	 */
-	public function register( $args = null ) : bool {
+    /**
+     * Hooks into 'comment_form'.
+     *
+     * @param mixed $args The arguments.
+     *
+     * @return bool.
+     */
+    public function register( $args = null ) : bool
+    {
 
-		$this->args = $args;
+        $this->args = $args;
 
-		add_action(
-			$this->action_hook,
-			[
-				$this,
-				'prepare',
-			]
-		);
+        add_action(
+            $this->action_hook,
+            [
+            $this,
+            'prepare',
+            ]
+        );
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Renders the time field for the TimeSpamFilter.
-	 *
-	 * @return bool
-	 */
-	public function prepare() : bool {
-		echo '<input
+    /**
+     * Renders the time field for the TimeSpamFilter.
+     *
+     * @return bool
+     */
+    public function prepare() : bool
+    {
+        echo '<input
             type="hidden"
-            name="' . esc_attr( $this->args ) . '"
+            name="' . esc_attr($this->args) . '"
             value="' . (int) time() . '"
         />';
-		return true;
-	}
+        return true;
+    }
 }

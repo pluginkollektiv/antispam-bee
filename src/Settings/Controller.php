@@ -21,304 +21,312 @@ use Pluginkollektiv\AntispamBee\Repository\PostProcessorRepository;
  *
  * @package Pluginkollektiv\AntispamBee\Settings
  */
-class Controller {
+class Controller
+{
 
-	/**
-	 * The hook of the settings page.
-	 *
-	 * @var string $hook
-	 */
-	private $hook;
+    /**
+     * The hook of the settings page.
+     *
+     * @var string $hook
+     */
+    private $hook;
 
-	/**
-	 * The directory, where the templates can be found to render the settings page.
-	 *
-	 * @var string
-	 */
-	private $template_dir;
+    /**
+     * The directory, where the templates can be found to render the settings page.
+     *
+     * @var string
+     */
+    private $template_dir;
 
-	/**
-	 * The filter repository.
-	 *
-	 * @var FilterRepository
-	 */
-	private $filter_repository;
+    /**
+     * The filter repository.
+     *
+     * @var FilterRepository
+     */
+    private $filter_repository;
 
-	/**
-	 * The post processor repository.
-	 *
-	 * @var PostProcessorRepository
-	 */
-	private $post_processor_repository;
+    /**
+     * The post processor repository.
+     *
+     * @var PostProcessorRepository
+     */
+    private $post_processor_repository;
 
-	/**
-	 * The Antispam Bee configuration object.
-	 *
-	 * @var AntispamBeeConfig
-	 */
-	private $config;
+    /**
+     * The Antispam Bee configuration object.
+     *
+     * @var AntispamBeeConfig
+     */
+    private $config;
 
-	/**
-	 * The URL to the plugin.
-	 *
-	 * @var string
-	 */
-	private $plugins_url;
+    /**
+     * The URL to the plugin.
+     *
+     * @var string
+     */
+    private $plugins_url;
 
-	/**
-	 * Controller constructor.
-	 *
-	 * @param FilterRepository        $filter_repository The filter repository.
-	 * @param PostProcessorRepository $post_processor_repository The post processor repository.
-	 * @param AntispamBeeConfig       $config The Antispam Bee Configuration.
-	 * @param string                  $template_dir The path to the templates directory.
-	 * @param string                  $plugins_url The URL to the plugin.
-	 */
-	public function __construct(
-		FilterRepository $filter_repository,
-		PostProcessorRepository $post_processor_repository,
-		AntispamBeeConfig $config,
-		string $template_dir,
-		string $plugins_url
-	) {
-		$this->template_dir              = $template_dir;
-		$this->filter_repository         = $filter_repository;
-		$this->post_processor_repository = $post_processor_repository;
-		$this->config                    = $config;
-		$this->plugins_url               = $plugins_url;
-	}
+    /**
+     * Controller constructor.
+     *
+     * @param FilterRepository        $filter_repository         The filter repository.
+     * @param PostProcessorRepository $post_processor_repository The post processor repository.
+     * @param AntispamBeeConfig       $config                    The Antispam Bee Configuration.
+     * @param string                  $template_dir              The path to the templates directory.
+     * @param string                  $plugins_url               The URL to the plugin.
+     */
+    public function __construct(
+        FilterRepository $filter_repository,
+        PostProcessorRepository $post_processor_repository,
+        AntispamBeeConfig $config,
+        string $template_dir,
+        string $plugins_url
+    ) {
+        $this->template_dir              = $template_dir;
+        $this->filter_repository         = $filter_repository;
+        $this->post_processor_repository = $post_processor_repository;
+        $this->config                    = $config;
+        $this->plugins_url               = $plugins_url;
+    }
 
-	/**
-	 * Registers the settings page.
-	 *
-	 * @return bool
-	 */
-	public function register() : bool {
-		$this->hook = add_submenu_page(
-			'options-general.php',
-			'Antispam Bee',
-			'Antispam Bee',
-			'manage_options',
-			'antispam-bee',
-			[
-				$this,
-				'render',
-			]
-		);
+    /**
+     * Registers the settings page.
+     *
+     * @return bool
+     */
+    public function register() : bool
+    {
+        $this->hook = add_submenu_page(
+            'options-general.php',
+            'Antispam Bee',
+            'Antispam Bee',
+            'manage_options',
+            'antispam-bee',
+            [
+            $this,
+            'render',
+            ]
+        );
 
-		return false !== $this->hook;
-	}
+        return false !== $this->hook;
+    }
 
-	/**
-	 * Renders the settings page.
-	 *
-	 * @return bool
-	 */
-	public function render() : bool {
+    /**
+     * Renders the settings page.
+     *
+     * @return bool
+     */
+    public function render() : bool
+    {
 
-		$this->listen();
-		$data             = new \stdClass();
-		$data->url        = $this->plugins_url;
-		$data->active_tab = 'settings-tab-checks.php';
-		$data->menu       = [
-			'filters'         => (object) [
-				'label'  => __( 'Filter', 'antispam-bee' ),
-				'url'    => admin_url( 'options-general.php?page=antispam-bee&tab=filters' ),
-				'active' => false,
-			],
-			'post-processors' => (object) [
-				'label'  => __( 'Spam Processing', 'antispam-bee' ),
-				'url'    => admin_url( 'options-general.php?page=antispam-bee&tab=post-processors' ),
-				'active' => false,
-			],
-			'advanced'        => (object) [
-				'label'  => __( 'Advanced', 'antispam-bee' ),
-				'url'    => admin_url( 'options-general.php?page=antispam-bee&tab=advanced' ),
-				'active' => false,
-			],
-		];
+        $this->listen();
+        $data             = new \stdClass();
+        $data->url        = $this->plugins_url;
+        $data->active_tab = 'settings-tab-checks.php';
+        $data->menu       = [
+        'filters'         => (object) [
+        'label'  => __('Filter', 'antispam-bee'),
+        'url'    => admin_url('options-general.php?page=antispam-bee&tab=filters'),
+        'active' => false,
+        ],
+        'post-processors' => (object) [
+        'label'  => __('Spam Processing', 'antispam-bee'),
+        'url'    => admin_url('options-general.php?page=antispam-bee&tab=post-processors'),
+        'active' => false,
+        ],
+        'advanced'        => (object) [
+        'label'  => __('Advanced', 'antispam-bee'),
+        'url'    => admin_url('options-general.php?page=antispam-bee&tab=advanced'),
+        'active' => false,
+        ],
+        ];
 
-		$data->tab = $this->generate_tab_data();
+        $data->tab = $this->generate_tab_data();
 
-		foreach ( $data->menu as $key => $val ) {
-			if ( $key === $this->active_tab() ) {
-				$data->menu[ $key ]->active = true;
-				$data->active_tab           = 'settings-tab-' . $key . '.php';
-			}
-		}
-		$data->active_tab = $this->template_dir . '/' . $data->active_tab;
-		if ( ! is_readable( $this->template_dir . '/settings-wrapper.php' ) ) {
-			return false;
-		}
-		include $this->template_dir . '/settings-wrapper.php';
-		return true;
-	}
+        foreach ( $data->menu as $key => $val ) {
+            if ($key === $this->active_tab() ) {
+                $data->menu[ $key ]->active = true;
+                $data->active_tab           = 'settings-tab-' . $key . '.php';
+            }
+        }
+        $data->active_tab = $this->template_dir . '/' . $data->active_tab;
+        if (! is_readable($this->template_dir . '/settings-wrapper.php') ) {
+            return false;
+        }
+        include $this->template_dir . '/settings-wrapper.php';
+        return true;
+    }
 
-	/**
-	 * The settings page has some tabs. This method generates the data for each tab.
-	 *
-	 * @return object
-	 */
-	private function generate_tab_data() {
-		$tab_data = (object) [
-			'nonce'        => wp_create_nonce( 'antispambee-filter' ),
-			'nonce_action' => 'antispambee-filter',
-			'nonce_name'   => '_antispambee_nonce',
-		];
-		if ( $this->active_tab() === 'filters' ) {
-			$tab_data = $this->filters_tab_data();
-		}
-		if ( $this->active_tab() === 'post-processors' ) {
-			$tab_data = $this->post_processor_tab_data();
-		}
+    /**
+     * The settings page has some tabs. This method generates the data for each tab.
+     *
+     * @return object
+     */
+    private function generate_tab_data()
+    {
+        $tab_data = (object) [
+        'nonce'        => wp_create_nonce('antispambee-filter'),
+        'nonce_action' => 'antispambee-filter',
+        'nonce_name'   => '_antispambee_nonce',
+        ];
+        if ($this->active_tab() === 'filters' ) {
+            $tab_data = $this->filters_tab_data();
+        }
+        if ($this->active_tab() === 'post-processors' ) {
+            $tab_data = $this->post_processor_tab_data();
+        }
 
-		$tab_data->type = $this->active_tab();
-		return $tab_data;
-	}
+        $tab_data->type = $this->active_tab();
+        return $tab_data;
+    }
 
-	/**
-	 * Generates the data for the post processor tab.
-	 *
-	 * @return object
-	 */
-	private function post_processor_tab_data() {
-		return (object) [
-			'nonce'             => wp_create_nonce( 'antispambee-post-processor' ),
-			'nonce_action'      => 'antispambee-post-processor',
-			'nonce_name'        => '_antispambee_nonce',
-			'processors'        => $this->post_processor_repository->registered_processors(),
-			'active_processors' => array_map(
-				function( PostProcessorInterface $processor ) : string {
-					return $processor->id();
-				},
-				$this->post_processor_repository->active_processors()
-			),
-		];
-	}
+    /**
+     * Generates the data for the post processor tab.
+     *
+     * @return object
+     */
+    private function post_processor_tab_data()
+    {
+        return (object) [
+        'nonce'             => wp_create_nonce('antispambee-post-processor'),
+        'nonce_action'      => 'antispambee-post-processor',
+        'nonce_name'        => '_antispambee_nonce',
+        'processors'        => $this->post_processor_repository->registered_processors(),
+        'active_processors' => array_map(
+            function ( PostProcessorInterface $processor ) : string {
+                return $processor->id();
+            },
+            $this->post_processor_repository->active_processors()
+        ),
+        ];
+    }
 
-	/**
-	 * Generates the data for the filters tab.
-	 *
-	 * @return object
-	 */
-	private function filters_tab_data() {
-		return (object) [
-			'nonce'          => wp_create_nonce( 'antispambee-filter' ),
-			'nonce_action'   => 'antispambee-filter',
-			'nonce_name'     => '_antispambee_nonce',
-			'filters'        => $this->filter_repository->registered_filters(),
-			'active_filters' => array_map(
-				function( FilterInterface $filter ) : string {
-					return $filter->id();
-				},
-				$this->filter_repository->active_filters()
-			),
-		];
-	}
+    /**
+     * Generates the data for the filters tab.
+     *
+     * @return object
+     */
+    private function filters_tab_data()
+    {
+        return (object) [
+        'nonce'          => wp_create_nonce('antispambee-filter'),
+        'nonce_action'   => 'antispambee-filter',
+        'nonce_name'     => '_antispambee_nonce',
+        'filters'        => $this->filter_repository->registered_filters(),
+        'active_filters' => array_map(
+            function ( FilterInterface $filter ) : string {
+                return $filter->id();
+            },
+            $this->filter_repository->active_filters()
+        ),
+        ];
+    }
 
-	/**
-	 * Evaluates, which is the active tab.
-	 *
-	 * @return string
-	 */
-	private function active_tab() {
-		return ( isset( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'filters'; // Input var okay.
-	}
+    /**
+     * Evaluates, which is the active tab.
+     *
+     * @return string
+     */
+    private function active_tab()
+    {
+        return ( isset($_GET['tab']) ) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'filters'; // Input var okay.
+    }
 
-	/**
-	 * Listens whether settings need to be saved and saves those.
-	 *
-	 * @return bool
-	 */
-	private function listen() : bool {
+    /**
+     * Listens whether settings need to be saved and saves those.
+     *
+     * @return bool
+     */
+    private function listen() : bool
+    {
 
-		$tab_data = $this->generate_tab_data();
-		if (
-			! isset( $_POST['antispambee_fields'] ) // Input var okay.
-			|| ! isset( $_POST['type'] ) // Input var okay.
-			|| ! isset( $_POST[ $tab_data->nonce_name ] ) // Input var okay.
-			|| ! wp_verify_nonce(
-				sanitize_text_field( wp_unslash( $_POST[ $tab_data->nonce_name ] ) ), // Input var okay.
-				$tab_data->nonce_action
-			)
-		) {
-			return false;
-		}
+        $tab_data = $this->generate_tab_data();
+        if (! isset($_POST['antispambee_fields']) // Input var okay.
+            || ! isset($_POST['type']) // Input var okay.
+            || ! isset($_POST[ $tab_data->nonce_name ]) // Input var okay.
+            || ! wp_verify_nonce(
+                sanitize_text_field(wp_unslash($_POST[ $tab_data->nonce_name ])), // Input var okay.
+                $tab_data->nonce_action
+            )
+        ) {
+            return false;
+        }
 
-		$type = sanitize_text_field( wp_unslash( $_POST['type'] ) ); // Input var okay.
-		if ( $type !== $this->active_tab() ) {
-			return false;
-		}
+        $type = sanitize_text_field(wp_unslash($_POST['type'])); // Input var okay.
+        if ($type !== $this->active_tab() ) {
+            return false;
+        }
 
-		$success = true;
-		foreach ( wp_unslash( $_POST['antispambee_fields'] ) as $raw_key => $raw_value ) { // Input var okay.
-			$key    = sanitize_text_field( wp_unslash( $raw_key ) );
-			$value  = (int) $raw_value;
-			$result = false;
+        $success = true;
+        foreach ( wp_unslash($_POST['antispambee_fields']) as $raw_key => $raw_value ) { // Input var okay.
+            $key    = sanitize_text_field(wp_unslash($raw_key));
+            $value  = (int) $raw_value;
+            $result = false;
 
-			if ( 'filters' === $type ) {
-				$result = ( 1 === (int) $value ) ? $this->config->activate_filter( $key ) : $this->config->deactivate_filter( $key );
-			}
-			if ( 'post-processors' === $type ) {
-				$result = ( 1 === (int) $value ) ? $this->config->activate_processor( $key ) : $this->config->deactivate_processor( $key );
-			}
-			if ( ! $result ) {
-				$success = false;
-			}
-		}
+            if ('filters' === $type ) {
+                $result = ( 1 === (int) $value ) ? $this->config->activate_filter($key) : $this->config->deactivate_filter($key);
+            }
+            if ('post-processors' === $type ) {
+                $result = ( 1 === (int) $value ) ? $this->config->activate_processor($key) : $this->config->deactivate_processor($key);
+            }
+            if (! $result ) {
+                $success = false;
+            }
+        }
 
-		if ( ! $success ) {
-			return false;
-		}
+        if (! $success ) {
+            return false;
+        }
 
-		if ( is_array( $_POST['antispambee_field_config'][ $type ] ) ) {
-			$raw_configuration = wp_unslash( $_POST['antispambee_field_config'][ $type ] ); // Input var okay.
-			$success           = $this->set_configuration( $raw_configuration, $type );
-		}
+        if (is_array($_POST['antispambee_field_config'][ $type ]) ) {
+            $raw_configuration = wp_unslash($_POST['antispambee_field_config'][ $type ]); // Input var okay.
+            $success           = $this->set_configuration($raw_configuration, $type);
+        }
 
-		return $success && $this->config->persist();
-	}
+        return $success && $this->config->persist();
+    }
 
-	/**
-	 * Updates configuration data for filters and post processors.
-	 *
-	 * @param array  $raw_configuration The data to set.
-	 * @param string $type The type of configuration to set.
-	 *
-	 * @return bool
-	 */
-	private function set_configuration( array $raw_configuration, string $type ) {
-		$success                  = true;
-		$entities                 = ( 'filters' === $type ) ? $this->filter_repository->registered_filters() : $this->post_processor_repository->registered_processors();
-		$valid_configuration_keys = array_map(
-			function( $with_id ) : string {
-				return $with_id->id();
-			},
-			$entities
-		);
+    /**
+     * Updates configuration data for filters and post processors.
+     *
+     * @param array  $raw_configuration The data to set.
+     * @param string $type              The type of configuration to set.
+     *
+     * @return bool
+     */
+    private function set_configuration( array $raw_configuration, string $type )
+    {
+        $success                  = true;
+        $entities                 = ( 'filters' === $type ) ? $this->filter_repository->registered_filters() : $this->post_processor_repository->registered_processors();
+        $valid_configuration_keys = array_map(
+            function ( $with_id ) : string {
+                return $with_id->id();
+            },
+            $entities
+        );
 
-		foreach ( $raw_configuration as $key => $value ) {
-			if ( ! in_array( $key, $valid_configuration_keys, true ) ) {
-				continue;
-			}
-			if ( ! is_array( $value ) ) {
-				continue;
-			}
+        foreach ( $raw_configuration as $key => $value ) {
+            if (! in_array($key, $valid_configuration_keys, true) ) {
+                continue;
+            }
+            if (! is_array($value) ) {
+                continue;
+            }
 
-			try {
-				$option = ( 'filters' === $type ) ? $this->filter_repository->from_id( $key ) : $this->post_processor_repository->from_id( $key );
-				$option = $option->options();
-			} catch ( Runtime $error ) {
-				continue;
-			}
-			foreach ( $value as $option_key => $raw_option_value ) {
-				if ( ! $option->has( $option_key ) ) {
-					continue;
-				}
-				$option_value = $option->sanitize( $raw_option_value, $option_key );
-				$success      = $success && $this->config->has_config( $type ) && $this->config->get_config( $type )->set( $option_key, $option_value );
-			}
-		}
-		return $success;
-	}
+            try {
+                $option = ( 'filters' === $type ) ? $this->filter_repository->from_id($key) : $this->post_processor_repository->from_id($key);
+                $option = $option->options();
+            } catch ( Runtime $error ) {
+                continue;
+            }
+            foreach ( $value as $option_key => $raw_option_value ) {
+                if (! $option->has($option_key) ) {
+                    continue;
+                }
+                $option_value = $option->sanitize($raw_option_value, $option_key);
+                $success      = $success && $this->config->has_config($type) && $this->config->get_config($type)->set($option_key, $option_value);
+            }
+        }
+        return $success;
+    }
 }

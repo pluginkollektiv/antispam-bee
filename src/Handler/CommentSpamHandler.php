@@ -13,37 +13,40 @@ use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
  *
  * @package Pluginkollektiv\AntispamBee\Handler
  */
-class CommentSpamHandler implements SpamHandlerInterface {
+class CommentSpamHandler implements SpamHandlerInterface
+{
 
-	private $config;
-	private $repository;
+    private $config;
+    private $repository;
 
-	/**
-	 * CommentSpamHandler constructor.
-	 *
-	 * @param AntispamBeeConfig $config The options.
-	 */
-	public function __construct( AntispamBeeConfig $config, PostProcessorRepository $repository ) {
-		$this->config     = $config;
-		$this->repository = $repository;
-	}
+    /**
+     * CommentSpamHandler constructor.
+     *
+     * @param AntispamBeeConfig $config The options.
+     */
+    public function __construct( AntispamBeeConfig $config, PostProcessorRepository $repository )
+    {
+        $this->config     = $config;
+        $this->repository = $repository;
+    }
 
-	/**
-	 * Once a spam has been detected, this method will handle the rest.
-	 *
-	 * @param ReasonsRepository $reason The spam reason.
-	 * @param DataInterface     $data The spam data.
-	 *
-	 * @return bool
-	 */
-	public function execute( ReasonsRepository $reason, DataInterface $data ) : bool {
+    /**
+     * Once a spam has been detected, this method will handle the rest.
+     *
+     * @param ReasonsRepository $reason The spam reason.
+     * @param DataInterface     $data   The spam data.
+     *
+     * @return bool
+     */
+    public function execute( ReasonsRepository $reason, DataInterface $data ) : bool
+    {
 
-		$success = true;
-		foreach ( $this->repository->active_processors() as $processor ) {
-			if ( ! $processor->execute( $reason, $data ) ) {
-				$success = false;
-			};
-		}
-		return $success;
-	}
+        $success = true;
+        foreach ( $this->repository->active_processors() as $processor ) {
+            if (! $processor->execute($reason, $data) ) {
+                $success = false;
+            };
+        }
+        return $success;
+    }
 }

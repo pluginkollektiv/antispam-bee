@@ -8,7 +8,8 @@ namespace Pluginkollektiv\AntispamBee\Exceptions;
  *
  * @package Pluginkollektiv\AntispamBee\Exceptions
  */
-class InvalidArgument extends \InvalidArgumentException {
+class InvalidArgument extends \InvalidArgumentException
+{
 
 
 }
