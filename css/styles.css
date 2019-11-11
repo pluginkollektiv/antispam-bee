@@ -105,6 +105,10 @@
     min-height: 60px;
 }
 
+.ab-column select[multiple][name="ab_ignore_reasons[]"] {
+	width: auto;
+}
+
 .ab-column input.ab-mini-field {
     width: 40px;
 }
@@ -259,6 +263,10 @@
 
 .ab-column > ul > li > ul label {
     margin: 0 0 0 7px;
+}
+
+.ab-column > ul > li > ul label[for="ab_ignore_reasons"] {
+    margin: 0 0 5px 0;
 }
 
 .ab-column > ul > li > input[type="checkbox"]:checked ~ ul {
