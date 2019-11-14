@@ -51,7 +51,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 
 ### Requirements ###
 * PHP 5.2.4 or greater
-* WordPress 3.8 or greater
+* WordPress 4.5 or greater
 
 ### Settings ###
 After you have activated *Antispam Bee* the plugin will block spam comments out of the box. However, you may want to visit *Settings → Antispam Bee* to configure your custom set of anti-spam options that works best for your site.
