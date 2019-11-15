@@ -194,6 +194,8 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
             $text = $this->getSession()->getPage()->getHTML();
         } catch (\Behat\Mink\Exception\DriverException $e) {
             $text = '';
+        } catch (\WebDriver\Exception\NoSuchElement $e) {
+            $text = '';
         }
         $errorMsg = '';
         if (preg_match( '^' . preg_quote('<b>Fatal error</b>:') . '^', $text)) {
