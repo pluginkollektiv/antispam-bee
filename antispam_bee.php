@@ -58,7 +58,7 @@ class Antispam_Bee {
 	 *
 	 * @var int
 	 */
-	private static $db_version = 1;
+	private static $db_version = 1.01;
 
 	/**
 	 * The base.
@@ -264,17 +264,6 @@ class Antispam_Bee {
 					__CLASS__,
 					'populate_post_id',
 				)
-			);
-
-			// Save IP hash, if comment is spam.
-			add_action(
-				'comment_post',
-				array(
-					__CLASS__,
-					'save_ip_hash',
-				),
-				10,
-				1
 			);
 
 			add_action(
@@ -2399,31 +2388,6 @@ class Antispam_Bee {
 			'antispam_bee_reason',
 			self::$_reason
 		);
-	}
-
-	/**
-	 * Saves the IP address.
-	 *
-	 * @param int $comment_id The ID of the comment.
-	 */
-	public static function save_ip_hash( $comment_id ) {
-		$hashed_ip = self::hash_ip( self::get_client_ip() );
-		add_comment_meta(
-			$comment_id,
-			'antispam_bee_iphash',
-			$hashed_ip
-		);
-	}
-
-	/**
-	 * Hashes an IP address
-	 *
-	 * @param string $ip The IP address to hash.
-	 *
-	 * @return string
-	 */
-	public static function hash_ip( $ip ) {
-		return wp_hash_password( $ip );
 	}
 
 
