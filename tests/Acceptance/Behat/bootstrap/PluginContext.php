@@ -85,7 +85,7 @@ class PluginContext extends RawWordpressContext implements Context {
 		$wpcli_args = [
 			'secret_plugin_option',
 			'--format=json',
-			"'" . json_encode(1) . "'",
+			"'" . json_encode("1") . "'",
 		];
 		$this->getDriver()->wpcli('option', 'set', $wpcli_args );
 	}
