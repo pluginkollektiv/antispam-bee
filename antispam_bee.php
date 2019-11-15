@@ -1545,7 +1545,7 @@ class Antispam_Bee {
 				'body' => 'target[t]?ed (visitors|traffic)|viagra|cialis',
 			),
 			array(
-				'body' => 'purchase amazing|buy amazing',
+				'body' => 'purchase amazing|buy amazing|luxurybrandsale',
 			),
 			array(
 				'body'  => 'dating|sex|lotto|pharmacy',
