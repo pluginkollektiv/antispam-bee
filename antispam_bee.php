@@ -266,7 +266,7 @@ class Antispam_Bee {
 						'pre_get_comments',
 						array(
 							'Antispam_Bee_Columns',
-							'filter_by_spam_reason'
+							'filter_by_spam_reason',
 						)
 					);
 				}
