@@ -2,7 +2,7 @@ language: php
 
 sudo: required
 addons:
-  firefox: latest
+  chrome: stable
 
 services:
   - mysql
