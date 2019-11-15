@@ -219,7 +219,7 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 
         $errorFile = $failedStepsDir . '' . $featureFile . '-' . $line;
         echo PHP_EOL . 'ErrorFile: ' . $errorFile . PHP_EOL;
-        file_put_contents($errorFile . '.html', $this->getSession()->getPage()->getHtml());
+        file_put_contents($errorFile . '.html', $text);
 
         echo file_get_contents($errorFile . '.html');
         if ($errorMsg) {
