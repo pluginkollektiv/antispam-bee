@@ -185,4 +185,43 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 		// ok, let's hover it
 		$element->mouseOver();
 	}
+
+    /** @AfterStep */
+    public function afterStep(\Behat\Behat\Hook\Scope\AfterStepScope $scope)
+    {
+
+        try {
+            $text = $this->getSession()->getPage()->getHTML();
+        } catch (\Behat\Mink\Exception\DriverException $e) {
+            $text = '';
+        }
+        $errorMsg = '';
+        if (preg_match( '^' . preg_quote('<b>Fatal error</b>:') . '^', $text)) {
+            $errorMsg = 'PHP error message detected.';
+        }
+        if (preg_match( '^' . preg_quote('<b>Notice</b>:') . '^', $text)) {
+            $errorMsg = 'PHP Notice message detected.';
+        }
+
+        if (!$errorMsg && $scope->getTestResult()->isPassed()) {
+            return;
+        }
+
+        $failedStepsDir = dirname( __DIR__ ) . '/failed-steps/';
+        if (! is_writable($failedStepsDir)) {
+            @mkdir($failedStepsDir);
+        }
+        $featureFile = strtolower(str_replace(' ', '-', $featureFile = $scope->getFeature()->getTitle()));
+
+        $line = $scope->getStep()->getLine();
+
+        $errorFile = $failedStepsDir . '' . $featureFile . '-' . $line;
+        echo PHP_EOL . 'ErrorFile: ' . $errorFile . PHP_EOL;
+        file_put_contents($errorFile . '.html', $this->getSession()->getPage()->getHtml());
+
+        echo file_get_contents($errorFile . '.html');
+        if ($errorMsg) {
+            throw new \Exception($errorMsg);
+        }
+    }
 }
