@@ -459,14 +459,14 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 								<ul>
 									<li>
-										<select name="ab_ignore_reasons[]" id="ab_ignore_reasons" size="2" multiple>
+										<label for="ab_ignore_reasons">
+											<?php esc_html_e( 'Spam Reason', 'antispam-bee' ); ?>
+										</label>
+										<select name="ab_ignore_reasons[]" id="ab_ignore_reasons" size="5" multiple>
 											<?php foreach ( self::$defaults['reasons'] as $k => $v ) { ?>
 												<option <?php selected( in_array( $k, $options['ignore_reasons'], true ), true ); ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $v ); ?></option>
 											<?php } ?>
 										</select>
-										<label for="ab_ignore_reasons">
-											<?php esc_html_e( 'Spam Reason', 'antispam-bee' ); ?>
-										</label>
 									</li>
 								</ul>
 							</li>
