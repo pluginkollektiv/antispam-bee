@@ -102,7 +102,7 @@ final class Antispam_Bee_Columns {
 			<option value=""><?php esc_html_e( 'All spam reasons', 'antispam-bee' ); ?></option>
 			<?php
 			$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
-			$reasons     = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}commentmeta WHERE meta_key = 'antispam_bee_reason'", ARRAY_A );
+			$reasons     = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}commentmeta WHERE meta_key = 'antispam_bee_reason' group by meta_value", ARRAY_A );
 
 			foreach ( $reasons as $reason ) {
 				$label = Antispam_Bee::$defaults['reasons'][ $reason['meta_value'] ];
