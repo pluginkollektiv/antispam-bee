@@ -50,5 +50,6 @@ ln -s $PLUGIN_PATH/tests/Acceptance/Behat/env/mu-plugins/ $WORDPRESS_PATH/wp-con
 ls $WORDPRESS_PATH/wp-content/plugins
 
 vendor/bin/wp --path=$WORDPRESS_PATH plugin activate antispam-bee
+vendor/bin/wp --path=$WORDPRESS_PATH theme activate twentynineteen
 
 vendor/bin/behat
