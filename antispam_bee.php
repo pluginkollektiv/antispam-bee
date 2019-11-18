@@ -249,7 +249,7 @@ class Antispam_Bee {
 						)
 					);
 					add_action(
-						'pre_get_posts',
+						'pre_get_comments',
 						array(
 							'Antispam_Bee_Columns',
 							'set_orderby_query',
