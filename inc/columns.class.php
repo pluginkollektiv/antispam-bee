@@ -69,6 +69,8 @@ final class Antispam_Bee_Columns {
 		return $columns;
 	}
 
+    // phpcs:disable WordPress.VIP.SlowDBQuery.slow_db_query_meta_key
+    // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification
 	/**
 	 * Adjust orderby query
 	 *
@@ -78,17 +80,17 @@ final class Antispam_Bee_Columns {
 	 * @param   \WP_Comment_Query $query  Current WordPress query.
 	 */
 	public static function set_orderby_query( $query ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Input is used safely.
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : '';
 
 		if ( empty( $orderby ) || 'antispam_bee_reason' !== $orderby ) {
 			return;
 		}
 
-		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Necessary Meta_Query
 		$query->query_vars['meta_key'] = 'antispam_bee_reason';
 		$query->query_vars['orderby']  = 'meta_value';
 	}
+    // phpcs:enable WordPress.VIP.SlowDBQuery.slow_db_query_meta_key
+    // phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
 
 	/**
 	 * Print CSS for the plugin column
