@@ -255,6 +255,20 @@ class Antispam_Bee {
 							'set_orderby_query',
 						)
 					);
+					add_action(
+						'restrict_manage_comments',
+						array(
+							'Antispam_Bee_Columns',
+							'filter_columns',
+						)
+					);
+					add_action(
+						'pre_get_comments',
+						array(
+							'Antispam_Bee_Columns',
+							'filter_by_spam_reason',
+						)
+					);
 				}
 			}
 		} else {
