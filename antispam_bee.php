@@ -2352,34 +2352,46 @@ class Antispam_Bee {
 			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED'] );
 		}
 
-		preg_match_all ('/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g', $ip, $matches );
+		$ip = self::_sanitize_ip( $ip );
+		if ( $ip ) {
+			return $ip;
+		}
 
-		if ( $matches[0] != '' ) {
-			$ip = $ip;
-		} elseif ( isset( $_SERVER['REMOTE_ADDR']) ) {
+		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
 			$ip = wp_unslash( $_SERVER['REMOTE_ADDR'] );
-		} else {
-			return '';
+			return self::_sanitize_ip( $ip );
 		}
 
-		if ( strpos( $ip, ',' ) !== false ) {
-			$ips = explode( ',', $ip );
-			$ip  = trim( $ips[0] );
-		}
+		return '';
+	}
 
+	/**
+	 * Sanitize an IP string.
+	 *
+	 * @param string $raw_ip The raw IP.
+	 *
+	 * @return string The sanitized IP or an empty string.
+	 */
+	private static function _sanitize_ip( $raw_ip ) {
+
+		if ( strpos( $raw_ip, ',' ) !== false ) {
+			$ips    = explode( ',', $raw_ip );
+			$raw_ip = trim( $ips[0] );
+		}
 		if ( function_exists( 'filter_var' ) ) {
-			return filter_var(
-				$ip,
+			return (string) filter_var(
+				$raw_ip,
 				FILTER_VALIDATE_IP
 			);
 		}
 
-		return preg_replace(
+		return (string) preg_replace(
 			'/[^0-9a-f:\., ]/si',
 			'',
-			$ip
+			$raw_ip
 		);
 	}
+
 
 	/**
 	 * Add spam reason as comment data
