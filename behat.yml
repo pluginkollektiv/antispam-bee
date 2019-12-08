@@ -20,16 +20,24 @@ default:
   extensions:
     Behat\MinkExtension:
       base_url: http://localhost:8080    # [!] Change this for your local development.
-      browser_name: firefox
       default_session: default
       javascript_session: selenium2
+      browser_name: chrome
       sessions:
         default:
           goutte:
             guzzle_parameters:
-              verify: false               # Allow self-signed SSL certificates
+              verify: false   # Allow self-signed SSL certificates
         selenium2:
-          selenium2: ~
+          selenium2:
+            # This will probably be the same always, if you follow the guide for browsers below.
+            wd_host: http://localhost:4444/wd/hub
+            capabilities:
+              chrome:
+                switches:
+                  - "--headless"
+                  - "--disable-gpu"
+                  - "--no-sandbox"
 
     PaulGibbs\WordpressBehatExtension:
       path: %paths.base%/tmp/antispam-bee/     # [!] Change this for your local development.

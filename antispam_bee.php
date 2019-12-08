@@ -58,7 +58,7 @@ class Antispam_Bee {
 	 *
 	 * @var int
 	 */
-	private static $db_version = 1;
+	private static $db_version = 1.01;
 
 	/**
 	 * The base.
@@ -249,7 +249,7 @@ class Antispam_Bee {
 						)
 					);
 					add_action(
-						'pre_get_posts',
+						'pre_get_comments',
 						array(
 							'Antispam_Bee_Columns',
 							'set_orderby_query',
@@ -264,17 +264,6 @@ class Antispam_Bee {
 					__CLASS__,
 					'populate_post_id',
 				)
-			);
-
-			// Save IP hash, if comment is spam.
-			add_action(
-				'comment_post',
-				array(
-					__CLASS__,
-					'save_ip_hash',
-				),
-				10,
-				1
 			);
 
 			add_action(
@@ -971,7 +960,7 @@ class Antispam_Bee {
 
 		$wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM `$wpdb->comments` WHERE `comment_approved` = 'spam' AND SUBDATE(NOW(), %d) > comment_date_gmt",
+				"DELETE c, cm FROM `$wpdb->comments` AS c LEFT JOIN `$wpdb->commentmeta` AS cm ON (c.comment_ID = cm.comment_id) WHERE c.comment_approved = 'spam' AND SUBDATE(NOW(), %d) > c.comment_date_gmt",
 				$days
 			)
 		);
@@ -1195,7 +1184,7 @@ class Antispam_Bee {
 			$init_time_field = '';
 		}
 
-		$output = '<textarea autocomplete="nope" ' . $matches['before1'] . $matches['before2'] . $matches['before3'];
+		$output = '<textarea autocomplete="new-password" ' . $matches['before1'] . $matches['before2'] . $matches['before3'];
 
 		$id_script = '';
 		if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
@@ -1207,7 +1196,7 @@ class Antispam_Bee {
 		$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
 		$output .= $matches['after'] . '>';
 		$output .= $matches['content'];
-		$output .= '</textarea><textarea id="comment" aria-hidden="true" name="comment" autocomplete="nope" style="padding:0;clip:rect(1px, 1px, 1px, 1px);position:absolute !important;white-space:nowrap;height:1px;width:1px;overflow:hidden;" tabindex="-1"></textarea>';
+		$output .= '</textarea><textarea id="comment" aria-hidden="true" name="comment" autocomplete="new-password" style="padding:0;clip:rect(1px, 1px, 1px, 1px);position:absolute !important;white-space:nowrap;height:1px;width:1px;overflow:hidden;" tabindex="-1"></textarea>';
 
 		$output .= $id_script;
 		$output .= $init_time_field;
@@ -1556,7 +1545,7 @@ class Antispam_Bee {
 				'body' => 'target[t]?ed (visitors|traffic)|viagra|cialis',
 			),
 			array(
-				'body' => 'purchase amazing|buy amazing',
+				'body' => 'purchase amazing|buy amazing|luxurybrandsale',
 			),
 			array(
 				'body'  => 'dating|sex|lotto|pharmacy',
@@ -2406,31 +2395,6 @@ class Antispam_Bee {
 			'antispam_bee_reason',
 			self::$_reason
 		);
-	}
-
-	/**
-	 * Saves the IP address.
-	 *
-	 * @param int $comment_id The ID of the comment.
-	 */
-	public static function save_ip_hash( $comment_id ) {
-		$hashed_ip = self::hash_ip( self::get_client_ip() );
-		add_comment_meta(
-			$comment_id,
-			'antispam_bee_iphash',
-			$hashed_ip
-		);
-	}
-
-	/**
-	 * Hashes an IP address
-	 *
-	 * @param string $ip The IP address to hash.
-	 *
-	 * @return string
-	 */
-	public static function hash_ip( $ip ) {
-		return wp_hash_password( $ip );
 	}
 
 

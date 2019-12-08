@@ -132,21 +132,39 @@ Feature: Filter settings
 
   @javascript @db
   Scenario: RegEx
-    Given the option "regexp_check,flag_spam" is set
-    Given I am on "/?p=1"
-    Then I fill in "comment" with "Viagra helped me in those days."
-    Then I fill in "author" with "Monty"
-    Then I fill in "email" with "monty.1983@nuclear-secrets.com"
-    Then I fill in "url" with "http://nuclear-secrets.com"
-    Then I press "submit"
-    Then I should not see "Fatal"
-    Then I should see "Hello world"
-    Then I should not see "Notice"
+	Given the option "regexp_check,flag_spam" is set
+	Given I am on "/?p=1"
+	Then I fill in "comment" with "Viagra helped me in those days."
+	Then I fill in "author" with "Monty"
+	Then I fill in "email" with "monty.1983@nuclear-secrets.com"
+	Then I fill in "url" with "http://nuclear-secrets.com"
+	Then I press "submit"
+	Then I should not see "Fatal"
+	Then I should see "Hello world"
+	Then I should not see "Notice"
 
-    Given I am logged in as admin
-    Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
-    Then I should see "Monty"
-    Then I should see "Regular Expression"
+	Given I am logged in as admin
+	Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
+	Then I should see "Monty"
+	Then I should see "Regular Expression"
+
+  @javascript @db
+  Scenario: RegEx luxurybrandsale
+	Given the option "regexp_check,flag_spam" is set
+	Given I am on "/?p=1"
+	Then I fill in "comment" with "Come to our luxurybrandsale"
+	Then I fill in "author" with "Monty"
+	Then I fill in "email" with "monty.1983@nuclear-secrets.com"
+	Then I fill in "url" with "http://nuclear-secrets.com"
+	Then I press "submit"
+	Then I should not see "Fatal"
+	Then I should see "Hello world"
+	Then I should not see "Notice"
+
+	Given I am logged in as admin
+	Given I am on "/wp-admin/edit-comments.php?comment_status=spam"
+	Then I should see "Monty"
+	Then I should see "Regular Expression"
 
   @javascript @db
   Scenario: RegEx Disabled
