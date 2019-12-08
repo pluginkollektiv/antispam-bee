@@ -2363,6 +2363,7 @@ class Antispam_Bee {
 		}
 
 		return '';
+        // phpcs:enable WordPress.VIP.ValidatedSanitizedInput.InputNotSanitized
 	}
 
 	/**
