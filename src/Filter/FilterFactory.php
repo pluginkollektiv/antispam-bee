@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Pluginkollektiv\AntispamBee\Filter;
 
+use Pluginkollektiv\AntispamBee\Filter\Preparer\HoneypotPreparer;
 use Pluginkollektiv\AntispamBee\Option\NullOption;
 use Pluginkollektiv\AntispamBee\Option\OptionFactory;
 use Pluginkollektiv\AntispamBee\Filter\Preparer\TimeSpamPreparer;
@@ -80,6 +81,10 @@ class FilterFactory
         case 'time_check':
             $preparer = new TimeSpamPreparer('comment_form');
             $filter   = new TimeSpam($this->option_factory, $preparer);
+            break;
+        case 'honeypot':
+            $preparer = new HoneypotPreparer();
+            $filter   = new Honeypot($this->option_factory, $preparer);
             break;
         case 'gravatar_check':
             $filter = new ValidGravatar($this->option_factory);

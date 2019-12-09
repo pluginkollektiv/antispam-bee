@@ -55,11 +55,12 @@ class AntispamBeeConfig implements ConfigInterface
     public function antispambee_filters() : array
     {
         return [
-        'bbcode_check',
-        'spam_ip',
-        'country_code',
-        'time_check',
-        'gravatar_check',
+            'honeypot',
+            'bbcode_check',
+            'spam_ip',
+            'country_code',
+            'time_check',
+            'gravatar_check',
         ];
     }
 
@@ -79,7 +80,8 @@ class AntispamBeeConfig implements ConfigInterface
 
     public function get( string $key )
     {
-        return $this->config[ $key ];
+        $value = $this->config[ $key ];
+        return $value;
     }
 
     public function set( string $key, $value ) : bool

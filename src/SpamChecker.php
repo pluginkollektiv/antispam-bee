@@ -70,17 +70,16 @@ class SpamChecker
 
     private function spam_check( DataInterface $data )
     {
-        foreach ( $this->repository->active_spam_filters() as $filter ) {
+        $filters = $this->repository->active_spam_filters();
+        foreach ( $filters as $filter ) {
             if ($this->reasons->total_probability() >= 1 ) {
                 continue;
             }
             if (! $filter->can_check_data($data) ) {
                 continue;
             }
-            if (! $data->type()) {
 
-                $this->reasons->add_reason($filter->id(), $filter->filter($data));
-            }
+            $this->reasons->add_reason($filter->id(), $filter->filter($data));
         }
 
         return $this->reasons->total_probability() > .5;
