@@ -74,6 +74,7 @@ class IP
     /**
      * Detects the IP of the client.
      *
+     * @ToDo: Possible regression, see https://github.com/pluginkollektiv/antispam-bee/issues/286
      * @param  string $old_ip Will be returned as a fallback, if no IP has been found.
      * @return string
      */
