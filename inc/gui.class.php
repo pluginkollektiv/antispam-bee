@@ -308,7 +308,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											<?php
 												printf(
 													/* translators: 1: opening <a> tag with link to ISO codes reference. 2: closing </a> tag. */
-													esc_html__( 'Denied  %1$sISO Codes%2$s for this option.', 'antispam-bee' ),
+													esc_html__( 'Denied  %1$sISO country codes%2$s for this option.', 'antispam-bee' ),
 													wp_kses_post( $iso_codes_link ),
 													'</a>'
 												);
@@ -323,7 +323,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											<?php
 												printf(
 													/* translators: 1: opening <a> tag with link to ISO codes reference. 2: closing </a> tag. */
-													esc_html__( 'Allowed  %1$sISO Codes%2$s for this option.', 'antispam-bee' ),
+													esc_html__( 'Allowed  %1$sISO country codes%2$s for this option.', 'antispam-bee' ),
 													wp_kses_post( $iso_codes_link ),
 													'</a>'
 												);
