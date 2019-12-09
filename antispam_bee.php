@@ -2387,7 +2387,7 @@ class Antispam_Bee {
 		}
 
 		return (string) preg_replace(
-			'/[^0-9a-f:\., ]/si',
+			'/[^0-9a-f:. ]/si',
 			'',
 			$raw_ip
 		);
