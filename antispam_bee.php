@@ -858,6 +858,10 @@ class Antispam_Bee {
 			);
 		}
 
+		if ( null === self::$defaults ) {
+			self::_init_internal_vars();
+		}
+
 		return wp_parse_args(
 			$options,
 			self::$defaults['options']
