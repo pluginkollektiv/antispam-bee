@@ -35,15 +35,16 @@ use Pluginkollektiv\AntispamBee\Repository\PostProcessorRepository;
 use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 use Pluginkollektiv\AntispamBee\Settings\Controller;
 
+if ( ! class_exists( AntispamBeeConfig::class ) ) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
+
 add_action(
 	'plugins_loaded',
 	function() {
 
 		global $wpdb;
 
-		if ( ! class_exists( AntispamBeeConfig::class ) ) {
-			require_once __DIR__ . '/vendor/autoload.php';
-		}
 		$option_factory = new OptionFactory();
 		$ip             = new IP();
 		$filter_factory = new FilterFactory( $ip, $wpdb, $option_factory );
@@ -155,5 +156,6 @@ add_action(
 			2
 		);
 
-	}
+	},
+    PHP_INT_MAX
 );
