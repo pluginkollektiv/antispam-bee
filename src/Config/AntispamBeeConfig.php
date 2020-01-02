@@ -113,42 +113,33 @@ class AntispamBeeConfig implements ConfigInterface
         return true;
     }
 
-    public function deactivate_filter( string $filter ) : bool
+    public function deactivate_filter( string $filterKey ) : bool
     {
-        $filter = $this->filter_factory->from_id($filter);
-        if (is_a($filter, NullFilter::class) ) {
+        $filter = $this->filter_factory->from_id($filterKey);
+        if (! is_a($filter, NullFilter::class) && ! $filter->options()->activateable() ) {
             return false;
         }
-        if (! $filter->options()->activateable() ) {
-            return false;
-        }
-        unset($this->config['active_filters'][ $filter->id() ]);
+        unset($this->config['active_filters'][ $filterKey ]);
         return true;
     }
 
-    public function activate_processor( string $processor ) : bool
+    public function activate_processor( string $processorKey ) : bool
     {
-        $processor = $this->post_processor_factory->from_id($processor);
-        if (is_a($processor, NullPostProcessor::class) ) {
+        $processor = $this->post_processor_factory->from_id($processorKey);
+        if (! is_a($processor, NullPostProcessor::class) && ! $processor->options()->activateable() ) {
             return false;
         }
-        if (! $processor->options()->activateable() ) {
-            return false;
-        }
-        $this->config['active_processors'][ $processor->id() ] = true;
+        $this->config['active_processors'][ $processorKey ] = true;
         return true;
     }
 
-    public function deactivate_processor( string $processor ) : bool
+    public function deactivate_processor( string $processorKey ) : bool
     {
-        $processor = $this->post_processor_factory->from_id($processor);
-        if (is_a($processor, NullPostProcessor::class) ) {
+        $processor = $this->post_processor_factory->from_id($processorKey);
+        if (! is_a($processor, NullPostProcessor::class) && ! $processor->options()->activateable() ) {
             return false;
         }
-        if (! $processor->options()->activateable() ) {
-            return false;
-        }
-        unset($this->config['active_processors'][ $processor->id() ]);
+        unset($this->config['active_processors'][ $processorKey ]);
         return true;
     }
 
