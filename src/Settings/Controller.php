@@ -278,7 +278,7 @@ class Controller
             return false;
         }
 
-        if (is_array($_POST['antispambee_field_config'][ $type ]) ) {
+        if (isset($_POST['antispambee_field_config'][ $type ]) && is_array($_POST['antispambee_field_config'][ $type ]) ) {
             $raw_configuration = wp_unslash($_POST['antispambee_field_config'][ $type ]); // Input var okay.
             $success           = $this->set_configuration($raw_configuration, $type);
         }
