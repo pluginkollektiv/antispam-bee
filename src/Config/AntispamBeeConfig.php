@@ -103,16 +103,13 @@ class AntispamBeeConfig implements ConfigInterface
         return $this->sub_configs[ $key ];
     }
 
-    public function activate_filter( string $filter ) : bool
+    public function activate_filter( string $filterKey ) : bool
     {
-        $filter = $this->filter_factory->from_id($filter);
-        if (is_a($filter, NullFilter::class) ) {
+        $filter = $this->filter_factory->from_id($filterKey);
+        if (! is_a($filter, NullFilter::class) && ! $filter->options()->activateable() ) {
             return false;
         }
-        if (! $filter->options()->activateable() ) {
-            return false;
-        }
-        $this->config['active_filters'][ $filter->id() ] = true;
+        $this->config['active_filters'][ $filterKey ] = true;
         return true;
     }
 

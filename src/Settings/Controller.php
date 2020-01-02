@@ -264,10 +264,10 @@ class Controller
             $result = false;
 
             if ('filters' === $type ) {
-                $result = ( 1 === (int) $value ) ? $this->config->activate_filter($key) : $this->config->deactivate_filter($key);
+                $result = ( 1 === $value ) ? $this->config->activate_filter($key) : $this->config->deactivate_filter($key);
             }
             if ('post-processors' === $type ) {
-                $result = ( 1 === (int) $value ) ? $this->config->activate_processor($key) : $this->config->deactivate_processor($key);
+                $result = ( 1 === $value ) ? $this->config->activate_processor($key) : $this->config->deactivate_processor($key);
             }
             if (! $result ) {
                 $success = false;
