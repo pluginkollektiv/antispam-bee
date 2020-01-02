@@ -27,7 +27,7 @@ class SaveReason implements PostProcessorInterface
     public function execute( ReasonsRepository $reason, DataInterface $data ) : bool
     {
         $this->reason = $reason;
-        add_action(
+        return (bool) add_action(
             'comment_post',
             [
             $this,
