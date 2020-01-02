@@ -33,4 +33,19 @@ class CommentDataFactory
         }
         return new CommentData($data);
     }
+
+    public function fromComment(\WP_Comment $comment) : CommentData
+    {
+        $data = [
+            'comment_author' => $comment->comment_author,
+            'comment_author_email' => $comment->comment_author_email,
+            'comment_author_url' => $comment->comment_author_url,
+            'comment_content' => $comment->comment_content,
+            'user_ID' => (int) $comment->user_id,
+            'comment_author_IP' => $comment->comment_author_IP,
+            'comment_post_ID' => (int) $comment->comment_post_ID,
+            'comment_type' => $comment->comment_type,
+        ];
+        return $this->get($data);
+    }
 }
