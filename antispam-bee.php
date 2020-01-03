@@ -47,18 +47,16 @@ add_action(
 
 		$option_factory = new OptionFactory();
 		$ip             = new IP();
-		$filter_factory = new FilterFactory( $ip, $wpdb, $option_factory );
 
 		$log_file               = ( defined( 'ANTISPAM_BEE_LOG_FILE' ) ) ? (string) ANTISPAM_BEE_LOG_FILE : '';
 		$logger                 = new FileLogger( $log_file );
-		$post_processor_factory = new PostProcessorFactory( $option_factory, $logger );
 
 		$sub_configs = [
 			'filters'         => new GenericWPOption( 'antispambee_filter' ),
 			'post_processors' => new GenericWPOption( 'antispambee_post_processors' ),
 		];
 		$raw_options = get_option( 'antispam_bee', [] );
-		$config      = new AntispamBeeConfig( $raw_options, 'antispam_bee', $filter_factory, $post_processor_factory, $sub_configs );
+		$config      = new AntispamBeeConfig( $raw_options, 'antispam_bee', $sub_configs );
 
 		$filter_option_factory    = new OptionFactory( $sub_configs['filters'] );
 		$filter_factory           = new FilterFactory( $ip, $wpdb, $filter_option_factory );
@@ -94,7 +92,7 @@ add_action(
 			},
 			0
 		);
-		$registrar = new Registrar( $config );
+		$registrar = new Registrar();
 		$registrar->run();
 		$filter_repository         = new FilterRepository( $config, ...$registrar->registered_filters() );
 		$post_processor_repository = new PostProcessorRepository( $config, ...$registrar->registered_post_processors() );

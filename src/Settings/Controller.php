@@ -264,10 +264,22 @@ class Controller
             $result = false;
 
             if ('filters' === $type ) {
-                $result = ( 1 === $value ) ? $this->config->activate_filter($key) : $this->config->deactivate_filter($key);
+                try {
+                    $filter = $this->filter_repository->from_id($key);
+                    $result = (1 === $value)
+                        ? $this->config->activate_filter($filter)
+                        : $this->config->deactivate_filter($filter);
+                } catch (Runtime $error) {
+                    $result = false;
+                }
             }
             if ('post-processors' === $type ) {
-                $result = ( 1 === $value ) ? $this->config->activate_processor($key) : $this->config->deactivate_processor($key);
+                try {
+                    $processor = $this->post_processor_repository->from_id($key);
+                    $result = ( 1 === $value ) ? $this->config->activate_processor($processor) : $this->config->deactivate_processor($processor);
+                } catch (Runtime $error) {
+                    $result = false;
+                }
             }
             if (! $result ) {
                 $success = false;

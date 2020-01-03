@@ -5,9 +5,11 @@ namespace Pluginkollektiv\AntispamBee\Config;
 
 use Pluginkollektiv\AntispamBee\Exceptions\Runtime;
 use Pluginkollektiv\AntispamBee\Filter\FilterFactory;
+use Pluginkollektiv\AntispamBee\Filter\FilterInterface;
 use Pluginkollektiv\AntispamBee\Filter\NullFilter;
 use Pluginkollektiv\AntispamBee\PostProcessor\NullPostProcessor;
 use Pluginkollektiv\AntispamBee\PostProcessor\PostProcessorFactory;
+use Pluginkollektiv\AntispamBee\PostProcessor\PostProcessorInterface;
 
 /**
  * Class Options
@@ -19,8 +21,6 @@ class AntispamBeeConfig implements ConfigInterface
 
     private $config;
     private $config_key;
-    private $filter_factory;
-    private $post_processor_factory;
 
     /**
      * @var ConfigInterface[] $sub_configs
@@ -30,15 +30,11 @@ class AntispamBeeConfig implements ConfigInterface
     public function __construct(
         array $config,
         string $config_key,
-        FilterFactory $filter_factory,
-        PostProcessorFactory $post_processor_factory,
         array $sub_configs
     ) {
 
         $this->config                 = $config;
         $this->config_key             = $config_key;
-        $this->filter_factory         = $filter_factory;
-        $this->post_processor_factory = $post_processor_factory;
         foreach ( $sub_configs as $key => $val ) {
             if (! is_a($val, ConfigInterface::class) ) {
                 continue;
@@ -103,43 +99,39 @@ class AntispamBeeConfig implements ConfigInterface
         return $this->sub_configs[ $key ];
     }
 
-    public function activate_filter( string $filterKey ) : bool
+    public function activate_filter( FilterInterface $filter ) : bool
     {
-        $filter = $this->filter_factory->from_id($filterKey);
-        if (! is_a($filter, NullFilter::class) && ! $filter->options()->activateable() ) {
+        if (! $filter->options()->activateable() ) {
             return false;
         }
-        $this->config['active_filters'][ $filterKey ] = true;
+        $this->config['active_filters'][ $filter->id() ] = true;
         return true;
     }
 
-    public function deactivate_filter( string $filterKey ) : bool
+    public function deactivate_filter( FilterInterface $filter ) : bool
     {
-        $filter = $this->filter_factory->from_id($filterKey);
-        if (! is_a($filter, NullFilter::class) && ! $filter->options()->activateable() ) {
+        if (! $filter->options()->activateable() ) {
             return false;
         }
-        unset($this->config['active_filters'][ $filterKey ]);
+        unset($this->config['active_filters'][ $filter->id() ]);
         return true;
     }
 
-    public function activate_processor( string $processorKey ) : bool
+    public function activate_processor( PostProcessorInterface $processor ) : bool
     {
-        $processor = $this->post_processor_factory->from_id($processorKey);
-        if (! is_a($processor, NullPostProcessor::class) && ! $processor->options()->activateable() ) {
+        if (! $processor->options()->activateable() ) {
             return false;
         }
-        $this->config['active_processors'][ $processorKey ] = true;
+        $this->config['active_processors'][ $processor->id() ] = true;
         return true;
     }
 
-    public function deactivate_processor( string $processorKey ) : bool
+    public function deactivate_processor( PostProcessorInterface $processor ) : bool
     {
-        $processor = $this->post_processor_factory->from_id($processorKey);
-        if (! is_a($processor, NullPostProcessor::class) && ! $processor->options()->activateable() ) {
+        if (! $processor->options()->activateable() ) {
             return false;
         }
-        unset($this->config['active_processors'][ $processorKey ]);
+        unset($this->config['active_processors'][ $processor->id() ]);
         return true;
     }
 
