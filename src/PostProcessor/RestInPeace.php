@@ -1,4 +1,10 @@
 <?php
+/**
+ * If this post processor is active the PHP process will die, once a spam comment has been detected.
+ *
+ * @package Antispam Bee PostProcessor
+ */
+
 declare( strict_types = 1 );
 
 namespace Pluginkollektiv\AntispamBee\PostProcessor;
@@ -8,50 +14,88 @@ use Pluginkollektiv\AntispamBee\Option\OptionFactory;
 use Pluginkollektiv\AntispamBee\Option\OptionInterface;
 use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
-class RestInPeace implements PostProcessorInterface
-{
+/**
+ * Class RestInPeace
+ *
+ * @package Pluginkollektiv\AntispamBee\PostProcessor
+ */
+class RestInPeace implements PostProcessorInterface {
 
-    private $options;
-    private $option_factory;
+	/**
+	 * The options for the rest in peace processor.
+	 *
+	 * @var OptionInterface
+	 */
+	private $options;
 
-    public function __construct( OptionFactory $option_factory )
-    {
-        $this->option_factory = $option_factory;
-    }
+	/**
+	 * The option factory.
+	 *
+	 * @var OptionFactory
+	 */
+	private $option_factory;
 
-    public function execute( ReasonsRepository $reason, DataInterface $data ) : bool
-    {
+	/**
+	 * RestInPeace constructor.
+	 *
+	 * @param OptionFactory $option_factory The option factory.
+	 */
+	public function __construct( OptionFactory $option_factory ) {
+		$this->option_factory = $option_factory;
+	}
 
-        return false !== add_action(
-            'pre_comment_approved',
-            function () {
-                status_header(403);
-                die('Spam deleted.');
-            }
-        );
-    }
+	/**
+	 * Executes the rest in peace post processor.
+	 *
+	 * @param ReasonsRepository $reason The reason why the current data is spam.
+	 * @param DataInterface     $data The current data.
+	 *
+	 * @return bool
+	 */
+	public function execute( ReasonsRepository $reason, DataInterface $data ) : bool {
 
-    public function id() : string
-    {
-        return 'rest_in_peace';
-    }
+		return false !== add_action(
+			'pre_comment_approved',
+			function () {
+				status_header( 403 );
+				die( 'Spam deleted.' );
+			}
+		);
+	}
 
-    public function register() : bool
-    {
-        return true;
-    }
+	/**
+	 * The ID of the rest in peace post processor.
+	 *
+	 * @return string
+	 */
+	public function id() : string {
+		return 'rest_in_peace';
+	}
 
-    public function options() : OptionInterface
-    {
+	/**
+	 * Registers the rest in peace post processor.
+	 *
+	 * @return bool
+	 */
+	public function register() : bool {
+		return true;
+	}
 
-        if ($this->options ) {
-            return $this->options;
-        }
-        $args          = [
-        'name'        => __('Do not save spam', 'antispam-bee'),
-        'description' => __('Do not keep spam in the blog.', 'antispam-bee'),
-        ];
-        $this->options = $this->option_factory->from_args($args);
-        return $this->options;
-    }
+	/**
+	 * Returns the options for the rest in peace post processor.
+	 *
+	 * @return OptionInterface
+	 */
+	public function options() : OptionInterface {
+
+		if ( $this->options ) {
+			return $this->options;
+		}
+		$args          = [
+			'name'        => __( 'Do not save spam', 'antispam-bee' ),
+			'description' => __( 'Do not keep spam in the blog.', 'antispam-bee' ),
+		];
+		$this->options = $this->option_factory->from_args( $args );
+		return $this->options;
+	}
 }

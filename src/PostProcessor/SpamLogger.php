@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Spam Logger Post processor logs spam using a LoggerInterface implementation.
+ *
+ * @package Antispam Bee PostProcessor
+ */
+
 declare( strict_types = 1 );
 
 namespace Pluginkollektiv\AntispamBee\PostProcessor;
@@ -9,46 +15,84 @@ use Pluginkollektiv\AntispamBee\Option\OptionInterface;
 use Pluginkollektiv\AntispamBee\Logger\LoggerInterface;
 use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
-class SpamLogger implements PostProcessorInterface
-{
+/**
+ * Class SpamLogger
+ *
+ * @package Pluginkollektiv\AntispamBee\PostProcessor
+ */
+class SpamLogger implements PostProcessorInterface {
 
-    private $logger;
-    private $option_factory;
+	/**
+	 * The logger.
+	 *
+	 * @var LoggerInterface
+	 */
+	private $logger;
 
+	/**
+	 * The option factory.
+	 *
+	 * @var OptionFactory
+	 */
+	private $option_factory;
 
-    public function __construct( LoggerInterface $logger, OptionFactory $option_factory )
-    {
-        $this->logger         = $logger;
-        $this->option_factory = $option_factory;
-    }
+	/**
+	 * SpamLogger constructor.
+	 *
+	 * @param LoggerInterface $logger The logger.
+	 * @param OptionFactory   $option_factory The option factory.
+	 */
+	public function __construct( LoggerInterface $logger, OptionFactory $option_factory ) {
+		$this->logger         = $logger;
+		$this->option_factory = $option_factory;
+	}
 
-    public function execute( ReasonsRepository $reason, DataInterface $data ) : bool
-    {
+	/**
+	 * Executes the processor.
+	 *
+	 * @param ReasonsRepository $reason The reason repository.
+	 * @param DataInterface     $data The current data.
+	 *
+	 * @return bool
+	 */
+	public function execute( ReasonsRepository $reason, DataInterface $data ) : bool {
 
-        if (! $this->logger->is_ready() ) {
-            return false;
-        }
-        $log = sprintf(
-            '%s comment for post=%d from host=%s marked as spam',
-            current_time('mysql'),
-            $data->post(),
-            $data->ip()
-        );
-        return $this->logger($log);
-    }
+		if ( ! $this->logger->is_ready() ) {
+			return false;
+		}
+		$log = sprintf(
+			'%s comment for post=%d from host=%s marked as spam',
+			current_time( 'mysql' ),
+			$data->post(),
+			$data->ip()
+		);
+		return $this->logger( $log );
+	}
 
-    public function id() : string
-    {
-        return 'spamlog';
-    }
+	/**
+	 * The ID of the spam logger.
+	 *
+	 * @return string
+	 */
+	public function id() : string {
+		return 'spamlog';
+	}
 
-    public function register() : bool
-    {
-        return true;
-    }
+	/**
+	 * Registers the logger.
+	 *
+	 * @return bool
+	 */
+	public function register() : bool {
+		return true;
+	}
 
-    public function options() : OptionInterface
-    {
-        return $this->option_factory->null();
-    }
+	/**
+	 * Returns the options for the spam logger.
+	 *
+	 * @return OptionInterface
+	 */
+	public function options() : OptionInterface {
+		return $this->option_factory->null();
+	}
 }

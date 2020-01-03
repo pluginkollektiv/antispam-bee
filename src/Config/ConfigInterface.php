@@ -1,19 +1,69 @@
 <?php
+/**
+ * The configuration interface
+ *
+ * @package Antispam Bee Config
+ */
 
 namespace Pluginkollektiv\AntispamBee\Config;
 
-interface ConfigInterface
-{
+/**
+ * Interface ConfigInterface
+ *
+ * @package Pluginkollektiv\AntispamBee\Config
+ */
+interface ConfigInterface {
 
-    public function has( string $key) : bool;
+	/**
+	 * Whether a given key exists.
+	 *
+	 * @param string $key The key.
+	 *
+	 * @return bool
+	 */
+	public function has( string $key) : bool;
 
-    public function get( string $key);
+	/**
+	 * Returns the value for a given key.
+	 *
+	 * @param string $key The key.
+	 *
+	 * @return mixed
+	 */
+	public function get( string $key);
 
-    public function has_config( string $key ) : bool;
+	/**
+	 * Whether a specific sub config exists.
+	 *
+	 * @param string $key The key.
+	 *
+	 * @return bool
+	 */
+	public function has_config( string $key ) : bool;
 
-    public function get_config( string $key ) : ConfigInterface;
+	/**
+	 * Returns a specific sub config.
+	 *
+	 * @param string $key The key.
+	 *
+	 * @return ConfigInterface
+	 */
+	public function get_config( string $key ) : ConfigInterface;
 
-    public function set( string $key, $value) : bool;
+	/**
+	 * Sets a specific configuration.
+	 *
+	 * @param string $key The key to set.
+	 * @param mixed  $value The value to set.
+	 *
+	 * @return bool
+	 */
+	public function set( string $key, $value) : bool;
 
-    public function persist() : bool;
+	/**
+	 * Persists the current configuration.
+	 *
+	 * @return bool
+	 */
+	public function persist() : bool;
 }

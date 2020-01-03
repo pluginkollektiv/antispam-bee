@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Null Post Processor.
+ *
+ * @package Antispam Bee PostProcessor
+ */
+
 declare( strict_types = 1 );
 
 namespace Pluginkollektiv\AntispamBee\PostProcessor;
@@ -8,33 +14,65 @@ use Pluginkollektiv\AntispamBee\Option\OptionInterface;
 use Pluginkollektiv\AntispamBee\Option\OptionFactory;
 use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
-class NullPostProcessor implements PostProcessorInterface
-{
+/**
+ * Class NullPostProcessor
+ *
+ * @package Pluginkollektiv\AntispamBee\PostProcessor
+ */
+class NullPostProcessor implements PostProcessorInterface {
 
-    private $option_factory;
+	/**
+	 * The Option factory.
+	 *
+	 * @var OptionFactory
+	 */
+	private $option_factory;
 
+	/**
+	 * NullPostProcessor constructor.
+	 *
+	 * @param OptionFactory $option_factory The option factory.
+	 */
+	public function __construct( OptionFactory $option_factory ) {
+		$this->option_factory = $option_factory;
+	}
 
-    public function __construct( OptionFactory $option_factory )
-    {
-        $this->option_factory = $option_factory;
-    }
-    public function execute( ReasonsRepository $reason, DataInterface $data ) : bool
-    {
-        return false;
-    }
+	/**
+	 * Executes the post procession.
+	 *
+	 * @param ReasonsRepository $reason The reason repository.
+	 * @param DataInterface     $data The current data.
+	 *
+	 * @return bool
+	 */
+	public function execute( ReasonsRepository $reason, DataInterface $data ) : bool {
+		return false;
+	}
 
-    public function id() : string
-    {
-        return '';
-    }
+	/**
+	 * The ID of the processor.
+	 *
+	 * @return string
+	 */
+	public function id() : string {
+		return '';
+	}
 
-    public function register() : bool
-    {
-        return true;
-    }
+	/**
+	 * Registers the processor.
+	 *
+	 * @return bool
+	 */
+	public function register() : bool {
+		return true;
+	}
 
-    public function options() : OptionInterface
-    {
-        return $this->option_factory->null();
-    }
+	/**
+	 * Returns the NullOption.
+	 *
+	 * @return OptionInterface
+	 */
+	public function options() : OptionInterface {
+		return $this->option_factory->null();
+	}
 }

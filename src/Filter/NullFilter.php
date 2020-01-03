@@ -6,6 +6,7 @@
  *
  * @package Antispam Bee Filter
  */
+
 declare( strict_types = 1 );
 
 namespace Pluginkollektiv\AntispamBee\Filter;
@@ -19,75 +20,70 @@ use Pluginkollektiv\AntispamBee\Option\OptionInterface;
  *
  * @package Pluginkollektiv\AntispamBee\Filter
  */
-class NullFilter implements FilterInterface
-{
+class NullFilter implements FilterInterface {
 
-    /**
-     * @var NullOption $options
-     */
-    private $options;
+	/**
+	 * The options for the NullFilter.
+	 *
+	 * @var NullOption $options
+	 */
+	private $options;
 
-    /**
-     * NullFilter constructor.
-     *
-     * @param NullOption $options
-     */
-    public function __construct( NullOption $options )
-    {
-        $this->options = $options;
-    }
+	/**
+	 * NullFilter constructor.
+	 *
+	 * @param NullOption $options The options for this filter.
+	 */
+	public function __construct( NullOption $options ) {
+		$this->options = $options;
+	}
 
-    /**
-     * Won't filter anything.
-     *
-     * @param DataInterface $data
-     *
-     * @return float
-     */
-    public function filter( DataInterface $data ) : float
-    {
-        return 0;
-    }
+	/**
+	 * Won't filter anything.
+	 *
+	 * @param DataInterface $data The data to be checked.
+	 *
+	 * @return float
+	 */
+	public function filter( DataInterface $data ) : float {
+		return 0;
+	}
 
-    /**
-     * Won't register anything.
-     *
-     * @return bool
-     */
-    public function register() : bool
-    {
-        return true;
-    }
+	/**
+	 * Won't register anything.
+	 *
+	 * @return bool
+	 */
+	public function register() : bool {
+		return true;
+	}
 
-    /**
-     * Returns a NullOption.
-     *
-     * @return OptionInterface
-     */
-    public function options() : OptionInterface
-    {
-        return $this->options;
-    }
+	/**
+	 * Returns a NullOption.
+	 *
+	 * @return OptionInterface
+	 */
+	public function options() : OptionInterface {
+		return $this->options;
+	}
 
-    /**
-     * Returns the ID.
-     *
-     * @return string
-     */
-    public function id() : string
-    {
-        return '';
-    }
+	/**
+	 * Returns the ID.
+	 *
+	 * @return string
+	 */
+	public function id() : string {
+		return '';
+	}
 
-    /**
-     * Returns whether a data object can be cheked.
-     *
-     * @param DataInterface $data
-     *
-     * @return bool
-     */
-    public function can_check_data(DataInterface $data): bool
-    {
-        return false;
-    }
+	/**
+	 * Returns whether a data object can be checked.
+	 *
+	 * @param DataInterface $data The data to be checked.
+	 *
+	 * @return bool
+	 */
+	public function can_check_data( DataInterface $data ) : bool {
+		return false;
+	}
 }

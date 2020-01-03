@@ -16,68 +16,65 @@ namespace Pluginkollektiv\AntispamBee\Filter\Preparer;
  *
  * @package Pluginkollektiv\AntispamBee\Preparer
  */
-class TimeSpamPreparer implements PreparerInterface
-{
+class TimeSpamPreparer implements PreparerInterface {
 
-    /**
-     * The arguments needed to render the field.
-     *
-     * @var mixed
-     */
-    private $args;
 
-    /**
-     * The action hook.
-     *
-     * @var string
-     */
-    private $action_hook;
+	/**
+	 * The arguments needed to render the field.
+	 *
+	 * @var mixed
+	 */
+	private $args;
 
-    /**
-     * TimeSpamPreparer constructor.
-     *
-     * @param string $action_hook The action, in which the method should hook into.
-     */
-    public function __construct( string $action_hook )
-    {
-        $this->action_hook = $action_hook;
-    }
+	/**
+	 * The action hook.
+	 *
+	 * @var string
+	 */
+	private $action_hook;
 
-    /**
-     * Hooks into 'comment_form'.
-     *
-     * @param mixed $args The arguments.
-     *
-     * @return bool.
-     */
-    public function register( $args = null ) : bool
-    {
+	/**
+	 * TimeSpamPreparer constructor.
+	 *
+	 * @param string $action_hook The action, in which the method should hook into.
+	 */
+	public function __construct( string $action_hook ) {
+		$this->action_hook = $action_hook;
+	}
 
-        $this->args = $args;
+	/**
+	 * Hooks into 'comment_form'.
+	 *
+	 * @param mixed $args The arguments.
+	 *
+	 * @return bool.
+	 */
+	public function register( $args = null ) : bool {
 
-        add_action(
-            $this->action_hook,
-            [
-            $this,
-            'prepare',
-            ]
-        );
+		$this->args = $args;
 
-        return true;
-    }
+		add_action(
+			$this->action_hook,
+			[
+				$this,
+				'prepare',
+			]
+		);
 
-    /**
-     * Renders the time field for the TimeSpamFilter.
-     *
-     * @return bool
-     */
-    public function prepare() : bool
-    {
-        echo '<input
+		return true;
+	}
+
+	/**
+	 * Renders the time field for the TimeSpamFilter.
+	 *
+	 * @return bool
+	 */
+	public function prepare() : bool {
+		echo '<input
             type="hidden"
-            name="' . esc_attr($this->args) . '"
+            name="' . esc_attr( $this->args ) . '"
             value="' . (int) time() . '"
         />';
-        return true;
-    }
+		return true;
+	}
 }

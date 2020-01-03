@@ -1,4 +1,10 @@
 <?php
+/**
+ * The SaveReason post processor saves the reason, why a comment was marked as spam in the comments meta data.
+ *
+ * @package Antispam Bee PostProcessor
+ */
+
 declare( strict_types = 1 );
 
 namespace Pluginkollektiv\AntispamBee\PostProcessor;
@@ -8,76 +14,122 @@ use Pluginkollektiv\AntispamBee\Option\OptionFactory;
 use Pluginkollektiv\AntispamBee\Option\OptionInterface;
 use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
-class SaveReason implements PostProcessorInterface
-{
+/**
+ * Class SaveReason
+ *
+ * @package Pluginkollektiv\AntispamBee\PostProcessor
+ */
+class SaveReason implements PostProcessorInterface {
 
-    private $options;
+	/**
+	 * The options.
+	 *
+	 * @var OptionInterface
+	 */
+	private $options;
 
-    /**
-     * @var ReasonsRepository|null
-     */
-    private $reason;
-    private $option_factory;
+	/**
+	 * The reasons repository.
+	 *
+	 * @var ReasonsRepository|null
+	 */
+	private $reason;
 
-    public function __construct( OptionFactory $option_factory )
-    {
-        $this->option_factory = $option_factory;
-    }
+	/**
+	 * The option factory.
+	 *
+	 * @var OptionFactory
+	 */
+	private $option_factory;
 
-    public function execute( ReasonsRepository $reason, DataInterface $data ) : bool
-    {
-        $this->reason = $reason;
-        return (bool) add_action(
-            'comment_post',
-            [
-            $this,
-            'add_spam_reason_to_comment',
-            ]
-        );
-    }
+	/**
+	 * SaveReason constructor.
+	 *
+	 * @param OptionFactory $option_factory The option factory.
+	 */
+	public function __construct( OptionFactory $option_factory ) {
+		$this->option_factory = $option_factory;
+	}
 
-    public function add_spam_reason_to_comment( $comment_id ) : bool
-    {
+	/**
+	 * Executds the save reason post processor.
+	 *
+	 * @param ReasonsRepository $reason The reasons repository.
+	 * @param DataInterface     $data The current data.
+	 *
+	 * @return bool
+	 */
+	public function execute( ReasonsRepository $reason, DataInterface $data ) : bool {
+		$this->reason = $reason;
+		return (bool) add_action(
+			'comment_post',
+			[
+				$this,
+				'add_spam_reason_to_comment',
+			]
+		);
+	}
 
-        if (! is_a($this->reason, ReasonsRepository::class) ) {
-            return false;
-        }
+	/**
+	 * Adds the reasons as meta data to the comment.
+	 *
+	 * @param int $comment_id The ID of the comment.
+	 *
+	 * @return bool
+	 */
+	public function add_spam_reason_to_comment( $comment_id ) : bool {
 
-        /**
-         * ToDo: This is a different data structure than in ASB2. If kept, this should be handled in
-         * the Spam Reason view. Another possibility would be to just save the highest reason, but I
-         * think, there can be quite some advantages to save all reasons further down the road.
-         */
-        return false !== add_comment_meta(
-            $comment_id,
-            'antispam_bee_reason',
-            $this->reason->all()
-        );
-    }
+		if ( ! is_a( $this->reason, ReasonsRepository::class ) ) {
+			return false;
+		}
 
-    public function id() : string
-    {
-        return 'savereason';
-    }
+		/**
+		 * ToDo: This is a different data structure than in ASB2. If kept, this should be handled in
+		 * the Spam Reason view. Another possibility would be to just save the highest reason, but I
+		 * think, there can be quite some advantages to save all reasons further down the road.
+		 */
+		return false !== add_comment_meta(
+			$comment_id,
+			'antispam_bee_reason',
+			$this->reason->all()
+		);
+	}
 
-    public function register() : bool
-    {
-        // ToDo: Register and render the reason column in the comments table.
-        return false;
-    }
+	/**
+	 * The ID of the save reason post processor.
+	 *
+	 * @return string
+	 */
+	public function id() : string {
+		return 'savereason';
+	}
 
-    public function options() : OptionInterface
-    {
+	/**
+	 * Registers the post processor.
+	 *
+	 * @return bool
+	 */
+	public function register() : bool {
+		// ToDo: Register and render the reason column in the comments table.
+		return false;
+	}
 
-        if ($this->options ) {
-            return $this->options;
-        }
-        $args          = [
-        'name'        => __('Save Spam Reason', 'antispam-bee'),
-        'description' => __('Save the reason, why a comment was marked as spam.', 'antispam-bee'),
-        ];
-        $this->options = $this->option_factory->from_args($args);
-        return $this->options;
-    }
+	/**
+	 * Return the options for the save reason processor.
+	 *
+	 * @return OptionInterface
+	 */
+	public function options() : OptionInterface {
+
+		if ( $this->options ) {
+			return $this->options;
+		}
+		$args          = [
+			'name'        => __( 'Save Spam Reason', 'antispam-bee' ),
+			'description' => __( 'Save the reason, why a comment was marked as spam.', 'antispam-bee' ),
+		];
+		$this->options = $this->option_factory->from_args( $args );
+		return $this->options;
+	}
 
 }

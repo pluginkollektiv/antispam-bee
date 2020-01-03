@@ -1,14 +1,34 @@
 <?php
+/**
+ * The logger interface.
+ *
+ * @package Antispam Bee Logger
+ */
+
 declare( strict_types = 1 );
 
 namespace Pluginkollektiv\AntispamBee\Logger;
 
-use Pluginkollektiv\AntispamBee\Entity\DataInterface;
+/**
+ * Interface LoggerInterface
+ *
+ * @package Pluginkollektiv\AntispamBee\Logger
+ */
+interface LoggerInterface {
 
-interface LoggerInterface
-{
+	/**
+	 * Add a new entry to log.
+	 *
+	 * @param string $log The entry.
+	 *
+	 * @return bool
+	 */
+	public function log( string $log) : bool;
 
-    public function log( string $entry) : bool;
-
-    public function is_ready() : bool;
+	/**
+	 * Whether the logger is ready to log entries.
+	 *
+	 * @return bool
+	 */
+	public function is_ready() : bool;
 }

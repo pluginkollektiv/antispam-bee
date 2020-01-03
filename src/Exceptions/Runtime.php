@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Runtime Exception
+ *
+ * @package Antispam Bee Exceptions
+ */
+
 declare( strict_types = 1 );
 
 namespace Pluginkollektiv\AntispamBee\Exceptions;
@@ -8,8 +14,8 @@ namespace Pluginkollektiv\AntispamBee\Exceptions;
  *
  * @package Pluginkollektiv\AntispamBee\Exceptions
  */
-class Runtime extends \RuntimeException
-{
+class Runtime extends \RuntimeException {
+
 
 
 }

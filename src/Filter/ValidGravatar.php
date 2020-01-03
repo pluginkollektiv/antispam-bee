@@ -5,6 +5,7 @@
  *
  * @package Antispam Bee Filter
  */
+
 declare(strict_types = 1);
 
 namespace Pluginkollektiv\AntispamBee\Filter;
@@ -19,115 +20,110 @@ use Pluginkollektiv\AntispamBee\Option\OptionInterface;
  *
  * @package Pluginkollektiv\AntispamBee\Filter
  */
-class ValidGravatar implements NoSpamFilterInterface
-{
+class ValidGravatar implements NoSpamFilterInterface {
 
-    /**
-     * When already created, contains the Options for this filter.
-     *
-     * @var OptionInterface $options
-     */
-    private $options;
 
-    /**
-     * Creates the options for this filter.
-     *
-     * @var OptionFactory
-     */
-    private $option_factory;
+	/**
+	 * When already created, contains the Options for this filter.
+	 *
+	 * @var OptionInterface $options
+	 */
+	private $options;
 
-    /**
-     * The types of data, which can be filtered with this filter.
-     *
-     * @var array
-     */
-    private $types;
+	/**
+	 * Creates the options for this filter.
+	 *
+	 * @var OptionFactory
+	 */
+	private $option_factory;
 
-    /**
-     * ValidGravatar constructor.
-     *
-     * @param OptionFactory $option_factory
-     */
-    public function __construct( OptionFactory $option_factory, array $types = [CommentDataTypes::COMMENT] )
-    {
-        $this->option_factory = $option_factory;
-        $this->types = $types;
-    }
+	/**
+	 * The types of data, which can be filtered with this filter.
+	 *
+	 * @var array
+	 */
+	private $types;
 
-    /**
-     * Checks if a gravatar is associated with this data structure.
-     *
-     * @param DataInterface $data
-     *
-     * @return float
-     */
-    public function filter( DataInterface $data ) : float
-    {
-        $response = wp_safe_remote_get(
-            sprintf(
-                'https://www.gravatar.com/avatar/%s?d=404',
-                md5(strtolower(trim($data->email())))
-            )
-        );
+	/**
+	 * ValidGravatar constructor.
+	 *
+	 * @param OptionFactory $option_factory The option factory.
+	 * @param array         $types The allowed data types.
+	 */
+	public function __construct( OptionFactory $option_factory, array $types = [ CommentDataTypes::COMMENT ] ) {
+		$this->option_factory = $option_factory;
+		$this->types          = $types;
+	}
 
-        if (is_wp_error($response) ) {
-            return 0;
-        }
+	/**
+	 * Checks if a gravatar is associated with this data structure.
+	 *
+	 * @param DataInterface $data The data to be checked.
+	 *
+	 * @return float
+	 */
+	public function filter( DataInterface $data ) : float {
+		$response = wp_safe_remote_get(
+			sprintf(
+				'https://www.gravatar.com/avatar/%s?d=404',
+				md5( strtolower( trim( $data->email() ) ) )
+			)
+		);
 
-        if (wp_remote_retrieve_response_code($response) === 200 ) {
-            return 1;
-        }
+		if ( is_wp_error( $response ) ) {
+			return 0;
+		}
 
-        return 0;
-    }
+		if ( wp_remote_retrieve_response_code( $response ) === 200 ) {
+			return 1;
+		}
 
-    /**
-     * Nothing to register for this filter.
-     *
-     * @return bool
-     */
-    public function register() : bool
-    {
-        return true;
-    }
+		return 0;
+	}
 
-    /**
-     * The options for this filter.
-     *
-     * @return OptionInterface
-     */
-    public function options() : OptionInterface
-    {
-        if ($this->options ) {
-            return $this->options;
-        }
-        $args          = [
-        'name'        => __('Valid Gravatar', 'antispam-bee'),
-        'description' => __('text.', 'antispam-bee'),
-        ];
-        $this->options = $this->option_factory->from_args($args);
-        return $this->options;
-    }
+	/**
+	 * Nothing to register for this filter.
+	 *
+	 * @return bool
+	 */
+	public function register() : bool {
+		return true;
+	}
 
-    /**
-     * Returns the ID for this filter.
-     *
-     * @return string
-     */
-    public function id() : string
-    {
-        return 'gravatar_check';
-    }
+	/**
+	 * The options for this filter.
+	 *
+	 * @return OptionInterface
+	 */
+	public function options() : OptionInterface {
+		if ( $this->options ) {
+			return $this->options;
+		}
+		$args          = [
+			'name'        => __( 'Valid Gravatar', 'antispam-bee' ),
+			'description' => __( 'text.', 'antispam-bee' ),
+		];
+		$this->options = $this->option_factory->from_args( $args );
+		return $this->options;
+	}
 
-    /**
-     * Returns whether a data object can be cheked.
-     *
-     * @param DataInterface $data
-     *
-     * @return bool
-     */
-    public function can_check_data(DataInterface $data): bool
-    {
-        return in_array($data->type(), $this->types, true);
-    }
+	/**
+	 * Returns the ID for this filter.
+	 *
+	 * @return string
+	 */
+	public function id() : string {
+		return 'gravatar_check';
+	}
+
+	/**
+	 * Returns whether a data object can be checked.
+	 *
+	 * @param DataInterface $data The data to be checked.
+	 *
+	 * @return bool
+	 */
+	public function can_check_data( DataInterface $data ) : bool {
+		return in_array( $data->type(), $this->types, true );
+	}
 }

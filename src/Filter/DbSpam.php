@@ -22,146 +22,141 @@ use Pluginkollektiv\AntispamBee\Option\OptionInterface;
  *
  * @package Pluginkollektiv\AntispamBee\Filter
  */
-class DbSpam implements SpamFilterInterface
-{
+class DbSpam implements SpamFilterInterface {
 
-    /**
-     * If already created, this will contain the OptionInterface.
-     *
-     * @var OptionInterface
-     */
-    private $options;
 
-    /**
-     * The factory will produce the option interface.
-     *
-     * @var OptionFactory
-     */
-    private $option_factory;
+	/**
+	 * If already created, this will contain the OptionInterface.
+	 *
+	 * @var OptionInterface
+	 */
+	private $options;
 
-    /**
-     * The database connection.
-     *
-     * @var \wpdb
-     */
-    private $wpdb;
+	/**
+	 * The factory will produce the option interface.
+	 *
+	 * @var OptionFactory
+	 */
+	private $option_factory;
 
-    /**
-     * The types of data, which can be filtered with this filter.
-     *
-     * @var array
-     */
-    private $types;
+	/**
+	 * The database connection.
+	 *
+	 * @var \wpdb
+	 */
+	private $wpdb;
 
-    /**
-     * DbSpam constructor.
-     *
-     * @param OptionFactory $option_factory
-     * @param \wpdb         $wpdb
-     */
-    public function __construct( OptionFactory $option_factory, \wpdb $wpdb, array $types = CommentDataTypes::ALL )
-    {
-        $this->option_factory = $option_factory;
-        $this->wpdb           = $wpdb;
-        $this->types = $types;
-    }
+	/**
+	 * The types of data, which can be filtered with this filter.
+	 *
+	 * @var array
+	 */
+	private $types;
 
-    /**
-     * Determines, whether the data structure is spam.
-     *
-     * @param DataInterface $data
-     *
-     * @return float
-     */
-    public function filter( DataInterface $data ) : float
-    {
+	/**
+	 * DbSpam constructor.
+	 *
+	 * @param OptionFactory $option_factory The option factory.
+	 * @param \wpdb         $wpdb The WordPress database object.
+	 * @param array         $types The allowed data types.
+	 */
+	public function __construct( OptionFactory $option_factory, \wpdb $wpdb, array $types = CommentDataTypes::ALL ) {
+		$this->option_factory = $option_factory;
+		$this->wpdb           = $wpdb;
+		$this->types          = $types;
+	}
 
-        $params = [];
-        $filter = [];
-        if (! empty($data->website()) ) {
-            $filter[] = '`comment_author_url` = %s';
-            $params[] = wp_unslash($data->website());
-        }
-        if (! empty($data->ip()) ) {
-            $filter[] = '`comment_author_IP` = %s';
-            $params[] = wp_unslash($data->ip());
-        }
+	/**
+	 * Determines, whether the data structure is spam.
+	 *
+	 * @param DataInterface $data The data to check.
+	 *
+	 * @return float
+	 */
+	public function filter( DataInterface $data ) : float {
 
-        if (! empty($data->email()) ) {
-            $filter[] = '`comment_author_email` = %s';
-            $params[] = wp_unslash($data->email());
-        }
-        if (empty($params) ) {
-            return (float) 0;
-        }
+		$params = [];
+		$filter = [];
+		if ( ! empty( $data->website() ) ) {
+			$filter[] = '`comment_author_url` = %s';
+			$params[] = wp_unslash( $data->website() );
+		}
+		if ( ! empty( $data->ip() ) ) {
+			$filter[] = '`comment_author_IP` = %s';
+			$params[] = wp_unslash( $data->ip() );
+		}
+
+		if ( ! empty( $data->email() ) ) {
+			$filter[] = '`comment_author_email` = %s';
+			$params[] = wp_unslash( $data->email() );
+		}
+		if ( empty( $params ) ) {
+			return (float) 0;
+		}
 
         // phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
         // phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
-        $filter_sql = implode(' OR ', $filter);
+		$filter_sql = implode( ' OR ', $filter );
 
-        $result = $this->wpdb->get_var(
-            $this->wpdb->prepare(
-                sprintf(
-                    "SELECT `comment_ID` FROM `{$this->wpdb->comments}`
+		$result = $this->wpdb->get_var(
+			$this->wpdb->prepare(
+				sprintf(
+					"SELECT `comment_ID` FROM `{$this->wpdb->comments}`
                      WHERE `comment_approved` = 'spam' AND (%s) LIMIT 1",
-                    $filter_sql
-                ),
-                $params
-            )
-        );
+					$filter_sql
+				),
+				$params
+			)
+		);
         // phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
         // phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
 
-        return (float) ! empty($result);
-    }
+		return (float) ! empty( $result );
+	}
 
-    /**
-     * Nothing to register here.
-     *
-     * @return bool
-     */
-    public function register() : bool
-    {
-        return true;
-    }
+	/**
+	 * Nothing to register here.
+	 *
+	 * @return bool
+	 */
+	public function register() : bool {
+		return true;
+	}
 
-    /**
-     * Returns the options for this filter.
-     *
-     * @return OptionInterface
-     */
-    public function options() : OptionInterface
-    {
-        if ($this->options ) {
-            return $this->options;
-        }
-        $args          = [
-        'name'        => __('DB Spam', 'antispam-bee'),
-        'description' => __('text.', 'antispam-bee'),
-        ];
-        $this->options = $this->option_factory->from_args($args);
-        return $this->options;
-    }
+	/**
+	 * Returns the options for this filter.
+	 *
+	 * @return OptionInterface
+	 */
+	public function options() : OptionInterface {
+		if ( $this->options ) {
+			return $this->options;
+		}
+		$args          = [
+			'name'        => __( 'DB Spam', 'antispam-bee' ),
+			'description' => __( 'text.', 'antispam-bee' ),
+		];
+		$this->options = $this->option_factory->from_args( $args );
+		return $this->options;
+	}
 
-    /**
-     * Returns the ID of the filter.
-     *
-     * @return string
-     */
-    public function id() : string
-    {
-        return 'spam_ip';
-    }
+	/**
+	 * Returns the ID of the filter.
+	 *
+	 * @return string
+	 */
+	public function id() : string {
+		return 'spam_ip';
+	}
 
-    /**
-     * Returns whether a data object can be cheked.
-     *
-     * @param DataInterface $data
-     *
-     * @return bool
-     */
-    public function can_check_data(DataInterface $data): bool
-    {
-        return in_array($data->type(), $this->types, true);
-    }
+	/**
+	 * Returns whether a data object can be checked.
+	 *
+	 * @param DataInterface $data The data to check.
+	 *
+	 * @return bool
+	 */
+	public function can_check_data( DataInterface $data ) : bool {
+		return in_array( $data->type(), $this->types, true );
+	}
 }

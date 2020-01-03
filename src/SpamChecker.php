@@ -1,4 +1,10 @@
 <?php
+/**
+ * Checks, if a given data is spam or not.
+ *
+ * @package Antispam Bee
+ */
+
 declare(strict_types = 1);
 
 namespace Pluginkollektiv\AntispamBee;
@@ -8,80 +14,118 @@ use Pluginkollektiv\AntispamBee\Handler\SpamHandlerInterface;
 use Pluginkollektiv\AntispamBee\Repository\FilterRepository;
 use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
-class SpamChecker
-{
+/**
+ * Class SpamChecker
+ *
+ * @package Pluginkollektiv\AntispamBee
+ */
+class SpamChecker {
 
+	/**
+	 * The spam handler.
+	 *
+	 * @var SpamHandlerInterface
+	 */
+	private $spam_handler;
 
-    private $spamHandler;
-    private $repository;
-    private $reasons;
+	/**
+	 * The filter repository.
+	 *
+	 * @var FilterRepository
+	 */
+	private $repository;
 
-    public function __construct(
-        SpamHandlerInterface $spamHandler,
-        FilterRepository $repository,
-        ReasonsRepository $reasons
-    ) {
-        $this->repository  = $repository;
-        $this->spamHandler = $spamHandler;
-        $this->reasons     = $reasons;
-    }
+	/**
+	 * The reasons repository.
+	 *
+	 * @var ReasonsRepository
+	 */
+	private $reasons;
 
-    /**
-     * Checks the data and if its detected as being spam, the SpamHandler will be executed.
-     *
-     * @param DataInterface $data The data to check.
-     *
-     * @return bool
-     */
-    public function check( DataInterface $data ) : bool
-    {
+	/**
+	 * SpamChecker constructor.
+	 *
+	 * @param SpamHandlerInterface $spam_handler The spam handler.
+	 * @param FilterRepository     $repository The filter repository.
+	 * @param ReasonsRepository    $reasons The reasons repository.
+	 */
+	public function __construct(
+		SpamHandlerInterface $spam_handler,
+		FilterRepository $repository,
+		ReasonsRepository $reasons
+	) {
+		$this->repository   = $repository;
+		$this->spam_handler = $spam_handler;
+		$this->reasons      = $reasons;
+	}
 
-        if ($this->no_spam_check($data) ) {
-            return false;
-        }
+	/**
+	 * Checks the data and if its detected as being spam, the SpamHandler will be executed.
+	 *
+	 * @param DataInterface $data The data to check.
+	 *
+	 * @return bool
+	 */
+	public function check( DataInterface $data ) {
 
-        $is_spam = $this->spam_check($data);
+		if ( $this->no_spam_check( $data ) ) {
+			return false;
+		}
 
-        if ($is_spam ) {
-            $this->spamHandler->execute($this->reasons, $data);
-        }
-        return $is_spam;
+		$is_spam = $this->spam_check( $data );
 
-    }
+		if ( $is_spam ) {
+			$this->spam_handler->execute( $this->reasons, $data );
+		}
+		return $is_spam;
 
-    private function no_spam_check( DataInterface $data )
-    {
-        $probability = 0;
+	}
 
-        foreach ( $this->repository->active_nospam_filters() as $filter ) {
-            if ($probability >= 1 ) {
-                continue;
-            }
-            if (! $filter->can_check_data($data) ) {
-                continue;
-            }
+	/**
+	 * Runs the no spam filter and returns whether the data is nospam or not.
+	 *
+	 * @param DataInterface $data The data to check.
+	 *
+	 * @return bool
+	 */
+	private function no_spam_check( DataInterface $data ) {
+		$probability = 0;
 
-            $propability_for_filter = $filter->filter($data);
-            $probability           += $propability_for_filter;
-        }
+		foreach ( $this->repository->active_nospam_filters() as $filter ) {
+			if ( $probability >= 1 ) {
+				continue;
+			}
+			if ( ! $filter->can_check_data( $data ) ) {
+				continue;
+			}
 
-        return $probability > .5;
-    }
+			$propability_for_filter = $filter->filter( $data );
+			$probability           += $propability_for_filter;
+		}
 
-    private function spam_check( DataInterface $data )
-    {
-        $filters = $this->repository->active_spam_filters();
-        foreach ( $filters as $filter ) {
-            if ($this->reasons->total_probability() >= 1 ) {
-                continue;
-            }
-            if (! $filter->can_check_data($data) ) {
-                continue;
-            }
+		return $probability > .5;
+	}
 
-            $this->reasons->add_reason($filter->id(), $filter->filter($data));
-        }
+	/**
+	 * Runs the spam filter and returns whether the data is spam or not.
+	 *
+	 * @param DataInterface $data The data to check.
+	 *
+	 * @return bool
+	 */
+	private function spam_check( DataInterface $data ) : bool {
+		$filters = $this->repository->active_spam_filters();
+		foreach ( $filters as $filter ) {
+			if ( $this->reasons->total_probability() >= 1 ) {
+				continue;
+			}
+			if ( ! $filter->can_check_data( $data ) ) {
+				continue;
+			}
 
-        return $this->reasons->total_probability() > .5;
-    }
+			$this->reasons->add_reason( $filter->id(), $filter->filter( $data ) );
+		}
+
+		return $this->reasons->total_probability() > .5;
+	}
 }

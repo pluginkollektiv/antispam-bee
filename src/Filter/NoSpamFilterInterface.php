@@ -8,11 +8,12 @@
  *
  * @package Antispam Bee Filter
  */
+
 declare( strict_types = 1 );
 
 namespace Pluginkollektiv\AntispamBee\Filter;
 
-interface NoSpamFilterInterface extends FilterInterface
-{
+interface NoSpamFilterInterface extends FilterInterface {
+
 
 }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * The comment spam handler.
+ *
+ * Once spam was detected, this controller takes care of how to process the spam now.
+ *
+ * @package Antispam Bee Handler
+ */
+
 declare(strict_types = 1);
 
 namespace Pluginkollektiv\AntispamBee\Handler;
@@ -13,40 +21,49 @@ use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
  *
  * @package Pluginkollektiv\AntispamBee\Handler
  */
-class CommentSpamHandler implements SpamHandlerInterface
-{
+class CommentSpamHandler implements SpamHandlerInterface {
 
-    private $config;
-    private $repository;
+	/**
+	 * The configuration.
+	 *
+	 * @var AntispamBeeConfig
+	 */
+	private $config;
 
-    /**
-     * CommentSpamHandler constructor.
-     *
-     * @param AntispamBeeConfig $config The options.
-     */
-    public function __construct( AntispamBeeConfig $config, PostProcessorRepository $repository )
-    {
-        $this->config     = $config;
-        $this->repository = $repository;
-    }
+	/**
+	 * The post processor repository.
+	 *
+	 * @var PostProcessorRepository
+	 */
+	private $repository;
 
-    /**
-     * Once a spam has been detected, this method will handle the rest.
-     *
-     * @param ReasonsRepository $reason The spam reason.
-     * @param DataInterface     $data   The spam data.
-     *
-     * @return bool
-     */
-    public function execute( ReasonsRepository $reason, DataInterface $data ) : bool
-    {
+	/**
+	 * CommentSpamHandler constructor.
+	 *
+	 * @param AntispamBeeConfig       $config The options.
+	 * @param PostProcessorRepository $repository The post processor repository.
+	 */
+	public function __construct( AntispamBeeConfig $config, PostProcessorRepository $repository ) {
+		$this->config     = $config;
+		$this->repository = $repository;
+	}
 
-        $success = true;
-        foreach ( $this->repository->active_processors() as $processor ) {
-            if (! $processor->execute($reason, $data) ) {
-                $success = false;
-            };
-        }
-        return $success;
-    }
+	/**
+	 * Once a spam has been detected, this method will handle the rest.
+	 *
+	 * @param ReasonsRepository $reason The spam reason.
+	 * @param DataInterface     $data   The spam data.
+	 *
+	 * @return bool
+	 */
+	public function execute( ReasonsRepository $reason, DataInterface $data ) : bool {
+
+		$success = true;
+		foreach ( $this->repository->active_processors() as $processor ) {
+			if ( ! $processor->execute( $reason, $data ) ) {
+				$success = false;
+			};
+		}
+		return $success;
+	}
 }

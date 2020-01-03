@@ -36,7 +36,7 @@ use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 use Pluginkollektiv\AntispamBee\Settings\Controller;
 
 if ( ! class_exists( AntispamBeeConfig::class ) ) {
-    require_once __DIR__ . '/vendor/autoload.php';
+	require_once __DIR__ . '/vendor/autoload.php';
 }
 
 add_action(
@@ -48,8 +48,8 @@ add_action(
 		$option_factory = new OptionFactory();
 		$ip             = new IP();
 
-		$log_file               = ( defined( 'ANTISPAM_BEE_LOG_FILE' ) ) ? (string) ANTISPAM_BEE_LOG_FILE : '';
-		$logger                 = new FileLogger( $log_file );
+		$log_file = ( defined( 'ANTISPAM_BEE_LOG_FILE' ) ) ? (string) ANTISPAM_BEE_LOG_FILE : '';
+		$logger   = new FileLogger( $log_file );
 
 		$sub_configs = [
 			'filters'         => new GenericWPOption( 'antispambee_filter' ),
@@ -144,7 +144,7 @@ add_action(
 					return $approved;
 				}
 
-				$reasons = new ReasonsRepository();
+				$reasons      = new ReasonsRepository();
 				$spam_handler = new CommentSpamHandler( $config, $post_processor_repository );
 				$spam_checker = new SpamChecker( $spam_handler, $filter_repository, $reasons );
 
@@ -155,5 +155,5 @@ add_action(
 		);
 
 	},
-    PHP_INT_MAX
+	PHP_INT_MAX
 );

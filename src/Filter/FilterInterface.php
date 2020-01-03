@@ -18,31 +18,46 @@ use Pluginkollektiv\AntispamBee\Option\OptionInterface;
  *
  * @package Pluginkollektiv\AntispamBee\Filter
  */
-interface FilterInterface
-{
+interface FilterInterface {
 
 
-    /**
-     * Filters the data and determines its value towards spam or no spam.
-     *
-     * @param DataInterface $data The data, to check for spam.
-     *
-     * @return float
-     */
-    public function filter( DataInterface $data ) : float;
 
-    public function register() : bool;
+	/**
+	 * Filters the data and determines its value towards spam or no spam.
+	 *
+	 * @param DataInterface $data The data, to check for spam.
+	 *
+	 * @return float
+	 */
+	public function filter( DataInterface $data ) : float;
 
-    public function options() : OptionInterface;
+	/**
+	 * Registers the filter.
+	 *
+	 * @return bool
+	 */
+	public function register() : bool;
 
-    public function id() : string;
+	/**
+	 * The options of the filter.
+	 *
+	 * @return OptionInterface
+	 */
+	public function options() : OptionInterface;
 
-    /**
-     * Returns whether a data object can be cheked.
-     *
-     * @param DataInterface $data
-     *
-     * @return bool
-     */
-    public function can_check_data(DataInterface $data) : bool;
+	/**
+	 * The ID of the filter.
+	 *
+	 * @return string
+	 */
+	public function id() : string;
+
+	/**
+	 * Returns whether a data object can be cheked.
+	 *
+	 * @param DataInterface $data The data to be checked.
+	 *
+	 * @return bool
+	 */
+	public function can_check_data( DataInterface $data) : bool;
 }

@@ -1,4 +1,10 @@
 <?php
+/**
+ * The post processor interface.
+ *
+ * @package Antispam Bee PostProcessor
+ */
+
 declare( strict_types = 1 );
 
 namespace Pluginkollektiv\AntispamBee\PostProcessor;
@@ -7,14 +13,41 @@ use Pluginkollektiv\AntispamBee\Entity\DataInterface;
 use Pluginkollektiv\AntispamBee\Option\OptionInterface;
 use Pluginkollektiv\AntispamBee\Repository\ReasonsRepository;
 
-interface PostProcessorInterface
-{
+/**
+ * Interface PostProcessorInterface
+ *
+ * @package Pluginkollektiv\AntispamBee\PostProcessor
+ */
+interface PostProcessorInterface {
 
-    public function execute( ReasonsRepository $reason, DataInterface $data) : bool;
+	/**
+	 * Executes the processor.
+	 *
+	 * @param ReasonsRepository $reason The reasons why the current data is spam.
+	 * @param DataInterface     $data The current data.
+	 *
+	 * @return bool
+	 */
+	public function execute( ReasonsRepository $reason, DataInterface $data) : bool;
 
-    public function id() : string;
+	/**
+	 * The ID of the post processor.
+	 *
+	 * @return string
+	 */
+	public function id() : string;
 
-    public function register() : bool;
+	/**
+	 * Registers the post processor.
+	 *
+	 * @return bool
+	 */
+	public function register() : bool;
 
-    public function options() : OptionInterface;
+	/**
+	 * Returns the options for this post processor.
+	 *
+	 * @return OptionInterface
+	 */
+	public function options() : OptionInterface;
 }
