@@ -1,6 +1,6 @@
 # Antispam Bee #
 
-[![Build Status](https://travis-ci.org/pluginkollektiv/antispam-bee.svg?branch=master)](https://travis-ci.org/pluginkollektiv/antispam-bee)
+[![Build Status](https://travis-ci.org/pluginkollektiv/antispam-bee.svg?branch=master)](https://travis-ci.org/pluginkollektiv/antispam-bee) [![Current Antispam Bee version](https://img.shields.io/wordpress/plugin/v/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/) [![Number of downloads](https://img.shields.io/wordpress/plugin/dt/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/advanced/) [![Number of active installs](https://img.shields.io/wordpress/plugin/installs/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/advanced/) [![WordPress plugin rating](https://img.shields.io/wordpress/plugin/r/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/#reviews) 
 
 Antispam plugin with a sophisticated toolset for effective day to day comment and trackback spam-fighting. Built with data protection and privacy in mind.
 
