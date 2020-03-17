@@ -1405,7 +1405,6 @@ class Antispam_Bee {
 			);
 		}
 
-
 		if ( $options['regexp_check'] && self::_is_regexp_spam(
 			array(
 				'ip'     => $ip,
