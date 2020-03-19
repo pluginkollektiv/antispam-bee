@@ -54,7 +54,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 			'dashboard_count'          => (int) ( ! empty( $_POST['ab_dashboard_count'] ) ),
 			'dashboard_chart'          => (int) ( ! empty( $_POST['ab_dashboard_chart'] ) ),
-			'advanced_check'           => (int) ( ! empty( $_POST['ab_advanced_check'] ) ),
 			'regexp_check'             => (int) ( ! empty( $_POST['ab_regexp_check'] ) ),
 			'spam_ip'                  => (int) ( ! empty( $_POST['ab_spam_ip'] ) ),
 			'already_commented'        => (int) ( ! empty( $_POST['ab_already_commented'] ) ),
@@ -245,13 +244,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								</label>
 							</li>
 
-							<li>
-								<input type="checkbox" name="ab_advanced_check" id="ab_advanced_check" value="1" <?php checked( $options['advanced_check'], 1 ); ?> />
-								<label for="ab_advanced_check">
-									<?php esc_html_e( 'Validate the ip address of commenters', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Validation of the IP address used', 'antispam-bee' ); ?></span>
-								</label>
-							</li>
 
 							<li>
 								<input type="checkbox" name="ab_regexp_check" id="ab_regexp_check" value="1" <?php checked( $options['regexp_check'], 1 ); ?> />

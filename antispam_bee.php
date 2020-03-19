@@ -394,7 +394,6 @@ class Antispam_Bee {
 
 		self::$defaults = array(
 			'options' => array(
-				'advanced_check'           => 1,
 				'regexp_check'             => 1,
 				'spam_ip'                  => 1,
 				'already_commented'        => 1,
@@ -433,7 +432,6 @@ class Antispam_Bee {
 				'css'           => esc_attr__( 'Honeypot', 'antispam-bee' ),
 				'time'          => esc_attr__( 'Comment time', 'antispam-bee' ),
 				'empty'         => esc_attr__( 'Empty Data', 'antispam-bee' ),
-				'server'        => esc_attr__( 'Fake IP', 'antispam-bee' ),
 				'localdb'       => esc_attr__( 'Local DB Spam', 'antispam-bee' ),
 				'country'       => esc_attr__( 'Country Check', 'antispam-bee' ),
 				'bbcode'        => esc_attr__( 'BBCode', 'antispam-bee' ),
@@ -1270,12 +1268,6 @@ class Antispam_Bee {
 			);
 		}
 
-		if ( $options['advanced_check'] && self::_is_fake_ip( $ip, self::parse_url( $url, 'host' ) ) ) {
-			return array(
-				'reason' => 'server',
-			);
-		}
-
 		if ( $options['spam_ip'] && self::_is_db_spam( $ip, $url ) ) {
 			return array(
 				'reason' => 'localdb',
@@ -1410,12 +1402,6 @@ class Antispam_Bee {
 		if ( $options['bbcode_check'] && self::_is_bbcode_spam( $body ) ) {
 			return array(
 				'reason' => 'bbcode',
-			);
-		}
-
-		if ( $options['advanced_check'] && self::_is_fake_ip( $ip ) ) {
-			return array(
-				'reason' => 'server',
 			);
 		}
 
@@ -1780,45 +1766,6 @@ class Antispam_Bee {
 		);
 
 		if ( $result ) {
-			return true;
-		}
-
-		return false;
-	}
-
-
-	/**
-	 * Check for a fake IP
-	 *
-	 * @since   2.0
-	 * @change  2.6.2
-	 *
-	 * @param   string $client_ip    Client IP.
-	 * @param   string $client_host  Client Host (optional).
-	 * @return  boolean              True if fake IP.
-	 */
-	private static function _is_fake_ip( $client_ip, $client_host = '' ) {
-		$host_by_ip = gethostbyaddr( $client_ip );
-
-		if ( self::_is_ipv6( $client_ip ) ) {
-			return $client_ip !== $host_by_ip;
-		}
-
-		if ( empty( $client_host ) ) {
-			$ip_by_host = gethostbyname( $host_by_ip );
-
-			if ( $ip_by_host === $host_by_ip ) {
-				return false;
-			}
-		} else {
-			if ( $host_by_ip === $client_ip ) {
-				return true;
-			}
-
-			$ip_by_host = gethostbyname( $client_host );
-		}
-
-		if ( strpos( $client_ip, self::_cut_ip( $ip_by_host ) ) === false ) {
 			return true;
 		}
 
