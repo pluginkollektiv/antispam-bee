@@ -2419,7 +2419,7 @@ class Antispam_Bee {
 			$comment = get_comment( $comment );
 		}
 		$id = $comment->comment_ID;
-		update_comment_meta( $id, 'antispam_bee_reason', 'manual' );
+		update_comment_meta( $id, 'antispam_bee_reason', 'manually' );
 	}
 
 
