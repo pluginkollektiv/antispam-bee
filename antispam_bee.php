@@ -2412,7 +2412,7 @@ class Antispam_Bee {
 	 * Updates the Antispam Bee reason for manual transitions
 	 *
 	 * @since   2.9.2
-	 * @param  [obj] $comment Comment Object.
+	 * @param  WP_Comment $comment Comment Object.
 	 */
 	public static function update_antispam_bee_reason( $comment ) {
 		update_comment_meta( $comment->comment_ID, 'antispam_bee_reason', 'manually' );
