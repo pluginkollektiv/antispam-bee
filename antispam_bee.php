@@ -103,6 +103,22 @@ class Antispam_Bee {
 			)
 		);
 
+		add_action(
+			'comment_unapproved_to_spam',
+			array(
+				__CLASS__,
+				'update_antispam_bee_reason',
+			)
+		);
+
+		add_action(
+			'comment_approved_to_spam',
+			array(
+				__CLASS__,
+				'update_antispam_bee_reason',
+			)
+		);
+
 		if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
 			return;
 		}
@@ -438,6 +454,7 @@ class Antispam_Bee {
 				'lang'          => esc_attr__( 'Comment Language', 'antispam-bee' ),
 				'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
 				'title_is_name' => esc_attr__( 'Identical Post title and blog title', 'antispam-bee' ),
+				'manually'      => esc_attr__( 'Manually', 'antispam-bee' ),
 			),
 		);
 	}
@@ -2390,6 +2407,17 @@ class Antispam_Bee {
 			'antispam_bee_reason'
 		);
 	}
+
+	/**
+	 * Updates the Antispam Bee reason for manual transitions
+	 *
+	 * @since   2.9.2
+	 * @param  WP_Comment $comment Comment Object.
+	 */
+	public static function update_antispam_bee_reason( $comment ) {
+		update_comment_meta( $comment->comment_ID, 'antispam_bee_reason', 'manually' );
+	}
+
 
 	/**
 	 * Get the current post ID.
