@@ -21,7 +21,7 @@
 
 
 * **Deutsch**
-  * Fix: Lösche Kommentarmeta beim Löschen von Spamkommentaren. Für das Aufräumen alter verwaister Kommentarmetas empfehlen wir die Verwendung von [WP Sweep](https://wordpress.org/plugins/wp-sweep/)
+  * Fix: Lösche Kommentarmeta beim Löschen von Spamkommentaren. Für das Aufräumen alter verwaister Kommentarmetas empfehlen wir die Verwendung von [WP Sweep](https://de.wordpress.org/plugins/wp-sweep/)
   * Fix: Dashboard Statistiken zeigten falschen Wert
   * Tweak: Änderung des autocomplete Attributs zu "new-password"
   * Tweak: Kompatibilität mit Autoptimize verbessert
