@@ -3,7 +3,7 @@
 
 ### 2.9.2 ###
 * **English**
-  * Fix: Delete comment meta for deleted old spam
+  * Fix: Delete comment meta for deleted old spam. For the cleanup of older orphaned comment meta we suggest the usage of [WP Sweep](https://wordpress.org/plugins/wp-sweep/)
   * Fix: Statistic in dashboard showed wrong value
   * Tweak: Change autocomplete attribute to "new-password"
   * Tweak: Autoptimize compatibility improved
@@ -21,7 +21,7 @@
 
 
 * **Deutsch**
-  * Fix: Lösche Kommentarmeta beim Löschen von Spamkommentaren
+  * Fix: Lösche Kommentarmeta beim Löschen von Spamkommentaren. Für das Aufräumen alter verwaister Kommentarmetas empfehlen wir die Verwendung von [WP Sweep](https://wordpress.org/plugins/wp-sweep/)
   * Fix: Dashboard Statistiken zeigten falschen Wert
   * Tweak: Änderung des autocomplete Attributs zu "new-password"
   * Tweak: Kompatibilität mit Autoptimize verbessert
