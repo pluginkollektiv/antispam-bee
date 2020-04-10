@@ -4,7 +4,7 @@
  * Description: Antispam plugin with a sophisticated toolset for effective day to day comment and trackback spam-fighting. Built with data protection and privacy in mind.
  * Author:      pluginkollektiv
  * Author URI:  https://pluginkollektiv.org
- * Plugin URI:  https://wordpress.org/plugins/antispam-bee/
+ * Plugin URI:  https://antispambee.pluginkollektiv.org/
  * Text Domain: antispam-bee
  * Domain Path: /lang
  * License:     GPLv2 or later
@@ -2535,7 +2535,7 @@ class Antispam_Bee {
 		) . sprintf(
 			"%s\r\n%s\r\n",
 			esc_html__( 'Notify message by Antispam Bee', 'antispam-bee' ),
-			esc_html__( 'http://antispambee.com', 'antispam-bee' )
+			esc_html__( 'https://antispambee.com', 'antispam-bee' )
 		);
 
 		wp_mail(
