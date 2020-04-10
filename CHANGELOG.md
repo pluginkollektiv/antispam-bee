@@ -189,25 +189,25 @@
 * **English**
    * Removal of functions *Block comments from specific countries* and *Allow comments only in certain language* for financial reasons
 * **Deutsch**
-   * Entfernung der Funktionen *Kommentare nur in einer Sprache zulassen* und *Bestimmte Länder blockieren bzw. erlauben* aus finanziellen Gründen - [Hintergrund-Informationen](https://plus.google.com/u/0/+SergejMüller/posts/ZyquhoYjUyF)
+   * Entfernung der Funktionen *Kommentare nur in einer Sprache zulassen* und *Bestimmte Länder blockieren bzw. erlauben* aus finanziellen Gründen - [Hintergrund-Informationen](https://antispambee.pluginkollektiv.org/news/2015/removal-of-allow-comments-only-in-certain-language/)
 
 ### 2.6.6 ###
 * **English**
     * Switch to the official Google Translation API
     * *Release time investment (Development & QA): 2.5 h*
 * **Deutsch**
-    * (Testweise) Umstellung auf die offizielle Google Translation API - [Hintergrund-Informationen](https://plus.google.com/u/0/+SergejMüller/posts/ZyquhoYjUyF)
+    * (Testweise) Umstellung auf die offizielle Google Translation API
     * *Release-Zeitaufwand (Development & QA): 2,5 Stunden*
 
 ### 2.6.5 ###
 * **English**
    * Fix: Return parameters on `dashboard_glance_items` callback / thx [@toscho](https://twitter.com/toscho)
-   * New function: [Trust commenters with a Gravatar](https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation) / thx [@glueckpress](https://twitter.com/glueckpress)
+   * New function: [Trust commenters with a Gravatar](https://antispambee.pluginkollektiv.org/documentation#gravatar) / thx [@glueckpress](https://twitter.com/glueckpress)
    * Additional plausibility checks and filters
    * *Release time investment (Development & QA): 12 h*
 * **Deutsch**
    * Fix: Parameter-Rückgabe bei `dashboard_glance_items` / thx [@toscho](https://twitter.com/toscho)
-   * Neue Funktion: [Kommentatoren mit Gravatar vertrauen](https://github.com/pluginkollektiv/antispam-bee/wiki/de-Dokumentation) / thx [@glueckpress](https://twitter.com/glueckpress)
+   * Neue Funktion: [Kommentatoren mit Gravatar vertrauen](https://antispambee.pluginkollektiv.org/de/dokumentation#gravatar) / thx [@glueckpress](https://twitter.com/glueckpress)
    * Zusätzliche Plausibilitätsprüfungen und Filter
    * *Release-Zeitaufwand (Development & QA): 12 Stunden*
 
@@ -216,7 +216,7 @@
    * Consideration of the comment time (Spam if a comment was written in less than 5 seconds)
    * *Release time investment (Development & QA): 6.25 h*
 * **Deutsch**
-   * Berücksichtigung der Kommentarzeit (Spam, wenn ein Kommentar in unter 5 Sekunden verfasst) - [Hintergrund-Informationen](https://plus.google.com/+SergejMüller/posts/73EbP6F1BgC)
+   * Berücksichtigung der Kommentarzeit (Spam, wenn ein Kommentar in unter 5 Sekunden verfasst) - [Hintergrund-Informationen](https://antispambee.pluginkollektiv.org/news/2014/antispam-bee-2-6-4/)
    * *Release-Zeitaufwand (Development & QA): 6,25 Stunden*
 
 ### 2.6.3 ###
@@ -270,7 +270,6 @@
 * **Deutsch**
    * Umstellung von TornevallDNSBL zu [Stop Forum Spam](http://www.stopforumspam.com)
    * Neue JS-Bibliothek für das Dashboard-Widget
-   * [Mehr Informationen auf Google+](https://plus.google.com/110569673423509816572/posts/VCFr3fDAYDs)
 
 ### 2.5.7 ###
 * **English**
@@ -279,19 +278,18 @@
 * **Deutsch**
    * Optionale Spam-Logdatei z.B. für [Fail2Ban](https://wiki.ubuntuusers.de/fail2ban/)
    * Filter `antispam_bee_notification_subject` für eigenen Betreff in Benachrichtigungen
-   * Detaillierte Informationen zum Update auf [Google+](https://plus.google.com/110569673423509816572/posts/iCfip2ggYt9)
 
 ### 2.5.6 ###
 * **English**
-   * Added new detection/patterns for spam comments
+   * [Added new detection/patterns for spam comments](https://antispambee.pluginkollektiv.org/news/2013/new-patterns-in-antispam-bee-2-5-6/)
 * **Deutsch**
-   * Neue Erkennungsmuster für Spam hinzugefügt / [Google+](https://plus.google.com/110569673423509816572/posts/9BSURheN3as)
+   * [Neue Erkennungsmuster für Spam hinzugefügt](https://antispambee.pluginkollektiv.org/de/news/2013/neue-erkennungsmuster-in-antispam-bee-2-5-6/)
 
 ### 2.5.5 ###
 * **English**
    * Detection and filtering of spam comments that try to exploit the latest [W3 Total Cache and WP Super Cache Vulnerability](http://blog.sucuri.net/2013/05/w3-total-cache-and-wp-super-cache-vulnerability-being-targeted-in-the-wild.html).
 * **Deutsch**
-   * Erkennung und Ausfilterung von Spam-Kommentaren, die versuchen, [Sicherheitslücken von W3 Total Cache und WP Super Cache](http://blog.sucuri.net/2013/05/w3-total-cache-and-wp-super-cache-vulnerability-being-targeted-in-the-wild.html) auszunutzen. [Ausführlicher auf Google+](https://plus.google.com/110569673423509816572/posts/afWWQbUh4at).
+   * Erkennung und Ausfilterung von Spam-Kommentaren, die versuchen, [Sicherheitslücken von W3 Total Cache und WP Super Cache](http://blog.sucuri.net/2013/05/w3-total-cache-and-wp-super-cache-vulnerability-being-targeted-in-the-wild.html) auszunutzen. [Ausführliche Informationen](https://antispambee.pluginkollektiv.org/de/news/2013/antispam-bee-nun-auch-als-antimalware-plugin/).
 
 ### 2.5.4 ###
 * **English**
@@ -299,7 +297,7 @@
    * New mascot for Antispam Bee
    * Advanced Scanning on IP, URL and e-mail address of incoming comments in local blog spam database
 * **Deutsch**
-   * Jubiläumsausgabe: [Details zum Update](https://plus.google.com/110569673423509816572/posts/3dq9Re5vTY5)
+   * Jubiläumsausgabe: [Details zum Update](https://plus.googlehttps://antispambee.pluginkollektiv.org/de/news/2013/jubilaeumsausgabe-antispam-bee-2-5-4/)
    * Neues Maskottchen für Antispam Bee
    * Erweiterte Prüfung eingehender Kommentare in lokaler Blog-Spamdatenbank auf IP, URL und E-Mail-Adresse
 
@@ -315,10 +313,9 @@
    * Change the filter order
    * Improvements to the language file
 * **Deutsch**
-   * Neu: [Reguläre Ausdrücke anwenden](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation) mit vordefinierten und eigenen Erkennungsmustern
+   * Neu: [Reguläre Ausdrücke anwenden](hhttps://antispambee.pluginkollektiv.org/de/dokumentation#regex) mit vordefinierten und eigenen Erkennungsmustern
    * Änderung der Filter-Reihenfolge
    * Verbesserungen an der Sprachdatei
-   * [Hintergrundinformationen zum Update](https://plus.google.com/110569673423509816572/posts/CwtbSoMkGrT)
 
 ### 2.5.1 ###
 * **English**
@@ -327,16 +324,16 @@
    * More transparency by added Privacy Policy
    * PHP 5.2.4 as a requirement (is also the prerequisite for WP 3.4)
 * **Deutsch**
-   * [BBCode im Kommentar als Spamgrund](https://github.com/pluginkollektiv/antispam-bee/wiki/Dokumentation)
+   * [BBCode im Kommentar als Spamgrund](hhttps://antispambee.pluginkollektiv.org/de/dokumentation#bbcode)
    * IP-Anonymisierung bei der Länderprüfung
-   * [Mehr Transparenz](https://plus.google.com/110569673423509816572/posts/ZMU6RfyRK29) durch hinzugefügte Datenschutzhinweise
+   * [Mehr Transparenz](https://antispambee.pluginkollektiv.org/de/news/2012/datenschutz-update/) durch hinzugefügte Datenschutzhinweise
    * PHP 5.2.4 als Voraussetzung (ist zugleich die Voraussetzung für WP 3.4)
 
 ### 2.5.0 ###
 * **English**
-   * Edition 2012
+   * [Edition 2012](https://antispambee.pluginkollektiv.org/news/2012/edition-2012/)
 * **Deutsch**
-   * [Edition 2012](https://plus.google.com/110569673423509816572/posts/6JUC6PHXd6A)
+   * [Edition 2012](https://antispambee.pluginkollektiv.org/de/news/2012/edition-2012/)
 
 ### 2.4.6 ###
 * **English**

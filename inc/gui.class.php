@@ -212,7 +212,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									$link1 = sprintf(
 										'<a href="%s" target="_blank" rel="noopener noreferrer">',
 										esc_url(
-											__( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#trust-commenters-with-a-gravatar', 'antispam-bee' ),
+											__( 'https://antispambee.pluginkollektiv.org/documentation#gravatar', 'antispam-bee' ),
 											'https'
 										)
 									);
@@ -270,7 +270,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									$link1 = sprintf(
 										'<a href="%s" target="_blank" rel="noopener noreferrer">',
 										esc_url(
-											__( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#block-comments-from-specific-countries', 'antispam-bee' ),
+											__( 'https://antispambee.pluginkollektiv.org/documentation#country', 'antispam-bee' ),
 											'https'
 										)
 									);
@@ -335,7 +335,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										$link1 = sprintf(
 											'<a href="%s" target="_blank" rel="noopener noreferrer">',
 											esc_url(
-												__( 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Documentation#allow-comments-only-in-certain-language', 'antispam-bee' ),
+												__( 'https://antispambee.pluginkollektiv.org/documentation#language', 'antispam-bee' ),
 												'https'
 											)
 										);
@@ -526,7 +526,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							<a href="<?php echo esc_url( __( 'https://wordpress.org/plugins/antispam-bee/faq/', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FAQ', 'antispam-bee' ); ?></a>
 						</p>
 						<p>
-							<a href="<?php echo esc_url( __( 'https://github.com/pluginkollektiv/antispam-bee/wiki/', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Manual', 'antispam-bee' ); ?></a>
+							<a href="<?php echo esc_url( __( 'https://antispambee.pluginkollektiv.org/documentation', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Manual', 'antispam-bee' ); ?></a>
 						</p>
 						<p>
 							<a href="<?php echo esc_url( __( 'https://wordpress.org/support/plugin/antispam-bee', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Support', 'antispam-bee' ); ?></a>
