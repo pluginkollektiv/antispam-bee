@@ -3,8 +3,8 @@
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
-* Tested up to:      5.2
-* Stable tag:        2.9.1
+* Tested up to:      5.4
+* Stable tag:        2.9.2-beta
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,6 +89,24 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 A complete documentation is available in the [GitHub repository Wiki](https://github.com/pluginkollektiv/antispam-bee/wiki).
 
 ## Changelog ##
+
+### 2.9.2 ###
+* **English**
+  * Fix: Delete comment meta for deleted old spam. For the cleanup of older orphaned comment meta we suggest the usage of [WP Sweep](https://wordpress.org/plugins/wp-sweep/)
+  * Fix: Statistic in dashboard showed wrong value
+  * Tweak: Change autocomplete attribute to "new-password"
+  * Tweak: Autoptimize compatibility improved
+  * Tweak: Renamed blacklist/whitelist to a better phrase
+  * Tweak: Added new pattern
+  * Tweak: UI and text optimizations
+  * Tweak: Better compatibility with some server configurations
+  * Tweak: Make spam reason sortable and filterable
+  * Tweak: Add spam reason for manually marked spam
+  * Maintenance: Deleted unused code
+  * Maintenance: Removed Fake IP check (unreliable and producing false positives)
+  * Maintenance: Fix some coding standard issues
+  * Maintenance: Tested up to WordPress 5.4
+  * Maintenance: Tested up to PHP 7.4
 
 ### 2.9.1 ###
   * Improved backend accessibility

@@ -1,6 +1,42 @@
 ## Changelog ##
 
 
+### 2.9.2 ###
+* **English**
+  * Fix: Delete comment meta for deleted old spam. For the cleanup of older orphaned comment meta we suggest the usage of [WP Sweep](https://wordpress.org/plugins/wp-sweep/)
+  * Fix: Statistic in dashboard showed wrong value
+  * Tweak: Change autocomplete attribute to "new-password"
+  * Tweak: Autoptimize compatibility improved
+  * Tweak: Renamed blacklist/whitelist to a better phrase
+  * Tweak: Added new pattern
+  * Tweak: UI and text optimizations
+  * Tweak: Better compatibility with some server configurations
+  * Tweak: Make spam reason sortable and filterable
+  * Tweak: Add spam reason for manually marked spam
+  * Maintenance: Deleted unused code
+  * Maintenance: Removed Fake IP check (unreliable and producing false positives)
+  * Maintenance: Fix some coding standard issues
+  * Maintenance: Tested up to WordPress 5.4
+  * Maintenance: Tested up to PHP 7.4
+
+
+* **Deutsch**
+  * Fix: Lösche Kommentarmeta beim Löschen von Spamkommentaren. Für das Aufräumen alter verwaister Kommentarmetas empfehlen wir die Verwendung von [WP Sweep](https://de.wordpress.org/plugins/wp-sweep/)
+  * Fix: Dashboard Statistiken zeigten falschen Wert
+  * Tweak: Änderung des autocomplete Attributs zu "new-password"
+  * Tweak: Kompatibilität mit Autoptimize verbessert
+  * Tweak: "Blacklist/Whitelist" umbenannt
+  * Tweak: Neue Spamerkennungsmuster hinzugefügt
+  * Tweak: UI und Textverbesserungen
+  * Tweak: Erhöhte Kompatibilität mit einigen Serverkonfigurationen
+  * Tweak: Kommentare nach Spamgrund sortier- und filterbar gemacht
+  * Tweak: Neuer Spamgrund für manuell markierten Spam eingeführt
+  * Maintenance: Ungenutzter Code wurde gelöscht
+  * Maintenance: Der Fake IP check wurde entfernt. Dieser war unzuverlässig und produzierte falsche Ergebnisse
+  * Maintenance: Einige Probleme mit unseren Coding standards wurden gefixt
+  * Maintenance: Getestet bis WordPress 5.4
+  * Maintenance: Getestet bis PHP 7.4
+
 ### 2.9.1 ###
 * **English**
   * Improved backend accessibility

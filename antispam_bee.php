@@ -9,7 +9,7 @@
  * Domain Path: /lang
  * License:     GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
- * Version:     2.9.1
+ * Version:     2.9.2-beta
  *
  * [](http://coderisk.com/wp/plugin/antispam-bee/RIPS-lAHLcgvqY8)
  *

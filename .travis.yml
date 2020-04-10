@@ -32,8 +32,24 @@ jobs:
       env: WORDPRESS_VERSION=nightly
       script: ./bin/behat.sh
     - stage: behat
-      php: '7.1'
+      php: '7.3'
       env: WORDPRESS_VERSION=latest
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.2'
+      env: WORDPRESS_VERSION=5.3
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.0'
+      env: WORDPRESS_VERSION=5.2
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.0'
+      env: WORDPRESS_VERSION=5.1
+      script: ./bin/behat.sh
+    - stage: behat
+      php: '7.0'
+      env: WORDPRESS_VERSION=5.0
       script: ./bin/behat.sh
     - stage: behat
       php: '7.2'
@@ -50,18 +66,6 @@ jobs:
     - stage: behat
       php: '7.0'
       env: WORDPRESS_VERSION=4.6
-      script: ./bin/behat.sh
-    - stage: behat
-      php: '7.0'
-      env: WORDPRESS_VERSION=5.0
-      script: ./bin/behat.sh
-    - stage: behat
-      php: '7.0'
-      env: WORDPRESS_VERSION=5.1
-      script: ./bin/behat.sh
-    - stage: behat
-      php: '7.0'
-      env: WORDPRESS_VERSION=5.2
       script: ./bin/behat.sh
     - stage: quality
       php: '7.0'
