@@ -1554,6 +1554,11 @@ class Antispam_Bee {
 				'email' => '@gmail.com$',
 			),
 			array(
+				'body'   => '\b[a-z]{30}\b',
+				'author' => '\b[a-z]{10}\b',
+				'host'   => '\b[a-z]{10}\b',
+			),
+			array(
 				'body' => '\<\!.+?mfunc.+?\>',
 			),
 			array(
