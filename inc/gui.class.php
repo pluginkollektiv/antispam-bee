@@ -239,7 +239,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							<li>
 								<input type="checkbox" name="ab_bbcode_check" id="ab_bbcode_check" value="1" <?php checked( $options['bbcode_check'], 1 ); ?> />
 								<label for="ab_bbcode_check">
-									<?php esc_html_e( 'BBCode is spam', 'antispam-bee' ); ?>
+									<?php esc_html_e( 'BBCode links are spam', 'antispam-bee' ); ?>
 									<span><?php esc_html_e( 'Review the comment contents for BBCode links', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
