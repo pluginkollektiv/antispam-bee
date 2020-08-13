@@ -154,4 +154,38 @@ final class Antispam_Bee_Columns {
 		</style>
 		<?php
 	}
+
+	/**
+	 * Add comment action link to report spam to ASB
+	 *
+	 * @since 2.9.3
+	 *
+	 * @param array   $actions Array of actions.
+	 * @param comment $comment Comment object.
+	 */
+	public static function add_report_comment_action_link( $actions, $comment ) {
+
+		// URLencode comment data.
+		$name    = rawurlencode( $comment->comment_author );
+		$email   = rawurlencode( $comment->comment_author_email );
+		$ip      = rawurlencode( $comment->comment_author_IP );
+		$host    = rawurlencode( gethostbyaddr( $ip ) );
+		$url     = rawurlencode( $comment->comment_author_url );
+		$content = rawurlencode( $comment->comment_content );
+		$agent   = rawurlencode( $comment->comment_agent );
+
+		// Build action link.
+		$target = ' target="_blank" ';
+		$rel    = ' rel="noopener noreferrer" ';
+		$href   = 'href="https://docs.google.com/forms/d/e/1FAIpQLSeQlKVZZYsF1qkKz7U78B2wy_6s6I7aNSdQc-DGpjeqWx70-A/viewform?c=0&w=1&entry.437446945=' . $name . '&entry.462884433=' . $ip . '&entry.1346967038=' . $host . '&entry.121560485=' . $email . '&entry.1210529682=' . $url . '&entry.1837399577=' . $content . '&entry.372858475=' . $agent . '" ';
+
+		$action  = '';
+		$action .= "<a $target $href $rel>";
+		$action .= __( 'Report to Antispam Bee', 'antispam-bee' );
+		$action .= '</a>';
+
+		$actions['report_spam trash'] = $action;
+
+		return $actions;
+	}
 }
