@@ -2488,6 +2488,15 @@ class Antispam_Bee {
 			);
 		}
 
+		// Prepare Comment Type.
+		$comment_name = __( 'Comment', 'antispam-bee' );
+		if ( 'trackback' === $comment['comment_type'] ) {
+			$comment_name = __( 'Trackback', 'antispam-bee' );
+		}
+		if ( 'pingback' === $comment['comment_type'] ) {
+			$comment_name = __( 'Pingback', 'antispam-bee' );
+		}
+
 		// Body.
 		$body = sprintf(
 			"%s \"%s\"\r\n\r\n",
@@ -2504,7 +2513,7 @@ class Antispam_Bee {
 		) . sprintf(
 			"%s: %s\r\n",
 			esc_html__( 'Type', 'antispam-bee' ),
-			esc_html( ( empty( $comment['comment_type'] ) ? __( 'Comment', 'antispam-bee' ) : __( 'Trackback', 'antispam-bee' ) ) )
+			esc_html( $comment_name )
 		) . sprintf(
 			"Whois: http://whois.arin.net/rest/ip/%s\r\n",
 			$comment['comment_author_IP']
