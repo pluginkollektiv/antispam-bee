@@ -169,7 +169,7 @@ final class Antispam_Bee_Columns {
 		$name    = rawurlencode( $comment->comment_author );
 		$email   = rawurlencode( $comment->comment_author_email );
 		$ip      = rawurlencode( $comment->comment_author_IP );
-		$host    = rawurlencode( gethostbyaddr( $ip ) );
+		$host    = rawurlencode( gethostbyaddr( $comment->comment_author_IP ) );
 		$url     = rawurlencode( $comment->comment_author_url );
 		$content = rawurlencode( $comment->comment_content );
 		$agent   = rawurlencode( $comment->comment_agent );
