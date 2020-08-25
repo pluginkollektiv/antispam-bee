@@ -156,12 +156,12 @@ final class Antispam_Bee_Columns {
 	}
 
 	/**
-	 * Add comment action link to report spam to ASB
+	 * Add comment action link to report spam to ASB.
 	 *
 	 * @since 2.9.3
 	 *
-	 * @param array   $actions Array of actions.
-	 * @param comment $comment Comment object.
+	 * @param string[]   $actions Array of actions.
+	 * @param WP_Comment $comment Comment object.
 	 */
 	public static function add_report_comment_action_link( $actions, $comment ) {
 
