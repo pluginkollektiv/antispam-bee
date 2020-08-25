@@ -2193,10 +2193,14 @@ class Antispam_Bee {
 	/**
 	 * Testing if we are on an AMP site.
 	 *
+	 * Starting with v2.0, amp_is_request() is the preferred method to check,
+	 * but we fall back to the then deprecated is_amp_endpoint() as needed.
+	 *
 	 * @return bool
 	 */
 	private static function _is_amp() {
-		return function_exists('is_amp_endpoint') && is_amp_endpoint();
+		return ( function_exists( 'amp_is_request' ) && amp_is_request() )
+		       || ( function_exists('is_amp_endpoint') && is_amp_endpoint() );
 	}
 
 
