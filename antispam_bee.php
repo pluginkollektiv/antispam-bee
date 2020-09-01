@@ -1222,8 +1222,10 @@ class Antispam_Bee {
 
 		$id_script = '';
 		if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
-			$output   .= 'id="' . self::get_secret_id_for_post( self::$_current_post_id ) . '" ';
-			$id_script = '<script data-noptimize type="text/javascript">document.getElementById("comment").setAttribute( "id", "a' . substr( esc_js( md5( time() ) ), 0, 31 ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( self::$_current_post_id ) ) . '").setAttribute( "id", "comment" );</script>';
+			$output .= 'id="' . self::get_secret_id_for_post( self::$_current_post_id ) . '" ';
+			if ( ! self::_is_amp() ) {
+				$id_script = '<script data-noptimize type="text/javascript">document.getElementById("comment").setAttribute( "id", "a' . substr( esc_js( md5( time() ) ), 0, 31 ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( self::$_current_post_id ) ) . '").setAttribute( "id", "comment" );</script>';
+			}
 		}
 
 		$output .= ' name="' . esc_attr( self::get_secret_name_for_post( self::$_current_post_id ) ) . '" ';
@@ -2187,6 +2189,18 @@ class Antispam_Bee {
 	 */
 	private static function _is_mobile() {
 		return strpos( get_template_directory(), 'wptouch' );
+	}
+
+	/**
+	 * Testing if we are on an AMP site.
+	 *
+	 * Starting with v2.0, amp_is_request() is the preferred method to check,
+	 * but we fall back to the then deprecated is_amp_endpoint() as needed.
+	 *
+	 * @return bool
+	 */
+	private static function _is_amp() {
+		return ( function_exists( 'amp_is_request' ) && amp_is_request() ) || ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() );
 	}
 
 
