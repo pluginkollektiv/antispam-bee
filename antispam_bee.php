@@ -1221,9 +1221,9 @@ class Antispam_Bee {
 
 		$id_script = '';
 		if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
-			$output   .= 'id="' . self::get_secret_id_for_post( self::$_current_post_id ) . '" ';
-			if (! self::_is_amp()) {
-				$id_script = '<script data-noptimize type="text/javascript">document.getElementById("comment").setAttribute( "id", "a' . substr(esc_js(md5(time())), 0, 31) . '" );document.getElementById("' . esc_js(self::get_secret_id_for_post(self::$_current_post_id)) . '").setAttribute( "id", "comment" );</script>';
+			$output .= 'id="' . self::get_secret_id_for_post( self::$_current_post_id ) . '" ';
+			if ( ! self::_is_amp() ) {
+				$id_script = '<script data-noptimize type="text/javascript">document.getElementById("comment").setAttribute( "id", "a' . substr( esc_js( md5( time() ) ), 0, 31 ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post( self::$_current_post_id ) ) . '").setAttribute( "id", "comment" );</script>';
 			}
 		}
 
@@ -2199,8 +2199,7 @@ class Antispam_Bee {
 	 * @return bool
 	 */
 	private static function _is_amp() {
-		return ( function_exists( 'amp_is_request' ) && amp_is_request() )
-		       || ( function_exists('is_amp_endpoint') && is_amp_endpoint() );
+		return ( function_exists( 'amp_is_request' ) && amp_is_request() ) || ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() );
 	}
 
 
