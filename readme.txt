@@ -3,9 +3,9 @@
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
-* Tested up to:      5.4
+* Tested up to:      5.5
 * Requires PHP:      5.2
-* Stable tag:        2.9.2
+* Stable tag:        2.9.3-beta
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
