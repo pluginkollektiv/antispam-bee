@@ -1,5 +1,17 @@
 ## Changelog ##
 
+### 2.9.3 ###
+* **English**
+  * Fixed: Compatibility with WordPress 5.5
+  * Fixed: Undefined index on spam list page
+  * Tweak: Better wording on settings page
+  * Tweak: AMP compatibility
+
+* **Deutsch**
+  * Fix: Kompatibilität mit WordPress 5.5
+  * Fix: Undefined index in Spamliste
+  * Tweak: Inklusivere Sprache unter Einstellungen
+  * Tweak: AMP-Kompatibilität
 
 ### 2.9.2 ###
 * **English**
