@@ -1580,6 +1580,9 @@ class Antispam_Bee {
 				'body'  => 'dating|sex|lotto|pharmacy',
 				'email' => '@mail\.ru|@yandex\.',
 			),
+			array(
+				'body' => '^\[…\] ((Here |There )you (can |will ))?(((R|r)ead |(F|f)ind )(\d* )?)?((M|m)ore )?(Information |Info )?(here )?(to |on )+that Topic: \S* \[…\]$',
+			),
 		);
 
 		$quoted_author = preg_quote( $comment['author'], '/' );
