@@ -119,7 +119,7 @@ class Antispam_Bee {
 			)
 		);
 
-		$disallow_ajax = apply_filters( 'antispam_bee_allow_ajax_calls', true );
+		$disallow_ajax = apply_filters( 'antispam_bee_disallow_ajax_calls', true );
 
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX && $disallow_ajax ) {
 			return;
