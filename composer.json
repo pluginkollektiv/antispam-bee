@@ -31,7 +31,8 @@
 		"behat/mink-goutte-driver": "^1.2",
 		"behat/mink-selenium2-driver": "^1.3",
 		"wp-coding-standards/wpcs": "^0.14.1",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.4.4"
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+		"composer/package-versions-deprecated": "^1.11"
 	},
 	"autoload-dev": {
 		"classmap": [
