@@ -1,5 +1,5 @@
 # Antispam Bee #
-* Contributors:      pluginkollektiv
+* Contributors:      pluginkollektiv, websupporter, timse201, schlessera, glueckpress, zodiac1978, swissspidy, drivingralle, florianbrinkmann
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
@@ -130,7 +130,7 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
   * Introduction of behat tests.
   * Updates the used JavaScript library for the statistics widget.
   * Bugfix in the "Comment form used outside of posts" option.
-  
+
 ### 2.8.1 ###
   * PHP 5.3 compatibility
   * Bugfix where a spam trackback produced a fatal error
@@ -145,7 +145,7 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
    * Minor interface improvements
    * Remove old russian and Dutch translation files
    * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
-  
+
 ### 2.7.1 ###
    * Fixes an incompatibility with Chrome autofill
    * Fixes some incompatibilities with other plugins/themes where the comment field was left empty
