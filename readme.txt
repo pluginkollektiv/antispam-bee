@@ -1,5 +1,5 @@
 # Antispam Bee #
-* Contributors:      pluginkollektiv, websupporter, timse201, schlessera, glueckpress, zodiac1978, swissspidy, drivingralle, florianbrinkmann
+* Contributors:      pluginkollektiv, websupporter, schlessera, zodiac1978, swissspidy, krafit
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
