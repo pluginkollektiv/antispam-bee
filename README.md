@@ -32,6 +32,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Pull requests for documented bugs are highly appreciated.
 * If you think you’ve found a bug (e.g. you’re experiencing unexpected behavior), please post at the [support forums](https://wordpress.org/support/plugin/antispam-bee) first.
 * If you want to help us translate this plugin you can do so [on WordPress Translate](https://translate.wordpress.org/projects/wp-plugins/antispam-bee).
+* To test the plugin on your local machine, simply run `docker-compose up` in the root folder and open `http://localhost:8081/` in your browser.
 
 ### Donate
 [Donate for us via Paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW)
