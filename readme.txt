@@ -97,6 +97,7 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
   * Fixed: Undefined index on spam list page
   * Tweak: Better wording on settings page
   * Tweak: AMP compatibility
+  * Tweak: Protect CSS from overwrite through bad themes
 
 ### 2.9.2 ###
   * Fix: Delete comment meta for deleted old spam. For the cleanup of older orphaned comment meta we suggest the usage of [WP Sweep](https://wordpress.org/plugins/wp-sweep/)

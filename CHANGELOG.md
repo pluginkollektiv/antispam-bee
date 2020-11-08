@@ -6,12 +6,14 @@
   * Fixed: Undefined index on spam list page
   * Tweak: Better wording on settings page
   * Tweak: AMP compatibility
+  * Tweak: Protect CSS from overwrite through bad themes
 
 * **Deutsch**
   * Fix: Kompatibilität mit WordPress 5.5
   * Fix: Undefined index in Spamliste
   * Tweak: Inklusivere Sprache unter Einstellungen
   * Tweak: AMP-Kompatibilität
+  * Tweak: Schütze CSS besser vor Überschreiben durch schlechte Themes
 
 ### 2.9.2 ###
 * **English**
