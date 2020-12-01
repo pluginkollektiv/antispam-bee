@@ -11,7 +11,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Trust approved commenters.
 * Trust commenters with a Gravatar.
 * Consider the comment time.
-* Treat BBCode as spam.
+* Treat BBCode links as spam.
 * Validate the IP address of commenters.
 * Use regular expressions.
 * Search local spam database for commenters previously marked as spammers.
