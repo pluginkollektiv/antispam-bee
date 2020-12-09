@@ -565,4 +565,61 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		 */
 		return apply_filters( 'ab_get_allowed_translate_languages', $lang );
 	}
+
+	/**
+	 * Add reanalyze button to edit-comments page.
+	 *
+	 * @since 2.10
+	 * @return void
+	 */
+	public static function add_reanalyze_button( $hook_suffix ) {
+		if ( 'edit-comments.php' !== $hook_suffix ) {
+			return;
+		}
+
+		// Create HTML for form and input button.
+		$form_markup = sprintf(
+			'<form method="post" id="antispam-bee-reanalyze-all-form">%s</form>',
+			wp_nonce_field( 'antispam_bee_reanalyze_all', 'antispam_bee_reanalyze_all_nonce' )
+		);
+
+		$button_markup = sprintf(
+			'<input class="button" id="antispam-bee-reanalyze-all" name="antispam_bee_reanalyze_all" type="submit" value="Reanalyze with Antispam Bee" form="antispam-bee-reanalyze-all-form">'
+		);
+
+		printf(
+			'<script>
+				( function() {
+					document.addEventListener( "DOMContentLoaded", function() {
+						var commentsForm = document.querySelector( "#comments-form" ),
+							actionsDiv = document.querySelector( "#comments-form .tablenav.top" );
+						if ( ! commentsForm || ! actionsDiv ) {
+							return;
+						}
+
+						var tablenavPagesDiv = actionsDiv.querySelector( ".tablenav-pages" );
+						if ( ! tablenavPagesDiv ) {
+							return;
+						}
+
+						// Create submit input.
+						var actionDiv = document.createElement( "div" );
+						actionDiv.classList.add( "alignleft", "actions" );
+
+						var submit = \'%s\';
+						
+						actionDiv.innerHTML = submit;
+
+						// Add action div before tablenavPagesDiv.
+						tablenavPagesDiv.parentNode.insertBefore( actionDiv, tablenavPagesDiv );
+
+						// Add form before comments form list.
+						commentsForm.outerHTML = \'%s\' + commentsForm.outerHTML;
+					} );
+				} )();
+			</script>',
+			$button_markup,
+			$form_markup
+		);
+	}
 }
