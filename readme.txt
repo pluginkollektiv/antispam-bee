@@ -232,5 +232,5 @@ This update makes sure your spam check is GDPR compliant, no matter the options 
 ## Screenshots ##
 1. Block or allow comments from specific countries.
 2. Allow comments only in certain languages.
-3. Add usefull spam stats to your dashboard.
+3. Add useful spam stats to your dashboard.
 4. Tailor WordPress' spam management to your workflow.
