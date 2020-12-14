@@ -230,4 +230,7 @@ For the complete changelog, check out our [GitHub repository](https://github.com
 This update makes sure your spam check is GDPR compliant, no matter the options you choose. Please make sure to update before May 25th!
 
 ## Screenshots ##
-1. Antispam Bee settings
+1. Block or allow comments from specific countries.
+2. Allow comments only in certain languages.
+3. Add usefull spam stats to your dashboard.
+4. Tailor WordPress' spam management to your workflow.
