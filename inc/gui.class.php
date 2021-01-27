@@ -583,8 +583,12 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			wp_nonce_field( 'antispam_bee_reanalyze_all', 'antispam_bee_reanalyze_all_nonce' )
 		);
 
+		$is_reanalyzing = get_option( 'antispambee_is_reanalyzing', false );
+
 		$button_markup = sprintf(
-			'<input class="button" id="antispam-bee-reanalyze-all" name="antispam_bee_reanalyze_all" type="submit" value="Reanalyze with Antispam Bee" form="antispam-bee-reanalyze-all-form">'
+			'<input class="button" id="antispam-bee-reanalyze-all" name="antispam_bee_reanalyze_all" type="submit" value="%s" form="antispam-bee-reanalyze-all-form" %s>',
+			$is_reanalyzing === false ? __( 'Reanalyze with Antispam Bee', 'antispam-bee' ) : __( 'Reanalyzing in progress…', 'antispam-bee' ),
+			$is_reanalyzing !== false ? 'disabled' : ''
 		);
 
 		printf(

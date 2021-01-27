@@ -1249,6 +1249,14 @@ class Antispam_Bee {
 			return;
 		}
 
+		// Test if ASB is already reanalyzing.
+		if ( get_option( 'antispambee_is_reanalyzing', false ) !== false ) {
+			return;
+		}
+
+		// Set option so we can disable the reanalyze button while analyzing is running.
+		update_option( 'antispambee_is_reanalyzing', true );
+
 		// Dispatch async action.
 		as_enqueue_async_action( 'antispam_bee_reanalyze_comments' );
 	}
@@ -1300,6 +1308,7 @@ class Antispam_Bee {
 		// Check if less than $number comments where checked.
 		// In that case, we do not need another run.
 		if ( count( $comments ) < $number ) {
+			delete_option( 'antispambee_is_reanalyzing' );
 			return;
 		}
 
