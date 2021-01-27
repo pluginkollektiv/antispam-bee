@@ -38,6 +38,9 @@
 // Make sure this file is only run from within the WordPress context.
 defined( 'ABSPATH' ) || exit;
 
+// Load action scheduler.
+$action_scheduler = require_once dirname( __FILE__ ) . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
+
 /**
  * Antispam_Bee
  *
@@ -117,6 +120,16 @@ class Antispam_Bee {
 				__CLASS__,
 				'update_antispam_bee_reason',
 			)
+		);
+
+		add_action(
+			'antispam_bee_reanalyze_comments',
+			array(
+				__CLASS__,
+				'reanalyze_comments',
+			),
+			10,
+			2
 		);
 
 		if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
@@ -299,7 +312,7 @@ class Antispam_Bee {
 					'admin_init',
 					array(
 						__CLASS__,
-						'reanalyze_comments'
+						'handle_reanalyze_comments_request'
 					)
 				);
 			}
@@ -1223,14 +1236,11 @@ class Antispam_Bee {
 	}
 
 	/**
-	 * If the action is fired, reanalyze all comments.
+	 * Handle request to reanalyze pending comments.
 	 *
 	 * @since   2.10
-	 *
-	 * @param   array $comment  Untreated comment.
-	 * @return  array $comment  Treated comment.
 	 */
-	public static function reanalyze_comments() {
+	public static function handle_reanalyze_comments_request() {
 		if ( ! self::_current_page( 'edit-comments' ) ) {
 			return;
 		}
@@ -1239,16 +1249,62 @@ class Antispam_Bee {
 			return;
 		}
 
-		// Get all comments.
+		// Dispatch async action.
+		as_enqueue_async_action( 'antispam_bee_reanalyze_comments' );
+	}
+
+	/**
+	 * Reanalyze pending comments.
+	 * 
+	 * @param array $last_handled_ids IDs of last 50 checked IDs.
+	 * @param int $offset The offset to use in get_comments().
+	 *
+	 * @since   2.10
+	 */
+	public static function reanalyze_comments( $last_handled_ids = null, $offset = 0 ) {
+		$number = 500;
+
+		// Get pending comments.
 		$comments = get_comments(
 			array(
 				'status' => 'hold',
+				'number' => $number,
+				'order' => 'ASC',
+				'offset' => $offset,
 			)
 		);
 
-		foreach ( $comments as $comment ) {
-			self::check_existing_comment( $comment );
+		// Check if we need to use an offset.
+		if ( $last_handled_ids !== null ) {
+			foreach ( $comments as $key => $comment ) {
+				if ( in_array( $comment->comment_ID, $last_handled_ids ) ) {
+					$offset += $key + 1;
+				}
+			}
+			as_enqueue_async_action( 'antispam_bee_reanalyze_comments', array( null, $offset ) );
+			return;
 		}
+
+		$checked_ids = [];
+		// Check the comments.
+		foreach ( $comments as $key => $comment ) {
+			self::check_existing_comment( $comment );
+
+			// We store the last 50 IDs in an array to check already processed comments 
+			// that are no spam in the next batch.
+			if ( $number - $key < 50 ) {
+				array_push( $checked_ids, $comment->comment_ID );
+			}
+		}
+
+		// Check if less than $number comments where checked.
+		// In that case, we do not need another run.
+		if ( count( $comments ) < $number ) {
+			return;
+		}
+
+		// Dispatch async action.
+		as_enqueue_async_action( 'antispam_bee_reanalyze_comments', array( $checked_ids, $offset ) );
 	}
 
 	/**

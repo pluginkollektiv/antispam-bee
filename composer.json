@@ -42,5 +42,8 @@
 		"psr-4": {
 			"AntispamBee\\Tests\\": "tests/"
 		}
+	},
+	"require": {
+		"woocommerce/action-scheduler": "^3.1"
 	}
 }
