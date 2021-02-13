@@ -602,6 +602,18 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			return;
 		}
 
+		// Check if we have pending comments.
+		$pending_comments_count = get_comments(
+			array(
+				'status' => 'hold',
+				'count' => true,
+			)
+		);
+
+		if ( $pending_comments_count === 0 ) {
+			return;
+		}
+
 		// Create HTML for form and input button.
 		$form_markup = sprintf(
 			'<form method="post" id="antispam-bee-reanalyze-all-form">%s</form>',
