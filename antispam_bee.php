@@ -1255,11 +1255,20 @@ class Antispam_Bee {
 			return;
 		}
 
+		self::init_pending_comments_reanalyzation();
+	}
+
+	/**
+	 * Init reanalyzation of pending comments.
+	 *
+	 * @since   2.10
+	 */
+	public static function init_pending_comments_reanalyzation() {
 		// Test if ASB is already reanalyzing.
 		if ( get_option( 'antispambee_is_reanalyzing', false ) !== false ) {
 			return;
 		}
-
+		
 		// Set option so we can disable the reanalyze button while analyzing is running.
 		update_option( 'antispambee_is_reanalyzing', true );
 

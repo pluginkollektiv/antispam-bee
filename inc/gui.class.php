@@ -126,6 +126,11 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 		self::update_options( $options );
 
+		// Handle reanalyze comments option/action.
+		if ( isset( $_POST['ab_reanalyze_pending_comments'] ) && (int) $_POST['ab_reanalyze_pending_comments'] === 1 ) {
+			self::init_pending_comments_reanalyzation();
+		}
+
 		wp_safe_redirect(
 			add_query_arg(
 				array(
@@ -515,6 +520,26 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									<span><?php esc_html_e( 'Check for comment forms on archive pages', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
+							<?php
+							// Only display option when pending comment count more than X.
+							$pending_comments_count = get_comments(
+								array(
+									'status' => 'hold',
+									'count' => true,
+								)
+							);
+							if ( $pending_comments_count > 20 ) {
+								?>	
+								<li>
+									<input type="checkbox" name="ab_reanalyze_pending_comments" id="ab_reanalyze_pending_comments" value="1" <?php disabled( get_option( 'antispambee_is_reanalyzing', false ), 1 ); ?> />
+									<label for="ab_reanalyze_pending_comments">
+										<?php get_option( 'antispambee_is_reanalyzing', false ) !== false ? esc_html_e( 'Reanalyzing in progress…', 'antispam-bee' ) : esc_html_e( 'Reanalyze pending comments', 'antispam-bee' ); ?>
+										<span><?php esc_html_e( 'All pending comments are reanalyzed with Antispam Bee (that might take some time with many pending comments)', 'antispam-bee' ); ?></span>
+									</label>
+								</li>
+								<?php
+							}
+							?>
 						</ul>
 					</div>
 
