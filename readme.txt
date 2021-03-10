@@ -1,11 +1,11 @@
 # Antispam Bee #
-* Contributors:      pluginkollektiv, websupporter, schlessera, zodiac1978, swissspidy, krafit, kau-boy
+* Contributors:      pluginkollektiv, websupporter, schlessera, zodiac1978, swissspidy, krafit, kau-boy, florianbrinkmann
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
 * Tested up to:      5.7
 * Requires PHP:      5.2
-* Stable tag:        2.9.3
+* Stable tag:        2.9.4
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,13 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 A complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ## Changelog ##
+
+### 2.9.4 ###
+
+  * Enhancement: Add filter to allow ajax calls
+  * Tweak: Better wording for BBCode feature in plugin description
+  * Tweak: Better screenshots in the plugin directory
+  * Maintenance: Tested up to WordPress 5.7
 
 ### 2.9.3 ###
   * Fixed: Compatibility with WordPress 5.5

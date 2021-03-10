@@ -1,5 +1,18 @@
 ## Changelog ##
 
+### 2.9.4 ###
+* **English**
+  * Enhancement: Add filter to allow ajax calls
+  * Tweak: Better wording for BBCode feature in plugin description
+  * Tweak: Better screenshots in the plugin directory
+  * Maintenance: Tested up to WordPress 5.7
+
+* **Deutsch**
+  * Verbesserung: Filter hinzugefügt, um Ajax-Aufrufe zuzulassen
+  * Tweak: Bessere Formulierung für BBCode-Funktion in Plugin-Beschreibung
+  * Tweak: Bessere Screenshots im Plugin-Verzeichnis
+  * Wartung: Getestet mit WordPress 5.7
+
 ### 2.9.3 ###
 * **English**
   * Fixed: Compatibility with WordPress 5.5
