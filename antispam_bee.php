@@ -484,6 +484,22 @@ class Antispam_Bee {
 		return $array[ $key ];
 	}
 
+	/**
+	 * Check if comment is a ping (pingback, trackback or something similar)
+	 *
+	 * @param  array $comment Treated commentary data.
+	 * @return boolean        True if ping, false if classic comment
+	 */
+	public static function is_ping( $comment ) {
+		$types  = array( 'pingback', 'trackback', 'pings' );
+		$is_ping = false;
+
+		if ( in_array( self::get_key( $comment, 'comment_type' ), $ping['types'], true ) ) {
+			$is_ping = true;
+		}
+
+		return apply_filters( 'antispam_bee_is_ping', $is_ping, $comment );
+	}
 
 	/**
 	 * Localization of the admin pages
@@ -1101,10 +1117,7 @@ class Antispam_Bee {
 			);
 		}
 
-		$ping = array(
-			'types'   => array( 'pingback', 'trackback', 'pings' ),
-			'allowed' => ! self::get_option( 'ignore_pings' ),
-		);
+		$pings_allowed = ! self::get_option( 'ignore_pings' );
 
 		// phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification
 		// Everybody can post.
@@ -1118,7 +1131,7 @@ class Antispam_Bee {
 					$status['reason']
 				);
 			}
-		} elseif ( in_array( self::get_key( $comment, 'comment_type' ), $ping['types'], true ) && $ping['allowed'] ) {
+		} elseif ( self::is_ping( $comment ) && $pings_allowed ) {
 			$status = self::_verify_trackback_request( $comment );
 
 			if ( ! empty( $status['reason'] ) ) {
@@ -2226,7 +2239,7 @@ class Antispam_Bee {
 	 * @param   array   $comment  Untreated commentary data.
 	 * @param   string  $reason   Reason for suspicion.
 	 * @param   boolean $is_ping  Ping (optional).
-	 * @return  array    $comment  Treated commentary data.
+	 * @return  array   $comment  Treated commentary data.
 	 */
 	private static function _handle_spam_request( $comment, $reason, $is_ping = false ) {
 
