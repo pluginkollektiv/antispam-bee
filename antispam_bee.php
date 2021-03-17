@@ -487,8 +487,10 @@ class Antispam_Bee {
 	/**
 	 * Check if comment is a ping (pingback, trackback or something similar)
 	 *
-	 * @param  array $comment Treated commentary data.
-	 * @return boolean        True if ping, false if classic comment
+	 * @since   <TBD>
+	 *
+	 * @param   array $comment Treated commentary data.
+	 * @return  boolean        `true` if ping and `false` if classic comment
 	 */
 	public static function is_ping( $comment ) {
 		$types  = array( 'pingback', 'trackback', 'pings' );
