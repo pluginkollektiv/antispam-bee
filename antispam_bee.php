@@ -496,7 +496,7 @@ class Antispam_Bee {
 		$types  = array( 'pingback', 'trackback', 'pings' );
 		$is_ping = false;
 
-		if ( in_array( self::get_key( $comment, 'comment_type' ), $ping['types'], true ) ) {
+		if ( in_array( self::get_key( $comment, 'comment_type' ), $types, true ) ) {
 			$is_ping = true;
 		}
 
