@@ -493,7 +493,7 @@ class Antispam_Bee {
 	 * @return  boolean        `true` if ping and `false` if classic comment
 	 */
 	public static function is_ping( $comment ) {
-		$types  = array( 'pingback', 'trackback', 'pings' );
+		$types   = array( 'pingback', 'trackback', 'pings' );
 		$is_ping = false;
 
 		if ( in_array( self::get_key( $comment, 'comment_type' ), $types, true ) ) {
