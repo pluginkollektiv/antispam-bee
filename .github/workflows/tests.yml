@@ -1,0 +1,95 @@
+name: Tests, Behat, Coding Standards
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['7.3', '7.2', '5.4']
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: mbstring, intl
+        ini-values: post_max_size=256M, short_open_tag=On
+        tools: phpunit, composer
+    - name: Set COMPOSER environment variable for 5.4
+      if: matrix.php-versions == '5.4'
+      run: echo "COMPOSER=composer-php-5-4.json" >> $GITHUB_ENV
+    - name: Run tests
+      run: |
+        composer install
+        ./vendor/bin/phpunit -c ./phpunit.xml.dist
+  behat:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: pluginkollektiv_antispambee_behat
+        ports:
+          - '8888:3306'
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    strategy:
+      matrix:
+        php: ['8']
+        wordpress: ['nightly', 'latest']
+        include:
+          - php: '7.4'
+            wordpress: '5.5'
+          - php: '7.4'
+            wordpress: '5.4'
+          - php: '7.3'
+            wordpress: '5.3'
+          - php: '7.3'
+            wordpress: '5.2'
+          - php: '7.3'
+            wordpress: '5.1'
+          - php: '7.2'
+            wordpress: '4.9'
+          - php: '7.2'
+            wordpress: '4.8'
+          - php: '7.2'
+            wordpress: '4.7'
+          - php: '7.2'
+            wordpress: '4.6'
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: mbstring, intl, pdo_mysql, zip
+        ini-values: post_max_size=256M, short_open_tag=On
+        tools: phpunit, composer
+    - name: Start mysql service
+      run: sudo /etc/init.d/mysql start
+    - name: Install XVFB
+      run: sudo apt-get install xvfb
+    - name: Run tests
+      run: |
+        composer install --ignore-platform-req=php
+        ./bin/behat.sh
+      env:
+        WORDPRESS_VERSION: ${{ matrix.wordpress }}
+        NAP_LENGTH: 10
+    - name: Cleanup xvfb
+      uses: bcomnes/cleanup-xvfb@v1
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.2'
+        extensions: mbstring, intl
+        ini-values: post_max_size=256M, short_open_tag=On
+        tools: phpunit, composer
+    - name: Run PHPCS
+      run: |
+        composer install
+        ./vendor/bin/phpcs ./ --standard=./phpcs.config.xml -s
