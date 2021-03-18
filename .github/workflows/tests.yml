@@ -19,14 +19,14 @@ jobs:
       run: |
         composer install
         ./vendor/bin/phpunit -c ./phpunit.xml.dist
-  test-5-6:
+  test-5-4:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '5.6'
+        php-version: '5.4'
         extensions: mbstring, intl
         ini-values: post_max_size=256M, short_open_tag=On
         tools: phpunit, composer
@@ -35,7 +35,7 @@ jobs:
         composer install
         ./vendor/bin/phpunit -c ./phpunit.xml.dist
       env:
-        COMPOSER: composer-php-5-6.json
+        COMPOSER: composer-php-5-4.json
   behat:
     runs-on: ubuntu-latest
     services:
