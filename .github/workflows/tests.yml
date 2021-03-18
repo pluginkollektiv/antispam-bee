@@ -15,10 +15,9 @@ jobs:
         extensions: mbstring, intl
         ini-values: post_max_size=256M, short_open_tag=On
         tools: phpunit, composer
-    - name: Set COMPOSER environment variable
-      env:
-        PHP_VERSION: ${{ matrix.php-versions }}
-      run: echo "COMPOSER=$(($PHP_VERSION == '5.4' ? 'composer-php-5-4.json' : 'composer.json' ))" >> $GITHUB_ENV
+    - name: Set COMPOSER environment variable for 5.4
+      if: matrix.php-versions == '5.4'
+      run: echo "COMPOSER=composer-php-5-4.json" >> $GITHUB_ENV
     - name: Run tests
       run: |
         composer install
