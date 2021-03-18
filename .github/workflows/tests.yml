@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['7.2', '7.3']
+        php-versions: ['7.3', '7.2', '5.4']
     steps:
     - uses: actions/checkout@master
     - name: Setup PHP
@@ -15,27 +15,14 @@ jobs:
         extensions: mbstring, intl
         ini-values: post_max_size=256M, short_open_tag=On
         tools: phpunit, composer
-    - name: Run tests
-      run: |
-        composer install
-        ./vendor/bin/phpunit -c ./phpunit.xml.dist
-  test-5-4:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '5.4'
-        extensions: mbstring, intl
-        ini-values: post_max_size=256M, short_open_tag=On
-        tools: phpunit, composer
-    - name: Run tests
-      run: |
-        composer install
-        ./vendor/bin/phpunit -c ./phpunit.xml.dist
+    - name: Set COMPOSER environment variable
       env:
-        COMPOSER: composer-php-5-4.json
+        PHP_VERSION: ${{ matrix.php-versions }}
+      run: echo "COMPOSER=$(($PHP_VERSION == '5.4' ? 'composer-php-5-4.json' : 'composer.json' ))" >> $GITHUB_ENV
+    - name: Run tests
+      run: |
+        composer install
+        ./vendor/bin/phpunit -c ./phpunit.xml.dist
   behat:
     runs-on: ubuntu-latest
     services:
