@@ -1377,11 +1377,12 @@ class Antispam_Bee {
 	 * @return  array|void     Array with suspected reason
 	 */
 	private static function _verify_comment_request( $comment ) {
-		$ip     = self::get_key( $comment, 'comment_author_IP' );
-		$url    = self::get_key( $comment, 'comment_author_url' );
-		$body   = self::get_key( $comment, 'comment_content' );
-		$email  = self::get_key( $comment, 'comment_author_email' );
-		$author = self::get_key( $comment, 'comment_author' );
+		$ip        = self::get_key( $comment, 'comment_author_IP' );
+		$url       = self::get_key( $comment, 'comment_author_url' );
+		$body      = self::get_key( $comment, 'comment_content' );
+		$email     = self::get_key( $comment, 'comment_author_email' );
+		$author    = self::get_key( $comment, 'comment_author' );
+		$useragent = self::get_key( $comment, 'comment_agent' );
 
 		if ( empty( $body ) ) {
 			return array(
@@ -1433,12 +1434,13 @@ class Antispam_Bee {
 
 		if ( $options['regexp_check'] && self::_is_regexp_spam(
 			array(
-				'ip'     => $ip,
-				'rawurl' => $url,
-				'host'   => self::parse_url( $url, 'host' ),
-				'body'   => $body,
-				'email'  => $email,
-				'author' => $author,
+				'ip'        => $ip,
+				'rawurl'    => $url,
+				'host'      => self::parse_url( $url, 'host' ),
+				'body'      => $body,
+				'email'     => $email,
+				'author'    => $author,
+				'useragent' => $useragent,
 			)
 		) ) {
 			return array(
@@ -1554,6 +1556,7 @@ class Antispam_Bee {
 			'body',
 			'email',
 			'author',
+			'useragent',
 		);
 
 		$patterns = array(
