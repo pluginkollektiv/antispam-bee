@@ -322,7 +322,7 @@ class Antispam_Bee {
 					'admin_init',
 					array(
 						__CLASS__,
-						'handle_reanalyze_comments_request'
+						'handle_reanalyze_comments_request',
 					)
 				);
 			}
@@ -1168,8 +1168,9 @@ class Antispam_Bee {
 
 	/**
 	 * Handle the spam check for a comment.
-	 * 
-	 * @param  array      $comment The comment data array. 
+	 *
+	 * @param  array $comment The comment data array.
+	 * @param  bool  $is_existing true if is existing comment, false otherwise.
 	 * @return array|null Comment array or null when existing comment was deleted or no reason for marking as spam.
 	 */
 	private static function _handle_comment( $comment, $is_existing = false ) {
@@ -1190,8 +1191,9 @@ class Antispam_Bee {
 
 	/**
 	 * Handle the spam check for a trackback.
-	 * 
-	 * @param  array      $trackback The trackback data array. 
+	 *
+	 * @param  array $trackback The trackback data array.
+	 * @param  bool  $is_existing true if is existing trackback, false otherwise.
 	 * @return array|null Trackback array or null when existing trackback was deleted or no reason for marking as spam.
 	 */
 	private static function _handle_trackback( $trackback, $is_existing = false ) {
@@ -1216,7 +1218,7 @@ class Antispam_Bee {
 	 * @since   2.10
 	 *
 	 * @param   array $comment  Untreated comment.
-	 * @return  array $comment  Treated comment.
+	 * @return  void
 	 */
 	public static function check_existing_comment( $comment ) {
 		$ping = self::get_ping_options();
@@ -1231,7 +1233,7 @@ class Antispam_Bee {
 		);
 
 		$comment = (array) $comment;
-		if ( $comment['comment_type'] === 'comment' ) {
+		if ( 'comment' === $comment['comment_type'] ) {
 			// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
 			self::_handle_comment( $comment, true );
 		} elseif ( in_array( self::get_key( $comment, 'comment_type' ), $ping['types'], true ) && $ping['allowed'] ) {
@@ -1274,7 +1276,7 @@ class Antispam_Bee {
 		if ( get_option( 'antispambee_is_reanalyzing', false ) !== false ) {
 			return;
 		}
-		
+
 		// Set option so we can disable the reanalyze button while analyzing is running.
 		update_option( 'antispambee_is_reanalyzing', true );
 
@@ -1284,31 +1286,32 @@ class Antispam_Bee {
 
 	/**
 	 * Reanalyze pending comments.
-	 * 
+	 *
 	 * @param array $last_handled_ids IDs of last 50 checked IDs.
-	 * @param int $offset The offset to use in get_comments().
+	 * @param int   $offset The offset to use in get_comments().
+	 * @param bool  $reanalyzation_found_new_spam true if new spam was found during reanalyzation, false otherwise.
 	 *
 	 * @since   2.10
 	 */
 	public static function reanalyze_comments( $last_handled_ids = null, $offset = 0, $reanalyzation_found_new_spam = false ) {
 		self::$_reanalyzation_found_new_spam = $reanalyzation_found_new_spam;
-		$number = 500;
+		$number                              = 500;
 
 		// Get pending comments.
 		$comments = get_comments(
 			array(
 				'status' => 'hold',
 				'number' => $number,
-				'order' => 'ASC',
+				'order'  => 'ASC',
 				'offset' => $offset,
 			)
 		);
 
 		// Check if we need to use an offset.
-		if ( $last_handled_ids !== null ) {
+		if ( null !== $last_handled_ids ) {
 			$tmp = 0;
 			foreach ( $comments as $key => $comment ) {
-				if ( in_array( $comment->comment_ID, $last_handled_ids ) ) {
+				if ( in_array( $comment->comment_ID, $last_handled_ids, true ) ) {
 					$tmp = $key + 1;
 				}
 			}
@@ -1322,7 +1325,7 @@ class Antispam_Bee {
 		foreach ( $comments as $key => $comment ) {
 			self::check_existing_comment( $comment );
 
-			// We store the last 50 IDs in an array to check already processed comments 
+			// We store the last 50 IDs in an array to check already processed comments
 			// that are no spam in the next batch.
 			if ( $number - $key < 50 ) {
 				array_push( $checked_ids, $comment->comment_ID );
@@ -1333,7 +1336,7 @@ class Antispam_Bee {
 		// In that case, we do not need another run.
 		if ( count( $comments ) < $number ) {
 			// If the reanalyze run found new spam, we run the reanalyzation again.
-			if ( self::$_reanalyzation_found_new_spam === true ) {
+			if ( true === self::$_reanalyzation_found_new_spam ) {
 				wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments' );
 				return;
 			}
@@ -2434,9 +2437,10 @@ class Antispam_Bee {
 	 * @since   0.1
 	 * @change  2.6.0
 	 *
-	 * @param   array      $comment  Untreated commentary data.
-	 * @param   string     $reason   Reason for suspicion.
-	 * @param   boolean    $is_ping  Ping (optional).
+	 * @param   array   $comment  Untreated commentary data.
+	 * @param   string  $reason   Reason for suspicion.
+	 * @param   boolean $is_ping  Ping (optional).
+	 * @param   boolean $existing_comment true if existing comment, false otherwise.
 	 * @return  array|null $comment  Treated commentary data or null when existing comment was deleted.
 	 */
 	private static function _handle_spam_request( $comment, $reason, $is_ping = false, $existing_comment = false ) {

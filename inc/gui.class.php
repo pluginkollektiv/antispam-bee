@@ -127,7 +127,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		self::update_options( $options );
 
 		// Handle reanalyze comments option/action.
-		if ( isset( $_POST['ab_reanalyze_pending_comments'] ) && (int) $_POST['ab_reanalyze_pending_comments'] === 1 ) {
+		if ( isset( $_POST['ab_reanalyze_pending_comments'] ) && 1 === (int) $_POST['ab_reanalyze_pending_comments'] ) {
 			self::init_pending_comments_reanalyzation();
 		}
 
@@ -525,11 +525,11 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							$pending_comments_count = get_comments(
 								array(
 									'status' => 'hold',
-									'count' => true,
+									'count'  => true,
 								)
 							);
 							if ( $pending_comments_count > 20 ) {
-								?>	
+								?>
 								<li>
 									<input type="checkbox" name="ab_reanalyze_pending_comments" id="ab_reanalyze_pending_comments" value="1" <?php disabled( get_option( 'antispambee_is_reanalyzing', false ), 1 ); ?> />
 									<label for="ab_reanalyze_pending_comments">
@@ -595,6 +595,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	 * Add reanalyze button to edit-comments page.
 	 *
 	 * @since 2.10
+	 * @param string $hook_suffix The current admin page.
 	 * @return void
 	 */
 	public static function add_reanalyze_button( $hook_suffix ) {
@@ -606,11 +607,11 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		$pending_comments_count = get_comments(
 			array(
 				'status' => 'hold',
-				'count' => true,
+				'count'  => true,
 			)
 		);
 
-		if ( $pending_comments_count === 0 ) {
+		if ( 0 === $pending_comments_count ) {
 			return;
 		}
 
@@ -624,8 +625,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 		$button_markup = sprintf(
 			'<input class="button" id="antispam-bee-reanalyze-all" name="antispam_bee_reanalyze_all" type="submit" value="%s" form="antispam-bee-reanalyze-all-form" %s>',
-			$is_reanalyzing === false ? __( 'Reanalyze with Antispam Bee', 'antispam-bee' ) : __( 'Reanalyzing in progress…', 'antispam-bee' ),
-			$is_reanalyzing !== false ? 'disabled' : ''
+			false === $is_reanalyzing ? __( 'Reanalyze with Antispam Bee', 'antispam-bee' ) : __( 'Reanalyzing in progress…', 'antispam-bee' ),
+			false !== $is_reanalyzing ? 'disabled' : ''
 		);
 
 		printf(
