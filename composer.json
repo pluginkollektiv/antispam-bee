@@ -42,5 +42,7 @@
 		"psr-4": {
 			"AntispamBee\\Tests\\": "tests/"
 		}
+	},
+	"require": {
 	}
 }

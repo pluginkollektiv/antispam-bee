@@ -89,6 +89,13 @@ class Antispam_Bee {
 	private static $_current_post_id;
 
 	/**
+	 * If new spam was found during a reanalyzation run.
+	 *
+	 * @var boolean
+	 */
+	private static $_reanalyzation_found_new_spam = false;
+
+	/**
 	 * "Constructor" of the class
 	 *
 	 * @since   0.1
@@ -117,6 +124,16 @@ class Antispam_Bee {
 				__CLASS__,
 				'update_antispam_bee_reason',
 			)
+		);
+
+		add_action(
+			'antispam_bee_reanalyze_comments',
+			array(
+				__CLASS__,
+				'reanalyze_comments',
+			),
+			10,
+			3
 		);
 
 		$disallow_ajax = apply_filters( 'antispam_bee_disallow_ajax_calls', true );
@@ -292,6 +309,22 @@ class Antispam_Bee {
 						)
 					);
 				}
+				require_once dirname( __FILE__ ) . '/inc/gui.class.php';
+				add_action(
+					'admin_enqueue_scripts',
+					array(
+						'Antispam_Bee_GUI',
+						'add_reanalyze_button',
+					)
+				);
+
+				add_action(
+					'admin_init',
+					array(
+						__CLASS__,
+						'handle_reanalyze_comments_request',
+					)
+				);
 			}
 		} else {
 			add_action(
@@ -1038,6 +1071,16 @@ class Antispam_Bee {
 		}
 	}
 
+	/**
+	 * Return ping options.
+	 */
+	private static function get_ping_options() {
+		return array(
+			'types'   => array( 'pingback', 'trackback', 'pings' ),
+			'allowed' => ! self::get_option( 'ignore_pings' ),
+		);
+	}
+
 
 
 	/*
@@ -1101,38 +1144,209 @@ class Antispam_Bee {
 			);
 		}
 
-		$ping = array(
-			'types'   => array( 'pingback', 'trackback', 'pings' ),
-			'allowed' => ! self::get_option( 'ignore_pings' ),
-		);
+		$ping = self::get_ping_options();
 
 		// phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification
 		// Everybody can post.
 		if ( strpos( $request_path, 'wp-comments-post.php' ) !== false && ! empty( $_POST ) ) {
 			// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
-			$status = self::_verify_comment_request( $comment );
+			$handled = self::_handle_comment( $comment );
 
-			if ( ! empty( $status['reason'] ) ) {
-				return self::_handle_spam_request(
-					$comment,
-					$status['reason']
-				);
+			if ( is_array( $handled ) ) {
+				return $handled;
 			}
 		} elseif ( in_array( self::get_key( $comment, 'comment_type' ), $ping['types'], true ) && $ping['allowed'] ) {
-			$status = self::_verify_trackback_request( $comment );
+			$handled = self::_handle_trackback( $comment );
 
-			if ( ! empty( $status['reason'] ) ) {
-				return self::_handle_spam_request(
-					$comment,
-					$status['reason'],
-					true
-				);
+			if ( is_array( $handled ) ) {
+				return $handled;
 			}
 		}
 
 		return $comment;
 	}
 
+	/**
+	 * Handle the spam check for a comment.
+	 *
+	 * @param  array $comment The comment data array.
+	 * @param  bool  $is_existing true if is existing comment, false otherwise.
+	 * @return array|null Comment array or null when existing comment was deleted or no reason for marking as spam.
+	 */
+	private static function _handle_comment( $comment, $is_existing = false ) {
+		$status = self::_verify_comment_request( $comment );
+
+		if ( ! empty( $status['reason'] ) ) {
+			self::$_reanalyzation_found_new_spam = true;
+			return self::_handle_spam_request(
+				$comment,
+				$status['reason'],
+				false,
+				$is_existing
+			);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Handle the spam check for a trackback.
+	 *
+	 * @param  array $trackback The trackback data array.
+	 * @param  bool  $is_existing true if is existing trackback, false otherwise.
+	 * @return array|null Trackback array or null when existing trackback was deleted or no reason for marking as spam.
+	 */
+	private static function _handle_trackback( $trackback, $is_existing = false ) {
+		$status = self::_verify_trackback_request( $trackback );
+
+		if ( ! empty( $status['reason'] ) ) {
+			self::$_reanalyzation_found_new_spam = true;
+			return self::_handle_spam_request(
+				$trackback,
+				$status['reason'],
+				true,
+				$is_existing
+			);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Check existing comment for spam
+	 *
+	 * @since   2.10
+	 *
+	 * @param   array $comment  Untreated comment.
+	 * @return  void
+	 */
+	public static function check_existing_comment( $comment ) {
+		$ping = self::get_ping_options();
+
+		// If we would not remove that action, the spam reason would be set to `manually`.
+		remove_action(
+			'comment_unapproved_to_spam',
+			array(
+				__CLASS__,
+				'update_antispam_bee_reason',
+			)
+		);
+
+		$comment = (array) $comment;
+		if ( 'comment' === $comment['comment_type'] ) {
+			// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
+			self::_handle_comment( $comment, true );
+		} elseif ( in_array( self::get_key( $comment, 'comment_type' ), $ping['types'], true ) && $ping['allowed'] ) {
+			self::_handle_trackback( $comment, true );
+		}
+
+		add_action(
+			'comment_unapproved_to_spam',
+			array(
+				__CLASS__,
+				'update_antispam_bee_reason',
+			)
+		);
+	}
+
+	/**
+	 * Handle request to reanalyze pending comments.
+	 *
+	 * @since   2.10
+	 */
+	public static function handle_reanalyze_comments_request() {
+		if ( ! self::_current_page( 'edit-comments' ) ) {
+			return;
+		}
+
+		if ( ! isset( $_POST['antispam_bee_reanalyze_all_nonce'] ) || ! check_admin_referer( 'antispam_bee_reanalyze_all', 'antispam_bee_reanalyze_all_nonce' ) ) {
+			return;
+		}
+
+		self::init_pending_comments_reanalyzation();
+	}
+
+	/**
+	 * Init reanalyzation of pending comments.
+	 *
+	 * @since   2.10
+	 */
+	public static function init_pending_comments_reanalyzation() {
+		// Test if ASB is already reanalyzing.
+		if ( get_option( 'antispambee_is_reanalyzing', false ) !== false ) {
+			return;
+		}
+
+		// Set option so we can disable the reanalyze button while analyzing is running.
+		update_option( 'antispambee_is_reanalyzing', true );
+
+		// Dispatch cron event.
+		wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments' );
+	}
+
+	/**
+	 * Reanalyze pending comments.
+	 *
+	 * @param array $last_handled_ids IDs of last 50 checked IDs.
+	 * @param int   $offset The offset to use in get_comments().
+	 * @param bool  $reanalyzation_found_new_spam true if new spam was found during reanalyzation, false otherwise.
+	 *
+	 * @since   2.10
+	 */
+	public static function reanalyze_comments( $last_handled_ids = null, $offset = 0, $reanalyzation_found_new_spam = false ) {
+		self::$_reanalyzation_found_new_spam = $reanalyzation_found_new_spam;
+		$number                              = 500;
+
+		// Get pending comments.
+		$comments = get_comments(
+			array(
+				'status' => 'hold',
+				'number' => $number,
+				'order'  => 'ASC',
+				'offset' => $offset,
+			)
+		);
+
+		// Check if we need to use an offset.
+		if ( null !== $last_handled_ids ) {
+			$tmp = 0;
+			foreach ( $comments as $key => $comment ) {
+				if ( in_array( $comment->comment_ID, $last_handled_ids, true ) ) {
+					$tmp = $key + 1;
+				}
+			}
+			$offset += $tmp;
+			wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments', array( null, $offset, self::$_reanalyzation_found_new_spam ) );
+			return;
+		}
+
+		$checked_ids = [];
+		// Check the comments.
+		foreach ( $comments as $key => $comment ) {
+			self::check_existing_comment( $comment );
+
+			// We store the last 50 IDs in an array to check already processed comments
+			// that are no spam in the next batch.
+			if ( $number - $key < 50 ) {
+				array_push( $checked_ids, $comment->comment_ID );
+			}
+		}
+
+		// Check if less than $number comments where checked.
+		// In that case, we do not need another run.
+		if ( count( $comments ) < $number ) {
+			// If the reanalyze run found new spam, we run the reanalyzation again.
+			if ( true === self::$_reanalyzation_found_new_spam ) {
+				wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments' );
+				return;
+			}
+			delete_option( 'antispambee_is_reanalyzing' );
+			return;
+		}
+
+		// Dispatch cron event.
+		wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments', array( $checked_ids, $offset, self::$_reanalyzation_found_new_spam ) );
+	}
 
 	/**
 	 * Prepares the replacement of the comment field
@@ -2229,9 +2443,10 @@ class Antispam_Bee {
 	 * @param   array   $comment  Untreated commentary data.
 	 * @param   string  $reason   Reason for suspicion.
 	 * @param   boolean $is_ping  Ping (optional).
-	 * @return  array    $comment  Treated commentary data.
+	 * @param   boolean $existing_comment true if existing comment, false otherwise.
+	 * @return  array|null $comment  Treated commentary data or null when existing comment was deleted.
 	 */
-	private static function _handle_spam_request( $comment, $reason, $is_ping = false ) {
+	private static function _handle_spam_request( $comment, $reason, $is_ping = false, $existing_comment = false ) {
 
 		$options = self::get_options();
 
@@ -2250,49 +2465,73 @@ class Antispam_Bee {
 
 		// Delete spam.
 		if ( $spam_remove ) {
-			self::_go_in_peace();
+			if ( $existing_comment ) {
+				wp_delete_comment( $comment['comment_ID'] );
+				return null;
+			} else {
+				self::_go_in_peace();
+			}
 		}
 
 		if ( $ignore_filter && ( ( 1 === (int) $ignore_type && $is_ping ) || ( 2 === (int) $ignore_type && ! $is_ping ) ) ) {
-			self::_go_in_peace();
+			if ( $existing_comment ) {
+				wp_delete_comment( $comment['comment_ID'] );
+				return null;
+			} else {
+				self::_go_in_peace();
+			}
 		}
 
 		// Spam reason.
 		if ( $ignore_reason ) {
-			self::_go_in_peace();
+			if ( $existing_comment ) {
+				wp_delete_comment( $comment['comment_ID'] );
+				return null;
+			} else {
+				self::_go_in_peace();
+			}
 		}
 		self::$_reason = $reason;
 
-		// Mark spam.
-		add_filter(
-			'pre_comment_approved',
-			array(
-				__CLASS__,
-				'return_spam',
-			)
-		);
+		if ( $existing_comment ) {
+			// Mark spam.
+			wp_spam_comment( $comment['comment_ID'] );
 
-		// Send e-mail.
-		add_action(
-			'comment_post',
-			array(
-				__CLASS__,
-				'send_mail_notification',
-			)
-		);
+			// Spam reason as comment meta.
+			if ( $spam_notice ) {
+				self::add_spam_reason_to_comment( $comment['comment_ID'] );
+			}
+		} else {
+			// Mark spam.
+			add_filter(
+				'pre_comment_approved',
+				array(
+					__CLASS__,
+					'return_spam',
+				)
+			);
 
-		// Spam reason as comment meta.
-		if ( $spam_notice ) {
+			// Send e-mail.
 			add_action(
 				'comment_post',
 				array(
 					__CLASS__,
-					'add_spam_reason_to_comment',
+					'send_mail_notification',
 				)
 			);
-		}
 
-		return $comment;
+			// Spam reason as comment meta.
+			if ( $spam_notice ) {
+				add_action(
+					'comment_post',
+					array(
+						__CLASS__,
+						'add_spam_reason_to_comment',
+					)
+				);
+			}
+			return $comment;
+		}
 	}
 
 

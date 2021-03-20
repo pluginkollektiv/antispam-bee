@@ -126,6 +126,11 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 		self::update_options( $options );
 
+		// Handle reanalyze comments option/action.
+		if ( isset( $_POST['ab_reanalyze_pending_comments'] ) && 1 === (int) $_POST['ab_reanalyze_pending_comments'] ) {
+			self::init_pending_comments_reanalyzation();
+		}
+
 		wp_safe_redirect(
 			add_query_arg(
 				array(
@@ -515,6 +520,26 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									<span><?php esc_html_e( 'Check for comment forms on archive pages', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
+							<?php
+							// Only display option when pending comment count more than X.
+							$pending_comments_count = get_comments(
+								array(
+									'status' => 'hold',
+									'count'  => true,
+								)
+							);
+							if ( $pending_comments_count > 20 ) {
+								?>
+								<li>
+									<input type="checkbox" name="ab_reanalyze_pending_comments" id="ab_reanalyze_pending_comments" value="1" <?php disabled( get_option( 'antispambee_is_reanalyzing', false ), 1 ); ?> />
+									<label for="ab_reanalyze_pending_comments">
+										<?php get_option( 'antispambee_is_reanalyzing', false ) !== false ? esc_html_e( 'Reanalyzing in progress…', 'antispam-bee' ) : esc_html_e( 'Reanalyze pending comments', 'antispam-bee' ); ?>
+										<span><?php esc_html_e( 'All pending comments are reanalyzed with Antispam Bee (that might take some time with many pending comments)', 'antispam-bee' ); ?></span>
+									</label>
+								</li>
+								<?php
+							}
+							?>
 						</ul>
 					</div>
 
@@ -564,5 +589,79 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		 * @return (array)
 		 */
 		return apply_filters( 'ab_get_allowed_translate_languages', $lang );
+	}
+
+	/**
+	 * Add reanalyze button to edit-comments page.
+	 *
+	 * @since 2.10
+	 * @param string $hook_suffix The current admin page.
+	 * @return void
+	 */
+	public static function add_reanalyze_button( $hook_suffix ) {
+		if ( 'edit-comments.php' !== $hook_suffix ) {
+			return;
+		}
+
+		// Check if we have pending comments.
+		$pending_comments_count = get_comments(
+			array(
+				'status' => 'hold',
+				'count'  => true,
+			)
+		);
+
+		if ( 0 === $pending_comments_count ) {
+			return;
+		}
+
+		// Create HTML for form and input button.
+		$form_markup = sprintf(
+			'<form method="post" id="antispam-bee-reanalyze-all-form">%s</form>',
+			wp_nonce_field( 'antispam_bee_reanalyze_all', 'antispam_bee_reanalyze_all_nonce' )
+		);
+
+		$is_reanalyzing = get_option( 'antispambee_is_reanalyzing', false );
+
+		$button_markup = sprintf(
+			'<input class="button" id="antispam-bee-reanalyze-all" name="antispam_bee_reanalyze_all" type="submit" value="%s" form="antispam-bee-reanalyze-all-form" %s>',
+			false === $is_reanalyzing ? __( 'Reanalyze with Antispam Bee', 'antispam-bee' ) : __( 'Reanalyzing in progress…', 'antispam-bee' ),
+			false !== $is_reanalyzing ? 'disabled' : ''
+		);
+
+		printf(
+			'<script>
+				( function() {
+					document.addEventListener( "DOMContentLoaded", function() {
+						var commentsForm = document.querySelector( "#comments-form" ),
+							actionsDiv = document.querySelector( "#comments-form .tablenav.top" );
+						if ( ! commentsForm || ! actionsDiv ) {
+							return;
+						}
+
+						var tablenavPagesDiv = actionsDiv.querySelector( ".tablenav-pages" );
+						if ( ! tablenavPagesDiv ) {
+							return;
+						}
+
+						// Create submit input.
+						var actionDiv = document.createElement( "div" );
+						actionDiv.classList.add( "alignleft", "actions" );
+
+						var submit = \'%s\';
+						
+						actionDiv.innerHTML = submit;
+
+						// Add action div before tablenavPagesDiv.
+						tablenavPagesDiv.parentNode.insertBefore( actionDiv, tablenavPagesDiv );
+
+						// Add form before comments form list.
+						commentsForm.outerHTML = \'%s\' + commentsForm.outerHTML;
+					} );
+				} )();
+			</script>',
+			$button_markup,
+			$form_markup
+		);
 	}
 }
