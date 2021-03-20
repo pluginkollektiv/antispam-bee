@@ -38,9 +38,6 @@
 // Make sure this file is only run from within the WordPress context.
 defined( 'ABSPATH' ) || exit;
 
-// Load action scheduler.
-$action_scheduler = require_once dirname( __FILE__ ) . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
-
 /**
  * Antispam_Bee
  *
@@ -92,6 +89,13 @@ class Antispam_Bee {
 	private static $_current_post_id;
 
 	/**
+	 * If new spam was found during a reanalyzation run.
+	 *
+	 * @var boolean
+	 */
+	private static $_reanalyzation_found_new_spam = false;
+
+	/**
 	 * "Constructor" of the class
 	 *
 	 * @since   0.1
@@ -129,7 +133,7 @@ class Antispam_Bee {
 				'reanalyze_comments',
 			),
 			10,
-			2
+			3
 		);
 
 		$disallow_ajax = apply_filters( 'antispam_bee_disallow_ajax_calls', true );
@@ -1172,6 +1176,7 @@ class Antispam_Bee {
 		$status = self::_verify_comment_request( $comment );
 
 		if ( ! empty( $status['reason'] ) ) {
+			self::$_reanalyzation_found_new_spam = true;
 			return self::_handle_spam_request(
 				$comment,
 				$status['reason'],
@@ -1193,6 +1198,7 @@ class Antispam_Bee {
 		$status = self::_verify_trackback_request( $trackback );
 
 		if ( ! empty( $status['reason'] ) ) {
+			self::$_reanalyzation_found_new_spam = true;
 			return self::_handle_spam_request(
 				$trackback,
 				$status['reason'],
@@ -1272,8 +1278,8 @@ class Antispam_Bee {
 		// Set option so we can disable the reanalyze button while analyzing is running.
 		update_option( 'antispambee_is_reanalyzing', true );
 
-		// Dispatch async action.
-		as_enqueue_async_action( 'antispam_bee_reanalyze_comments' );
+		// Dispatch cron event.
+		wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments' );
 	}
 
 	/**
@@ -1284,7 +1290,8 @@ class Antispam_Bee {
 	 *
 	 * @since   2.10
 	 */
-	public static function reanalyze_comments( $last_handled_ids = null, $offset = 0 ) {
+	public static function reanalyze_comments( $last_handled_ids = null, $offset = 0, $reanalyzation_found_new_spam = false ) {
+		self::$_reanalyzation_found_new_spam = $reanalyzation_found_new_spam;
 		$number = 500;
 
 		// Get pending comments.
@@ -1299,12 +1306,14 @@ class Antispam_Bee {
 
 		// Check if we need to use an offset.
 		if ( $last_handled_ids !== null ) {
+			$tmp = 0;
 			foreach ( $comments as $key => $comment ) {
 				if ( in_array( $comment->comment_ID, $last_handled_ids ) ) {
-					$offset += $key + 1;
+					$tmp = $key + 1;
 				}
 			}
-			as_enqueue_async_action( 'antispam_bee_reanalyze_comments', array( null, $offset ) );
+			$offset += $tmp;
+			wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments', array( null, $offset, self::$_reanalyzation_found_new_spam ) );
 			return;
 		}
 
@@ -1323,12 +1332,17 @@ class Antispam_Bee {
 		// Check if less than $number comments where checked.
 		// In that case, we do not need another run.
 		if ( count( $comments ) < $number ) {
+			// If the reanalyze run found new spam, we run the reanalyzation again.
+			if ( self::$_reanalyzation_found_new_spam === true ) {
+				wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments' );
+				return;
+			}
 			delete_option( 'antispambee_is_reanalyzing' );
 			return;
 		}
 
-		// Dispatch async action.
-		as_enqueue_async_action( 'antispam_bee_reanalyze_comments', array( $checked_ids, $offset ) );
+		// Dispatch cron event.
+		wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments', array( $checked_ids, $offset, self::$_reanalyzation_found_new_spam ) );
 	}
 
 	/**

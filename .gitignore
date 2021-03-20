@@ -1,5 +1,3 @@
 .idea
 composer.lock
-!/vendor
-/vendor/*
-!/vendor/woocommerce
+/vendor/

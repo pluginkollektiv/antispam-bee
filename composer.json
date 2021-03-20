@@ -44,6 +44,5 @@
 		}
 	},
 	"require": {
-		"woocommerce/action-scheduler": "^3.1"
 	}
 }
