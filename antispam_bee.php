@@ -2573,7 +2573,7 @@ class Antispam_Bee {
 		) . sprintf(
 			"%s\r\n%s\r\n",
 			esc_html__( 'Notify message by Antispam Bee', 'antispam-bee' ),
-			esc_html__( 'https://antispambee.com', 'antispam-bee' )
+			esc_html__( 'https://antispambee.pluginkollektiv.org/', 'antispam-bee' )
 		);
 
 		wp_mail(
