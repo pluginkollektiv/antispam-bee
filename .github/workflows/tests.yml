@@ -93,3 +93,4 @@ jobs:
       run: |
         composer install
         ./vendor/bin/phpcs ./ --standard=./phpcs.config.xml -s
+        composer lint-all
