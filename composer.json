@@ -6,18 +6,18 @@
 		"antispam",
 		"honeypot"
 	],
-	"homepage": "https://pluginkollektiv.github.io/antispam-bee/",
+	"homepage": "https://antispambee.pluginkollektiv.org/",
 	"authors": [
 		{
 			"name": "pluginkollektiv",
-			"homepage": "https://github.com/pluginkollektiv",
+			"homepage": "https://pluginkollektiv.org/",
 			"role": "Maintainer"
 		}
 	],
 	"support": {
 		"issues": "https://github.com/pluginkollektiv/antispam-bee/issues",
 		"source": "https://github.com/pluginkollektiv/antispam-bee",
-		"docs": "https://github.com/pluginkollektiv/antispam-bee/blob/master/README.md"
+		"docs": "https://antispambee.pluginkollektiv.org/documentation/"
 	},
 	"type": "wordpress-plugin",
 	"license": "GPL-v2",
@@ -42,5 +42,17 @@
 		"psr-4": {
 			"AntispamBee\\Tests\\": "tests/"
 		}
-	}
+	},
+  "scripts": {
+    "lint-all": [
+      "@lint-js",
+      "@lint-css"
+    ],
+    "lint-css": [
+      "npx stylelint css/dashboard.css css/styles.css"
+    ],
+    "lint-js": [
+      "npx eslint js/dashboard.js js/raphael.helper.js js/scripts.js"
+    ]
+  }
 }
