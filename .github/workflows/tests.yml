@@ -89,7 +89,12 @@ jobs:
         extensions: mbstring, intl
         ini-values: post_max_size=256M, short_open_tag=On
         tools: phpunit, composer
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
     - name: Run PHPCS
       run: |
         composer install
         ./vendor/bin/phpcs ./ --standard=./phpcs.config.xml -s
+        npm install
+        composer lint-all

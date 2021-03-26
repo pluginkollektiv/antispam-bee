@@ -1,2 +1,5 @@
-.idea
-/vendor/
+css/*.min.css
+js/*.min.js
+.idea/
+node_modules/
+vendor/

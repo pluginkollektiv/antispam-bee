@@ -6,18 +6,18 @@
 		"antispam",
 		"honeypot"
 	],
-	"homepage": "https://pluginkollektiv.github.io/antispam-bee/",
+	"homepage": "https://antispambee.pluginkollektiv.org/",
 	"authors": [
 		{
 			"name": "pluginkollektiv",
-			"homepage": "https://github.com/pluginkollektiv",
+			"homepage": "https://pluginkollektiv.org/",
 			"role": "Maintainer"
 		}
 	],
 	"support": {
 		"issues": "https://github.com/pluginkollektiv/antispam-bee/issues",
 		"source": "https://github.com/pluginkollektiv/antispam-bee",
-		"docs": "https://github.com/pluginkollektiv/antispam-bee/blob/master/README.md"
+		"docs": "https://antispambee.pluginkollektiv.org/documentation/"
 	},
 	"type": "wordpress-plugin",
 	"license": "GPL-v2",
@@ -32,7 +32,8 @@
 		"wp-coding-standards/wpcs": "^0.14.1",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
 		"composer/package-versions-deprecated": "^1.11",
-		"dmore/behat-chrome-extension": "^1.3"
+		"dmore/behat-chrome-extension": "^1.3",
+		"matthiasmullie/minify": "^1.3"
 	},
 	"autoload-dev": {
 		"classmap": [
@@ -42,5 +43,33 @@
 		"psr-4": {
 			"AntispamBee\\Tests\\": "tests/"
 		}
-	}
+	},
+  "scripts": {
+    "post-install-cmd": [
+      "@build"
+    ],
+    "post-update-cmd": [
+      "@build"
+    ],
+    "build": [
+      "@minify"
+    ],
+    "lint-all": [
+      "@lint-js",
+      "@lint-css"
+    ],
+    "lint-css": [
+      "npx stylelint css/dashboard.css css/styles.css"
+    ],
+    "lint-js": [
+      "npx eslint js/dashboard.js js/raphael.helper.js js/scripts.js"
+    ],
+    "minify": [
+      "minifycss css/dashboard.css > css/dashboard.min.css",
+      "minifycss css/styles.css > css/styles.min.css",
+      "minifyjs js/dashboard.js > js/dashboard.min.js",
+      "minifyjs js/raphael.helper.js > js/raphael.helper.min.js",
+      "minifyjs js/scripts.js > js/scripts.min.js"
+    ]
+  }
 }
