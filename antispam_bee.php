@@ -388,10 +388,10 @@ class Antispam_Bee {
 		delete_option( 'antispam_bee' );
 		$wpdb->query( 'OPTIMIZE TABLE `' . $wpdb->options . '`' );
 
-		//phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
+		//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")';
 		$wpdb->query( $sql );
-		//phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
+		//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 
@@ -1053,7 +1053,7 @@ class Antispam_Bee {
 	 * @change  2.6.3
 	 */
 	public static function precheck_incoming_request() {
-		// phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( is_feed() || is_trackback() || empty( $_POST ) || self::_is_mobile() ) {
 			return;
 		}
@@ -1075,7 +1075,7 @@ class Antispam_Bee {
 		} else {
 			$_POST['ab_spam__hidden_field'] = 1;
 		}
-		// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 
@@ -1106,10 +1106,10 @@ class Antispam_Bee {
 			'allowed' => ! self::get_option( 'ignore_pings' ),
 		);
 
-		// phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Everybody can post.
 		if ( strpos( $request_path, 'wp-comments-post.php' ) !== false && ! empty( $_POST ) ) {
-			// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
+			// phpcs:enable WordPress.Security.NonceVerification.Missing
 			$status = self::_verify_comment_request( $comment );
 
 			if ( ! empty( $status['reason'] ) ) {
@@ -1412,13 +1412,13 @@ class Antispam_Bee {
 			return;
 		}
 
-		// phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( ! empty( $_POST['ab_spam__hidden_field'] ) ) {
 			return array(
 				'reason' => 'css',
 			);
 		}
-		// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( $options['time_check'] && self::_is_shortest_time() ) {
 			return array(
@@ -1506,10 +1506,10 @@ class Antispam_Bee {
 	 * @return  boolean    TRUE if the action time is less than 5 seconds
 	 */
 	private static function _is_shortest_time() {
-		// phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Everybody can Post.
 		$init_time = (int) self::get_key( $_POST, 'ab_init_time' );
-		// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		if ( 0 === $init_time ) {
 			return false;
 		}
@@ -1685,7 +1685,7 @@ class Antispam_Bee {
 			return false;
 		}
 
-		// phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		$filter_sql = implode( ' OR ', $filter );
 
@@ -1699,7 +1699,7 @@ class Antispam_Bee {
 			)
 		);
 		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
-		// phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 		return ! empty( $result );
 	}
@@ -2347,7 +2347,7 @@ class Antispam_Bee {
 	 * @return  mixed  $ip  Client IP
 	 */
 	public static function get_client_ip() {
-		// phpcs:disable WordPress.VIP.ValidatedSanitizedInput.InputNotSanitized
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		// Sanitization of $ip takes place further down.
 		$ip = '';
 
@@ -2374,7 +2374,7 @@ class Antispam_Bee {
 		}
 
 		return '';
-        // phpcs:enable WordPress.VIP.ValidatedSanitizedInput.InputNotSanitized
+        // phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
 	/**
@@ -2495,6 +2495,7 @@ class Antispam_Bee {
 		$subject = sprintf(
 			'[%s] %s',
 			stripslashes_deep(
+				// phpcs:ignore PHPCompatibility.ParameterValues.NewHTMLEntitiesEncodingDefault.NotSet
 				html_entity_decode(
 					get_bloginfo( 'name' ),
 					ENT_QUOTES
@@ -2810,10 +2811,10 @@ class Antispam_Bee {
 		 * In Version 2.9 the IP of the commenter was saved as a hash. We reverted this solution.
 		 * Therefore, we need to delete this unused data.
 		 */
-		//phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
+		//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash")';
 		$wpdb->query( $sql );
-		//phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
+		//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 		update_option( 'antispambee_db_version', self::$db_version );
 	}

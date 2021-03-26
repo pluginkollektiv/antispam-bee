@@ -424,7 +424,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<label for="ab_ignore_filter">
 									<?php
 									echo sprintf(
-										// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
+										// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 										// Output gets escaped in _build_select()
 										// translators: %s is the select field.
 										esc_html__( 'Limit approval to %s', 'antispam-bee' ),
@@ -436,7 +436,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											),
 											$options['ignore_type']
 										)
-										// phpcs:enable _build_select
+										// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 									);
 									?>
 									<span><?php esc_html_e( 'Other types of spam will be deleted immediately', 'antispam-bee' ); ?></span>
