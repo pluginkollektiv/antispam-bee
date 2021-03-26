@@ -20,6 +20,6 @@
 /package.json
 /package-lock.json
 /composer.lock
-/phpcs.config.xml
+/phpcs.xml
 /phpunit.xml.dist
 /README.md

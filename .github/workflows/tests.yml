@@ -95,6 +95,5 @@ jobs:
     - name: Run PHPCS
       run: |
         composer install
-        ./vendor/bin/phpcs ./ --standard=./phpcs.config.xml -s
         npm install
         composer lint-all
