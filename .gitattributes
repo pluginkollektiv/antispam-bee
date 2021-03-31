@@ -19,6 +19,6 @@
 /docker-compose.yml export-ignore
 /package.json export-ignore
 /package-lock.json export-ignore
-/phpcs.config.xml export-ignore
+/phpcs.xml export-ignore
 /phpunit.xml.dist export-ignore
 /README.md export-ignore

@@ -277,7 +277,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										printf(
 											/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
 											esc_html__( 'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
-											wp_kses_post( $link1 ), '</a>'
+											wp_kses_post( $link1 ),
+											'</a>'
 										);
 									?>
 									</span>
@@ -423,7 +424,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<label for="ab_ignore_filter">
 									<?php
 									echo sprintf(
-										// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
+										// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 										// Output gets escaped in _build_select()
 										// translators: %s is the select field.
 										esc_html__( 'Limit approval to %s', 'antispam-bee' ),
@@ -435,7 +436,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											),
 											$options['ignore_type']
 										)
-										// phpcs:enable _build_select
+										// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 									);
 									?>
 									<span><?php esc_html_e( 'Other types of spam will be deleted immediately', 'antispam-bee' ); ?></span>

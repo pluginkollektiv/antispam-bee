@@ -92,9 +92,8 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: '14'
-    - name: Run PHPCS
+    - name: Run code style checks for CSS, JavaScript and PHP
       run: |
         composer install
-        ./vendor/bin/phpcs ./ --standard=./phpcs.config.xml -s
         npm install
         composer lint-all
