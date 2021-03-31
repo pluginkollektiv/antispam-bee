@@ -487,7 +487,7 @@ class Antispam_Bee {
 	/**
 	 * Check if comment is a ping (pingback, trackback or something similar)
 	 *
-	 * @since   2.10
+	 * @since   2.10.0
 	 *
 	 * @param   array $comment Treated commentary data.
 	 * @return  boolean        `true` if ping and `false` if classic comment
