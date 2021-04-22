@@ -549,7 +549,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											get_option( 'antispambee_reanalyzed_comments_count', 0 )
 										) : esc_html_e( 'Reanalyze pending comments', 'antispam-bee' );
 										?>
-										<span><?php esc_html_e( 'All pending comments are reanalyzed with Antispam Bee (that might take some time with many pending comments)', 'antispam-bee' ); ?></span>
+										<span><?php esc_html_e( 'All pending comments are reanalyzed with Antispam Bee (that might take some time with many pending comments).', 'antispam-bee' ); ?><br>
+										<strong><?php esc_html_e( 'Most useful when the local spam database option is active and some comments are already marked as spam.', 'antispam-bee' ); ?></strong></span>
 									</label>
 								</li>
 								<?php
