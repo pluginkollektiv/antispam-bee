@@ -309,22 +309,6 @@ class Antispam_Bee {
 						)
 					);
 				}
-				require_once dirname( __FILE__ ) . '/inc/gui.class.php';
-				add_action(
-					'admin_enqueue_scripts',
-					array(
-						'Antispam_Bee_GUI',
-						'add_reanalyze_button',
-					)
-				);
-
-				add_action(
-					'admin_init',
-					array(
-						__CLASS__,
-						'handle_reanalyze_comments_request',
-					)
-				);
 			}
 		} else {
 			add_action(
@@ -1247,23 +1231,6 @@ class Antispam_Bee {
 				'update_antispam_bee_reason',
 			)
 		);
-	}
-
-	/**
-	 * Handle request to reanalyze pending comments.
-	 *
-	 * @since   2.10
-	 */
-	public static function handle_reanalyze_comments_request() {
-		if ( ! self::_current_page( 'edit-comments' ) ) {
-			return;
-		}
-
-		if ( ! isset( $_POST['antispam_bee_reanalyze_all_nonce'] ) || ! check_admin_referer( 'antispam_bee_reanalyze_all', 'antispam_bee_reanalyze_all_nonce' ) ) {
-			return;
-		}
-
-		self::init_pending_comments_reanalyzation();
 	}
 
 	/**
