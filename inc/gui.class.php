@@ -131,6 +131,14 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			self::init_pending_comments_reanalyzation();
 		}
 
+		// Handle request to stop reanalyzation.
+		if ( isset( $_POST['ab_cancel_reanalyze_pending_comments'] ) && 1 === (int) $_POST['ab_cancel_reanalyze_pending_comments'] ) {
+			delete_option( 'antispambee_is_reanalyzing' );
+			delete_option( 'antispambee_reanalyzed_comments_count' );
+			$timestamp = wp_next_scheduled( 'antispam_bee_reanalyze_comments' );
+			wp_unschedule_event( $timestamp, 'antispam_bee_reanalyze_comments' );
+		}
+
 		wp_safe_redirect(
 			add_query_arg(
 				array(
@@ -521,20 +529,35 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								</label>
 							</li>
 							<?php
-							// Only display option when pending comment count more than X.
+							// Only display option when pending comment count more than X or currently reanalyzing.
 							$pending_comments_count = get_comments(
 								array(
 									'status' => 'hold',
 									'count'  => true,
 								)
 							);
-							if ( $pending_comments_count > 20 ) {
+							$is_reanalyzing = get_option( 'antispambee_is_reanalyzing', false );
+							if ( $pending_comments_count > 20 || $is_reanalyzing ) {
 								?>
 								<li>
-									<input type="checkbox" name="ab_reanalyze_pending_comments" id="ab_reanalyze_pending_comments" value="1" <?php disabled( get_option( 'antispambee_is_reanalyzing', false ), 1 ); ?> />
+									<input type="checkbox" name="ab_reanalyze_pending_comments" id="ab_reanalyze_pending_comments" value="1" <?php disabled( $is_reanalyzing, 1 ); ?> />
 									<label for="ab_reanalyze_pending_comments">
-										<?php get_option( 'antispambee_is_reanalyzing', false ) !== false ? esc_html_e( 'Reanalyzing in progress…', 'antispam-bee' ) : esc_html_e( 'Reanalyze pending comments', 'antispam-bee' ); ?>
+										<?php $is_reanalyzing !== false ? esc_html_e( /* translators: d = Number of comments that were already processed. */
+											sprintf( 'Reanalyzing in progress, already processed %s comments', get_option( 'antispambee_reanalyzed_comments_count', 0 ) ),
+											'antispam-bee'
+										) : esc_html_e( 'Reanalyze pending comments', 'antispam-bee' ); ?>
 										<span><?php esc_html_e( 'All pending comments are reanalyzed with Antispam Bee (that might take some time with many pending comments)', 'antispam-bee' ); ?></span>
+									</label>
+								</li>
+								<?php
+							}
+							if ( $is_reanalyzing ) {
+								?>
+								<li>
+									<input type="checkbox" name="ab_cancel_reanalyze_pending_comments" id="ab_cancel_reanalyze_pending_comments" value="1" />
+									<label for="ab_cancel_reanalyze_pending_comments">
+										<?php esc_html_e( 'Stop reanalyzation', 'antispam-bee' ); ?>
+										<span><?php esc_html_e( 'The current batch of comments will be finished, after that it will stop.', 'antispam-bee' ); ?></span>
 									</label>
 								</li>
 								<?php

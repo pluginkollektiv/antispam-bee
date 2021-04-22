@@ -1272,6 +1272,12 @@ class Antispam_Bee {
 		self::$_reanalyzed_comments_count    = $reanalyzed_comments_count;
 		$number                              = 500;
 
+		// Maybe the user canceled reanalyzation via the settings. If so, we do not want to start
+		// a new batch.
+		if ( get_option( 'antispambee_is_reanalyzing', false ) === false ) {
+			return;
+		}
+
 		// Get pending comments.
 		$comments = get_comments(
 			array(
