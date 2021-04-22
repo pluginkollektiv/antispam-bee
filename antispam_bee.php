@@ -96,6 +96,13 @@ class Antispam_Bee {
 	private static $_reanalyzation_found_new_spam = false;
 
 	/**
+	 * Number of already reanalyzed comments in the current reanalyzation.
+	 *
+	 * @var int
+	 */
+	private static $_reanalyzed_comments_count = 0;
+
+	/**
 	 * "Constructor" of the class
 	 *
 	 * @since   0.1
@@ -133,7 +140,7 @@ class Antispam_Bee {
 				'reanalyze_comments',
 			),
 			10,
-			3
+			4
 		);
 
 		$disallow_ajax = apply_filters( 'antispam_bee_disallow_ajax_calls', true );
@@ -1260,8 +1267,9 @@ class Antispam_Bee {
 	 *
 	 * @since   2.10
 	 */
-	public static function reanalyze_comments( $last_handled_ids = null, $offset = 0, $reanalyzation_found_new_spam = false ) {
+	public static function reanalyze_comments( $last_handled_ids = null, $offset = 0, $reanalyzation_found_new_spam = false, $reanalyzed_comments_count = 0 ) {
 		self::$_reanalyzation_found_new_spam = $reanalyzation_found_new_spam;
+		self::$_reanalyzed_comments_count    = $reanalyzed_comments_count;
 		$number                              = 500;
 
 		// Get pending comments.
@@ -1283,7 +1291,7 @@ class Antispam_Bee {
 				}
 			}
 			$offset += $tmp;
-			wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments', array( null, $offset, self::$_reanalyzation_found_new_spam ) );
+			wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments', array( null, $offset, self::$_reanalyzation_found_new_spam, self::$_reanalyzed_comments_count ) );
 			return;
 		}
 
@@ -1292,12 +1300,17 @@ class Antispam_Bee {
 		foreach ( $comments as $key => $comment ) {
 			self::check_existing_comment( $comment );
 
+			// Increase number of handled comments.
+			self::$_reanalyzed_comments_count = self::$_reanalyzed_comments_count + 1;
+
 			// We store the last 50 IDs in an array to check already processed comments
 			// that are no spam in the next batch.
 			if ( $number - $key < 50 ) {
 				array_push( $checked_ids, $comment->comment_ID );
 			}
 		}
+
+		update_option( 'antispambee_reanalyzed_comments_count', self::$_reanalyzed_comments_count );
 
 		// Check if less than $number comments where checked.
 		// In that case, we do not need another run.
@@ -1308,11 +1321,12 @@ class Antispam_Bee {
 				return;
 			}
 			delete_option( 'antispambee_is_reanalyzing' );
+			delete_option( 'antispambee_reanalyzed_comments_count' );
 			return;
 		}
 
 		// Dispatch cron event.
-		wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments', array( $checked_ids, $offset, self::$_reanalyzation_found_new_spam ) );
+		wp_schedule_single_event( time(), 'antispam_bee_reanalyze_comments', array( $checked_ids, $offset, self::$_reanalyzation_found_new_spam, self::$_reanalyzed_comments_count ) );
 	}
 
 	/**
