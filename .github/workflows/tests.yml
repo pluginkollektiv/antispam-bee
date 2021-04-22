@@ -68,7 +68,7 @@ jobs:
     - name: Start mysql service
       run: sudo /etc/init.d/mysql start
     - name: Install XVFB
-      run: sudo apt-get install xvfb
+      run: sudo apt-get update && sudo apt-get install xvfb
     - name: Run tests
       run: |
         composer install --ignore-platform-req=php
