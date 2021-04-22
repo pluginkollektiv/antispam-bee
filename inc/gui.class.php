@@ -536,16 +536,19 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									'count'  => true,
 								)
 							);
+
 							$is_reanalyzing = get_option( 'antispambee_is_reanalyzing', false );
 							if ( $pending_comments_count > 20 || $is_reanalyzing ) {
 								?>
 								<li>
 									<input type="checkbox" name="ab_reanalyze_pending_comments" id="ab_reanalyze_pending_comments" value="1" <?php disabled( $is_reanalyzing, 1 ); ?> />
 									<label for="ab_reanalyze_pending_comments">
-										<?php $is_reanalyzing !== false ? esc_html_e( /* translators: d = Number of comments that were already processed. */
-											sprintf( 'Reanalyzing in progress, already processed %s comments', get_option( 'antispambee_reanalyzed_comments_count', 0 ) ),
-											'antispam-bee'
-										) : esc_html_e( 'Reanalyze pending comments', 'antispam-bee' ); ?>
+										<?php
+										false !== $is_reanalyzing ? printf( /* translators: d = Number of comments that were already processed. */
+											esc_html__( 'Reanalyzing in progress, already processed %s comments', 'antispam-bee' ),
+											get_option( 'antispambee_reanalyzed_comments_count', 0 )
+										) : esc_html_e( 'Reanalyze pending comments', 'antispam-bee' );
+										?>
 										<span><?php esc_html_e( 'All pending comments are reanalyzed with Antispam Bee (that might take some time with many pending comments)', 'antispam-bee' ); ?></span>
 									</label>
 								</li>

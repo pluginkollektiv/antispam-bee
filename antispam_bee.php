@@ -1264,6 +1264,7 @@ class Antispam_Bee {
 	 * @param array $last_handled_ids IDs of last 50 checked IDs.
 	 * @param int   $offset The offset to use in get_comments().
 	 * @param bool  $reanalyzation_found_new_spam true if new spam was found during reanalyzation, false otherwise.
+	 * @param int   $reanalyzed_comments_count Number of comments that were processed during current reanalyzation.
 	 *
 	 * @since   2.10
 	 */
