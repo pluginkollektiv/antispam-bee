@@ -262,13 +262,21 @@ class Antispam_Bee {
 							'print_column_styles',
 						)
 					);
-
 					add_filter(
 						'manage_edit-comments_sortable_columns',
 						array(
 							'Antispam_Bee_Columns',
 							'register_sortable_columns',
 						)
+					);
+					add_filter(
+						'comment_row_actions',
+						array(
+							'Antispam_Bee_Columns',
+							'add_report_comment_action_link',
+						),
+						10,
+						2
 					);
 					add_action(
 						'pre_get_comments',
@@ -301,7 +309,6 @@ class Antispam_Bee {
 					'populate_post_id',
 				)
 			);
-
 			add_action(
 				'template_redirect',
 				array(
@@ -2845,6 +2852,7 @@ class Antispam_Bee {
 		return $current_version === self::$db_version;
 
 	}
+
 }
 
 
