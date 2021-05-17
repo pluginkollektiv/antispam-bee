@@ -302,13 +302,14 @@ class Antispam_Bee {
 				)
 			);
 
-			add_action(
-				'template_redirect',
+			add_filter(
+				'comment_form_field_comment',
 				array(
 					__CLASS__,
 					'prepare_comment_field',
 				)
 			);
+
 			add_action(
 				'init',
 				array(
@@ -1153,42 +1154,21 @@ class Antispam_Bee {
 	 * Prepares the replacement of the comment field
 	 *
 	 * @since   0.1
-	 * @change  2.4
+	 * @change  2.10
+	 * 
+	 * @param string $comment_field Markup of the comment field.
 	 */
-	public static function prepare_comment_field() {
+	public static function prepare_comment_field( $comment_field ) {
 		if ( is_feed() || is_trackback() || is_robots() || self::_is_mobile() ) {
-			return;
+			return $comment_field;
 		}
 
 		if ( ! is_singular() && ! self::get_option( 'always_allowed' ) ) {
-			return;
+			return $comment_field;
 		}
 
-		ob_start(
-			array(
-				'Antispam_Bee',
-				'replace_comment_field',
-			)
-		);
-	}
-
-
-	/**
-	 * Replaces the comment field
-	 *
-	 * @since   2.4
-	 * @change  2.6.4
-	 *
-	 * @param   string $data HTML code of the website.
-	 * @return  string       Treated HTML code.
-	 */
-	public static function replace_comment_field( $data ) {
-		if ( empty( $data ) ) {
-			return;
-		}
-
-		if ( ! preg_match( '#<textarea.+?name=["\']comment["\']#s', $data ) ) {
-			return $data;
+		if ( ! preg_match( '#<textarea.+?name=["\']comment["\']#s', $comment_field ) ) {
+			return $comment_field;
 		}
 
 		return preg_replace_callback(
@@ -1215,7 +1195,7 @@ class Antispam_Bee {
 				<\/textarea>                                                        (?# the closing textarea tag )
 			)/x',
 			array( 'Antispam_Bee', 'replace_comment_field_callback' ),
-			$data,
+			$comment_field,
 			-1
 		);
 	}
