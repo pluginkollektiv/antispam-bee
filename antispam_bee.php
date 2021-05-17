@@ -1159,14 +1159,6 @@ class Antispam_Bee {
 	 * @param string $comment_field Markup of the comment field.
 	 */
 	public static function prepare_comment_field( $comment_field ) {
-		if ( is_feed() || is_trackback() || is_robots() || self::_is_mobile() ) {
-			return $comment_field;
-		}
-
-		if ( ! is_singular() && ! self::get_option( 'always_allowed' ) ) {
-			return $comment_field;
-		}
-
 		if ( ! preg_match( '#<textarea.+?name=["\']comment["\']#s', $comment_field ) ) {
 			return $comment_field;
 		}
