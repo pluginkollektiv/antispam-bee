@@ -3,3 +3,5 @@ js/*.min.js
 .idea/
 node_modules/
 vendor/
+composer.lock
+package-lock.json
