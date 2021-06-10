@@ -1752,7 +1752,7 @@ class Antispam_Bee {
 		$response = wp_safe_remote_head(
 			esc_url_raw(
 				sprintf(
-					'https://api.ip2country.info/ip?%s',
+					'https://www.iplocate.io/api/lookup/%s',
 					self::_anonymize_ip( $ip )
 				),
 				'https'
@@ -1767,7 +1767,20 @@ class Antispam_Bee {
 			return false;
 		}
 
-		$country = (string) wp_remote_retrieve_header( $response, 'x-country-code' );
+		$body = (string) wp_remote_retrieve_body( $response );
+
+		$json = wp_json_decode( $body, true );
+
+		// Check if response is valid json.
+		if ( ! is_array( $json ) ) {
+			return false;
+		}
+
+		if ( ! array_key_exists( 'country_code', $json ) ) {
+			return false;
+		}
+
+		$country = strtolower( $json['country_code'] );
 
 		if ( empty( $country ) || strlen( $country ) !== 2 ) {
 			return false;
