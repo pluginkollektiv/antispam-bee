@@ -2,6 +2,11 @@ css/*.min.css
 js/*.min.js
 .idea/
 node_modules/
+tmp/
 vendor/
-composer.lock
+chromedriver
+driver.tar.gz
+driver.zip
+geckodrier
+nohup.out
 package-lock.json

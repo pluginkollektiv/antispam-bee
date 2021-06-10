@@ -12,6 +12,7 @@
 /.eslintrc.json
 /.gitattributes
 /.gitignore
+/.sonarcloud.properties
 /.stylelintrc.json
 /composer.json
 /composer.lock
