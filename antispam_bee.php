@@ -1749,11 +1749,14 @@ class Antispam_Bee {
 			return false;
 		}
 
+		$apikey = apply_filters( 'antispam_bee_country_spam_apikey', '' );
+
 		$response = wp_safe_remote_head(
 			esc_url_raw(
 				sprintf(
-					'https://www.iplocate.io/api/lookup/%s',
-					self::_anonymize_ip( $ip )
+					'https://www.iplocate.io/api/lookup/%s?apikey=%s',
+					self::_anonymize_ip( $ip ),
+					$apikey
 				),
 				'https'
 			)
