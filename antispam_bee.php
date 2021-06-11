@@ -1749,6 +1749,13 @@ class Antispam_Bee {
 			return false;
 		}
 
+		// Hook to implement a custom IP check.
+		$is_country_spam = apply_filters( 'antispam_bee_is_country_spam', null, $ip, $white, $black );
+
+		if ( is_bool( $is_country_spam ) ) {
+			return $is_country_spam;
+		}
+
 		$apikey = apply_filters( 'antispam_bee_country_spam_apikey', '' );
 
 		$response = wp_safe_remote_head(
