@@ -1725,6 +1725,7 @@ class Antispam_Bee {
 	 *
 	 * @since   2.6.9
 	 * @change  2.6.9
+	 * @change  2.10
 	 *
 	 * @param   string $ip IP address.
 	 * @return  boolean    True if the comment is spam based on country filter.
@@ -1749,13 +1750,33 @@ class Antispam_Bee {
 			return false;
 		}
 
-		// Hook to implement a custom IP check.
+		/**
+		 * Filter to hook into the `_is_country_spam` functionality, to implement for example a custom IP check.
+		 *
+		 * @since 2.10
+		 *
+		 * @param null   $is_country_spam The `is_country_spam` result.
+		 * @param string $ip              The IP address.
+		 * @param array  $white           The list of whitelisted country codes.
+		 * @param array  $black           The list of blacklisted country codes.
+		 *
+		 * @return null|boolean The `is_country_spam` result or null.
+		 */
 		$is_country_spam = apply_filters( 'antispam_bee_is_country_spam', null, $ip, $white, $black );
 
 		if ( is_bool( $is_country_spam ) ) {
 			return $is_country_spam;
 		}
 
+		/**
+		 * Filters the IPLocate API key. With this filter, you can add your own IPLocate API key.
+		 *
+		 * @since 2.10
+		 *
+		 * @param string  The current IPLocate API key. Default is `null`.
+		 *
+		 * @return string The changed IPLocate API key or null.
+		 */
 		$apikey = apply_filters( 'antispam_bee_country_spam_apikey', '' );
 
 		$response = wp_safe_remote_head(
