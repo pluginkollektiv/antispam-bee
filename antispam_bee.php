@@ -423,7 +423,6 @@ class Antispam_Bee {
 				'gravatar_check'           => 0,
 				'time_check'               => 0,
 				'ignore_pings'             => 0,
-				'always_allowed'           => 0,
 
 				'dashboard_chart'          => 0,
 				'dashboard_count'          => 0,
@@ -2682,12 +2681,7 @@ class Antispam_Bee {
 	 * @return string
 	 */
 	public static function get_secret_name_for_post( $post_id ) {
-
-		if ( self::get_option( 'always_allowed' ) ) {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
-		} else {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
-		}
+		$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
 
 		$secret = self::ensure_secret_starts_with_letter( $secret );
 
@@ -2716,11 +2710,7 @@ class Antispam_Bee {
 	 */
 	public static function get_secret_id_for_post( $post_id ) {
 
-		if ( self::get_option( 'always_allowed' ) ) {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
-		} else {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
-		}
+		$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
 
 		$secret = self::ensure_secret_starts_with_letter( $secret );
 

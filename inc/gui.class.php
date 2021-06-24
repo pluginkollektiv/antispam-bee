@@ -58,7 +58,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'spam_ip'                  => (int) ( ! empty( $_POST['ab_spam_ip'] ) ),
 			'already_commented'        => (int) ( ! empty( $_POST['ab_already_commented'] ) ),
 			'time_check'               => (int) ( ! empty( $_POST['ab_time_check'] ) ),
-			'always_allowed'           => (int) ( ! empty( $_POST['ab_always_allowed'] ) ),
 
 			'ignore_pings'             => (int) ( ! empty( $_POST['ab_ignore_pings'] ) ),
 			'ignore_filter'            => (int) ( ! empty( $_POST['ab_ignore_filter'] ) ),
@@ -506,14 +505,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<label for="ab_ignore_pings">
 									<?php esc_html_e( 'Do not check trackbacks / pingbacks', 'antispam-bee' ); ?>
 									<span><?php esc_html_e( 'No spam check for link notifications', 'antispam-bee' ); ?></span>
-								</label>
-							</li>
-
-							<li>
-								<input type="checkbox" name="ab_always_allowed" id="ab_always_allowed" value="1" <?php checked( $options['always_allowed'], 1 ); ?> />
-								<label for="ab_always_allowed">
-									<?php esc_html_e( 'Comment form used outside of posts', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Check for comment forms on archive pages', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 						</ul>

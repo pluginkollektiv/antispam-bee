@@ -137,7 +137,6 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 				'gravatar_check'	=> 0,
 				'time_check'		=> 0,
 				'ignore_pings' 		=> 0,
-				'always_allowed' 	=> 0,
 
 				'dashboard_chart' 	=> 0,
 				'dashboard_count' 	=> 0,
