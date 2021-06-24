@@ -27,6 +27,18 @@
         <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
         <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
     </rule>
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
+            <property name="prefixes" type="array" value="Antispam_Bee,ab_"/>
+        </properties>
+    </rule>
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <!-- Value: replace the text domain used. Separate multiple prefixes with a comma. -->
+            <property name="text_domain" type="array" value="antispam-bee"/>
+        </properties>
+    </rule>
 
     <!-- Include sniffs for PHP cross-version compatibility. -->
     <config name="testVersion" value="5.2-"/>
