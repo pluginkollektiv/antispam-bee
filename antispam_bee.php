@@ -497,7 +497,7 @@ class Antispam_Bee {
 	 * @return  mixed         Value of the requested key.
 	 */
 	public static function get_key( $array, $key ) {
-		if ( empty( $array ) || empty( $key ) || empty( $array[ $key ] ) ) {
+		if ( empty( $array ) || empty( $key ) || ! isset( $array[$key] ) ) {
 			return null;
 		}
 
