@@ -302,13 +302,31 @@ class Antispam_Bee {
 				)
 			);
 
-			add_filter(
-				'comment_form_field_comment',
-				array(
-					__CLASS__,
-					'prepare_comment_field',
-				)
-			);
+			if ( 1 == self::get_option( 'use_output_buffer' ) || null === self::get_option( 'use_output_buffer' ) ) {
+				add_action(
+					'template_redirect',
+					function() {
+						if ( is_feed() || is_trackback() || is_robots() || self::_is_mobile() ) {
+							return;
+						}
+				
+						ob_start(
+							array(
+								'Antispam_Bee',
+								'prepare_comment_field',
+							)
+						);
+					}
+				);
+			} else {
+				add_filter(
+					'comment_form_field_comment',
+					array(
+						__CLASS__,
+						'prepare_comment_field',
+					)
+				);
+			}
 
 			add_action(
 				'init',
@@ -347,12 +365,14 @@ class Antispam_Bee {
 	 * Action during the activation of the Plugins
 	 *
 	 * @since   0.1
-	 * @change  2.4
+	 * @change  2.10
 	 */
 	public static function activate() {
 		add_option(
 			'antispam_bee',
-			array(),
+			array(
+				'use_output_buffer' => 0,
+			),
 			'',
 			'no'
 		);
@@ -1155,11 +1175,15 @@ class Antispam_Bee {
 	 * @since   0.1
 	 * @change  2.10
 	 * 
-	 * @param string $comment_field Markup of the comment field.
+	 * @param string $data Markup of the comment field or whole page (depending on ob option).
 	 */
-	public static function prepare_comment_field( $comment_field ) {
-		if ( ! preg_match( '#<textarea.+?name=["\']comment["\']#s', $comment_field ) ) {
-			return $comment_field;
+	public static function prepare_comment_field( $data ) {
+		if ( empty( $data ) ) {
+			return;
+		}
+
+		if ( ! preg_match( '#<textarea.+?name=["\']comment["\']#s', $data ) ) {
+			return $data;
 		}
 
 		return preg_replace_callback(
@@ -1186,7 +1210,7 @@ class Antispam_Bee {
 				<\/textarea>                                                        (?# the closing textarea tag )
 			)/x',
 			array( 'Antispam_Bee', 'replace_comment_field_callback' ),
-			$comment_field,
+			$data,
 			-1
 		);
 	}
