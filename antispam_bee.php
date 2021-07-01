@@ -365,7 +365,7 @@ class Antispam_Bee {
 	 * Action during the activation of the Plugins
 	 *
 	 * @since   0.1
-	 * @change  2.10
+	 * @change  2.10.0
 	 */
 	public static function activate() {
 		add_option(
@@ -1173,7 +1173,7 @@ class Antispam_Bee {
 	 * Prepares the replacement of the comment field
 	 *
 	 * @since   0.1
-	 * @change  2.10
+	 * @change  2.10.0
 	 * 
 	 * @param string $data Markup of the comment field or whole page (depending on ob option).
 	 */
@@ -2699,6 +2699,8 @@ class Antispam_Bee {
 
 	/**
 	 * Returns the secret of a post used in the textarea name attribute.
+	 * 
+	 * @change 2.10.0
 	 *
 	 * @param int $post_id The Post ID.
 	 *
@@ -2727,6 +2729,8 @@ class Antispam_Bee {
 
 	/**
 	 * Returns the secret of a post used in the textarea id attribute.
+	 * 
+	 * @change 2.10.0
 	 *
 	 * @param int $post_id The post ID.
 	 *
