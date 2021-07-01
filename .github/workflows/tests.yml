@@ -97,3 +97,4 @@ jobs:
         composer install
         npm install
         composer lint-all
+        composer cs
