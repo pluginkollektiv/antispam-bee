@@ -14,17 +14,6 @@
 
 /* @end group */
 
-/* @group Browse Happy */
-
-.browsehappy {
-	margin: 0 0 20px;
-	padding: 10px;
-	border: 1px solid #e66f00;
-	text-align: center;
-}
-
-/* @end group */
-
 /* @group Columns */
 
 .ab-wrap {
@@ -48,7 +37,7 @@
 	font-size: 18px;
 	font-weight: normal;
 	line-height: 20px;
-	color: #23282d;
+	color: #1d2327;
 }
 
 .ab-column h3.icon::before {
@@ -57,7 +46,7 @@
 	right: 20px;
 	speak: none;
 	width: 1em;
-	color: #8e959c;
+	color: #8c8f94;
 	position: absolute;
 	text-align: center;
 	-webkit-font-smoothing: antialiased;
@@ -78,7 +67,7 @@
 
 .ab-column h6 {
 	clear: both;
-	color: #555d66;
+	color: #3c434a;
 	margin: 0 0 20px;
 	font-weight: normal;
 	font-size: 13px;
@@ -93,7 +82,7 @@
 .ab-column select {
 	font-size: 13px;
 	text-align: center;
-	background: #f8f8f9;
+	background: #f6f7f7;
 }
 
 .ab-column input[type="number"] {
@@ -120,7 +109,7 @@
 
 .ab-column input[type="text"] + label,
 .ab-column select + label {
-	color: #8e959c;
+	color: #8c8f94;
 	margin: 0 0 0 7px;
 	display: inline-block;
 	text-transform: uppercase;
@@ -159,11 +148,11 @@
 	display: inline-block;
 	font-size: 14px;
 	max-width: 286px;
-	color: #23282d;
+	color: #1d2327;
 }
 
 .ab-column > ul > li label span {
-	color: #555d66;
+	color: #3c434a;
 	display: block;
 	font-size: 13px;
 	line-height: 16px;
@@ -195,7 +184,7 @@
 
 .ab-column.ab-arrow > ul > li::after {
 	bottom: -22px;
-	border-color: #f1f1f1 transparent;
+	border-color: #f0f0f1 transparent;
 }
 
 .ab-column.ab-join > ul > li::before {
@@ -231,11 +220,11 @@
 }
 
 .ab-column--submit-service p:first-of-type {
-	border-top: 1px solid #e0e5e9;
+	border-top: 1px solid #dcdcde;
 }
 
 .ab-column--submit-service p:last-of-type {
-	border-bottom: 1px solid #e0e5e9;
+	border-bottom: 1px solid #dcdcde;
 }
 
 .ab-column--submit-service .button {
