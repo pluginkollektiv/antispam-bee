@@ -70,8 +70,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'bbcode_check'             => (int) ( ! empty( $_POST['ab_bbcode_check'] ) ),
 			'gravatar_check'           => (int) ( ! empty( $_POST['ab_gravatar_check'] ) ),
 			'country_code'             => (int) ( ! empty( $_POST['ab_country_code'] ) ),
-			'country_black'            => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_black' ) ) ),
-			'country_white'            => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_white' ) ) ),
+			'country_denied'            => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_denied' ) ) ),
+			'country_allowed'            => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_allowed' ) ) ),
 
 			'translate_api'            => (int) ( ! empty( $_POST['ab_translate_api'] ) ),
 			'translate_lang'           => $selected_languages,
@@ -98,23 +98,23 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			$options['ignore_reasons'] = array();
 		}
 
-		if ( ! empty( $options['country_black'] ) ) {
-			$options['country_black'] = preg_replace(
+		if ( ! empty( $options['country_denied'] ) ) {
+			$options['country_denied'] = preg_replace(
 				'/[^A-Z ,;]/',
 				'',
-				strtoupper( $options['country_black'] )
+				strtoupper( $options['country_denied'] )
 			);
 		}
 
-		if ( ! empty( $options['country_white'] ) ) {
-			$options['country_white'] = preg_replace(
+		if ( ! empty( $options['country_allowed'] ) ) {
+			$options['country_allowed'] = preg_replace(
 				'/[^A-Z ,;]/',
 				'',
-				strtoupper( $options['country_white'] )
+				strtoupper( $options['country_allowed'] )
 			);
 		}
 
-		if ( empty( $options['country_black'] ) && empty( $options['country_white'] ) ) {
+		if ( empty( $options['country_denied'] ) && empty( $options['country_allowed'] ) ) {
 			$options['country_code'] = 0;
 		}
 
@@ -295,8 +295,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									);
 									?>
 									<li>
-										<textarea name="ab_country_black" id="ab_country_black" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr( $options['country_black'] ); ?></textarea>
-										<label for="ab_country_black">
+										<textarea name="ab_country_denied" id="ab_country_denied" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr( $options['country_denied'] ); ?></textarea>
+										<label for="ab_country_denied">
 											<span>
 											<?php
 												printf(
@@ -310,8 +310,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										</label>
 									</li>
 									<li>
-										<textarea name="ab_country_white" id="ab_country_white" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr( $options['country_white'] ); ?></textarea>
-										<label for="ab_country_white">
+										<textarea name="ab_country_allowed" id="ab_country_allowed" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr( $options['country_allowed'] ); ?></textarea>
+										<label for="ab_country_allowed">
 											<span>
 											<?php
 												printf(
