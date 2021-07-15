@@ -1800,7 +1800,7 @@ class Antispam_Bee {
 
 		$body = (string) wp_remote_retrieve_body( $response );
 
-		$json = wp_json_decode( $body, true );
+		$json = json_decode( $body, true );
 
 		// Check if response is valid json.
 		if ( ! is_array( $json ) ) {
