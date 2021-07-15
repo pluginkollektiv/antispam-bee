@@ -300,13 +300,32 @@ class Antispam_Bee {
 				)
 			);
 
-			add_action(
-				'template_redirect',
-				array(
-					__CLASS__,
-					'prepare_comment_field',
-				)
-			);
+			if ( 1 == self::get_option( 'use_output_buffer' ) || null === self::get_option( 'use_output_buffer' ) ) {
+				add_action(
+					'template_redirect',
+					function() {
+						if ( is_feed() || is_trackback() || is_robots() || self::_is_mobile() ) {
+							return;
+						}
+				
+						ob_start(
+							array(
+								'Antispam_Bee',
+								'prepare_comment_field',
+							)
+						);
+					}
+				);
+			} else {
+				add_filter(
+					'comment_form_field_comment',
+					array(
+						__CLASS__,
+						'prepare_comment_field',
+					)
+				);
+			}
+
 			add_action(
 				'init',
 				array(
@@ -344,12 +363,14 @@ class Antispam_Bee {
 	 * Action during the activation of the Plugins
 	 *
 	 * @since   0.1
-	 * @change  2.4
+	 * @change  2.10.0
 	 */
 	public static function activate() {
 		add_option(
 			'antispam_bee',
-			array(),
+			array(
+				'use_output_buffer' => 0,
+			),
 			'',
 			'no'
 		);
@@ -420,7 +441,6 @@ class Antispam_Bee {
 				'gravatar_check'           => 0,
 				'time_check'               => 0,
 				'ignore_pings'             => 0,
-				'always_allowed'           => 0,
 
 				'dashboard_chart'          => 0,
 				'dashboard_count'          => 0,
@@ -475,7 +495,7 @@ class Antispam_Bee {
 	 * @return  mixed         Value of the requested key.
 	 */
 	public static function get_key( $array, $key ) {
-		if ( empty( $array ) || empty( $key ) || empty( $array[ $key ] ) ) {
+		if ( empty( $array ) || empty( $key ) || ! isset( $array[$key] ) ) {
 			return null;
 		}
 
@@ -1151,36 +1171,11 @@ class Antispam_Bee {
 	 * Prepares the replacement of the comment field
 	 *
 	 * @since   0.1
-	 * @change  2.4
+	 * @change  2.10.0
+	 * 
+	 * @param string $data Markup of the comment field or whole page (depending on ob option).
 	 */
-	public static function prepare_comment_field() {
-		if ( is_feed() || is_trackback() || is_robots() || self::_is_mobile() ) {
-			return;
-		}
-
-		if ( ! is_singular() && ! self::get_option( 'always_allowed' ) ) {
-			return;
-		}
-
-		ob_start(
-			array(
-				'Antispam_Bee',
-				'replace_comment_field',
-			)
-		);
-	}
-
-
-	/**
-	 * Replaces the comment field
-	 *
-	 * @since   2.4
-	 * @change  2.6.4
-	 *
-	 * @param   string $data HTML code of the website.
-	 * @return  string       Treated HTML code.
-	 */
-	public static function replace_comment_field( $data ) {
+	public static function prepare_comment_field( $data ) {
 		if ( empty( $data ) ) {
 			return;
 		}
@@ -2702,18 +2697,15 @@ class Antispam_Bee {
 
 	/**
 	 * Returns the secret of a post used in the textarea name attribute.
+	 * 
+	 * @change 2.10.0
 	 *
 	 * @param int $post_id The Post ID.
 	 *
 	 * @return string
 	 */
 	public static function get_secret_name_for_post( $post_id ) {
-
-		if ( self::get_option( 'always_allowed' ) ) {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
-		} else {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
-		}
+		$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
 
 		$secret = self::ensure_secret_starts_with_letter( $secret );
 
@@ -2735,6 +2727,8 @@ class Antispam_Bee {
 
 	/**
 	 * Returns the secret of a post used in the textarea id attribute.
+	 * 
+	 * @change 2.10.0
 	 *
 	 * @param int $post_id The post ID.
 	 *
@@ -2742,11 +2736,7 @@ class Antispam_Bee {
 	 */
 	public static function get_secret_id_for_post( $post_id ) {
 
-		if ( self::get_option( 'always_allowed' ) ) {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
-		} else {
-			$secret = substr( sha1( md5( 'comment-id' . self::$_salt . (int) $post_id ) ), 0, 10 );
-		}
+		$secret = substr( sha1( md5( 'comment-id' . self::$_salt ) ), 0, 10 );
 
 		$secret = self::ensure_secret_starts_with_letter( $secret );
 
