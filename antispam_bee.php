@@ -1807,7 +1807,7 @@ class Antispam_Bee {
 			return false;
 		}
 
-		if ( ! array_key_exists( 'country_code', $json ) ) {
+		if ( empty( $json['country_code'] ) ) {
 			return false;
 		}
 
