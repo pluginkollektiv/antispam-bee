@@ -56,7 +56,7 @@ class Antispam_Bee {
 	 *
 	 * @var int
 	 */
-	private static $db_version = 1.01;
+	private static $db_version = 1.02;
 
 	/**
 	 * The base.
@@ -93,6 +93,51 @@ class Antispam_Bee {
 	 * @change  2.6.4
 	 */
 	public static function init() {
+		add_action(
+			'upgrader_process_complete',
+			function( $wp_upgrader, $hook_extra ) {
+				if ( ! $wp_upgrader instanceof \Plugin_Upgrader || ! isset( $hook_extra['plugins'] ) ) {
+					return;
+				}
+
+				$updated_plugins = $hook_extra['plugins'];
+				$asb_updated = false;
+				foreach ( $updated_plugins as $updated_plugin ) {
+					if ( $updated_plugin !== self::$_base ) {
+						continue;
+					}
+					$asb_updated = true;
+				}
+
+				if ( $asb_updated === false ) {
+					return;
+				}
+
+				self::asb_updated();
+			},
+			10,
+			2
+		);
+
+		add_action(
+			'upgrader_overwrote_package',
+			function( $package, $data, $package_type ) {
+				if ( $package_type !== 'plugin' ) {
+					return;
+				}
+
+				$text_domain = isset( $data['TextDomain'] ) ? $data['TextDomain'] : '';
+
+				if ( $text_domain !== 'antispam-bee' ) {
+					return;
+				}
+
+				self::asb_updated();
+			},
+			10,
+			3
+		);
+
 		add_action(
 			'unspam_comment',
 			array(
@@ -426,8 +471,8 @@ class Antispam_Bee {
 				'dashboard_count'          => 0,
 
 				'country_code'             => 0,
-				'country_black'            => '',
-				'country_white'            => '',
+				'country_denied'            => '',
+				'country_allowed'            => '',
 
 				'translate_api'            => 0,
 				'translate_lang'           => array(),
@@ -1730,20 +1775,20 @@ class Antispam_Bee {
 	private static function _is_country_spam( $ip ) {
 		$options = self::get_options();
 
-		$white = preg_split(
+		$allowed = preg_split(
 			'/[\s,;]+/',
-			$options['country_white'],
+			$options['country_allowed'],
 			-1,
 			PREG_SPLIT_NO_EMPTY
 		);
-		$black = preg_split(
+		$denied = preg_split(
 			'/[\s,;]+/',
-			$options['country_black'],
+			$options['country_denied'],
 			-1,
 			PREG_SPLIT_NO_EMPTY
 		);
 
-		if ( empty( $white ) && empty( $black ) ) {
+		if ( empty( $allowed ) && empty( $denied ) ) {
 			return false;
 		}
 
@@ -1771,11 +1816,11 @@ class Antispam_Bee {
 			return false;
 		}
 
-		if ( ! empty( $black ) ) {
-			return ( in_array( $country, $black, true ) );
+		if ( ! empty( $denied ) ) {
+			return ( in_array( $country, $denied, true ) );
 		}
 
-		return ( ! in_array( $country, $white, true ) );
+		return ( ! in_array( $country, $allowed, true ) );
 	}
 
 
@@ -2818,16 +2863,43 @@ class Antispam_Bee {
 			return;
 		}
 
-		global $wpdb;
+		$version_from_db = floatval( get_option( 'antispambee_db_version', 0 ) );
+		if ( $version_from_db < 1.01 ) {
+			global $wpdb;
 
-		/**
-		 * In Version 2.9 the IP of the commenter was saved as a hash. We reverted this solution.
-		 * Therefore, we need to delete this unused data.
-		 */
-		//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-		$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash")';
-		$wpdb->query( $sql );
-		//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+			/**
+			 * In Version 2.9 the IP of the commenter was saved as a hash. We reverted this solution.
+			 * Therefore, we need to delete this unused data.
+			 */
+			//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+			$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash")';
+			$wpdb->query( $sql );
+			//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+		}
+			
+		// DB version was raised in ASB 2.10 to 1.02.
+		if ( $version_from_db < 1.02 ) {
+			// Update option names.
+			$options = self::get_options();
+			if ( isset( $options['country_black'] ) ) {
+				$options['country_denied'] = $options['country_black'];
+				unset( $options['country_black'] );
+			}
+			if ( isset( $options['country_white'] ) ) {
+				$options['country_allowed'] = $options['country_white'];
+				unset( $options['country_white'] );
+			}
+
+			update_option(
+				'antispam_bee',
+				$options
+			);
+
+			wp_cache_set(
+				'antispam_bee',
+				$options
+			);
+		}
 
 		update_option( 'antispambee_db_version', self::$db_version );
 	}
@@ -2839,9 +2911,20 @@ class Antispam_Bee {
 	 */
 	private static function db_version_is_current() {
 
-		$current_version = absint( get_option( 'antispambee_db_version', 0 ) );
+		$current_version = floatval( get_option( 'antispambee_db_version', 0 ) );
 		return $current_version === self::$db_version;
 
+	}
+
+	/**
+	 * Runs after ASB was updated.
+	 * 
+	 * @since 2.10.0
+	 * 
+	 * @return void 
+	 */
+	private static function asb_updated() {
+		self::update_database();
 	}
 }
 

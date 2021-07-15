@@ -144,8 +144,8 @@ class FeatureContext extends RawWordpressContext implements SnippetAcceptingCont
 
 				// Filter
 				'country_code' 		=> 0,
-				'country_black'		=> '',
-				'country_white'		=> '',
+				'country_denied'		=> '',
+				'country_allowed'		=> '',
 
 				'translate_api' 	=> 0,
 				'translate_lang'	=> array(),
