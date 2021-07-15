@@ -1811,7 +1811,7 @@ class Antispam_Bee {
 			return false;
 		}
 
-		$country = strtolower( $json['country_code'] );
+		$country = strtoupper( $json['country_code'] );
 
 		if ( empty( $country ) || strlen( $country ) !== 2 ) {
 			return false;
