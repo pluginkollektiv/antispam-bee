@@ -1725,7 +1725,7 @@ class Antispam_Bee {
 	 *
 	 * @since   2.6.9
 	 * @change  2.6.9
-	 * @change  2.10
+	 * @change  2.10.0
 	 *
 	 * @param   string $ip IP address.
 	 * @return  boolean    True if the comment is spam based on country filter.
@@ -1753,7 +1753,7 @@ class Antispam_Bee {
 		/**
 		 * Filter to hook into the `_is_country_spam` functionality, to implement for example a custom IP check.
 		 *
-		 * @since 2.10
+		 * @since 2.10.0
 		 *
 		 * @param null   $is_country_spam The `is_country_spam` result.
 		 * @param string $ip              The IP address.
@@ -1771,7 +1771,7 @@ class Antispam_Bee {
 		/**
 		 * Filters the IPLocate API key. With this filter, you can add your own IPLocate API key.
 		 *
-		 * @since 2.10
+		 * @since 2.10.0
 		 *
 		 * @param string  The current IPLocate API key. Default is `null`.
 		 *
