@@ -90,7 +90,7 @@ class Antispam_Bee {
 	 * "Constructor" of the class
 	 *
 	 * @since   0.1
-	 * @change  2.6.4
+	 * @change  2.10.0
 	 */
 	public static function init() {
 		add_action(
@@ -1767,7 +1767,7 @@ class Antispam_Bee {
 	 * Check for country spam by (anonymized) IP
 	 *
 	 * @since   2.6.9
-	 * @change  2.6.9
+	 * @change  2.10.0
 	 *
 	 * @param   string $ip IP address.
 	 * @return  boolean    True if the comment is spam based on country filter.
@@ -2906,6 +2906,8 @@ class Antispam_Bee {
 
 	/**
 	 * Whether the database structure is up to date.
+	 * 
+	 * @change 2.10.0
 	 *
 	 * @return bool
 	 */
