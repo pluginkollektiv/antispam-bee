@@ -19,7 +19,7 @@
   * Tweak: Verschiedene Aktualisierungen und Optimierungen im Testprozess
   * Tweak: Farbpalette an aktuelle WP-Version anpassen
   * Tweak: Wortlaut in Variablen und Optionsnamen wurden angepasst
-  * Readme: Neue Mitarbeiter hinzugefügt und unbenutzten Code bereinigt
+  * Readme: Neuer Contributor hinzugefügt und unbenutzten Code bereinigt
 
 ### 2.9.4 ###
 * **English**
