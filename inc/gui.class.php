@@ -511,13 +511,17 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							</li>
 
 							<li>
-								<input type="checkbox" name="ab_use_output_buffer" id="ab_use_output_buffer" value="1" <?php checked( ! isset( $options['use_output_buffer'] ) || $options['use_output_buffer'] == 1, true ); ?> />
+								<input type="checkbox" name="ab_use_output_buffer" id="ab_use_output_buffer" value="1" <?php checked( ! isset( $options['use_output_buffer'] ) || 1 == $options['use_output_buffer'], true ); ?> />
 								<label for="ab_use_output_buffer">
 									<?php esc_html_e( 'Check complete site markup for comment forms', 'antispam-bee' ); ?>
-									<span><?php printf( /* translators: s=filter name */
+									<span>
+									<?php
+									printf( /* translators: s=filter name */
 										esc_html__( 'Uses output buffering instead of the %s filter.', 'antispam-bee' ),
 										'<code>comment_form_field_comment</code>'
-									); ?></span>
+									);
+									?>
+									</span>
 								</label>
 							</li>
 						</ul>

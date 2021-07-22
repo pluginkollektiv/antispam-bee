@@ -305,18 +305,10 @@ class Antispam_Bee {
 			if ( 1 == self::get_option( 'use_output_buffer' ) || null === self::get_option( 'use_output_buffer' ) ) {
 				add_action(
 					'template_redirect',
-					function() {
-						if ( is_feed() || is_trackback() || is_robots() || self::_is_mobile() ) {
-							return;
-						}
-				
-						ob_start(
-							array(
-								'Antispam_Bee',
-								'prepare_comment_field',
-							)
-						);
-					}
+					array(
+						__CLASS__,
+						'prepare_comment_field_output_buffering',
+					)
 				);
 			} else {
 				add_filter(
@@ -497,7 +489,7 @@ class Antispam_Bee {
 	 * @return  mixed         Value of the requested key.
 	 */
 	public static function get_key( $array, $key ) {
-		if ( empty( $array ) || empty( $key ) || ! isset( $array[$key] ) ) {
+		if ( empty( $array ) || empty( $key ) || ! isset( $array[ $key ] ) ) {
 			return null;
 		}
 
@@ -1168,13 +1160,31 @@ class Antispam_Bee {
 		return $comment;
 	}
 
+	/**
+	 * Prepares the replacement of the comment field with output buffering.
+	 *
+	 * @since 2.10.0
+	 */
+	public static function prepare_comment_field_output_buffering() {
+		if ( is_feed() || is_trackback() || is_robots() || self::_is_mobile() ) {
+			return;
+		}
+
+		ob_start(
+			array(
+				'Antispam_Bee',
+				'prepare_comment_field',
+			)
+		);
+	}
+
 
 	/**
 	 * Prepares the replacement of the comment field
 	 *
 	 * @since   0.1
 	 * @change  2.10.0
-	 * 
+	 *
 	 * @param string $data Markup of the comment field or whole page (depending on ob option).
 	 */
 	public static function prepare_comment_field( $data ) {
@@ -2699,7 +2709,7 @@ class Antispam_Bee {
 
 	/**
 	 * Returns the secret of a post used in the textarea name attribute.
-	 * 
+	 *
 	 * @change 2.10.0
 	 *
 	 * @param int $post_id The Post ID.
@@ -2729,7 +2739,7 @@ class Antispam_Bee {
 
 	/**
 	 * Returns the secret of a post used in the textarea id attribute.
-	 * 
+	 *
 	 * @change 2.10.0
 	 *
 	 * @param int $post_id The post ID.
