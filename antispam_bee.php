@@ -95,45 +95,20 @@ class Antispam_Bee {
 	public static function init() {
 		add_action(
 			'upgrader_process_complete',
-			function( $wp_upgrader, $hook_extra ) {
-				if ( ! $wp_upgrader instanceof \Plugin_Upgrader || ! isset( $hook_extra['plugins'] ) ) {
-					return;
-				}
-
-				$updated_plugins = $hook_extra['plugins'];
-				$asb_updated = false;
-				foreach ( $updated_plugins as $updated_plugin ) {
-					if ( $updated_plugin !== self::$_base ) {
-						continue;
-					}
-					$asb_updated = true;
-				}
-
-				if ( $asb_updated === false ) {
-					return;
-				}
-
-				self::asb_updated();
-			},
+			array(
+				__CLASS__,
+				'upgrades_completed',
+			),
 			10,
 			2
 		);
 
 		add_action(
 			'upgrader_overwrote_package',
-			function( $package, $data, $package_type ) {
-				if ( $package_type !== 'plugin' ) {
-					return;
-				}
-
-				$text_domain = isset( $data['TextDomain'] ) ? $data['TextDomain'] : '';
-
-				if ( $text_domain !== 'antispam-bee' ) {
-					return;
-				}
-
-				self::asb_updated();
-			},
+			array(
+				__CLASS__,
+				'uploaded_upgrade_completed',
+			),
 			10,
 			3
 		);
@@ -2919,7 +2894,7 @@ class Antispam_Bee {
 			$wpdb->query( $sql );
 			//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 		}
-			
+
 		// DB version was raised in ASB 2.10 to 1.02.
 		if ( $version_from_db < 1.02 ) {
 			// Update option names.
@@ -2949,7 +2924,7 @@ class Antispam_Bee {
 
 	/**
 	 * Whether the database structure is up to date.
-	 * 
+	 *
 	 * @change 2.10.0
 	 *
 	 * @return bool
@@ -2962,11 +2937,63 @@ class Antispam_Bee {
 	}
 
 	/**
-	 * Runs after ASB was updated.
-	 * 
+	 * Runs after upgrades are completed.
+	 *
 	 * @since 2.10.0
-	 * 
-	 * @return void 
+	 *
+	 * @param \WP_Upgrader $wp_upgrader WP_Upgrader instance.
+	 * @param array        $hook_extra Array of bulk item update data.
+	 */
+	public static function upgrades_completed( $wp_upgrader, $hook_extra ) {
+		if ( ! $wp_upgrader instanceof Plugin_Upgrader || ! isset( $hook_extra['plugins'] ) ) {
+			return;
+		}
+
+		$updated_plugins = $hook_extra['plugins'];
+		$asb_updated = false;
+		foreach ( $updated_plugins as $updated_plugin ) {
+			if ( $updated_plugin !== self::$_base ) {
+				continue;
+			}
+			$asb_updated = true;
+		}
+
+		if ( false === $asb_updated ) {
+			return;
+		}
+
+		self::asb_updated();
+	}
+
+	/**
+	 * Runs after an upgrade via an uploaded ZIP package was completed.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param string $package The package file.
+	 * @param array  $data The new plugin or theme data.
+	 * @param string $package_type The package type.
+	 */
+	public static function uploaded_upgrade_completed( $package, $data, $package_type ) {
+		if ( 'plugin' !== $package_type ) {
+			return;
+		}
+
+		$text_domain = isset( $data['TextDomain'] ) ? $data['TextDomain'] : '';
+
+		if ( 'antispam-bee' !== $text_domain ) {
+			return;
+		}
+
+		self::asb_updated();
+	}
+
+	/**
+	 * Runs after ASB was updated.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @return void
 	 */
 	private static function asb_updated() {
 		self::update_database();
