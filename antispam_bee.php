@@ -1189,7 +1189,7 @@ class Antispam_Bee {
 	 */
 	public static function prepare_comment_field( $data ) {
 		if ( empty( $data ) ) {
-			return;
+			return $data;
 		}
 
 		if ( ! preg_match( '#<textarea.+?name=["\']comment["\']#s', $data ) ) {
