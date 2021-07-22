@@ -3,9 +3,9 @@
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
-* Tested up to:      5.7
+* Tested up to:      5.8
 * Requires PHP:      5.2
-* Stable tag:        2.9.4
+* Stable tag:        2.10.0
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,8 +92,16 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 
 ## Changelog ##
 
-### 2.9.4 ###
+### 2.10.0 ###
+  * Enhancement: Add comment user agent to regex pattern check
+  * Enhancement: Add filter to ping detection
+  * Tweak: Change API endpoint to use iplocate.io instead
+  * Tweak: Remove browsehappy link and styling
+  * Tweak: Adjust color scheme
+  * Tweak: Change wording for country options
+  * Tweak: Replace ob_start() with comment_form_field_comment filter
 
+### 2.9.4 ###
   * Enhancement: Add filter to allow ajax calls
   * Tweak: Better wording for BBCode feature in plugin description
   * Tweak: Better screenshots in the plugin directory
