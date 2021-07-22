@@ -93,13 +93,15 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 ## Changelog ##
 
 ### 2.10.0 ###
-  * Enhancement: Add comment user agent to regex pattern check
-  * Enhancement: Add filter to ping detection
-  * Tweak: Change API endpoint to use iplocate.io instead
-  * Tweak: Remove browsehappy link and styling
-  * Tweak: Adjust color scheme
-  * Tweak: Change wording for country options
-  * Tweak: Replace ob_start() with comment_form_field_comment filter
+  * Fix: Switch from ip2country.info to iplocate.io for country check
+  * Tweak: Added comment user agent to regex pattern check
+  * Tweak: Make the ping detection filterable to support new comment types
+  * Tweak: Updated internal documentation links
+  * Tweak: Several updates and optimizations in the testing process
+  * Tweak: Adjust color palette to recent WP version
+  * Tweak: Adjust wording in variables and option names
+  * Readme: Add new contributor and clean up unused code
+
 
 ### 2.9.4 ###
   * Enhancement: Add filter to allow ajax calls
