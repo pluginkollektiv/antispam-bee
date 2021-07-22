@@ -179,11 +179,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 				<?php $options = self::get_options(); ?>
 				<div class="ab-wrap">
-					<!--[if lt IE 9]>
-						<p class="browsehappy">
-							<a href="http://browsehappy.com">Browse Happy</a>
-						</p>
-					<![endif]-->
 
 					<div class="ab-column ab-arrow">
 						<h3 class="icon">

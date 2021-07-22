@@ -15,9 +15,9 @@
 		leftgutter = 0,
 		bottomgutter = 22,
 		topgutter = 22,
-		color = '#0073aa',
+		color = '#135e96',
 		r = Raphael( 'ab_chart', width, height ),
-		txt = { font: 'bold 12px "Open Sans", sans-serif', fill: '#32373c' },
+		txt = { font: 'bold 12px "Open Sans", sans-serif', fill: '#1d2327' },
 		X = ( width - leftgutter * 2 ) / labels.length,
 		max = Math.max.apply( Math, data ),
 		Y = ( height - bottomgutter - topgutter ) / max;
@@ -28,7 +28,7 @@
 		.attr(
 			{
 				font: 'normal 10px "Open Sans", sans-serif',
-				fill: '#b4b9be',
+				fill: '#a7aaad',
 			}
 		);
 
