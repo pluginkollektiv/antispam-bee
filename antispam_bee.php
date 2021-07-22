@@ -2895,7 +2895,7 @@ class Antispam_Bee {
 			//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 		}
 
-		// DB version was raised in ASB 2.10 to 1.02.
+		// DB version was raised in ASB 2.10.0 to 1.02.
 		if ( $version_from_db < 1.02 ) {
 			// Update option names.
 			$options = self::get_options();
