@@ -1774,12 +1774,12 @@ class Antispam_Bee {
 		 *
 		 * @param null   $is_country_spam The `is_country_spam` result.
 		 * @param string $ip              The IP address.
-		 * @param array  $white           The list of whitelisted country codes.
-		 * @param array  $black           The list of blacklisted country codes.
+		 * @param array  $allowed         The list of allowed country codes.
+		 * @param array  $denied          The list of denied country codes.
 		 *
 		 * @return null|boolean The `is_country_spam` result or null.
 		 */
-		$is_country_spam = apply_filters( 'antispam_bee_is_country_spam', null, $ip, $white, $black );
+		$is_country_spam = apply_filters( 'antispam_bee_is_country_spam', null, $ip, $allowed, $denied );
 
 		if ( is_bool( $is_country_spam ) ) {
 			return $is_country_spam;
