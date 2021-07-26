@@ -56,7 +56,7 @@ class Antispam_Bee {
 	 *
 	 * @var int
 	 */
-	private static $db_version = 1.01;
+	private static $db_version = 1.02;
 
 	/**
 	 * The base.
@@ -90,9 +90,29 @@ class Antispam_Bee {
 	 * "Constructor" of the class
 	 *
 	 * @since   0.1
-	 * @change  2.6.4
+	 * @change  2.10.0
 	 */
 	public static function init() {
+		add_action(
+			'upgrader_process_complete',
+			array(
+				__CLASS__,
+				'upgrades_completed',
+			),
+			10,
+			2
+		);
+
+		add_action(
+			'upgrader_overwrote_package',
+			array(
+				__CLASS__,
+				'uploaded_upgrade_completed',
+			),
+			10,
+			3
+		);
+
 		add_action(
 			'unspam_comment',
 			array(
@@ -426,8 +446,8 @@ class Antispam_Bee {
 				'dashboard_count'          => 0,
 
 				'country_code'             => 0,
-				'country_black'            => '',
-				'country_white'            => '',
+				'country_denied'            => '',
+				'country_allowed'            => '',
 
 				'translate_api'            => 0,
 				'translate_lang'           => array(),
@@ -1722,7 +1742,6 @@ class Antispam_Bee {
 	 * Check for country spam by (anonymized) IP
 	 *
 	 * @since   2.6.9
-	 * @change  2.6.9
 	 * @change  2.10.0
 	 *
 	 * @param   string $ip IP address.
@@ -1731,20 +1750,20 @@ class Antispam_Bee {
 	private static function _is_country_spam( $ip ) {
 		$options = self::get_options();
 
-		$white = preg_split(
+		$allowed = preg_split(
 			'/[\s,;]+/',
-			$options['country_white'],
+			$options['country_allowed'],
 			-1,
 			PREG_SPLIT_NO_EMPTY
 		);
-		$black = preg_split(
+		$denied = preg_split(
 			'/[\s,;]+/',
-			$options['country_black'],
+			$options['country_denied'],
 			-1,
 			PREG_SPLIT_NO_EMPTY
 		);
 
-		if ( empty( $white ) && empty( $black ) ) {
+		if ( empty( $allowed ) && empty( $denied ) ) {
 			return false;
 		}
 
@@ -1755,12 +1774,12 @@ class Antispam_Bee {
 		 *
 		 * @param null   $is_country_spam The `is_country_spam` result.
 		 * @param string $ip              The IP address.
-		 * @param array  $white           The list of whitelisted country codes.
-		 * @param array  $black           The list of blacklisted country codes.
+		 * @param array  $allowed         The list of allowed country codes.
+		 * @param array  $denied          The list of denied country codes.
 		 *
 		 * @return null|boolean The `is_country_spam` result or null.
 		 */
-		$is_country_spam = apply_filters( 'antispam_bee_is_country_spam', null, $ip, $white, $black );
+		$is_country_spam = apply_filters( 'antispam_bee_is_country_spam', null, $ip, $allowed, $denied );
 
 		if ( is_bool( $is_country_spam ) ) {
 			return $is_country_spam;
@@ -1815,11 +1834,11 @@ class Antispam_Bee {
 			return false;
 		}
 
-		if ( ! empty( $black ) ) {
-			return ( in_array( $country, $black, true ) );
+		if ( ! empty( $denied ) ) {
+			return ( in_array( $country, $denied, true ) );
 		}
 
-		return ( ! in_array( $country, $white, true ) );
+		return ( ! in_array( $country, $allowed, true ) );
 	}
 
 
@@ -2862,16 +2881,43 @@ class Antispam_Bee {
 			return;
 		}
 
-		global $wpdb;
+		$version_from_db = floatval( get_option( 'antispambee_db_version', 0 ) );
+		if ( $version_from_db < 1.01 ) {
+			global $wpdb;
 
-		/**
-		 * In Version 2.9 the IP of the commenter was saved as a hash. We reverted this solution.
-		 * Therefore, we need to delete this unused data.
-		 */
-		//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-		$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash")';
-		$wpdb->query( $sql );
-		//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+			/**
+			 * In Version 2.9 the IP of the commenter was saved as a hash. We reverted this solution.
+			 * Therefore, we need to delete this unused data.
+			 */
+			//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+			$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash")';
+			$wpdb->query( $sql );
+			//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+		}
+
+		// DB version was raised in ASB 2.10.0 to 1.02.
+		if ( $version_from_db < 1.02 ) {
+			// Update option names.
+			$options = self::get_options();
+			if ( isset( $options['country_black'] ) ) {
+				$options['country_denied'] = $options['country_black'];
+				unset( $options['country_black'] );
+			}
+			if ( isset( $options['country_white'] ) ) {
+				$options['country_allowed'] = $options['country_white'];
+				unset( $options['country_white'] );
+			}
+
+			update_option(
+				'antispam_bee',
+				$options
+			);
+
+			wp_cache_set(
+				'antispam_bee',
+				$options
+			);
+		}
 
 		update_option( 'antispambee_db_version', self::$db_version );
 	}
@@ -2879,13 +2925,78 @@ class Antispam_Bee {
 	/**
 	 * Whether the database structure is up to date.
 	 *
+	 * @change 2.10.0
+	 *
 	 * @return bool
 	 */
 	private static function db_version_is_current() {
 
-		$current_version = absint( get_option( 'antispambee_db_version', 0 ) );
+		$current_version = floatval( get_option( 'antispambee_db_version', 0 ) );
 		return $current_version === self::$db_version;
 
+	}
+
+	/**
+	 * Runs after upgrades are completed.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param \WP_Upgrader $wp_upgrader WP_Upgrader instance.
+	 * @param array        $hook_extra Array of bulk item update data.
+	 */
+	public static function upgrades_completed( $wp_upgrader, $hook_extra ) {
+		if ( ! $wp_upgrader instanceof Plugin_Upgrader || ! isset( $hook_extra['plugins'] ) ) {
+			return;
+		}
+
+		$updated_plugins = $hook_extra['plugins'];
+		$asb_updated = false;
+		foreach ( $updated_plugins as $updated_plugin ) {
+			if ( $updated_plugin !== self::$_base ) {
+				continue;
+			}
+			$asb_updated = true;
+		}
+
+		if ( false === $asb_updated ) {
+			return;
+		}
+
+		self::asb_updated();
+	}
+
+	/**
+	 * Runs after an upgrade via an uploaded ZIP package was completed.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param string $package The package file.
+	 * @param array  $data The new plugin or theme data.
+	 * @param string $package_type The package type.
+	 */
+	public static function uploaded_upgrade_completed( $package, $data, $package_type ) {
+		if ( 'plugin' !== $package_type ) {
+			return;
+		}
+
+		$text_domain = isset( $data['TextDomain'] ) ? $data['TextDomain'] : '';
+
+		if ( 'antispam-bee' !== $text_domain ) {
+			return;
+		}
+
+		self::asb_updated();
+	}
+
+	/**
+	 * Runs after ASB was updated.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @return void
+	 */
+	private static function asb_updated() {
+		self::update_database();
 	}
 }
 

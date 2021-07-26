@@ -12,7 +12,7 @@ function register_uninstall_hook() { }
 
 function wp_cache_get() { return false; }
 
-function wp_cache_set() { return true; }
+function wp_cache_set( $key, $data ) { return true; }
 
 function wp_parse_args( $args, $defaults = '' ) {
 	if ( is_object( $args ) ) {
