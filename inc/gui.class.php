@@ -207,7 +207,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									$link1 = sprintf(
 										'<a href="%s" target="_blank" rel="noopener noreferrer">',
 										esc_url(
-											__( 'https://antispambee.pluginkollektiv.org/documentation#gravatar', 'antispam-bee' ),
+											__( 'https://antispambee.pluginkollektiv.org/documentation/#trust-commenters-with-a-gravatar', 'antispam-bee' ),
 											'https'
 										)
 									);
@@ -265,7 +265,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									$link1 = sprintf(
 										'<a href="%s" target="_blank" rel="noopener noreferrer">',
 										esc_url(
-											__( 'https://antispambee.pluginkollektiv.org/documentation#country', 'antispam-bee' ),
+											__( 'https://antispambee.pluginkollektiv.org/documentation/#block-comments-from-specific-countries', 'antispam-bee' ),
 											'https'
 										)
 									);
@@ -331,7 +331,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										$link1 = sprintf(
 											'<a href="%s" target="_blank" rel="noopener noreferrer">',
 											esc_url(
-												__( 'https://antispambee.pluginkollektiv.org/documentation#language', 'antispam-bee' ),
+												__( 'https://antispambee.pluginkollektiv.org/documentation/#allow-comments-only-in-certain-language', 'antispam-bee' ),
 												'https'
 											)
 										);
