@@ -166,7 +166,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	 *
 	 * @since  0.1
 	 * @since  2.7.0
-	 * @since  2.10.0 Change documentation links, change country option name, and add option to parse complete markup for comment forms 
+	 * @since  2.10.0 Change documentation links, change country option name, and add option to parse complete markup for comment forms
 	 */
 	public static function options_page() { ?>
 		<div class="wrap" id="ab_main">
