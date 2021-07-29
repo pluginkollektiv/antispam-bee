@@ -410,7 +410,6 @@ class Antispam_Bee {
 	 * Action deleting the plugin
 	 *
 	 * @since  2.4
-	 * @since  2.4
 	 */
 	public static function uninstall() {
 		if ( ! self::get_option( 'delete_data_on_uninstall' ) ) {
@@ -586,7 +585,6 @@ class Antispam_Bee {
 	/**
 	 * Add the link to the settings
 	 *
-	 * @since  1.1
 	 * @since  1.1
 	 *
 	 * @param array $data The action link array.
