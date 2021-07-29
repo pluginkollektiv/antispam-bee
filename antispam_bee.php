@@ -437,7 +437,7 @@ class Antispam_Bee {
 	 * Initialization of the internal variables
 	 *
 	 * @since   2.4
-	 * @change  2.7.0
+	 * @change  2.10.0
 	 */
 	private static function _init_internal_vars() {
 		self::$_base = plugin_basename( __FILE__ );
@@ -458,8 +458,8 @@ class Antispam_Bee {
 				'dashboard_count'          => 0,
 
 				'country_code'             => 0,
-				'country_denied'            => '',
-				'country_allowed'            => '',
+				'country_denied'           => '',
+				'country_allowed'          => '',
 
 				'translate_api'            => 0,
 				'translate_lang'           => array(),
@@ -500,7 +500,7 @@ class Antispam_Bee {
 	 * Check and return an array key
 	 *
 	 * @since   2.4.2
-	 * @change  2.4.2
+	 * @change  2.10.0
 	 *
 	 * @param   array  $array Array with values.
 	 * @param   string $key   Name of the key.
@@ -1131,7 +1131,7 @@ class Antispam_Bee {
 	 * Check incoming requests for spam
 	 *
 	 * @since   0.1
-	 * @change  2.6.3
+	 * @change  2.10.0
 	 *
 	 * @param   array $comment  Untreated comment.
 	 * @return  array $comment  Treated comment.
@@ -1409,7 +1409,7 @@ class Antispam_Bee {
 	 * Check the comment
 	 *
 	 * @since   2.4
-	 * @change  2.7.0
+	 * @change  2.10.0
 	 *
 	 * @param   array $comment Data of the comment.
 	 * @return  array|void     Array with suspected reason
@@ -1582,7 +1582,7 @@ class Antispam_Bee {
 	 * Usage of regexp, also custom
 	 *
 	 * @since   2.5.2
-	 * @change  2.5.6
+	 * @change  2.10.0
 	 *
 	 * @param   array $comment Array with commentary data.
 	 * @return  boolean        True for suspicious comment.
@@ -1891,7 +1891,6 @@ class Antispam_Bee {
 	 * Check for unwanted languages
 	 *
 	 * @since   2.0
-	 * @change  2.6.6
 	 * @change  2.8.2
 	 *
 	 * @param  string $comment_content Content of the comment.
@@ -2546,7 +2545,7 @@ class Antispam_Bee {
 	 * Send notification via e-mail
 	 *
 	 * @since   0.1
-	 * @change  2.5.7
+	 * @change  2.10.0
 	 *
 	 * @hook    string  antispam_bee_notification_subject  Custom subject for notification mails
 	 *
@@ -2875,6 +2874,8 @@ class Antispam_Bee {
 
 	/**
 	 * Updates the database structure if necessary
+	 * 
+	 * @change 2.10.0
 	 */
 	public static function update_database() {
 		if ( self::db_version_is_current() ) {
