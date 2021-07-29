@@ -39,8 +39,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Antispam_Bee
  *
- * @since   0.1
- * @change  2.4
+ * @since  0.1
+ * @since  2.4
  */
 class Antispam_Bee {
 
@@ -89,9 +89,9 @@ class Antispam_Bee {
 	/**
 	 * "Constructor" of the class
 	 *
-	 * @since   0.1
-	 * @change  2.6.4
-	 * @change  2.10.0
+	 * @since  0.1
+	 * @since  2.6.4
+	 * @since  2.10.0 Change handling of comment field honeypot and call functions after completed upgrades
 	 */
 	public static function init() {
 		add_action(
@@ -375,9 +375,9 @@ class Antispam_Bee {
 	/**
 	 * Action during the activation of the Plugins
 	 *
-	 * @since   0.1
-	 * @change  2.4
-	 * @change  2.10.0
+	 * @since  0.1
+	 * @since  2.4
+	 * @since  2.10.0 Set `use_output_buffer` option to `0`
 	 */
 	public static function activate() {
 		add_option(
@@ -398,8 +398,8 @@ class Antispam_Bee {
 	/**
 	 * Action to deactivate the plugin
 	 *
-	 * @since   0.1
-	 * @change  2.4
+	 * @since  0.1
+	 * @since  2.4
 	 */
 	public static function deactivate() {
 		self::clear_scheduled_hook();
@@ -409,8 +409,8 @@ class Antispam_Bee {
 	/**
 	 * Action deleting the plugin
 	 *
-	 * @since   2.4
-	 * @change  2.4
+	 * @since  2.4
+	 * @since  2.4
 	 */
 	public static function uninstall() {
 		if ( ! self::get_option( 'delete_data_on_uninstall' ) ) {
@@ -438,9 +438,9 @@ class Antispam_Bee {
 	/**
 	 * Initialization of the internal variables
 	 *
-	 * @since   2.4
-	 * @change  2.7.0
-	 * @change  2.10.0
+	 * @since  2.4
+	 * @since  2.7.0
+	 * @since  2.10.0 Change renamed country option names in options array
 	 */
 	private static function _init_internal_vars() {
 		self::$_base = plugin_basename( __FILE__ );
@@ -503,7 +503,7 @@ class Antispam_Bee {
 	 * Check and return an array key
 	 *
 	 * @since   2.4.2
-	 * @change  2.10.0
+	 * @since   2.10.0 Only return `null` if option does not exist.
 	 *
 	 * @param   array  $array Array with values.
 	 * @param   string $key   Name of the key.
@@ -540,7 +540,7 @@ class Antispam_Bee {
 	 * Localization of the admin pages
 	 *
 	 * @since   0.1
-	 * @change  2.4
+	 * @since   2.4
 	 *
 	 * @param   string $page Mark the page.
 	 * @return  boolean      True on success.
@@ -573,8 +573,8 @@ class Antispam_Bee {
 	/**
 	 * Integration of the localization file
 	 *
-	 * @since   0.1
-	 * @change  2.4
+	 * @since  0.1
+	 * @since  2.4
 	 */
 	public static function load_plugin_lang() {
 		load_plugin_textdomain(
@@ -586,8 +586,8 @@ class Antispam_Bee {
 	/**
 	 * Add the link to the settings
 	 *
-	 * @since   1.1
-	 * @change  1.1
+	 * @since  1.1
+	 * @since  1.1
 	 *
 	 * @param array $data The action link array.
 	 * @return array $data The action link array.
@@ -617,8 +617,8 @@ class Antispam_Bee {
 	/**
 	 * Meta links of the plugin
 	 *
-	 * @since   0.1
-	 * @change  2.6.2
+	 * @since  0.1
+	 * @since  2.6.2
 	 *
 	 * @param   array  $input Existing links.
 	 * @param   string $file  Current page.
@@ -647,8 +647,8 @@ class Antispam_Bee {
 	/**
 	 * Registration of resources (CSS & JS)
 	 *
-	 * @since   1.6
-	 * @change  2.4.5
+	 * @since  1.6
+	 * @since  2.4.5
 	 */
 	public static function init_plugin_sources() {
 		$plugin = get_plugin_data( __FILE__ );
@@ -672,8 +672,8 @@ class Antispam_Bee {
 	/**
 	 * Initialization of the option page
 	 *
-	 * @since   0.1
-	 * @change  2.4.3
+	 * @since  0.1
+	 * @since  2.4.3
 	 */
 	public static function add_sidebar_menu() {
 		$page = add_options_page(
@@ -716,8 +716,8 @@ class Antispam_Bee {
 	/**
 	 * Initialization of JavaScript
 	 *
-	 * @since   1.6
-	 * @change  2.4
+	 * @since  1.6
+	 * @since  2.4
 	 */
 	public static function add_options_script() {
 		wp_enqueue_script( 'ab_script' );
@@ -727,8 +727,8 @@ class Antispam_Bee {
 	/**
 	 * Initialization of Stylesheets
 	 *
-	 * @since   1.6
-	 * @change  2.4
+	 * @since  1.6
+	 * @since  2.4
 	 */
 	public static function add_options_style() {
 		wp_enqueue_style( 'ab_style' );
@@ -739,7 +739,6 @@ class Antispam_Bee {
 	 * Integration of the GUI
 	 *
 	 * @since   2.4
-	 * @change  2.4
 	 */
 	public static function init_options_page() {
 		require_once dirname( __FILE__ ) . '/inc/gui.class.php';
@@ -756,8 +755,8 @@ class Antispam_Bee {
 	/**
 	 * Display the spam counter on the dashboard
 	 *
-	 * @since   0.1
-	 * @change  2.6.5
+	 * @since  0.1
+	 * @since  2.6.5
 	 *
 	 * @param   array $items  Initial array with dashboard items.
 	 * @return  array $items  Merged array with dashboard items.
@@ -783,8 +782,8 @@ class Antispam_Bee {
 	/**
 	 * Initialize the dashboard chart
 	 *
-	 * @since   1.9
-	 * @change  2.5.6
+	 * @since  1.9
+	 * @since  2.5.6
 	 */
 	public static function add_dashboard_chart() {
 		if ( ! current_user_can( 'publish_posts' ) || ! self::get_option( 'dashboard_chart' ) ) {
@@ -812,8 +811,8 @@ class Antispam_Bee {
 	/**
 	 * Print dashboard styles
 	 *
-	 * @since   1.9.0
-	 * @change  2.5.8
+	 * @since  1.9.0
+	 * @since  2.5.8
 	 */
 	public static function add_dashboard_style() {
 		$plugin = get_plugin_data( __FILE__ );
@@ -832,8 +831,8 @@ class Antispam_Bee {
 	/**
 	 * Print dashboard scripts
 	 *
-	 * @since   1.9.0
-	 * @change  2.5.8
+	 * @since  1.9.0
+	 * @since  2.5.8
 	 */
 	public static function add_dashboard_script() {
 		if ( ! self::get_option( 'daily_stats' ) ) {
@@ -870,8 +869,8 @@ class Antispam_Bee {
 	/**
 	 * Print dashboard html
 	 *
-	 * @since   1.9.0
-	 * @change  2.5.8
+	 * @since  1.9.0
+	 * @since  2.5.8
 	 */
 	public static function show_spam_chart() {
 		$items = (array) self::get_option( 'daily_stats' );
@@ -917,8 +916,8 @@ class Antispam_Bee {
 	/**
 	 * Get all plugin options
 	 *
-	 * @since   2.4
-	 * @change  2.6.1
+	 * @since  2.4
+	 * @since  2.6.1
 	 *
 	 * @return  array $options Array with option fields.
 	 */
@@ -944,8 +943,8 @@ class Antispam_Bee {
 	/**
 	 * Get single option field
 	 *
-	 * @since   0.1
-	 * @change  2.4.2
+	 * @since  0.1
+	 * @since  2.4.2
 	 *
 	 * @param   string $field Field name.
 	 * @return  mixed         Field value.
@@ -960,8 +959,8 @@ class Antispam_Bee {
 	/**
 	 * Update single option field
 	 *
-	 * @since   0.1
-	 * @change  2.4
+	 * @since  0.1
+	 * @since  2.4
 	 *
 	 * @param   string $field Field name.
 	 * @param   mixed  $value The Field value.
@@ -978,8 +977,8 @@ class Antispam_Bee {
 	/**
 	 * Update multiple option fields
 	 *
-	 * @since   0.1
-	 * @change  2.6.1
+	 * @since  0.1
+	 * @since  2.6.1
 	 *
 	 * @param   array $data Array with plugin option fields.
 	 */
@@ -1017,8 +1016,8 @@ class Antispam_Bee {
 	/**
 	 * Execution of the daily cronjobs
 	 *
-	 * @since   0.1
-	 * @change  2.4
+	 * @since  0.1
+	 * @since  2.4
 	 */
 	public static function start_daily_cronjob() {
 		if ( ! self::get_option( 'cronjob_enable' ) ) {
@@ -1037,8 +1036,8 @@ class Antispam_Bee {
 	/**
 	 * Delete old spam comments
 	 *
-	 * @since   0.1
-	 * @change  2.4
+	 * @since  0.1
+	 * @since  2.4
 	 */
 	private static function _delete_old_spam() {
 		$days = (int) self::get_option( 'cronjob_interval' );
@@ -1063,8 +1062,8 @@ class Antispam_Bee {
 	/**
 	 * Initialization of the cronjobs
 	 *
-	 * @since   0.1
-	 * @change  2.4
+	 * @since  0.1
+	 * @since  2.4
 	 */
 	public static function init_scheduled_hook() {
 		if ( ! wp_next_scheduled( 'antispam_bee_daily_cronjob' ) ) {
@@ -1080,8 +1079,8 @@ class Antispam_Bee {
 	/**
 	 * Deletion of the cronjobs
 	 *
-	 * @since   0.1
-	 * @change  2.4
+	 * @since  0.1
+	 * @since  2.4
 	 */
 	public static function clear_scheduled_hook() {
 		if ( wp_next_scheduled( 'antispam_bee_daily_cronjob' ) ) {
@@ -1100,8 +1099,8 @@ class Antispam_Bee {
 	/**
 	 * Check POST values
 	 *
-	 * @since   0.1
-	 * @change  2.6.3
+	 * @since  0.1
+	 * @since  2.6.3
 	 */
 	public static function precheck_incoming_request() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -1133,9 +1132,9 @@ class Antispam_Bee {
 	/**
 	 * Check incoming requests for spam
 	 *
-	 * @since   0.1
-	 * @change  2.6.3
-	 * @change  2.10.0
+	 * @since  0.1
+	 * @since  2.6.3
+	 * @since  2.10.0 Refactoring of code if pings are allowed and if is ping
 	 *
 	 * @param   array $comment  Untreated comment.
 	 * @return  array $comment  Treated comment.
@@ -1204,9 +1203,9 @@ class Antispam_Bee {
 	/**
 	 * Prepares the replacement of the comment field
 	 *
-	 * @since   0.1
-	 * @change  2.6.4
-	 * @change  2.10.0
+	 * @since  0.1
+	 * @since  2.4
+	 * @since  2.10.0 Changes needed because of new way to add the honeypot field via filter instead of output buffering
 	 *
 	 * @param string $data Markup of the comment field or whole page (depending on ob option).
 	 */
@@ -1293,8 +1292,8 @@ class Antispam_Bee {
 	/**
 	 * Check the trackbacks
 	 *
-	 * @since   2.4
-	 * @change  2.7.0
+	 * @since  2.4
+	 * @since  2.7.0
 	 *
 	 * @param   array $comment Trackback data.
 	 * @return  array          Array with suspected reason.
@@ -1413,9 +1412,9 @@ class Antispam_Bee {
 	/**
 	 * Check the comment
 	 *
-	 * @since   2.4
-	 * @change  2.7.0
-	 * @change  2.10.0
+	 * @since  2.4
+	 * @since  2.7.0
+	 * @since  2.10.0 Added useragent as data to regex check
 	 *
 	 * @param   array $comment Data of the comment.
 	 * @return  array|void     Array with suspected reason
@@ -1515,8 +1514,7 @@ class Antispam_Bee {
 	/**
 	 * Check for a Gravatar image
 	 *
-	 * @since   2.6.5
-	 * @change  2.6.5
+	 * @since  2.6.5
 	 *
 	 * @param   string $email Input email.
 	 * @return  boolean       Check status (true = Gravatar available).
@@ -1545,7 +1543,6 @@ class Antispam_Bee {
 	 * Check for comment action time
 	 *
 	 * @since   2.6.4
-	 * @change  2.6.4
 	 *
 	 * @return  boolean    TRUE if the action time is less than 5 seconds
 	 */
@@ -1587,9 +1584,9 @@ class Antispam_Bee {
 	/**
 	 * Usage of regexp, also custom
 	 *
-	 * @since   2.5.2
-	 * @change  2.5.6
-	 * @change  2.10.0
+	 * @since  2.5.2
+	 * @since  2.5.6
+	 * @since  2.10.0 Use useragent in check
 	 *
 	 * @param   array $comment Array with commentary data.
 	 * @return  boolean        True for suspicious comment.
@@ -1700,8 +1697,8 @@ class Antispam_Bee {
 	/**
 	 * Review a comment on its existence in the local spam
 	 *
-	 * @since   2.0.0
-	 * @change  2.5.4
+	 * @since  2.0.0
+	 * @since  2.5.4
 	 *
 	 * @param   string $ip    Comment IP.
 	 * @param   string $url   Comment URL (optional).
@@ -1753,8 +1750,8 @@ class Antispam_Bee {
 	/**
 	 * Check for country spam by (anonymized) IP
 	 *
-	 * @since   2.6.9
-	 * @change  2.10.0
+	 * @since  2.6.9
+	 * @since  2.10.0 Make country check API filterable and use iplocate.io instead of ip2country.info
 	 *
 	 * @param   string $ip IP address.
 	 * @return  boolean    True if the comment is spam based on country filter.
@@ -1858,7 +1855,6 @@ class Antispam_Bee {
 	 * Check for BBCode spam
 	 *
 	 * @since   2.5.1
-	 * @change  2.5.1
 	 *
 	 * @param   string $body Content of a comment.
 	 * @return  boolean      True for BBCode in content
@@ -1871,8 +1867,8 @@ class Antispam_Bee {
 	/**
 	 * Check for an already approved e-mail address
 	 *
-	 * @since   2.0
-	 * @change  2.5.1
+	 * @since  2.0
+	 * @since  2.5.1
 	 *
 	 * @param   string $email E-mail address.
 	 * @return  boolean       True for a found entry.
@@ -1897,9 +1893,9 @@ class Antispam_Bee {
 	/**
 	 * Check for unwanted languages
 	 *
-	 * @since   2.0
-	 * @change  2.6.6
-	 * @change  2.8.2
+	 * @since  2.0
+	 * @since  2.6.6
+	 * @since  2.8.2
 	 *
 	 * @param  string $comment_content Content of the comment.
 	 *
@@ -2182,8 +2178,8 @@ class Antispam_Bee {
 	/**
 	 * Trim IP addresses
 	 *
-	 * @since   0.1
-	 * @change  2.5.1
+	 * @since  0.1
+	 * @since  2.5.1
 	 *
 	 * @param   string  $ip       Original IP.
 	 * @param   boolean $cut_end  Shortening the end.
@@ -2204,7 +2200,6 @@ class Antispam_Bee {
 	 * Anonymize the IP addresses
 	 *
 	 * @since   2.5.1
-	 * @change  2.5.1
 	 *
 	 * @param   string $ip Original IP.
 	 * @return  string     Anonymous IP.
@@ -2222,7 +2217,6 @@ class Antispam_Bee {
 	 * Rotates the IP address
 	 *
 	 * @since   2.4.5
-	 * @change  2.4.5
 	 *
 	 * @param   string $ip  IP address.
 	 * @return  string      Turned IP address.
@@ -2243,8 +2237,8 @@ class Antispam_Bee {
 	/**
 	 * Check for an IPv4 address
 	 *
-	 * @since   2.4
-	 * @change  2.6.4
+	 * @since  2.4
+	 * @since  2.6.4
 	 *
 	 * @param   string $ip  IP to validate.
 	 * @return  integer       TRUE if IPv4.
@@ -2261,8 +2255,8 @@ class Antispam_Bee {
 	/**
 	 * Check for an IPv6 address
 	 *
-	 * @since   2.6.2
-	 * @change  2.6.4
+	 * @since  2.6.2
+	 * @since  2.6.4
 	 *
 	 * @param   string $ip  IP to validate.
 	 * @return  boolean       TRUE if IPv6.
@@ -2279,8 +2273,8 @@ class Antispam_Bee {
 	/**
 	 * Testing on mobile devices
 	 *
-	 * @since   0.1
-	 * @change  2.4
+	 * @since  0.1
+	 * @since  2.4
 	 *
 	 * @return  boolean  TRUE if "wptouch" is active
 	 */
@@ -2311,8 +2305,8 @@ class Antispam_Bee {
 	/**
 	 * Execution of the delete/marking process
 	 *
-	 * @since   0.1
-	 * @change  2.6.0
+	 * @since  0.1
+	 * @since  2.6.0
 	 *
 	 * @param   array   $comment  Untreated commentary data.
 	 * @param   string  $reason   Reason for suspicion.
@@ -2387,8 +2381,8 @@ class Antispam_Bee {
 	/**
 	 * Logfile with detected spam
 	 *
-	 * @since   2.5.7
-	 * @change  2.6.1
+	 * @since  2.5.7
+	 * @since  2.6.1
 	 *
 	 * @param   array $comment Array with commentary data.
 	 * @return  mixed        FALSE in case of error
@@ -2418,7 +2412,6 @@ class Antispam_Bee {
 	 * Sends the 403 header and terminates the connection
 	 *
 	 * @since   2.5.6
-	 * @change  2.5.6
 	 */
 	private static function _go_in_peace() {
 		status_header( 403 );
@@ -2430,7 +2423,6 @@ class Antispam_Bee {
 	 * Return real client IP
 	 *
 	 * @since   2.6.1
-	 * @change  2.6.1
 	 *
 	 * @return  mixed  $ip  Client IP
 	 */
@@ -2497,7 +2489,6 @@ class Antispam_Bee {
 	 * Add spam reason as comment data
 	 *
 	 * @since   2.6.0
-	 * @change  2.6.0
 	 *
 	 * @param   integer $comment_id  Comment ID.
 	 */
@@ -2514,7 +2505,6 @@ class Antispam_Bee {
 	 * Delete spam reason as comment data
 	 *
 	 * @since   2.6.0
-	 * @change  2.6.0
 	 *
 	 * @param   integer $comment_id  Comment ID.
 	 */
@@ -2552,9 +2542,9 @@ class Antispam_Bee {
 	/**
 	 * Send notification via e-mail
 	 *
-	 * @since   0.1
-	 * @change  2.5.7
-	 * @change  2.10.0
+	 * @since  0.1
+	 * @since  2.5.7
+	 * @since  2.10.0 Change plugin website URL
 	 *
 	 * @hook    string  antispam_bee_notification_subject  Custom subject for notification mails
 	 *
@@ -2702,8 +2692,8 @@ class Antispam_Bee {
 	/**
 	 * Return the number of spam comments
 	 *
-	 * @since   0.1
-	 * @change  2.4
+	 * @since  0.1
+	 * @since  2.4
 	 */
 	private static function _get_spam_count() {
 		// Init.
@@ -2717,8 +2707,8 @@ class Antispam_Bee {
 	/**
 	 * Output the number of spam comments
 	 *
-	 * @since   0.1
-	 * @change  2.4
+	 * @since  0.1
+	 * @since  2.4
 	 */
 	public static function the_spam_count() {
 		echo esc_html( self::_get_spam_count() );
@@ -2728,8 +2718,8 @@ class Antispam_Bee {
 	/**
 	 * Update the number of spam comments
 	 *
-	 * @since   0.1
-	 * @change  2.6.1
+	 * @since  0.1
+	 * @since  2.6.1
 	 */
 	private static function _update_spam_count() {
 		// Skip if not enabled.
@@ -2746,8 +2736,8 @@ class Antispam_Bee {
 	/**
 	 * Update statistics
 	 *
-	 * @since   1.9
-	 * @change  2.6.1
+	 * @since  1.9
+	 * @since  2.6.1
 	 */
 	private static function _update_daily_stats() {
 		// Skip if not enabled.
@@ -2779,7 +2769,7 @@ class Antispam_Bee {
 	/**
 	 * Returns the secret of a post used in the textarea name attribute.
 	 *
-	 * @change 2.10.0
+	 * @since 2.10.0 Modify secret generation because `always_allowed` option not longer exists
 	 *
 	 * @param int $post_id The Post ID.
 	 *
@@ -2809,7 +2799,7 @@ class Antispam_Bee {
 	/**
 	 * Returns the secret of a post used in the textarea id attribute.
 	 *
-	 * @change 2.10.0
+	 * @since 2.10.0 Modify secret generation because `always_allowed` option not longer exists
 	 *
 	 * @param int $post_id The post ID.
 	 *
@@ -2884,7 +2874,7 @@ class Antispam_Bee {
 	/**
 	 * Updates the database structure if necessary
 	 *
-	 * @change 2.10.0
+	 * @since 2.10.0 Add update routine for country option names
 	 */
 	public static function update_database() {
 		if ( self::db_version_is_current() ) {
@@ -2935,7 +2925,7 @@ class Antispam_Bee {
 	/**
 	 * Whether the database structure is up to date.
 	 *
-	 * @change 2.10.0
+	 * @since  2.10.0 Return a float instead of int
 	 *
 	 * @return bool
 	 */
