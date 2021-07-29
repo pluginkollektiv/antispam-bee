@@ -17,8 +17,9 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	/**
 	 * Save the GUI
 	 *
-	 * @since   0.1
-	 * @change  2.10.0
+	 * @since  0.1
+	 * @since  2.7.0
+	 * @since  2.10.0 Change country option names
 	 */
 	public static function save_changes() {
 		if ( empty( $_POST ) ) {
@@ -143,7 +144,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	 * Generation of a selectbox
 	 *
 	 * @since   2.4.5
-	 * @change  2.4.5
 	 *
 	 * @param   string $name      Name of the Selectbox.
 	 * @param   array  $data      Array with values.
@@ -164,8 +164,9 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	/**
 	 * Display the GUI
 	 *
-	 * @since   0.1
-	 * @change  2.10.0
+	 * @since  0.1
+	 * @since  2.7.0
+	 * @since  2.10.0 Change documentation links, change country option name, and add option to parse complete markup for comment forms
 	 */
 	public static function options_page() { ?>
 		<div class="wrap" id="ab_main">
