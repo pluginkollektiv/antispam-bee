@@ -1414,7 +1414,7 @@ class Antispam_Bee {
 	 *
 	 * @since  2.4
 	 * @since  2.7.0
-	 * @since  2.10.0 Added useragent as data to regex check
+	 * @since  2.10.0 Add useragent as data to regex check
 	 *
 	 * @param   array $comment Data of the comment.
 	 * @return  array|void     Array with suspected reason
