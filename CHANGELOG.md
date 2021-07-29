@@ -1,5 +1,28 @@
 ## Changelog ##
 
+### 2.10.0 ###
+* **English**
+  * Fix: Switch from ip2country.info to iplocate.io for country check
+  * Enhancement: Use filter to add the honeypot field instead of output buffering for new installations and added option to switch between the both ways
+  * Tweak: Added comment user agent to regex pattern check
+  * Tweak: Make the ping detection filterable to support new comment types
+  * Tweak: Updated internal documentation links
+  * Tweak: Several updates and optimizations in the testing process
+  * Tweak: Adjust color palette to recent WP version
+  * Tweak: Adjust wording in variables and option names
+  * Readme: Add new contributor and clean up unused code
+
+* **Deutsch**
+  * Fix: Wechsel von ip2country.info zu iplocate.io für die Länderprüfung
+  * Verbesserung: Bei neuen Installationen wird ein Filter zum Hinzufügen des Honeypot-Felds genutzt statt Output-Buffering. Es wurde eine Option hinzugefügt, zwischen den beiden Wegen zu wechseln
+  * Tweak: Kommentar User-Agent zu Regex-Pattern hinzugefügt
+  * Tweak: Die Ping-Erkennung ist jetzt filterbar, um neue Kommentartypen zu unterstützen
+  * Tweak: Aktualisierte Links zur internen Dokumentation
+  * Tweak: Verschiedene Aktualisierungen und Optimierungen im Testprozess
+  * Tweak: Farbpalette an aktuelle WP-Version anpassen
+  * Tweak: Wortlaut in Variablen und Optionsnamen wurden angepasst
+  * Readme: Neuer Contributor hinzugefügt und unbenutzten Code bereinigt
+
 ### 2.9.4 ###
 * **English**
   * Enhancement: Add filter to allow ajax calls
@@ -136,7 +159,7 @@
   * Minor interface improvements
   * Remove old russian and Dutch translation files
   * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
-  
+
 * **Deutsch**
   - Entfernt stopforumspam.com zur Vorbeugung möglicher DSGVO-Verletzungen
   - Verändert den Umgang mit IP-Adressen um der DSGVO zu entsprechen
@@ -146,7 +169,7 @@
   - Verberesserungen an der Benutzeroberfläche
   - Entfernt alte russische und holländische Sprachversionen
   - Mehr Details: https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
-  
+
 ### 2.7.1 ###
 
 * **English**
@@ -524,7 +547,7 @@
 * **Deutsch**
    * Kompatibilität mit WPtouch
    * Unterstützung für do_action hinzugefügt
-   * Übersetzung auf brasilianisches Portugiesisch 
+   * Übersetzung auf brasilianisches Portugiesisch
 
 ### 1.4 ###
 * **English**

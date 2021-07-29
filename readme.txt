@@ -3,9 +3,9 @@
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
-* Tested up to:      5.7
+* Tested up to:      5.8
 * Requires PHP:      5.2
-* Stable tag:        2.9.4
+* Stable tag:        2.10.0
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,8 +92,19 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 
 ## Changelog ##
 
-### 2.9.4 ###
+### 2.10.0 ###
+  * Fix: Switch from ip2country.info to iplocate.io for country check
+  * Enhancement: Use filter to add the honeypot field instead of output buffering for new installations and added option to switch between the both ways
+  * Tweak: Added comment user agent to regex pattern check
+  * Tweak: Make the ping detection filterable to support new comment types
+  * Tweak: Updated internal documentation links
+  * Tweak: Several updates and optimizations in the testing process
+  * Tweak: Adjust color palette to recent WP version
+  * Tweak: Adjust wording in variables and option names
+  * Readme: Add new contributor and clean up unused code
 
+
+### 2.9.4 ###
   * Enhancement: Add filter to allow ajax calls
   * Tweak: Better wording for BBCode feature in plugin description
   * Tweak: Better screenshots in the plugin directory
