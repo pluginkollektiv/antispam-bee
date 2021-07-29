@@ -18,6 +18,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	 * Save the GUI
 	 *
 	 * @since   0.1
+	 * @change  2.7.0
 	 * @change  2.10.0
 	 */
 	public static function save_changes() {
@@ -165,6 +166,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	 * Display the GUI
 	 *
 	 * @since   0.1
+	 * @change  2.7.0
 	 * @change  2.10.0
 	 */
 	public static function options_page() { ?>

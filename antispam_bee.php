@@ -90,6 +90,7 @@ class Antispam_Bee {
 	 * "Constructor" of the class
 	 *
 	 * @since   0.1
+	 * @change  2.6.4
 	 * @change  2.10.0
 	 */
 	public static function init() {
@@ -375,6 +376,7 @@ class Antispam_Bee {
 	 * Action during the activation of the Plugins
 	 *
 	 * @since   0.1
+	 * @change  2.4
 	 * @change  2.10.0
 	 */
 	public static function activate() {
@@ -437,6 +439,7 @@ class Antispam_Bee {
 	 * Initialization of the internal variables
 	 *
 	 * @since   2.4
+	 * @change  2.7.0
 	 * @change  2.10.0
 	 */
 	private static function _init_internal_vars() {
@@ -1131,6 +1134,7 @@ class Antispam_Bee {
 	 * Check incoming requests for spam
 	 *
 	 * @since   0.1
+	 * @change  2.6.3
 	 * @change  2.10.0
 	 *
 	 * @param   array $comment  Untreated comment.
@@ -1201,6 +1205,7 @@ class Antispam_Bee {
 	 * Prepares the replacement of the comment field
 	 *
 	 * @since   0.1
+	 * @change  2.6.4
 	 * @change  2.10.0
 	 *
 	 * @param string $data Markup of the comment field or whole page (depending on ob option).
@@ -1409,6 +1414,7 @@ class Antispam_Bee {
 	 * Check the comment
 	 *
 	 * @since   2.4
+	 * @change  2.7.0
 	 * @change  2.10.0
 	 *
 	 * @param   array $comment Data of the comment.
@@ -1582,6 +1588,7 @@ class Antispam_Bee {
 	 * Usage of regexp, also custom
 	 *
 	 * @since   2.5.2
+	 * @change  2.5.6
 	 * @change  2.10.0
 	 *
 	 * @param   array $comment Array with commentary data.
@@ -1891,6 +1898,7 @@ class Antispam_Bee {
 	 * Check for unwanted languages
 	 *
 	 * @since   2.0
+	 * @change  2.6.6
 	 * @change  2.8.2
 	 *
 	 * @param  string $comment_content Content of the comment.
@@ -2545,6 +2553,7 @@ class Antispam_Bee {
 	 * Send notification via e-mail
 	 *
 	 * @since   0.1
+	 * @change  2.5.7
 	 * @change  2.10.0
 	 *
 	 * @hook    string  antispam_bee_notification_subject  Custom subject for notification mails
