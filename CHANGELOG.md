@@ -3,7 +3,7 @@
 ### 2.10.0 ###
 * **English**
   * Fix: Switch from ip2country.info to iplocate.io for country check
-  * Enhancement: Use filter to add the honeypot field instead of output buffering for new installations and added option to switch between the both ways.
+  * Enhancement: Use filter to add the honeypot field instead of output buffering for new installations and added option to switch between the both ways
   * Tweak: Added comment user agent to regex pattern check
   * Tweak: Make the ping detection filterable to support new comment types
   * Tweak: Updated internal documentation links
@@ -14,7 +14,7 @@
 
 * **Deutsch**
   * Fix: Wechsel von ip2country.info zu iplocate.io für die Länderprüfung
-  * Verbesserung: Bei neuen Installationen wird ein Filter zum Hinzufügen des Honeypot-Felds genutzt statt Output-Buffering. Es wurde eine Option hinzugefügt, zwischen den beiden Wegen zu wechseln.
+  * Verbesserung: Bei neuen Installationen wird ein Filter zum Hinzufügen des Honeypot-Felds genutzt statt Output-Buffering. Es wurde eine Option hinzugefügt, zwischen den beiden Wegen zu wechseln
   * Tweak: Kommentar User-Agent zu Regex-Pattern hinzugefügt
   * Tweak: Die Ping-Erkennung ist jetzt filterbar, um neue Kommentartypen zu unterstützen
   * Tweak: Aktualisierte Links zur internen Dokumentation

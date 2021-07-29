@@ -94,6 +94,7 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 
 ### 2.10.0 ###
   * Fix: Switch from ip2country.info to iplocate.io for country check
+  * Enhancement: Use filter to add the honeypot field instead of output buffering for new installations and added option to switch between the both ways
   * Tweak: Added comment user agent to regex pattern check
   * Tweak: Make the ping detection filterable to support new comment types
   * Tweak: Updated internal documentation links
