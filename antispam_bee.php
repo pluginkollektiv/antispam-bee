@@ -2874,7 +2874,7 @@ class Antispam_Bee {
 
 	/**
 	 * Updates the database structure if necessary
-	 * 
+	 *
 	 * @change 2.10.0
 	 */
 	public static function update_database() {
