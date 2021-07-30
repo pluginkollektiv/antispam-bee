@@ -24,3 +24,6 @@
 /phpcs.xml
 /phpunit.xml.dist
 /README.md
+/output.log
+/docker_tag
+/behat.yml
