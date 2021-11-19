@@ -1117,11 +1117,11 @@ class Antispam_Bee {
 		$hidden_field = self::get_key( $_POST, 'comment' );
 		$plugin_field = self::get_key( $_POST, self::get_secret_name_for_post( $post_id ) );
 
-		if ( empty( $hidden_field ) && ! empty( $plugin_field ) ) {
+		if ( ! empty( $hidden_field ) ) {
+			$_POST['ab_spam__hidden_field'] = 1;
+		} else {
 			$_POST['comment'] = $plugin_field;
 			unset( $_POST[ self::get_secret_name_for_post( $post_id ) ] );
-		} else {
-			$_POST['ab_spam__hidden_field'] = 1;
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
@@ -1425,7 +1425,10 @@ class Antispam_Bee {
 		$author    = self::get_key( $comment, 'comment_author' );
 		$useragent = self::get_key( $comment, 'comment_agent' );
 
-		if ( empty( $body ) ) {
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		$allow_empty_comment = apply_filters( 'allow_empty_comment', false, $comment );
+
+		if ( empty( $body ) && ! $allow_empty_comment ) {
 			return array(
 				'reason' => 'empty',
 			);
