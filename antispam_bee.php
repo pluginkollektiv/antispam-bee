@@ -251,6 +251,25 @@ class Antispam_Bee {
 				);
 
 			} elseif ( self::_current_page( 'edit-comments' ) ) {
+				require_once dirname( __FILE__ ) . '/inc/gui.class.php';
+				add_filter(
+					'comment_row_actions',
+					array(
+						'Antispam_Bee_GUI',
+						'report_comment_action_link',
+					),
+					10,
+					2
+				);
+
+				add_action(
+					'admin_enqueue_scripts',
+					array(
+						'Antispam_Bee_GUI',
+						'enqueue_report_comment_action_link_script',
+					),
+				);
+
 				// phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification
 				if ( ! empty( $_GET['comment_status'] ) && 'spam' === $_GET['comment_status'] && ! self::get_option( 'no_notice' ) ) {
 					// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification

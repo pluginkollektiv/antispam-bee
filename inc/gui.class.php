@@ -570,4 +570,140 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		 */
 		return apply_filters( 'ab_get_allowed_translate_languages', $lang );
 	}
+
+	/**
+	 * Add comment action button to report spam to ASB
+	 *
+	 * @since 2.11.0
+	 * @param array   $actions Array of actions.
+	 * @param comment $comment Comment object.
+	 */
+	public static function report_comment_action_link( $actions, $comment ) {
+		$actions['report_spam'] = sprintf(
+			'<button
+				type="button"
+				class="report-comment-to-asb-button"
+				data-author="%s"
+				data-email="%s"
+				data-ip="%s"
+				data-host="%s"
+				data-url="%s"
+				data-content="%s"
+				data-agent="%s"
+				data-a11y-dialog-show="report-spam-dialog"
+			>%s</button>',
+			rawurlencode( $comment->comment_author ),
+			rawurlencode( $comment->comment_author_email ),
+			rawurlencode( $comment->comment_author_IP ),
+			rawurlencode( gethostbyaddr( $comment->comment_author_IP ) ),
+			rawurlencode( $comment->comment_author_url ),
+			rawurlencode( $comment->comment_content ),
+			rawurlencode( $comment->comment_agent ),
+			__( 'Report to Antispam Bee', 'antispam-bee' )
+		);
+
+		return $actions;
+	}
+
+	/**
+	 * Enqueue script for report spam button.
+	 * 
+	 * @since 2.11.0
+	 */
+	public static function enqueue_report_comment_action_link_script() {
+		wp_enqueue_script(
+			'a11y-dialog',
+			plugins_url( '../js/a11y-dialog.min.js', __FILE__ ),
+			array(),
+			filemtime( plugin_dir_path( __FILE__ ) . '../js/a11y-dialog.min.js' ),
+			true
+		);
+
+		// Print dialog markup.
+		printf(
+			'<div
+				class="a11y-dialog-container"
+				data-a11y-dialog="report-spam-dialog"
+				aria-labelledby="report-spam-dialog-title"
+				aria-hidden="true"
+			>
+				<div data-a11y-dialog-hide></div>
+				<div role="document">
+					<button type="button" data-a11y-dialog-hide aria-label="Close dialog">
+						&times;
+					</button>
+					<div class="dialog-content">
+						<h1 id="report-spam-dialog-title">%s</h1>
+						<p>%s</p>
+						<p>%s</p>
+						<ul class="comment-data-list"></ul>
+						<p>%s</p>
+						<p>%s</p>
+					</div>
+				</div>
+			</div>
+<style>
+.a11y-dialog-container,
+div[data-a11y-dialog-hide] {
+  position: fixed; /* 1 */
+  top: 0; /* 1 */
+  right: 0; /* 1 */
+  bottom: 0; /* 1 */
+  left: 0; /* 1 */
+}
+
+.a11y-dialog-container {
+  z-index: 2; /* 1 */
+  display: flex; /* 2 */
+}
+
+.a11y-dialog-container[aria-hidden="true"] {
+  display: none; /* 1 */
+}
+
+div[data-a11y-dialog-hide] {
+  background-color: rgba(43, 46, 56, 0.9); /* 1 */
+}
+
+.a11y-dialog-container .dialog-content {
+  margin: auto; /* 1 */
+  z-index: 2; /* 2 */
+  position: relative; /* 2 */
+  background-color: white; /* 3 */
+}</style>',
+			__( 'Report comment as unrecognized spam', 'antispam-bee' ),
+			__( 'Thank you for helping us to improve Antispam Bee.', 'antispam-bee' ),
+			__( 'You are about to report the comment by [commenter name] with the content [content of the comment] to us, because you believe it is unrecognized spam. We also found the following data in the comment, which we will exploit for Antispam Bee’s evaluation and heuristics:.', 'antispam-bee' ),
+			__( 'We evaluate this data [automated|manually] to improve the spam detection of Antispam Bee. If we receive multiple identical messages about a spammer, we also use this data to improve Blacklist Updater. The data will be processed by us in the next x [hours|days] and then automatically deleted. For the period of processing, the data is stored exclusively on servers located in Germany. Access to this data is only granted to our developer team. To keep the process lean, you will not receive any further feedback from us about the processing, storage or deletion, but pls receive our thanks for your help.', 'antispam-bee' ),
+			__( 'If you agree to submit this data, you can send it using the button below.', 'antispam-bee' )
+		);
+
+
+		wp_add_inline_script(
+			'a11y-dialog',
+			'( function() {
+				var buttons = document.querySelectorAll( ".report-comment-to-asb-button" );
+				if ( buttons.length === 0 ) {
+					return;
+				}
+
+				for ( var i = 0; i < buttons.length; i++ ) {
+					var button = buttons[i];
+					button.addEventListener( "click", function() {
+						var button = this
+							dataset = button.dataset,
+							commentData = {
+								author: dataset.author,
+								email: dataset.email,
+								ip: dataset.ip,
+								host: dataset.host,
+								url: dataset.url,
+								content: dataset.content,
+								agent: dataset.agent,
+							};
+					} );
+				}
+			} )();'
+		);
+	}
 }
