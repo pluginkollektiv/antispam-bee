@@ -1425,6 +1425,7 @@ class Antispam_Bee {
 		$author    = self::get_key( $comment, 'comment_author' );
 		$useragent = self::get_key( $comment, 'comment_agent' );
 
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$allow_empty_comment = apply_filters( 'allow_empty_comment', false, $comment );
 
 		if ( empty( $body ) && ! $allow_empty_comment ) {
