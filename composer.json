@@ -79,6 +79,7 @@
       "minifycss css/styles.css > css/styles.min.css",
       "minifyjs js/dashboard.js > js/dashboard.min.js",
       "minifyjs js/raphael.helper.js > js/raphael.helper.min.js",
+      "minifyjs js/a11y-dialog.js > js/a11y-dialog.min.js",
       "minifyjs js/scripts.js > js/scripts.min.js"
     ]
   }
