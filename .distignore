@@ -1,0 +1,29 @@
+# Directories
+/.git
+/.github
+/.wordpress-org
+/bin
+/node_modules
+/tests
+/vendor
+
+# Files
+/.distignore
+/.eslintrc.json
+/.gitattributes
+/.gitignore
+/.sonarcloud.properties
+/.stylelintrc.json
+/composer.json
+/composer.lock
+/composer-php-5-4.json
+/docker-compose.yml
+/package.json
+/package-lock.json
+/composer.lock
+/phpcs.xml
+/phpunit.xml.dist
+/README.md
+/output.log
+/docker_tag
+/behat.yml

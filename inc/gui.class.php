@@ -17,8 +17,9 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	/**
 	 * Save the GUI
 	 *
-	 * @since   0.1
-	 * @change  2.7.0
+	 * @since  0.1
+	 * @since  2.7.0
+	 * @since  2.10.0 Change country option names
 	 */
 	public static function save_changes() {
 		if ( empty( $_POST ) ) {
@@ -58,7 +59,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'spam_ip'                  => (int) ( ! empty( $_POST['ab_spam_ip'] ) ),
 			'already_commented'        => (int) ( ! empty( $_POST['ab_already_commented'] ) ),
 			'time_check'               => (int) ( ! empty( $_POST['ab_time_check'] ) ),
-			'always_allowed'           => (int) ( ! empty( $_POST['ab_always_allowed'] ) ),
 
 			'ignore_pings'             => (int) ( ! empty( $_POST['ab_ignore_pings'] ) ),
 			'ignore_filter'            => (int) ( ! empty( $_POST['ab_ignore_filter'] ) ),
@@ -70,13 +70,15 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			'bbcode_check'             => (int) ( ! empty( $_POST['ab_bbcode_check'] ) ),
 			'gravatar_check'           => (int) ( ! empty( $_POST['ab_gravatar_check'] ) ),
 			'country_code'             => (int) ( ! empty( $_POST['ab_country_code'] ) ),
-			'country_black'            => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_black' ) ) ),
-			'country_white'            => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_white' ) ) ),
+			'country_denied'            => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_denied' ) ) ),
+			'country_allowed'            => sanitize_text_field( wp_unslash( self::get_key( $_POST, 'ab_country_allowed' ) ) ),
 
 			'translate_api'            => (int) ( ! empty( $_POST['ab_translate_api'] ) ),
 			'translate_lang'           => $selected_languages,
 
 			'delete_data_on_uninstall' => (int) ( ! empty( $_POST['delete_data_on_uninstall'] ) ),
+
+			'use_output_buffer' => (int) ( ! empty( $_POST['ab_use_output_buffer'] ) ),
 
 		);
 
@@ -98,23 +100,23 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			$options['ignore_reasons'] = array();
 		}
 
-		if ( ! empty( $options['country_black'] ) ) {
-			$options['country_black'] = preg_replace(
+		if ( ! empty( $options['country_denied'] ) ) {
+			$options['country_denied'] = preg_replace(
 				'/[^A-Z ,;]/',
 				'',
-				strtoupper( $options['country_black'] )
+				strtoupper( $options['country_denied'] )
 			);
 		}
 
-		if ( ! empty( $options['country_white'] ) ) {
-			$options['country_white'] = preg_replace(
+		if ( ! empty( $options['country_allowed'] ) ) {
+			$options['country_allowed'] = preg_replace(
 				'/[^A-Z ,;]/',
 				'',
-				strtoupper( $options['country_white'] )
+				strtoupper( $options['country_allowed'] )
 			);
 		}
 
-		if ( empty( $options['country_black'] ) && empty( $options['country_white'] ) ) {
+		if ( empty( $options['country_denied'] ) && empty( $options['country_allowed'] ) ) {
 			$options['country_code'] = 0;
 		}
 
@@ -142,7 +144,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	 * Generation of a selectbox
 	 *
 	 * @since   2.4.5
-	 * @change  2.4.5
 	 *
 	 * @param   string $name      Name of the Selectbox.
 	 * @param   array  $data      Array with values.
@@ -163,8 +164,9 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	/**
 	 * Display the GUI
 	 *
-	 * @since   0.1
-	 * @change  2.7.0
+	 * @since  0.1
+	 * @since  2.7.0
+	 * @since  2.10.0 Change documentation links, change country option name, and add option to parse complete markup for comment forms
 	 */
 	public static function options_page() { ?>
 		<div class="wrap" id="ab_main">
@@ -179,11 +181,6 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 
 				<?php $options = self::get_options(); ?>
 				<div class="ab-wrap">
-					<!--[if lt IE 9]>
-						<p class="browsehappy">
-							<a href="http://browsehappy.com">Browse Happy</a>
-						</p>
-					<![endif]-->
 
 					<div class="ab-column ab-arrow">
 						<h3 class="icon">
@@ -212,7 +209,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									$link1 = sprintf(
 										'<a href="%s" target="_blank" rel="noopener noreferrer">',
 										esc_url(
-											__( 'https://antispambee.pluginkollektiv.org/documentation#gravatar', 'antispam-bee' ),
+											__( 'https://antispambee.pluginkollektiv.org/documentation/#trust-commenters-with-a-gravatar', 'antispam-bee' ),
 											'https'
 										)
 									);
@@ -270,14 +267,15 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									$link1 = sprintf(
 										'<a href="%s" target="_blank" rel="noopener noreferrer">',
 										esc_url(
-											__( 'https://antispambee.pluginkollektiv.org/documentation#country', 'antispam-bee' ),
+											__( 'https://antispambee.pluginkollektiv.org/documentation/#block-comments-from-specific-countries', 'antispam-bee' ),
 											'https'
 										)
 									);
 										printf(
 											/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
 											esc_html__( 'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
-											wp_kses_post( $link1 ), '</a>'
+											wp_kses_post( $link1 ),
+											'</a>'
 										);
 									?>
 									</span>
@@ -294,8 +292,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									);
 									?>
 									<li>
-										<textarea name="ab_country_black" id="ab_country_black" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr( $options['country_black'] ); ?></textarea>
-										<label for="ab_country_black">
+										<textarea name="ab_country_denied" id="ab_country_denied" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr( $options['country_denied'] ); ?></textarea>
+										<label for="ab_country_denied">
 											<span>
 											<?php
 												printf(
@@ -309,8 +307,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										</label>
 									</li>
 									<li>
-										<textarea name="ab_country_white" id="ab_country_white" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr( $options['country_white'] ); ?></textarea>
-										<label for="ab_country_white">
+										<textarea name="ab_country_allowed" id="ab_country_allowed" class="ab-medium-field code" placeholder="<?php esc_attr_e( 'e.g. BF, SG, YE', 'antispam-bee' ); ?>"><?php echo esc_attr( $options['country_allowed'] ); ?></textarea>
+										<label for="ab_country_allowed">
 											<span>
 											<?php
 												printf(
@@ -335,7 +333,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 										$link1 = sprintf(
 											'<a href="%s" target="_blank" rel="noopener noreferrer">',
 											esc_url(
-												__( 'https://antispambee.pluginkollektiv.org/documentation#language', 'antispam-bee' ),
+												__( 'https://antispambee.pluginkollektiv.org/documentation/#allow-comments-only-in-certain-language', 'antispam-bee' ),
 												'https'
 											)
 										);
@@ -423,7 +421,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<label for="ab_ignore_filter">
 									<?php
 									echo sprintf(
-										// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
+										// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 										// Output gets escaped in _build_select()
 										// translators: %s is the select field.
 										esc_html__( 'Limit approval to %s', 'antispam-bee' ),
@@ -435,7 +433,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 											),
 											$options['ignore_type']
 										)
-										// phpcs:enable _build_select
+										// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 									);
 									?>
 									<span><?php esc_html_e( 'Other types of spam will be deleted immediately', 'antispam-bee' ); ?></span>
@@ -509,10 +507,17 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 							</li>
 
 							<li>
-								<input type="checkbox" name="ab_always_allowed" id="ab_always_allowed" value="1" <?php checked( $options['always_allowed'], 1 ); ?> />
-								<label for="ab_always_allowed">
-									<?php esc_html_e( 'Comment form used outside of posts', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Check for comment forms on archive pages', 'antispam-bee' ); ?></span>
+								<input type="checkbox" name="ab_use_output_buffer" id="ab_use_output_buffer" value="1" <?php checked( ! isset( $options['use_output_buffer'] ) || 1 == $options['use_output_buffer'], true ); ?> />
+								<label for="ab_use_output_buffer">
+									<?php esc_html_e( 'Check complete site markup for comment forms', 'antispam-bee' ); ?>
+									<span>
+									<?php
+									printf( /* translators: s=filter name */
+										esc_html__( 'Uses output buffering instead of the %s filter.', 'antispam-bee' ),
+										'<code>comment_form_field_comment</code>'
+									);
+									?>
+									</span>
 								</label>
 							</li>
 						</ul>
@@ -564,5 +569,141 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		 * @return (array)
 		 */
 		return apply_filters( 'ab_get_allowed_translate_languages', $lang );
+	}
+
+	/**
+	 * Add comment action button to report spam to ASB
+	 *
+	 * @since 2.11.0
+	 * @param array   $actions Array of actions.
+	 * @param comment $comment Comment object.
+	 */
+	public static function report_comment_action_link( $actions, $comment ) {
+		$actions['report_spam'] = sprintf(
+			'<button
+				type="button"
+				class="report-comment-to-asb-button"
+				data-author="%s"
+				data-email="%s"
+				data-ip="%s"
+				data-host="%s"
+				data-url="%s"
+				data-content="%s"
+				data-agent="%s"
+				data-a11y-dialog-show="report-spam-dialog"
+			>%s</button>',
+			rawurlencode( $comment->comment_author ),
+			rawurlencode( $comment->comment_author_email ),
+			rawurlencode( $comment->comment_author_IP ),
+			rawurlencode( gethostbyaddr( $comment->comment_author_IP ) ),
+			rawurlencode( $comment->comment_author_url ),
+			rawurlencode( $comment->comment_content ),
+			rawurlencode( $comment->comment_agent ),
+			__( 'Report to Antispam Bee', 'antispam-bee' )
+		);
+
+		return $actions;
+	}
+
+	/**
+	 * Enqueue script for report spam button.
+	 * 
+	 * @since 2.11.0
+	 */
+	public static function enqueue_report_comment_action_link_script() {
+		wp_enqueue_script(
+			'a11y-dialog',
+			plugins_url( '../js/a11y-dialog.min.js', __FILE__ ),
+			array(),
+			filemtime( plugin_dir_path( __FILE__ ) . '../js/a11y-dialog.min.js' ),
+			true
+		);
+
+		// Print dialog markup.
+		printf(
+			'<div
+				class="a11y-dialog-container"
+				data-a11y-dialog="report-spam-dialog"
+				aria-labelledby="report-spam-dialog-title"
+				aria-hidden="true"
+			>
+				<div data-a11y-dialog-hide></div>
+				<div role="document">
+					<button type="button" data-a11y-dialog-hide aria-label="Close dialog">
+						&times;
+					</button>
+					<div class="dialog-content">
+						<h1 id="report-spam-dialog-title">%s</h1>
+						<p>%s</p>
+						<p>%s</p>
+						<ul class="comment-data-list"></ul>
+						<p>%s</p>
+						<p>%s</p>
+					</div>
+				</div>
+			</div>
+<style>
+.a11y-dialog-container,
+div[data-a11y-dialog-hide] {
+  position: fixed; /* 1 */
+  top: 0; /* 1 */
+  right: 0; /* 1 */
+  bottom: 0; /* 1 */
+  left: 0; /* 1 */
+}
+
+.a11y-dialog-container {
+  z-index: 2; /* 1 */
+  display: flex; /* 2 */
+}
+
+.a11y-dialog-container[aria-hidden="true"] {
+  display: none; /* 1 */
+}
+
+div[data-a11y-dialog-hide] {
+  background-color: rgba(43, 46, 56, 0.9); /* 1 */
+}
+
+.a11y-dialog-container .dialog-content {
+  margin: auto; /* 1 */
+  z-index: 2; /* 2 */
+  position: relative; /* 2 */
+  background-color: white; /* 3 */
+}</style>',
+			__( 'Report comment as unrecognized spam', 'antispam-bee' ),
+			__( 'Thank you for helping us to improve Antispam Bee.', 'antispam-bee' ),
+			__( 'You are about to report the comment by [commenter name] with the content [content of the comment] to us, because you believe it is unrecognized spam. We also found the following data in the comment, which we will exploit for Antispam Bee’s evaluation and heuristics:.', 'antispam-bee' ),
+			__( 'We evaluate this data [automated|manually] to improve the spam detection of Antispam Bee. If we receive multiple identical messages about a spammer, we also use this data to improve Blacklist Updater. The data will be processed by us in the next x [hours|days] and then automatically deleted. For the period of processing, the data is stored exclusively on servers located in Germany. Access to this data is only granted to our developer team. To keep the process lean, you will not receive any further feedback from us about the processing, storage or deletion, but pls receive our thanks for your help.', 'antispam-bee' ),
+			__( 'If you agree to submit this data, you can send it using the button below.', 'antispam-bee' )
+		);
+
+
+		wp_add_inline_script(
+			'a11y-dialog',
+			'( function() {
+				var buttons = document.querySelectorAll( ".report-comment-to-asb-button" );
+				if ( buttons.length === 0 ) {
+					return;
+				}
+
+				for ( var i = 0; i < buttons.length; i++ ) {
+					var button = buttons[i];
+					button.addEventListener( "click", function() {
+						var button = this
+							dataset = button.dataset,
+							commentData = {
+								author: dataset.author,
+								email: dataset.email,
+								ip: dataset.ip,
+								host: dataset.host,
+								url: dataset.url,
+								content: dataset.content,
+								agent: dataset.agent,
+							};
+					} );
+				}
+			} )();'
+		);
 	}
 }

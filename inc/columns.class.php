@@ -109,6 +109,9 @@ final class Antispam_Bee_Columns {
 			$reasons     = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}commentmeta WHERE meta_key = 'antispam_bee_reason' group by meta_value", ARRAY_A );
 
 			foreach ( $reasons as $reason ) {
+				if ( ! isset( Antispam_Bee::$defaults['reasons'][ $reason['meta_value'] ] ) ) {
+					continue;
+				}
 				$label = Antispam_Bee::$defaults['reasons'][ $reason['meta_value'] ];
 				echo "\t" . '<option value="' . esc_attr( $reason['meta_value'] ) . '"' . selected( $spam_reason, $reason['meta_value'], false ) . '>' . esc_html( $label ) . "</option>\n";
 			}

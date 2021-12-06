@@ -1,45 +1,85 @@
 {
-	"name": "pluginkollektiv/antispam-bee",
-	"description": "Antispam Bee blocks spam comments and trackbacks effectively and without captchas.",
-	"keywords": [
-		"WordPress",
-		"antispam",
-		"honeypot"
-	],
-	"homepage": "https://pluginkollektiv.github.io/antispam-bee/",
-	"authors": [
-		{
-			"name": "pluginkollektiv",
-			"homepage": "https://github.com/pluginkollektiv",
-			"role": "Maintainer"
-		}
-	],
-	"support": {
-		"issues": "https://github.com/pluginkollektiv/antispam-bee/issues",
-		"source": "https://github.com/pluginkollektiv/antispam-bee",
-		"docs": "https://github.com/pluginkollektiv/antispam-bee/blob/master/README.md"
-	},
-	"type": "wordpress-plugin",
-	"license": "GPL-v2",
-	"require-dev": {
-		"phpunit/phpunit": "^4",
-		"brain/monkey": "^1.4",
-		"wp-cli/wp-cli-bundle": "@stable",
-		"behat/mink": "1.7.1",
-		"paulgibbs/behat-wordpress-extension": "^1.0",
-		"behat/mink-extension": "v2.2",
-		"behat/mink-goutte-driver": "^1.2",
-		"behat/mink-selenium2-driver": "^1.3",
-		"wp-coding-standards/wpcs": "^0.14.1",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.4.4"
-	},
-	"autoload-dev": {
-		"classmap": [
-			"antispam_bee.php",
-			"inc/"
-		],
-		"psr-4": {
-			"AntispamBee\\Tests\\": "tests/"
-		}
-	}
+  "name": "pluginkollektiv/antispam-bee",
+  "description": "Antispam Bee blocks spam comments and trackbacks effectively and without captchas.",
+  "keywords": [
+    "WordPress",
+    "antispam",
+    "honeypot"
+  ],
+  "homepage": "https://antispambee.pluginkollektiv.org/",
+  "authors": [
+    {
+      "name": "pluginkollektiv",
+      "homepage": "https://pluginkollektiv.org/",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/pluginkollektiv/antispam-bee/issues",
+    "source": "https://github.com/pluginkollektiv/antispam-bee",
+    "docs": "https://antispambee.pluginkollektiv.org/documentation/"
+  },
+  "type": "wordpress-plugin",
+  "license": "GPL-v2",
+  "require-dev": {
+    "behat/mink": "1.7.1",
+    "behat/mink-goutte-driver": "^1.2",
+    "brain/monkey": "^1.5",
+    "composer/package-versions-deprecated": "^1.11",
+    "dmore/behat-chrome-extension": "^1.3",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+    "friends-of-behat/mink-extension": "^2.5",
+    "matthiasmullie/minify": "^1.3",
+    "paulgibbs/behat-wordpress-extension": "^3.3",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "phpunit/phpunit": "^4",
+    "wp-cli/wp-cli-bundle": "@stable",
+    "wp-coding-standards/wpcs": "^2.3"
+  },
+  "autoload-dev": {
+    "classmap": [
+      "antispam_bee.php",
+      "inc/"
+    ],
+    "psr-4": {
+      "AntispamBee\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "@build"
+    ],
+    "post-update-cmd": [
+      "@build"
+    ],
+    "build": [
+      "@minify"
+    ],
+    "cs": [
+      "@lint-php"
+    ],
+    "csfix": [
+      "phpcbf --standard=phpcs.xml"
+    ],
+    "lint-all": [
+      "@lint-js",
+      "@lint-css"
+    ],
+    "lint-css": [
+      "npx stylelint css/dashboard.css css/styles.css"
+    ],
+    "lint-js": [
+      "npx eslint js/dashboard.js js/raphael.helper.js js/scripts.js"
+    ],
+    "lint-php": [
+      "phpcs --standard=phpcs.xml -s"
+    ],
+    "minify": [
+      "minifycss css/dashboard.css > css/dashboard.min.css",
+      "minifycss css/styles.css > css/styles.min.css",
+      "minifyjs js/dashboard.js > js/dashboard.min.js",
+      "minifyjs js/raphael.helper.js > js/raphael.helper.min.js",
+      "minifyjs js/scripts.js > js/scripts.min.js"
+    ]
+  }
 }

@@ -357,7 +357,7 @@ Feature: Filter settings
     Given I am on "/wp-admin/edit-comments.php"
     Then I should see "Monty"
     Then I check "cb-select-all-1"
-    Then I select "Mark as Spam" from "bulk-action-selector-top"
+    Then I select "spam" from "bulk-action-selector-top"
     Then I press "doaction"
 
     Given I am an anonymous user
