@@ -639,6 +639,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 						<ul class="comment-data-list"></ul>
 						<p>%s</p>
 						<p>%s</p>
+						<button class="asb-report-spam-button button action">%s</button>
 					</div>
 				</div>
 			</div>
@@ -661,8 +662,12 @@ div[data-a11y-dialog-hide] {
   display: none; /* 1 */
 }
 
+.a11y-dialog-container > div {
+  width: 100%%;
+}
+
 div[data-a11y-dialog-hide] {
-  background-color: rgba(43, 46, 56, 0.9); /* 1 */
+  background-color: rgba(0, 0, 0, 0.35); /* 1 */
 }
 
 .a11y-dialog-container .dialog-content {
@@ -670,12 +675,36 @@ div[data-a11y-dialog-hide] {
   z-index: 2; /* 2 */
   position: relative; /* 2 */
   background-color: white; /* 3 */
+  width: 312px;
+  max-height: calc(100%% - 100px);
+  overflow: auto;
+  top: 50px;
+  padding: 1rem;
+  box-sizing: border-box;
+  box-shadow: 0 10px 10px rgba(0,0,0,.25);
+}
+
+.a11y-dialog-container .dialog-content > :first-child {
+  margin-top: 0;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+  font-size: 24px;
+  line-height: 1.4;
+}
+
+.asb-report-spam-button {
+  white-space: nowrap;    
+  background: #007cba;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: none;
+  outline: 1px solid transparent;
 }</style>',
 			__( 'Report comment as unrecognized spam', 'antispam-bee' ),
 			__( 'Thank you for helping us to improve Antispam Bee.', 'antispam-bee' ),
 			__( 'You are about to report the comment by [commenter name] with the content [content of the comment] to us, because you believe it is unrecognized spam. We also found the following data in the comment, which we will exploit for Antispam Bee’s evaluation and heuristics:.', 'antispam-bee' ),
 			__( 'We evaluate this data [automated|manually] to improve the spam detection of Antispam Bee. If we receive multiple identical messages about a spammer, we also use this data to improve Blacklist Updater. The data will be processed by us in the next x [hours|days] and then automatically deleted. For the period of processing, the data is stored exclusively on servers located in Germany. Access to this data is only granted to our developer team. To keep the process lean, you will not receive any further feedback from us about the processing, storage or deletion, but pls receive our thanks for your help.', 'antispam-bee' ),
-			__( 'If you agree to submit this data, you can send it using the button below.', 'antispam-bee' )
+			__( 'If you agree to submit this data, you can send it using the button below.', 'antispam-bee' ),
+            __( 'Report spam', 'antispam-bee' )
 		);
 
 
@@ -701,6 +730,8 @@ div[data-a11y-dialog-hide] {
 								content: dataset.content,
 								agent: dataset.agent,
 							};
+							
+                        console.log(commentData);
 					} );
 				}
 			} )();'
