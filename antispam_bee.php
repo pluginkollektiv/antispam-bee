@@ -138,6 +138,14 @@ class Antispam_Bee {
 			)
 		);
 
+        add_action(
+            'rest_api_init',
+            array(
+                __CLASS__,
+                'register_rest_routes'
+            )
+        );
+
 		$disallow_ajax = apply_filters( 'antispam_bee_disallow_ajax_calls', true );
 
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX && $disallow_ajax ) {
@@ -2895,6 +2903,59 @@ class Antispam_Bee {
 		$parts = wp_parse_url( $url );
 		return ( is_array( $parts ) && isset( $parts[ $component ] ) ) ? $parts[ $component ] : '';
 	}
+
+    public static function register_rest_routes() {
+        register_rest_route( 'antispam-bee/v1', 'report-spam', [
+            'methods' => 'POST',
+            'callback' => array( __CLASS__, 'report_spam_route_callback' ),
+            'permission_callback' => array( __CLASS__, 'report_spam_route_permission_callback' ),
+            'args' => array(
+                'comment_ids' => array(
+                    'validate_callback' => function( $param ) {
+                        if ( ! is_array( $param ) || empty( $param ) ) {
+                            return false;
+                        }
+
+                        foreach ( $param as $value ) {
+                            if ( is_int( $value ) ) {
+                                continue;
+                            }
+
+                            return false;
+                        }
+
+                        return true;
+                    }
+                )
+            )
+        ] );
+    }
+
+    public static function report_spam_route_permission_callback() {
+        return true;
+    }
+
+    public static function report_spam_route_callback( $request ) {
+        $comment_ids = $request->get_param( 'comment_ids' );
+        self::report_spam_comments( $comment_ids );
+
+    }
+
+    private static function report_spam_comments( $comment_ids ) {
+        $comments = get_comments(
+            array(
+                'comment__in' => $comment_ids,
+            )
+        );
+
+        if ( empty( $comments ) ) {
+            return;
+        }
+
+        foreach ( $comments as $comment ) {
+            add_comment_meta( $comment->comment_ID, 'asb_unrecognized_spam', true, true );
+        }
+    }
 
 	/**
 	 * Updates the database structure if necessary
