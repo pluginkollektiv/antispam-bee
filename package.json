@@ -2,7 +2,7 @@
   "private": true,
   "devDependencies": {
     "@wordpress/eslint-plugin": "^9.0.4",
-    "@wordpress/stylelint-config": "^19.0.3",
+    "@wordpress/stylelint-config": "^19.1",
     "eslint": "^8.4.1",
     "prettier": "^2.3.0",
     "stylelint": "^14.2.0"
