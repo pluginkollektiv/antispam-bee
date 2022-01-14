@@ -36,8 +36,10 @@ jobs:
     strategy:
       matrix:
         php: ['8.1']
-        wordpress: ['nightly', 'latest']
+        wordpress: ['nightly']
         include:
+          - php: '8'
+            wordpress: 'latest'
           - php: '8'
             wordpress: '5.7'
           - php: '7.4'
