@@ -9,10 +9,10 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '7.3'
           coverage: none
           tools: composer, cs2pr
       - name: Install dependencies
-        run: composer update
+        run: composer install --prefer-dist --no-progress
       - name: Detect coding standard violations
         run: ./vendor/bin/phpcs -n -q
