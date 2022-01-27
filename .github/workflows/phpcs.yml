@@ -13,6 +13,6 @@ jobs:
           coverage: none
           tools: composer, cs2pr
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+        run: composer update
       - name: Detect coding standard violations
         run: ./vendor/bin/phpcs -n -q
