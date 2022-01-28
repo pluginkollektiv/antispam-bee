@@ -7,6 +7,5 @@
     "no-descending-specificity": null,
     "selector-class-pattern": null,
     "selector-id-pattern": null,
-    "function-calc-no-invalid": false
   }
 }
