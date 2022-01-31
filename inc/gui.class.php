@@ -576,7 +576,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	 *
 	 * @since 2.11.0
 	 * @param array   $actions Array of actions.
-	 * @param comment $comment Comment object.
+	 * @param WP_Comment $comment Comment object.
 	 */
 	public static function report_comment_action_link( $actions, $comment ) {
 		$actions['report_spam'] = sprintf(
@@ -590,6 +590,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 				data-url="%s"
 				data-content="%s"
 				data-agent="%s"
+				data-id="%s"
 				data-a11y-dialog-show="report-spam-dialog"
 			>%s</button>',
 			rawurlencode( $comment->comment_author ),
@@ -599,6 +600,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 			rawurlencode( $comment->comment_author_url ),
 			rawurlencode( $comment->comment_content ),
 			rawurlencode( $comment->comment_agent ),
+            absint( $comment->comment_ID ),
 			__( 'Report to Antispam Bee', 'antispam-bee' )
 		);
 
@@ -639,102 +641,41 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 						<ul class="comment-data-list"></ul>
 						<p>%s</p>
 						<p>%s</p>
-						<button class="asb-report-spam-button button action">%s</button>
+						<button class="asb-report-spam-button button-primary" data-comment-ids="">%s</button>
+						<button data-a11y-dialog-hide="report-spam-dialog"  class="button-secondary">%s</button>
+						<p class="report-spam-dialog-message"></p>
 					</div>
 				</div>
 			</div>
 <style>
-.a11y-dialog-container,
-div[data-a11y-dialog-hide] {
-  position: fixed; /* 1 */
-  top: 0; /* 1 */
-  right: 0; /* 1 */
-  bottom: 0; /* 1 */
-  left: 0; /* 1 */
-}
-
-.a11y-dialog-container {
-  z-index: 2; /* 1 */
-  display: flex; /* 2 */
-}
-
-.a11y-dialog-container[aria-hidden="true"] {
-  display: none; /* 1 */
-}
-
-.a11y-dialog-container > div {
-  width: 100%%;
-}
-
-div[data-a11y-dialog-hide] {
-  background-color: rgba(0, 0, 0, 0.35); /* 1 */
-}
-
-.a11y-dialog-container .dialog-content {
-  margin: auto; /* 1 */
-  z-index: 2; /* 2 */
-  position: relative; /* 2 */
-  background-color: white; /* 3 */
-  width: 312px;
-  max-height: calc(100%% - 100px);
-  overflow: auto;
-  top: 50px;
-  padding: 1rem;
-  box-sizing: border-box;
-  box-shadow: 0 10px 10px rgba(0,0,0,.25);
-}
-
-.a11y-dialog-container .dialog-content > :first-child {
-  margin-top: 0;
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
-  font-size: 24px;
-  line-height: 1.4;
-}
-
-.asb-report-spam-button {
-  white-space: nowrap;    
-  background: #007cba;
-  color: #fff;
-  text-decoration: none;
-  text-shadow: none;
-  outline: 1px solid transparent;
-}</style>',
+</style>',
 			__( 'Report comment as unrecognized spam', 'antispam-bee' ),
 			__( 'Thank you for helping us to improve Antispam Bee.', 'antispam-bee' ),
 			__( 'You are about to report the comment by [commenter name] with the content [content of the comment] to us, because you believe it is unrecognized spam. We also found the following data in the comment, which we will exploit for Antispam Bee’s evaluation and heuristics:.', 'antispam-bee' ),
 			__( 'We evaluate this data [automated|manually] to improve the spam detection of Antispam Bee. If we receive multiple identical messages about a spammer, we also use this data to improve Blacklist Updater. The data will be processed by us in the next x [hours|days] and then automatically deleted. For the period of processing, the data is stored exclusively on servers located in Germany. Access to this data is only granted to our developer team. To keep the process lean, you will not receive any further feedback from us about the processing, storage or deletion, but pls receive our thanks for your help.', 'antispam-bee' ),
 			__( 'If you agree to submit this data, you can send it using the button below.', 'antispam-bee' ),
-            __( 'Report spam', 'antispam-bee' )
+            __( 'Report spam', 'antispam-bee' ),
+            __( 'Close', 'antispam-bee' )
 		);
 
-
-		wp_add_inline_script(
-			'a11y-dialog',
-			'( function() {
-				var buttons = document.querySelectorAll( ".report-comment-to-asb-button" );
-				if ( buttons.length === 0 ) {
-					return;
-				}
-
-				for ( var i = 0; i < buttons.length; i++ ) {
-					var button = buttons[i];
-					button.addEventListener( "click", function() {
-						var button = this
-							dataset = button.dataset,
-							commentData = {
-								author: dataset.author,
-								email: dataset.email,
-								ip: dataset.ip,
-								host: dataset.host,
-								url: dataset.url,
-								content: dataset.content,
-								agent: dataset.agent,
-							};
-							
-                        console.log(commentData);
-					} );
-				}
-			} )();'
+		wp_enqueue_script(
+			'asb-report-spam',
+			plugins_url( '../js/report-spam.min.js', __FILE__ ),
+			array( 'a11y-dialog', 'wp-api-fetch' ),
+			filemtime( plugin_dir_path( __FILE__ ) . '../js/report-spam.min.js' ),
+			true
 		);
+
+        wp_localize_script( 'asb-report-spam', 'asbReportSpam', array(
+            'reportSuccessful' => __( 'Spam was reported, thank you!', 'antispam-bee' ),
+            'reportFailed' => __( 'Wasn’t able to report spam, sorry, please try again later!', 'antispam-bee' ),
+        ) );
+
+        wp_enqueue_style(
+            'asb-report-spam',
+			plugins_url( '../css/report-spam.min.css', __FILE__ ),
+            array(),
+            filemtime( plugin_dir_path( __FILE__ ) . '../css/report-spam.min.css' )
+        );
 	}
 }

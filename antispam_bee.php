@@ -2904,6 +2904,11 @@ class Antispam_Bee {
 		return ( is_array( $parts ) && isset( $parts[ $component ] ) ) ? $parts[ $component ] : '';
 	}
 
+	/**
+	 * Registering REST routes.
+	 *
+	 * @since 2.11.0
+	 */
     public static function register_rest_routes() {
         register_rest_route( 'antispam-bee/v1', 'report-spam', [
             'methods' => 'POST',
@@ -2911,51 +2916,184 @@ class Antispam_Bee {
             'permission_callback' => array( __CLASS__, 'report_spam_route_permission_callback' ),
             'args' => array(
                 'comment_ids' => array(
-                    'validate_callback' => function( $param ) {
-                        if ( ! is_array( $param ) || empty( $param ) ) {
-                            return false;
-                        }
+                    'validate_callback' => array( __CLASS__, 'validate_comment_ids_array' ),
+                )
+            )
+        ] );
 
-                        foreach ( $param as $value ) {
-                            if ( is_int( $value ) ) {
-                                continue;
-                            }
-
-                            return false;
-                        }
-
-                        return true;
-                    }
+        register_rest_route( 'antispam-bee/v1', 'unrecognized-spam', [
+            'methods' => 'GET',
+            'callback' => array( __CLASS__, 'unrecognized_spam_comments' ),
+            'permission_callback' => array( __CLASS__, 'unrecognized_spam_route_permission_callback' ),
+            'args' => array(
+                'token' => array(
+                    'validate_callback' => array( __CLASS__, 'validate_unrecognized_spam_token' ),
                 )
             )
         ] );
     }
 
+	/**
+	 * Validation of comment_ids request param.
+	 *
+	 * @since 2.11.0
+	 *
+	 * @param mixed $ids Value of comment_ids request param.
+	 *
+	 * @return bool
+	 */
+	public static function validate_comment_ids_array( $ids ) {
+		if ( ! is_array( $ids ) || empty( $ids ) ) {
+			return false;
+		}
+
+		foreach ( $ids as $id ) {
+			if ( is_int( $id ) ) {
+				continue;
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checking permission for report-spam route.
+	 *
+	 * @since 2.11.0
+	 *
+	 * @return bool
+	 */
     public static function report_spam_route_permission_callback() {
-        return true;
+        return current_user_can( 'moderate_comments' );
     }
 
+	/**
+	 * Handling successful request to report-spam route.
+	 *
+	 * @since 2.11.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return WP_REST_Response
+	 */
     public static function report_spam_route_callback( $request ) {
         $comment_ids = $request->get_param( 'comment_ids' );
-        self::report_spam_comments( $comment_ids );
+        $marked_comments = self::report_spam_comments( $comment_ids );
+		if ( $marked_comments === false ) {
+			return new WP_REST_Response(
+				array(
+					'success' => false
+				)
+			);
+		}
 
+		return new WP_REST_Response(
+			array(
+				'success' => true
+			)
+		);
     }
 
+	/**
+	 * Reporting the unrecognized spam comments.
+	 *
+	 * @since 2.11.0
+	 *
+	 * @param array $comment_ids
+	 *
+	 * @return bool
+	 */
     private static function report_spam_comments( $comment_ids ) {
         $comments = get_comments(
             array(
-                'comment__in' => $comment_ids,
+                'comment__in' => $comment_ids !== null ? $comment_ids : [ 0 ],
             )
         );
 
         if ( empty( $comments ) ) {
-            return;
+            return false;
         }
 
         foreach ( $comments as $comment ) {
-            add_comment_meta( $comment->comment_ID, 'asb_unrecognized_spam', true, true );
+            add_comment_meta( $comment->comment_ID, 'antispam_bee_unrecognized_spam', true, true );
         }
-    }
+
+		update_option( 'antispam_bee_unrecognized_spam_token', uniqid() );
+
+		return true;
+	}
+
+	/**
+	 * Returns the comments that are marked as unrecognized spam.
+	 *
+	 * @since 2.11.0
+	 *
+	 * @return array
+	 */
+	public static function unrecognized_spam_comments() {
+		$comments = get_comments(
+			array(
+				'meta_key' => 'antispam_bee_unrecognized_spam',
+				'meta_value' => 1
+			)
+		);
+
+		$result = [];
+
+		foreach ( $comments as $comment ) {
+			$result[] = [
+				'author' => $comment->comment_author,
+				'author_email' => $comment->comment_author_email,
+				'author_url' => $comment->comment_author_url,
+				'author_IP' => $comment->comment_author_IP,
+				'content' => $comment->comment_content,
+				'agent' => $comment->comment_agent,
+				'host' => gethostbyaddr( $comment->comment_author_IP ),
+			];
+
+			delete_comment_meta( $comment->comment_ID, 'antispam_bee_unrecognized_spam' );
+		}
+
+		delete_option( 'antispam_bee_unrecognized_spam_token' );
+
+		return $result;
+	}
+
+	/**
+	 * Checks permission for unrecognized spam route.
+	 *
+	 * @since 2.11.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return bool
+	 */
+	public static function unrecognized_spam_route_permission_callback( $request ) {
+		$token = $request->get_param( 'token' );
+		$stored_token = get_option( 'antispam_bee_unrecognized_spam_token', '' );
+		if ( $token !== $stored_token ) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Validate token param of unrecognized spam route request.
+	 *
+	 * @since 2.11.0
+	 *
+	 * @param mixed $token The value of the token request param
+	 *
+	 * @return bool
+	 */
+	public static function validate_unrecognized_spam_token( $token ) {
+		if ( $token === '' || ! is_string( $token ) ) {
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Updates the database structure if necessary
