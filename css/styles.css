@@ -19,7 +19,7 @@
 .ab-wrap {
 	margin: 0 0 0 -10px;
 	padding: 20px 0 0 0;
-	text-rendering: optimizeLegibility;
+	text-rendering: optimizeLegibility; /* stylelint-disable-line value-keyword-case */
 }
 
 .ab-column {
