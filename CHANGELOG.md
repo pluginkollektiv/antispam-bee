@@ -1,5 +1,18 @@
 ## Changelog ##
 
+### 2.10.1 ###
+* **English**
+  * Fix: Allow empty comments if `allow_empty_comment` is set to true
+  * Fix: Add `aria-label` to work around bug in a11y testing tools
+  * Tweak: Updated some FAQ entries
+  * Tweak: Updated build tooling
+
+* **Deutsch**
+  * Fix: Leere Kommentare erlauben, wenn der Filter `allow_empty_comment` gesetzt ist
+  * Fix: Ein `aria-label` hinzugefühgt, um einen bekannten Fehler bei Tests zu umgehen
+  * Tweak: Aktualisierungen in der FAQ
+  * Tweak: Optimierungen am Build-Prozess
+
 ### 2.10.0 ###
 * **English**
   * Fix: Switch from ip2country.info to iplocate.io for country check
