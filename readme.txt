@@ -99,6 +99,7 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 ### 2.10.1 ###
   * Fix: Allow empty comments if `allow_empty_comment` is set to true
   * Fix: Add `aria-label` to work around bug in a11y testing tools
+  * Fix: Change priority for `prepare_comment_field` from 10 to 99
   * Tweak: Updated some FAQ entries
   * Tweak: Updated build tooling
 
