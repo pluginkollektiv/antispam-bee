@@ -335,7 +335,8 @@ class Antispam_Bee {
 					array(
 						__CLASS__,
 						'prepare_comment_field',
-					)
+					),
+					99
 				);
 			}
 
