@@ -4,14 +4,14 @@
 * **English**
   * Fix: Allow empty comments if `allow_empty_comment` is set to true
   * Fix: Add `aria-label` to work around bug in a11y testing tools
-  * Fix: Change priority for `prepare_comment_field` from 10 to 99
+  * Fix: Change priority for `comment_form_field_comment` from 10 to 99
   * Tweak: Updated some FAQ entries
   * Tweak: Updated build tooling
 
 * **Deutsch**
   * Fix: Leere Kommentare erlauben, wenn der Filter `allow_empty_comment` gesetzt ist
   * Fix: Ein `aria-label` hinzugefühgt, um einen bekannten Fehler bei Tests zu umgehen
-  * Fix: Änderung der Priorität vom Filter `prepare_comment_field` von 10 auf 99
+  * Fix: Änderung der Priorität vom Filter `comment_form_field_comment` von 10 auf 99
   * Tweak: Aktualisierungen in der FAQ
   * Tweak: Optimierungen am Build-Prozess
 
