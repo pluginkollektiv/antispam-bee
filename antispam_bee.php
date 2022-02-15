@@ -92,6 +92,7 @@ class Antispam_Bee {
 	 * @since  0.1
 	 * @since  2.6.4
 	 * @since  2.10.0 Change handling of comment field honeypot and call functions after completed upgrades
+	 * @since  2.10.1 Change priority from default 10 to 99 for comment_form_field_comment
 	 */
 	public static function init() {
 		add_action(
