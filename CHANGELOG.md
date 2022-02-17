@@ -10,7 +10,7 @@
 
 * **Deutsch**
   * Fix: Leere Kommentare erlauben, wenn der Filter `allow_empty_comment` gesetzt ist
-  * Fix: Ein `aria-label` hinzugefühgt, um einen bekannten Fehler bei Tests zu umgehen
+  * Fix: Ein `aria-label` hinzugefügt, um einen bekannten Fehler bei Tests zu umgehen
   * Fix: Änderung der Priorität vom Filter `comment_form_field_comment` von 10 auf 99
   * Tweak: Aktualisierungen in der FAQ
   * Tweak: Optimierungen am Build-Prozess
