@@ -2250,7 +2250,7 @@ class Antispam_Bee {
 		if ( function_exists( 'filter_var' ) ) {
 			return filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) !== false;
 		} else {
-			return preg_match( '/^\d{1,3}(\.\d{1,3}){3,3}$/', $ip );
+			return preg_match( '/^\d{1,3}(\.\d{1,3}){3}$/', $ip );
 		}
 	}
 
