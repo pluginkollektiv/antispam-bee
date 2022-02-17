@@ -5,7 +5,7 @@
 * Requires at least: 4.5
 * Tested up to:      5.9
 * Requires PHP:      5.2
-* Stable tag:        2.10.1
+* Stable tag:        2.11.0
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -96,7 +96,7 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 
 ## Changelog ##
 
-### 2.10.1 ###
+### 2.11.0 ###
   * Fix: Allow empty comments if `allow_empty_comment` is set to true
   * Fix: Add `aria-label` to work around bug in a11y testing tools
   * Fix: Change priority for `comment_form_field_comment` from 10 to 99

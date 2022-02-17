@@ -1,6 +1,6 @@
 ## Changelog ##
 
-### 2.10.1 ###
+### 2.11.0 ###
 * **English**
   * Fix: Allow empty comments if `allow_empty_comment` is set to true
   * Fix: Add `aria-label` to work around bug in a11y testing tools
