@@ -92,6 +92,7 @@ class Antispam_Bee {
 	 * @since  0.1
 	 * @since  2.6.4
 	 * @since  2.10.0 Change handling of comment field honeypot and call functions after completed upgrades
+	 * @since  2.11.0 Change priority from default 10 to 99 for comment_form_field_comment
 	 */
 	public static function init() {
 		add_action(
@@ -335,7 +336,8 @@ class Antispam_Bee {
 					array(
 						__CLASS__,
 						'prepare_comment_field',
-					)
+					),
+					99
 				);
 			}
 
@@ -2248,7 +2250,7 @@ class Antispam_Bee {
 		if ( function_exists( 'filter_var' ) ) {
 			return filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) !== false;
 		} else {
-			return preg_match( '/^\d{1,3}(\.\d{1,3}){3,3}$/', $ip );
+			return preg_match( '/^\d{1,3}(\.\d{1,3}){3}$/', $ip );
 		}
 	}
 
