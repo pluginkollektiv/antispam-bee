@@ -2907,7 +2907,7 @@ class Antispam_Bee {
 	/**
 	 * Registering REST routes.
 	 *
-	 * @since 2.11.0
+	 * @since 2.12.0
 	 */
     public static function register_rest_routes() {
         register_rest_route( 'antispam-bee/v1', 'report-spam', [
@@ -2936,7 +2936,7 @@ class Antispam_Bee {
 	/**
 	 * Validation of comment_ids request param.
 	 *
-	 * @since 2.11.0
+	 * @since 2.12.0
 	 *
 	 * @param mixed $ids Value of comment_ids request param.
 	 *
@@ -2961,7 +2961,7 @@ class Antispam_Bee {
 	/**
 	 * Checking permission for report-spam route.
 	 *
-	 * @since 2.11.0
+	 * @since 2.12.0
 	 *
 	 * @return bool
 	 */
@@ -2972,7 +2972,7 @@ class Antispam_Bee {
 	/**
 	 * Handling successful request to report-spam route.
 	 *
-	 * @since 2.11.0
+	 * @since 2.12.0
 	 *
 	 * @param WP_REST_Request $request
 	 *
@@ -2999,7 +2999,7 @@ class Antispam_Bee {
 	/**
 	 * Reporting the unrecognized spam comments.
 	 *
-	 * @since 2.11.0
+	 * @since 2.12.0
 	 *
 	 * @param array $comment_ids
 	 *
@@ -3020,7 +3020,21 @@ class Antispam_Bee {
             add_comment_meta( $comment->comment_ID, 'antispam_bee_unrecognized_spam', true, true );
         }
 
-		update_option( 'antispam_bee_unrecognized_spam_token', uniqid() );
+		$token = sodium_bin2hex( random_bytes( 6 ) );
+
+		update_option( 'antispam_bee_unrecognized_spam_token', $token );
+
+		wp_safe_remote_post(
+			'https://api.pluginkollektiv.org/spam-data/v1/',
+			array(
+				'body' => wp_json_encode(
+					array(
+						'host' => untrailingslashit( get_site_url() ),
+						'token' => $token
+					)
+				)
+			)
+		);
 
 		return true;
 	}
@@ -3028,7 +3042,7 @@ class Antispam_Bee {
 	/**
 	 * Returns the comments that are marked as unrecognized spam.
 	 *
-	 * @since 2.11.0
+	 * @since 2.12.0
 	 *
 	 * @return array
 	 */
@@ -3064,7 +3078,7 @@ class Antispam_Bee {
 	/**
 	 * Checks permission for unrecognized spam route.
 	 *
-	 * @since 2.11.0
+	 * @since 2.12.0
 	 *
 	 * @param WP_REST_Request $request
 	 *
@@ -3082,7 +3096,7 @@ class Antispam_Bee {
 	/**
 	 * Validate token param of unrecognized spam route request.
 	 *
-	 * @since 2.11.0
+	 * @since 2.12.0
 	 *
 	 * @param mixed $token The value of the token request param
 	 *
