@@ -33,7 +33,7 @@
     "paulgibbs/behat-wordpress-extension": "^3.3",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "phpunit/phpunit": "^4",
-    "wp-cli/wp-cli-bundle": "@stable",
+    "wp-cli/wp-cli-bundle": "^2.6",
     "wp-coding-standards/wpcs": "^2.3"
   },
   "autoload-dev": {
