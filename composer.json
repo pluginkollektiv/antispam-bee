@@ -21,6 +21,9 @@
   },
   "type": "wordpress-plugin",
   "license": "GPL-v2",
+  "require": {
+    "php": ">=5.6"
+  },
   "require-dev": {
     "behat/mink": "1.7.1",
     "behat/mink-goutte-driver": "^1.2",
@@ -35,6 +38,11 @@
     "phpunit/phpunit": "^4",
     "wp-cli/wp-cli-bundle": "@stable",
     "wp-coding-standards/wpcs": "^2.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "AntispamBee\\": "lib/"
+    }
   },
   "autoload-dev": {
     "classmap": [
@@ -53,7 +61,7 @@
       "@build"
     ],
     "build": [
-      "@minify"
+      "npx wp-scripts build"
     ],
     "cs": [
       "@lint-php"
@@ -73,13 +81,11 @@
     ],
     "lint-php": [
       "phpcs --standard=phpcs.xml -s"
-    ],
-    "minify": [
-      "minifycss css/dashboard.css > css/dashboard.min.css",
-      "minifycss css/styles.css > css/styles.min.css",
-      "minifyjs js/dashboard.js > js/dashboard.min.js",
-      "minifyjs js/raphael.helper.js > js/raphael.helper.min.js",
-      "minifyjs js/scripts.js > js/scripts.min.js"
     ]
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }

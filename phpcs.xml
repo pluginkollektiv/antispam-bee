@@ -1,47 +1,93 @@
 <?xml version="1.0"?>
-<ruleset name="Coding Standards">
-    <description>Coding standard for WordPress plugins</description>
+<ruleset name="WordPress Coding Standards based custom ruleset for your plugin">
+	<description>Generally-applicable sniffs for WordPress plugins.</description>
+	<!--
+	#############################################################################
+	COMMAND LINE ARGUMENTS
+	https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml
+	#############################################################################
+	-->
 
-    <!-- Pass some flags to PHPCS:
+	<!-- Pass some flags to PHPCS:
 		 p flag: Show progress of the run.
 		 s flag: Show sniff codes in all reports.
-		 v flag: Print verbose output.
-		 n flag: Do not print warnings.
 	-->
-    <arg value="psvn"/>
+	<arg value="ps"/>
 
-    <!-- use colors in output -->
-    <arg name="colors"/>
+	<!-- Strip the filepaths down to the relevant bit. -->
+	<arg name="basepath" value="./"/>
 
-    <!-- ignore vendor files-->
-    <file>.</file>
-    <exclude-pattern>/node_modules/*</exclude-pattern>
-    <exclude-pattern>/tests/*</exclude-pattern>
-    <exclude-pattern>/vendor/*</exclude-pattern>
-    <exclude-pattern>*.css</exclude-pattern>
-    <exclude-pattern>*.js</exclude-pattern>
+	<!-- Check up to 8 files simultanously. -->
+	<arg name="parallel" value="8"/>
 
-    <!-- WordPress coding standards -->
-    <config name="minimum_supported_wp_version" value="4.5"/>
-    <rule ref="WordPress">
-        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
-        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
-    </rule>
-    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
-        <properties>
-            <!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
-            <property name="prefixes" type="array" value="Antispam_Bee,ab_"/>
-        </properties>
-    </rule>
-    <rule ref="WordPress.WP.I18n">
-        <properties>
-            <!-- Value: replace the text domain used. Separate multiple prefixes with a comma. -->
-            <property name="text_domain" type="array" value="antispam-bee"/>
-        </properties>
-    </rule>
+	<!-- Only check the PHP. CSS/SCSS/JS files are checked separately with linters. -->
+	<arg name="extensions" value="php"/>
 
-    <!-- Include sniffs for PHP cross-version compatibility. -->
-    <config name="testVersion" value="5.2-"/>
-    <rule ref="PHPCompatibilityWP">
-    </rule>
+	<!-- Enable colors in the output -->
+	<arg name="colors"/>
+
+	<!-- Check all files in this directory and the directories below it. -->
+	<file>.</file>
+
+	<!--
+	#############################################################################
+	EXCLUDE SOME FILES AND FOLDERS
+	#############################################################################
+	-->
+
+	<exclude-pattern>/build/</exclude-pattern>
+	<exclude-pattern>/vendor/</exclude-pattern>
+	<exclude-pattern>/node_modules/</exclude-pattern>
+
+	<!--
+	#############################################################################
+	USE THE WordPress RULESET
+	#############################################################################
+	-->
+
+	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->
+	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
+	<config name="minimum_supported_wp_version" value="5.7"/>
+
+	<rule ref="WordPress">
+		<!-- As we use PHP 5.4+ now, we can use the short array syntax -->
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
+		<!-- Uncomment if you develop a theme with templates for CPTs having a prefix -->
+		<exclude name="WordPress.Files.FileName" />
+		<!-- Uncomment for projects using the metabox toolbox -->
+		<!--<exclude name="WordPress.CSRF.NonceVerification.NoNonceVerification" />-->
+		<!-- Uncomment if you want to use some functions that should be replaced with the VIP cached alternatives -->
+		<!--<exclude name="WordPress.VIP.RestrictedFunctions" />-->
+		<!--<exclude name="WordPress.VIP.PostsPerPage" />-->
+	</rule>
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
+			<property name="prefixes" type="array" value="antispam_bee,AntispamBee"/>
+		</properties>
+	</rule>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<!-- Value: replace the text domain used. Separate multiple prefixes with a comma. -->
+			<property name="text_domain" type="array" value="antispam-bee"/>
+		</properties>
+	</rule>
+	<rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
+		<properties>
+			<property name="blank_line_check" value="true"/>
+		</properties>
+	</rule>
+
+
+	<!--
+	#############################################################################
+	USE THE PHPCompatibility RULESET
+	#############################################################################
+	-->
+
+	<!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
+	<config name="testVersion" value="5.6-"/>
+	<!-- https://github.com/PHPCompatibility/PHPCompatibilityWP -->
+	<rule ref="PHPCompatibilityWP"/>
+
 </ruleset>

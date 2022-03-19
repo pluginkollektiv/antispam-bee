@@ -1,0 +1,20 @@
+{
+	"extends": [
+		"plugin:@wordpress/eslint-plugin/recommended"
+	],
+	"env": {
+		"browser": true
+	},
+	"rules": {
+		"max-len": [
+			"error",
+			{
+				"code": 160
+			}
+		],
+		"prettier/prettier": 0
+	},
+	"parserOptions": {
+		"requireConfigFile": false
+	}
+}
