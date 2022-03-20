@@ -8,6 +8,8 @@ trait InitPostProcessor {
 			$post_processors[] = [
 				'post_processor' => self::class
 			];
+
+			return $post_processors;
 		} );
 	}
 }

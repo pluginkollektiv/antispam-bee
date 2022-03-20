@@ -17,6 +17,9 @@ class DeleteForReasons implements PostProcessor, Controllable {
 		}
 
 		$reasons = Settings::get_option( $item['asb_item_type'] . '_' . self::get_slug() );
+		if ( ! $reasons ) {
+			$reasons = [];
+		}
 		if ( ! empty( array_intersect( $item['asb_reasons'], $reasons ) ) ) {
 			$item['asb_marked_as_delete'] = true;
 		}

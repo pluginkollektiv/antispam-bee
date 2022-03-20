@@ -33,11 +33,11 @@ class Rules {
 
 			$no_spam_threshold = (float) apply_filters( 'asb_no_spam_threshold', 0.0 );
 			$spam_threshold = (float) apply_filters( 'asb_spam_threshold', 0.0 );
-			if ( $no_spam_threshold <= 0.0 && $score <= $no_spam_threshold ) {
+			if ( $no_spam_threshold < 0.0 && $score <= $no_spam_threshold ) {
 				return false;
 			}
 
-			if ( $spam_threshold >= 0.0 && $score >= $spam_threshold ) {
+			if ( $spam_threshold > 0.0 && $score >= $spam_threshold ) {
 				return true;
 			}
 		}

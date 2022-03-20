@@ -128,4 +128,8 @@ class LangSpam implements Verifiable, Controllable {
 	public static function get_supported_types() {
 		return [ 'comment', 'trackback' ];
 	}
+
+	public static function is_active() {
+		return false;
+	}
 }

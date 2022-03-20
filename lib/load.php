@@ -7,6 +7,10 @@
 
 namespace AntispamBee;
 
+use AntispamBee\Fields\Honeypot as HoneypotField;
+use AntispamBee\Rules\Honeypot as HoneypotRule;
+use AntispamBee\Handlers\Comment;
+use AntispamBee\Handlers\Trackback;
 use AntispamBee\Helpers\AssetsLoader;
 use AntispamBee\PostProcessors\Delete;
 use AntispamBee\PostProcessors\DeleteForReasons;
@@ -43,13 +47,16 @@ function init() {
 		'trackback_from_myself_rule' => TrackbackFromMyself::class,
 		'trackback_post_title_is_blog_name_rule' => TrackbackPostTitleIsBlogName::class,
 		'valid_gravatar_rule' => ValidGravatar::class,
+		'honeypot_rule' => HoneypotRule::class,
 		'delete_post_processor' => Delete::class,
 		'delete_for_reasons_post_processor' => DeleteForReasons::class,
 		'save_reason_post_processor' => SaveReason::class,
 		'send_email_post_processor' => SendEmail::class,
 		'update_daily_stats_post_processor' => UpdateDailyStats::class,
 		'update_spam_count_post_processor' => UpdateSpamCount::class,
-		'update_spam_log_post_processor' => UpdateSpamLog::class
+		'update_spam_log_post_processor' => UpdateSpamLog::class,
+		'comment_handler' => Comment::class,
+		'trackback_handler' => Trackback::class,
 	];
 
 	// Initialize all modules.
@@ -58,6 +65,13 @@ function init() {
 			call_user_func( [ $module, 'init' ] );
 		}
 	}
+
+	add_filter(
+		'comment_form_field_comment',
+		function( $field_markup ) {
+			return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
+		}
+	);
 }
 
 add_action( 'plugins_loaded', 'AntispamBee\init' );

@@ -4,10 +4,21 @@ namespace AntispamBee\Handlers;
 
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\IpHelper;
+use AntispamBee\Rules\Honeypot;
 
 class Comment {
 	public static function init() {
 		add_action(
+			'init',
+			function() {
+				if ( ! Honeypot::is_active() ) {
+					return;
+				}
+				Honeypot::precheck();
+			}
+		);
+
+		add_filter(
 			'preprocess_comment',
 			[
 				__CLASS__,
@@ -25,13 +36,13 @@ class Comment {
 
 		if ( empty( $request_path ) ) {
 			PostProcessors::apply( 'comment', $comment, [ 'empty' ] );
-			return;
+			return $comment;
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Everybody can post.
 		if ( strpos( $request_path, 'wp-comments-post.php' ) === false || empty( $_POST ) ) {
-			return;
+			return $comment;
 		}
 
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -42,6 +53,7 @@ class Comment {
 			PostProcessors::apply( 'comment', $comment, $rules->get_spam_reasons() );
 		}
 
+		return $comment;
 		// todo: Maybe store no-spam-reasons
 	}
 }

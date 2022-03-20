@@ -148,4 +148,8 @@ class RegexpSpam implements Verifiable, Controllable {
 	public static function get_options() {
 		return null;
 	}
+
+	public static function is_active() {
+		return false;
+	}
 }

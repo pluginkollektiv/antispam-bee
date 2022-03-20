@@ -14,4 +14,6 @@ interface Verifiable {
 	public static function get_supported_types();
 
 	public static function is_final();
+
+	public static function is_active();
 }

@@ -8,6 +8,8 @@ trait InitRule {
 			$rules[] = [
 				'verifiable' => self::class,
 			];
+
+			return $rules;
 		} );
 	}
 }

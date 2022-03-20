@@ -210,4 +210,22 @@ class Settings {
 			)
 		);
 	}
+
+	/**
+	 * Check and return an array key
+	 *
+	 * @since   2.4.2
+	 * @since   2.10.0 Only return `null` if option does not exist.
+	 *
+	 * @param   array  $array Array with values.
+	 * @param   string $key   Name of the key.
+	 * @return  mixed         Value of the requested key.
+	 */
+	public static function get_key( $array, $key ) {
+		if ( empty( $array ) || empty( $key ) || ! isset( $array[ $key ] ) ) {
+			return null;
+		}
+
+		return $array[ $key ];
+	}
 }
