@@ -15,17 +15,20 @@ class DbSpam implements Verifiable, Controllable {
 		$params = [];
 		$filter = [];
 		$url = DataHelper::get_values_where_key_contains( 'url', $data );
+
 		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';
 			$params[] = wp_unslash( $url[0] );
 		}
 		$ip = DataHelper::get_values_by_keys( 'comment_author_IP', $data );
+
 		if ( ! empty( $ip ) ) {
 			$filter[] = '`comment_author_IP` = %s';
 			$params[] = wp_unslash( $ip[0] );
 		}
 
 		$email = DataHelper::get_values_where_key_contains( 'email' );
+
 		if ( ! empty( $email ) ) {
 			$filter[] = '`comment_author_email` = %s';
 			$params[] = wp_unslash( $email[0] );

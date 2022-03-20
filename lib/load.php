@@ -25,6 +25,8 @@ use AntispamBee\Rules\ShortestTime;
 use AntispamBee\Rules\TrackbackFromMyself;
 use AntispamBee\Rules\TrackbackPostTitleIsBlogName;
 use AntispamBee\Rules\ValidGravatar;
+use AntispamBee\Helpers\CommentsColumns;
+use AntispamBee\Helpers\Installer;
 
 /**
  * Init function of the plugin
@@ -33,6 +35,7 @@ function init() {
 	// Construct all modules to initialize.
 	$modules = [
 		'helpers_assets_loader' => new AssetsLoader(),
+    'helpers_comments_columns' => new CommentsColumns(),
 		'approved_email_rule' => ApprovedEmail::class,
 		'bbcode_rule' => BBCode::class,
 		'country_spam_rule' => CountrySpam::class,
@@ -61,3 +64,8 @@ function init() {
 }
 
 add_action( 'plugins_loaded', 'AntispamBee\init' );
+
+// Register the activation, deactivation and uninstall hooks.
+register_activation_hook( ANTISPAM_BEE_FILE, [ Installer::class, 'activate' ] );
+register_deactivation_hook( ANTISPAM_BEE_FILE, [ Installer::class, 'deactivate' ] );
+register_uninstall_hook( ANTISPAM_BEE_FILE, [ Installer::class, 'uninstall' ] );
