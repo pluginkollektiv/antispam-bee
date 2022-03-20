@@ -19,7 +19,8 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-define( 'ANTISPAM_BEE_VERSION', '1.0.0' );
+define( 'ANTISPAM_BEE_VERSION', '3.0.0' );
+define( 'ANTISPAM_BEE_DB_VERSION', '1.02' );
 define( 'ANTISPAM_BEE_FILE', __FILE__ );
 define( 'ANTISPAM_BEE_PATH', plugin_dir_path( ANTISPAM_BEE_FILE ) );
 define( 'ANTISPAM_BEE_URL', plugin_dir_url( ANTISPAM_BEE_FILE ) );
@@ -65,7 +66,7 @@ function antispam_bee_pre_init() {
  * @since 1.0.0
  */
 function antispam_bee_load_textdomain() {
-	load_plugin_textdomain( 'antispam-bee', false, basename( dirname( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain( 'antispam-bee' );
 }
 
 /**

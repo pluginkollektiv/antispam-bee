@@ -21,7 +21,7 @@ class AssetsLoader {
 	}
 
 	/**
-	 * Register the assets for all blocks.
+	 * Register the assets for the backend.
 	 */
 	public function register_assets() {
 		$backend_assets_path  = 'build/backend.asset.php';
@@ -34,11 +34,6 @@ class AssetsLoader {
 			$backend_asset = [
 				'dependencies' => [
 					'wp-i18n',
-					'wp-element',
-					'wp-blocks',
-					'wp-components',
-					'wp-editor',
-					'wp-polyfill',
 				],
 				'version'      => ANTISPAM_BEE_VERSION,
 			];
@@ -65,7 +60,9 @@ class AssetsLoader {
 			);
 		}
 
-		wp_set_script_translations( 'antispam-bee-backend', 'antispam-bee', plugin_dir_path( ANTISPAM_BEE_FILE ) . 'languages' );
+		if ( in_array( 'wp-i18n',$backend_asset['dependencies'], true ) ) {
+			wp_set_script_translations( 'antispam-bee-backend', 'antispam-bee' );
+		}
 	}
 
 	/**
