@@ -116,7 +116,7 @@ class LangSpam implements Verifiable, Controllable {
 		);
 	}
 
-	public static function render() {
-		// TODO: Implement render() method.
+	public static function get_options() {
+		null;
 	}
 }
