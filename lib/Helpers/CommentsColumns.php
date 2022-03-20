@@ -23,6 +23,7 @@ class CommentsColumns {
 	 * Registers the module hooks.
 	 */
 	public function init() {
+		// @todo: return early, if not on the correct "filter" page on the comments list.
 		add_filter( 'manage_edit-comments_columns', [ $this, 'register_plugin_columns' ] );
 		add_filter( 'manage_comments_custom_column', [ $this, 'print_plugin_column' ], 10, 2 );
 		add_filter( 'manage_edit-comments_sortable_columns', [ $this, 'register_sortable_columns' ] );
