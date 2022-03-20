@@ -34,11 +34,6 @@ class AssetsLoader {
 			$backend_asset = [
 				'dependencies' => [
 					'wp-i18n',
-					'wp-element',
-					'wp-blocks',
-					'wp-components',
-					'wp-editor',
-					'wp-polyfill',
 				],
 				'version'      => ANTISPAM_BEE_VERSION,
 			];
