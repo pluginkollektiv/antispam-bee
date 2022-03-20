@@ -7,6 +7,7 @@
 
 namespace AntispamBee;
 
+use AntispamBee\Admin\SettingsPage;
 use AntispamBee\Helpers\AssetsLoader;
 
 /**
@@ -16,6 +17,7 @@ function init() {
 	// Construct all modules to initialize.
 	$modules = [
 		'helpers_assets_loader' => new AssetsLoader(),
+		'settings_page' => new SettingsPage(),
 	];
 
 	// Initialize all modules.
