@@ -3,8 +3,6 @@
 namespace AntispamBee\Rules;
 
 interface Verifiable {
-	public static function init();
-
 	public static function verify( $data );
 
 	public static function get_name();
