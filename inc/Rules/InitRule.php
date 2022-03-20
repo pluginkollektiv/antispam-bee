@@ -8,7 +8,7 @@ trait InitRule {
 			$rules[] = [
 				'weight' => self::get_weight(),
 				'name' => self::get_name(),
-				'callable' => array( self::class, 'verify' ),
+				'verifiable' => self::class,
 			];
 		} );
 	}
