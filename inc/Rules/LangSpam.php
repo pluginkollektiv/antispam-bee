@@ -2,9 +2,14 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\LangHelper;
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
+
 class LangSpam implements Verifiable, Controllable {
 
 	use InitRule;
+	use IsActive;
 
 	public static function verify( $data ) {
 		$comment_content = $data;
@@ -58,7 +63,7 @@ class LangSpam implements Verifiable, Controllable {
 
 		$response = wp_safe_remote_post(
 			'https://api.pluginkollektiv.org/language/v1/',
-			array( 'body' => wp_json_encode( array( 'body' => $comment_text ) ) )
+			array( 'body' => wp_json_encode( [ 'body' => $comment_text ] ) )
 		);
 
 		if ( is_wp_error( $response )
@@ -76,7 +81,7 @@ class LangSpam implements Verifiable, Controllable {
 			return false;
 		}
 
-		return ! in_array( Lang_Code_Helper::map ( $detected_lang->code ), $allowed_lang, true );
+		return ! in_array( LangHelper::map ( $detected_lang->code ), $allowed_lang, true );
 	}
 
 	public static function get_name() {
@@ -118,5 +123,9 @@ class LangSpam implements Verifiable, Controllable {
 
 	public static function get_options() {
 		null;
+	}
+
+	public static function get_supported_types() {
+		return [ 'comment', 'trackback' ];
 	}
 }

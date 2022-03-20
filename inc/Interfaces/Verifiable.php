@@ -1,6 +1,6 @@
 <?php
 
-namespace AntispamBee\Rules;
+namespace AntispamBee\Interfaces;
 
 interface Verifiable {
 	public static function verify( $data );
@@ -10,6 +10,8 @@ interface Verifiable {
 	public static function get_weight();
 
 	public static function get_slug();
+
+	public static function get_supported_types();
 
 	public static function is_final();
 }

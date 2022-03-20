@@ -1,6 +1,6 @@
 <?php
 
-namespace AntispamBee\Helper;
+namespace AntispamBee\Helpers;
 
 class DataHelper {
 
@@ -26,5 +26,10 @@ class DataHelper {
 		}
 
 		return $results;
+	}
+
+	public static function parse_url( $url, $component = 'host' ) {
+		$parts = wp_parse_url( $url );
+		return ( is_array( $parts ) && isset( $parts[ $component ] ) ) ? $parts[ $component ] : '';
 	}
 }

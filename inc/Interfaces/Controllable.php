@@ -1,6 +1,6 @@
 <?php
 
-namespace AntispamBee\Rules;
+namespace AntispamBee\Interfaces;
 
 interface Controllable {
 	public static function get_label();

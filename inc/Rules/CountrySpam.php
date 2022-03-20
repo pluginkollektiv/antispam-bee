@@ -2,15 +2,19 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
+
 class CountrySpam implements Verifiable, Controllable {
 
 	use InitRule;
+	use IsActive;
 
 	public static function verify( $data ) {
-		$ip = \Data_Helper::get_values_by_keys( [ 'comment_author_IP' ], $data );
-		if ( empty( $ip ) ) {
+		if ( ! isset( $data['comment_author_IP'] ) || empty( $data['comment_author_IP'] ) ) {
 			return 0;
 		}
+		$ip = $data['comment_author_IP'];
 
 		$options = self::get_options();
 
@@ -145,5 +149,9 @@ class CountrySpam implements Verifiable, Controllable {
 
 	public static function get_options() {
 		return null;
+	}
+
+	public static function get_supported_types() {
+		return [ 'comment', 'trackback' ];
 	}
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace AntispamBee\Rules;
+namespace AntispamBee\Helpers;
 
-class LangCodeHelper {
+class LangHelper {
 
 	/**
 	 * Map franc language codes
@@ -14,7 +14,7 @@ class LangCodeHelper {
 	 * @return string             Mapped ISO code
 	 */
 	public static function map( $franc_code ) {
-		$codes = array(
+		$codes = [
 			'zha' => 'za',
 			'zho' => 'zh',
 			'zul' => 'zu',
@@ -200,7 +200,7 @@ class LangCodeHelper {
 			'aym' => 'ay',
 			'aze' => 'az',
 			'nds' => 'de',
-		);
+		];
 
 		if ( array_key_exists( $franc_code, $codes ) ) {
 			return $codes[ $franc_code ];
@@ -208,6 +208,5 @@ class LangCodeHelper {
 
 		return $franc_code;
 	}
-
 
 }
