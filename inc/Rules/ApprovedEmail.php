@@ -14,16 +14,13 @@ class ApprovedEmail implements Verifiable, Controllable {
 
 		$email = $email[0];
 
-		global $wpdb;
+		$approved_comments_count = get_comments( [
+			'status' => 'approved',
+			'count' => true,
+			'author_email' => $email,
+		] );
 
-		$result = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT `comment_ID` FROM `$wpdb->comments` WHERE `comment_approved` = '1' AND `comment_author_email` = %s LIMIT 1",
-				wp_unslash( $email )
-			)
-		);
-
-		if ( $result ) {
+		if ( 0 === $approved_comments_count ) {
 			return 1;
 		}
 

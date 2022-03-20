@@ -23,30 +23,30 @@ class ShortestTime implements Verifiable, Controllable {
 	}
 
 	public static function get_name() {
-		// TODO: Implement get_name() method.
+		return __( 'Comment time', 'antispam-bee' );
 	}
 
 	public static function get_weight() {
-		// TODO: Implement get_weight() method.
+		return 1.0;
 	}
 
 	public static function get_slug() {
-		// TODO: Implement get_slug() method.
+		return 'asb-shortest-time';
 	}
 
 	public static function is_final() {
-		// TODO: Implement is_final() method.
+		return false;
 	}
 
 	public static function get_label() {
-		__( 'Consider the comment time', 'antispam-bee' );
+		return __( 'Consider the comment time', 'antispam-bee' );
 	}
 
 	public static function get_description() {
-		// TODO: Implement get_description() method.
+		return __( 'Not recommended when using page caching', 'antispam-bee' );
 	}
 
-	public static function render() {
-		// TODO: Implement render() method.
+	public static function get_options() {
+		return null;
 	}
 }

@@ -76,7 +76,7 @@ class DbSpam implements Verifiable, Controllable {
 		return false;
 	}
 
-	public static function render() {
-		return '';
+	public static function get_options() {
+		return null;
 	}
 }

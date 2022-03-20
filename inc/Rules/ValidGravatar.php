@@ -75,7 +75,7 @@ class ValidGravatar implements Verifiable, Controllable {
 		);
 	}
 
-	public static function render() {
-		return '';
+	public static function get_options() {
+		return null;
 	}
 }
