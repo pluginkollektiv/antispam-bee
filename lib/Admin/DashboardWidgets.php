@@ -8,7 +8,7 @@
 namespace AntispamBee\Admin;
 
 use AntispamBee\Helpers\DashboardHelper;
-use AntispamBee\Helpers\OptionsHelper;
+use AntispamBee\Helpers\Settings;
 
 /**
  * Class DashboardWidgets
@@ -36,7 +36,7 @@ class DashboardWidgets {
 	 * @since  2.6.5
 	 */
 	public function add_dashboard_count( $items = array() ) {
-		if ( ! current_user_can( 'manage_options' ) || ! OptionsHelper::get_option( 'dashboard_count' ) ) {
+		if ( ! current_user_can( 'manage_options' ) || ! Settings::get_option( 'dashboard_count' ) ) {
 			return $items;
 		}
 
@@ -60,7 +60,7 @@ class DashboardWidgets {
 	 * @since  2.5.6
 	 */
 	public function add_dashboard_chart() {
-		if ( ! current_user_can( 'publish_posts' ) || ! OptionsHelper::get_option( 'dashboard_chart' ) ) {
+		if ( ! current_user_can( 'publish_posts' ) || ! Settings::get_option( 'dashboard_chart' ) ) {
 			return;
 		}
 
@@ -78,7 +78,7 @@ class DashboardWidgets {
 	 * @since  2.5.8
 	 */
 	public function show_spam_chart() {
-		$items = (array) OptionsHelper::get_option( 'daily_stats' );
+		$items = (array) Settings::get_option( 'daily_stats' );
 
 		if ( empty( $items ) ) {
 			echo sprintf(
@@ -117,7 +117,7 @@ class DashboardWidgets {
 	 * @since  2.4
 	 */
 	public function get_spam_count() {
-		$count = OptionsHelper::get_option( 'spam_count' );
+		$count = Settings::get_option( 'spam_count' );
 
 		return ( get_locale() === 'de_DE' ? number_format( $count, 0, '', '.' ) : number_format_i18n( $count ) );
 	}

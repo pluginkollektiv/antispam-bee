@@ -6,7 +6,7 @@ use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
-use AntispamBee\Settings;
+use AntispamBee\Helpers\Settings;
 use \AntispamBee\Fields\Honeypot as HoneypotField;
 
 class Honeypot implements Verifiable, Controllable {

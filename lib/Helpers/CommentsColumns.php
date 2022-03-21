@@ -16,7 +16,7 @@ class CommentsColumns {
 	 * Registers the module hooks.
 	 */
 	public function init() {
-		if ( ! DashboardHelper::is_edit_spam_comments_page() && ! OptionsHelper::get_option( 'no_notice' ) ) {
+		if ( ! DashboardHelper::is_edit_spam_comments_page() && ! Settings::get_option( 'no_notice' ) ) {
 			return;
 		}
 
@@ -62,7 +62,7 @@ class CommentsColumns {
 		}
 
 		$spam_reason  = get_comment_meta( $comment_id, $column, true );
-		$spam_reasons = OptionsHelper::get_options( 'reasons' );
+		$spam_reasons = Settings::get_options( 'reasons' );
 
 		if ( empty( $spam_reason ) || empty( $spam_reasons[ $spam_reason ] ) ) {
 			return;
@@ -119,7 +119,7 @@ class CommentsColumns {
 		<select id="filter-by-comment-spam-reason" name="comment_spam_reason">
 			<option value=""><?php esc_html_e( 'All spam reasons', 'antispam-bee' ); ?></option>
 			<?php
-			$spam_reasons = OptionsHelper::get_options( 'reasons' );
+			$spam_reasons = Settings::get_options( 'reasons' );
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
@@ -147,7 +147,7 @@ class CommentsColumns {
 	 * @param \WP_Comment_Query $query Current WordPress query.
 	 */
 	public static function filter_by_spam_reason( $query ) {
-		$spam_reasons = OptionsHelper::get_options( 'reasons' );
+		$spam_reasons = Settings::get_options( 'reasons' );
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
 		if ( empty( $spam_reason ) || ! in_array( $spam_reason, array_keys( $spam_reasons ), true ) ) {

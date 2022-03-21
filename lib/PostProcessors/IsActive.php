@@ -2,7 +2,7 @@
 
 namespace AntispamBee\PostProcessors;
 
-use AntispamBee\Settings;
+use AntispamBee\Helpers\Settings;
 
 trait IsActive {
 	public static function is_active( $type ) {

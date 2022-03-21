@@ -6,7 +6,7 @@ use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Helpers\LangHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
-use AntispamBee\Settings;
+use AntispamBee\Helpers\Settings;
 
 class SendEmail implements PostProcessor, Controllable {
 

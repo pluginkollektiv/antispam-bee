@@ -83,7 +83,7 @@ class AssetsLoader {
 	 * @since  2.5.8
 	 */
 	public function add_dashboard_script() {
-		if ( ! OptionsHelper::get_option( 'daily_stats' ) ) {
+		if ( ! Settings::get_option( 'daily_stats' ) ) {
 			return;
 		}
 

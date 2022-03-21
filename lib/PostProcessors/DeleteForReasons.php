@@ -5,7 +5,7 @@ namespace AntispamBee\PostProcessors;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
-use AntispamBee\Settings;
+use AntispamBee\Helpers\Settings;
 
 class DeleteForReasons implements PostProcessor, Controllable {
 
