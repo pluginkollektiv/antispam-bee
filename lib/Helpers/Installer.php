@@ -50,7 +50,6 @@ class Installer {
 		global $wpdb;
 
 		delete_option( 'antispam_bee' );
-		$wpdb->query( 'OPTIMIZE TABLE `' . $wpdb->options . '`' );
 
 		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$sql = 'DELETE FROM `' . $wpdb->commentmeta . '`WHERE `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")';
