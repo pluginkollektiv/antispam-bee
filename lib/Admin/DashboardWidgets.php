@@ -9,7 +9,6 @@ namespace AntispamBee\Admin;
 
 use AntispamBee\Helpers\DashboardHelper;
 use AntispamBee\Helpers\OptionsHelper;
-use AntispamBee\Helpers\StatsHelpers;
 
 /**
  * Class DashboardWidgets
@@ -47,7 +46,7 @@ class DashboardWidgets {
 			sprintf(
 				// translators: The number of spam comments Antispam Bee blocked so far.
 				__( '%s Blocked', 'antispam-bee' ),
-				StatsHelpers::get_spam_count()
+				$this->get_spam_count()
 			)
 		) . '</span>';
 
@@ -109,5 +108,27 @@ class DashboardWidgets {
 		$html .= "</table>\n";
 
 		echo wp_kses_post( '<div id="ab_chart">' . $html . '</div>' );
+	}
+
+	/**
+	 * Return the number of spam comments
+	 *
+	 * @since  0.1
+	 * @since  2.4
+	 */
+	public function get_spam_count() {
+		$count = OptionsHelper::get_option( 'spam_count' );
+
+		return ( get_locale() === 'de_DE' ? number_format( $count, 0, '', '.' ) : number_format_i18n( $count ) );
+	}
+
+	/**
+	 * Output the number of spam comments
+	 *
+	 * @since  0.1
+	 * @since  2.4
+	 */
+	public function the_spam_count() {
+		echo esc_html( $this->get_spam_count() );
 	}
 }

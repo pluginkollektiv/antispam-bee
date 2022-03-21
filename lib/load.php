@@ -16,7 +16,6 @@ use AntispamBee\Helpers\AssetsLoader;
 use AntispamBee\Helpers\CommentsColumns;
 use AntispamBee\Helpers\Installer;
 use AntispamBee\Helpers\OptionsHelper;
-use AntispamBee\Helpers\StatsHelpers;
 use AntispamBee\PostProcessors\Delete;
 use AntispamBee\PostProcessors\DeleteForReasons;
 use AntispamBee\PostProcessors\SaveReason;
@@ -49,7 +48,6 @@ function init() {
 		'helpers_assets_loader'                   => new AssetsLoader(),
 		'helpers_comments_columns'                => new CommentsColumns(),
 		'helpers_options_helper'                  => new OptionsHelper(),
-		'helpers_stats_helpers'                   => new StatsHelpers(),
 		'post_processor_delete'                   => new Delete(),
 		'post_processor_delete_for_reasons'       => new DeleteForReasons(),
 		'post_processor_save_reason'              => new SaveReason(),
