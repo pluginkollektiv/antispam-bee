@@ -7,6 +7,7 @@
 
 namespace AntispamBee;
 
+use AntispamBee\Admin\SettingsPage;
 use AntispamBee\Fields\Honeypot as HoneypotField;
 use AntispamBee\Rules\Honeypot as HoneypotRule;
 use AntispamBee\Handlers\Comment;
@@ -39,6 +40,7 @@ function init() {
 	// Construct all modules to initialize.
 	$modules = [
 		'helpers_assets_loader' => new AssetsLoader(),
+		'settings_page' => new SettingsPage(),
     'helpers_comments_columns' => new CommentsColumns(),
 		'approved_email_rule' => ApprovedEmail::class,
 		'bbcode_rule' => BBCode::class,
