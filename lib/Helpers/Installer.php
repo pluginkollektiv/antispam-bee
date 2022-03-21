@@ -7,15 +7,13 @@
 
 namespace AntispamBee\Helpers;
 
-use WP_Roles;
-
 /**
  * Class Installer
  */
 class Installer {
 
 	/**
-	 * Activate Antispam Bee.
+	 * Activate callback.
 	 */
 	public static function activate() {
 		if ( ! is_blog_installed() ) {
@@ -38,11 +36,16 @@ class Installer {
 		flush_rewrite_rules();
 	}
 
-
+	/**
+	 * Deactivate callback.
+	 */
 	public static function deactivate() {
 		self::clear_scheduled_hook();
 	}
 
+	/**
+	 * Uninstall callback.
+	 */
 	public static function uninstall() {
 		if ( ! self::get_option( 'delete_data_on_uninstall' ) ) {
 			return;
@@ -50,11 +53,9 @@ class Installer {
 		global $wpdb;
 
 		delete_option( 'antispam_bee' );
-		$wpdb->query( 'OPTIMIZE TABLE `' . $wpdb->options . '`' );
 
-		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$sql = 'DELETE FROM `' . $wpdb->commentmeta . '`WHERE `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")';
-		$wpdb->query( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->query( 'DELETE FROM `' . $wpdb->commentmeta . '`WHERE `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")' );
 	}
 
 	/**

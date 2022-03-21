@@ -32,6 +32,7 @@ use AntispamBee\Rules\TrackbackPostTitleIsBlogName;
 use AntispamBee\Rules\ValidGravatar;
 use AntispamBee\Helpers\CommentsColumns;
 use AntispamBee\Helpers\Installer;
+use AntispamBee\Helpers\OptionsHelper;
 
 /**
  * Init function of the plugin
@@ -62,6 +63,7 @@ function init() {
 		'update_spam_log_post_processor' => UpdateSpamLog::class,
 		'comment_handler' => Comment::class,
 		'trackback_handler' => Trackback::class,
+		'helpers_options_helper'   => new OptionsHelper(),
 	];
 
 	// Initialize all modules.
