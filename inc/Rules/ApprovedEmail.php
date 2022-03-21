@@ -3,6 +3,7 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
+use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
@@ -12,24 +13,24 @@ class ApprovedEmail implements Verifiable, Controllable {
 	use IsActive;
 
 	public static function verify( $data ) {
-		$email = DataHelper::get_values_where_key_contains( 'email', $data );
+		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $data );
 		if ( empty( $email ) ) {
 			return 0;
 		}
 
-		$email = $email[0];
+		$email = array_shift( $email );
 
 		$approved_comments_count = get_comments( [
-			'status' => 'approved',
+			'status' => 'approve',
 			'count' => true,
 			'author_email' => $email,
 		] );
 
 		if ( 0 === $approved_comments_count ) {
-			return 1;
+			return 0;
 		}
 
-		return - 1;
+		return -1;
 	}
 
 	public static function get_name() {
@@ -61,10 +62,6 @@ class ApprovedEmail implements Verifiable, Controllable {
 	}
 
 	public static function get_supported_types() {
-		return [ 'comment' ];
-	}
-
-	public static function is_active() {
-		return false;
+		return [ ItemTypeHelper::COMMENT_TYPE ];
 	}
 }

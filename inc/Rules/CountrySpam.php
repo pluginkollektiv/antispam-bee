@@ -2,6 +2,7 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
@@ -103,10 +104,10 @@ class CountrySpam implements Verifiable, Controllable {
 		}
 
 		if ( ! empty( $denied ) ) {
-			return in_array( $country, $denied, true ) ? 1 : -1;
+			return in_array( $country, $denied, true ) ? 1 : 0;
 		}
 
-		return in_array( $country, $allowed, true ) ? -1 : 1;
+		return in_array( $country, $allowed, true ) ? 0 : 1;
 	}
 
 	public static function get_name() {
@@ -152,10 +153,10 @@ class CountrySpam implements Verifiable, Controllable {
 	}
 
 	public static function get_supported_types() {
-		return [ 'comment', 'trackback' ];
+		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 
-	public static function is_active() {
+	public static function is_active( $type ) {
 		return false;
 	}
 }

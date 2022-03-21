@@ -14,6 +14,7 @@ class Rules {
 	}
 
 	public function apply( $item ) {
+		$item['asb_item_type'] = $this->type;
 		$rules = self::get( $this->type, true );
 
 		$score = 0.0;

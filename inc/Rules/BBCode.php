@@ -2,6 +2,7 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
@@ -12,11 +13,11 @@ class BBCode implements Verifiable, Controllable {
 
 	public static function verify( $data ) {
 		foreach ( $data as $value ) {
-			if ( true === preg_match( '/\[url[=\]].*\[\/url\]/is', $value ) ) {
+			if ( true === (bool) preg_match( '/\[url[=\]].*\[\/url\]/is', $value ) ) {
 				return 1;
 			}
 		}
-		return -1;
+		return 0;
 	}
 
 	public static function get_name() {
@@ -48,10 +49,7 @@ class BBCode implements Verifiable, Controllable {
 	}
 
 	public static function get_supported_types() {
-		return [ 'comment', 'trackback' ];
+		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 
-	public static function is_active() {
-		return false;
-	}
 }

@@ -2,6 +2,8 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\DataHelper;
+use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
@@ -23,7 +25,46 @@ class RegexpSpam implements Verifiable, Controllable {
 			'useragent',
 		];
 
-		$comment = $data;
+		$item = null;
+
+		if ( ItemTypeHelper::COMMENT_TYPE === $data['asb_item_type'] ) {
+			$ip        = $data['comment_author_IP'];
+			$url       = $data['comment_author_url'];
+			$body      = $data['comment_content'];
+			$email     = $data['comment_author_email'];
+			$author    = $data['comment_author'];
+			$useragent = $data['comment_agent'];
+			$item = array(
+				'ip'        => $ip,
+				'rawurl'    => $url,
+				'host'      => DataHelper::parse_url( $url, 'host' ),
+				'body'      => $body,
+				'email'     => $email,
+				'author'    => $author,
+				'useragent' => $useragent,
+			);
+		}
+
+		if ( ItemTypeHelper::TRACKBACK_TYPE === $data['asb_item_type'] ) {
+			$ip        = $data['comment_author_IP'];
+			$url       = $data['comment_author_url'];
+			$body      = $data['comment_content'];
+			$post_id   = $data['comment_post_ID'];
+			$type      = $data['comment_type'];
+			$blog_name = $data['comment_author'];
+			$item = [
+				'ip'     => $ip,
+				'rawurl' => $url,
+				'host'   => DataHelper::parse_url( $url, 'host' ),
+				'body'   => $body,
+				'email'  => '',
+				'author' => '',
+			];
+		}
+
+		if ( ! $item ) {
+			return 0;
+		}
 
 		$patterns = [
 			[
@@ -57,7 +98,7 @@ class RegexpSpam implements Verifiable, Controllable {
 			],
 		];
 
-		$quoted_author = preg_quote( $comment['author'], '/' );
+		$quoted_author = preg_quote( $item['author'], '/' );
 		if ( $quoted_author ) {
 			$patterns[] = [
 				'body' => sprintf(
@@ -87,7 +128,7 @@ class RegexpSpam implements Verifiable, Controllable {
 		);
 
 		if ( ! $patterns ) {
-			return false;
+			return 0;
 		}
 
 		foreach ( $patterns as $pattern ) {
@@ -98,23 +139,23 @@ class RegexpSpam implements Verifiable, Controllable {
 					continue;
 				}
 
-				$comment[ $field ] = ( function_exists( 'iconv' ) ? iconv( 'utf-8', 'utf-8//TRANSLIT', $comment[ $field ] ) : $comment[ $field ] );
+				$item[ $field ] = ( function_exists( 'iconv' ) ? iconv( 'utf-8', 'utf-8//TRANSLIT', $item[ $field ] ) : $item[ $field ] );
 
-				if ( empty( $comment[ $field ] ) ) {
+				if ( empty( $item[ $field ] ) ) {
 					continue;
 				}
 
-				if ( preg_match( '/' . $regexp . '/isu', $comment[ $field ] ) ) {
+				if ( preg_match( '/' . $regexp . '/isu', $item[ $field ] ) ) {
 					$hits[ $field ] = true;
 				}
 			}
 
 			if ( count( $hits ) === count( $pattern ) ) {
-				return true;
+				return 1;
 			}
 		}
 
-		return false;
+		return 0;
 	}
 
 	public static function get_name() {
@@ -134,7 +175,7 @@ class RegexpSpam implements Verifiable, Controllable {
 	}
 
 	public static function get_supported_types() {
-		return [ 'comment', 'trackback' ];
+		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 
 	public static function get_label() {
@@ -147,9 +188,5 @@ class RegexpSpam implements Verifiable, Controllable {
 
 	public static function get_options() {
 		return null;
-	}
-
-	public static function is_active() {
-		return false;
 	}
 }

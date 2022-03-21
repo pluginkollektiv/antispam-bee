@@ -82,6 +82,7 @@ class CommentsColumns {
 		}
 
 		$spam_reason  = get_comment_meta( $comment_id, $column, true );
+		var_dump($spam_reason);
 		$spam_reasons = self::$reasons;
 
 		if ( empty( $spam_reason ) || empty( $spam_reasons[ $spam_reason ] ) ) {

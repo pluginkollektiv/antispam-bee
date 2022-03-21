@@ -27,4 +27,6 @@ interface Controllable {
 	 * @return mixed
 	 */
 	public static function get_options();
+
+	public static function is_active( $type );
 }

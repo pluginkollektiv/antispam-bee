@@ -2,6 +2,7 @@
 
 namespace AntispamBee\PostProcessors;
 
+use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
 
@@ -41,7 +42,7 @@ class UpdateSpamLog implements PostProcessor {
 	}
 
 	public static function get_supported_types() {
-		return [ 'comment', 'trackback' ];
+		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 
 	public static function marks_as_delete() {

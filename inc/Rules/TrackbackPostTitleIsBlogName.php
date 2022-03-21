@@ -2,6 +2,7 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Verifiable;
 
 class TrackbackPostTitleIsBlogName implements Verifiable {
@@ -36,10 +37,6 @@ class TrackbackPostTitleIsBlogName implements Verifiable {
 	}
 
 	public static function get_supported_types() {
-		return [ 'trackback' ];
-	}
-
-	public static function is_active() {
-		return false;
+		return [ ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 }

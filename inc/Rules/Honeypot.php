@@ -3,6 +3,7 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
+use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 use AntispamBee\Settings;
@@ -80,10 +81,6 @@ class Honeypot implements Verifiable, Controllable {
 	}
 
 	public static function get_supported_types() {
-		return [ 'comment' ];
-	}
-
-	public static function is_active() {
-		return true;
+		return [ ItemTypeHelper::COMMENT_TYPE ];
 	}
 }

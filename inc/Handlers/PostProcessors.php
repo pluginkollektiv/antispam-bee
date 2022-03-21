@@ -23,6 +23,8 @@ class PostProcessors {
 			$process_function = isset( $post_processor['post_processor'] ) ? [ $post_processor['post_processor'], 'process' ] : $post_processor['process'];
 			$item = call_user_func( $process_function, $item );
 		}
+
+		return $item;
 	}
 
 	public static function get( $type = null, $only_active = false ) {

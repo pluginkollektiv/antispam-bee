@@ -4,6 +4,7 @@ namespace AntispamBee\Handlers;
 
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\IpHelper;
+use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Rules\Honeypot;
 
 class Comment {
@@ -11,7 +12,7 @@ class Comment {
 		add_action(
 			'init',
 			function() {
-				if ( ! Honeypot::is_active() ) {
+				if ( ! Honeypot::is_active( ItemTypeHelper::COMMENT_TYPE ) ) {
 					return;
 				}
 				Honeypot::precheck();
@@ -50,7 +51,15 @@ class Comment {
 		$is_spam = $rules->apply( $comment );
 
 		if ( $is_spam ) {
-			PostProcessors::apply( 'comment', $comment, $rules->get_spam_reasons() );
+			$item = PostProcessors::apply( 'comment', $comment, $rules->get_spam_reasons() );
+			if ( ! isset( $item['asb_marked_as_delete'] ) ) {
+				add_filter(
+					'pre_comment_approved',
+					function() {
+						return 'spam';
+					}
+				);
+			}
 		}
 
 		return $comment;
