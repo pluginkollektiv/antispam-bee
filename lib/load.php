@@ -10,10 +10,13 @@ namespace AntispamBee;
 use AntispamBee\Admin\DashboardWidgets;
 use AntispamBee\Admin\SettingsPage;
 use AntispamBee\Fields\Honeypot as HoneypotField;
-use AntispamBee\Rules\Honeypot as HoneypotRule;
 use AntispamBee\Handlers\Comment;
 use AntispamBee\Handlers\Trackback;
 use AntispamBee\Helpers\AssetsLoader;
+use AntispamBee\Helpers\CommentsColumns;
+use AntispamBee\Helpers\Installer;
+use AntispamBee\Helpers\OptionsHelper;
+use AntispamBee\Helpers\StatsHelpers;
 use AntispamBee\PostProcessors\Delete;
 use AntispamBee\PostProcessors\DeleteForReasons;
 use AntispamBee\PostProcessors\SaveReason;
@@ -25,16 +28,13 @@ use AntispamBee\Rules\ApprovedEmail;
 use AntispamBee\Rules\BBCode;
 use AntispamBee\Rules\CountrySpam;
 use AntispamBee\Rules\DbSpam;
+use AntispamBee\Rules\Honeypot as HoneypotRule;
 use AntispamBee\Rules\LangSpam;
 use AntispamBee\Rules\RegexpSpam;
 use AntispamBee\Rules\ShortestTime;
 use AntispamBee\Rules\TrackbackFromMyself;
 use AntispamBee\Rules\TrackbackPostTitleIsBlogName;
 use AntispamBee\Rules\ValidGravatar;
-use AntispamBee\Helpers\CommentsColumns;
-use AntispamBee\Helpers\Installer;
-use AntispamBee\Helpers\OptionsHelper;
-use AntispamBee\Helpers\StatsHelpers;
 
 /**
  * Init function of the plugin
@@ -42,32 +42,32 @@ use AntispamBee\Helpers\StatsHelpers;
 function init() {
 	// Construct all modules to initialize.
 	$modules = [
-		'helpers_assets_loader'                  => new AssetsLoader(),
-		'settings_page'                          => new SettingsPage(),
-		'helpers_comments_columns'               => new CommentsColumns(),
-		'approved_email_rule'                    => ApprovedEmail::class,
-		'bbcode_rule'                            => BBCode::class,
-		'country_spam_rule'                      => CountrySpam::class,
-		'db_spam_rule'                           => DbSpam::class,
-		'lang_spam_rule'                         => LangSpam::class,
-		'regexp_spam_rule'                       => RegexpSpam::class,
-		'shortest_time_rule'                     => ShortestTime::class,
-		'trackback_from_myself_rule'             => TrackbackFromMyself::class,
-		'trackback_post_title_is_blog_name_rule' => TrackbackPostTitleIsBlogName::class,
-		'valid_gravatar_rule'                    => ValidGravatar::class,
-		'honeypot_rule'                          => HoneypotRule::class,
-		'delete_post_processor'                  => Delete::class,
-		'delete_for_reasons_post_processor'      => DeleteForReasons::class,
-		'save_reason_post_processor'             => SaveReason::class,
-		'send_email_post_processor'              => SendEmail::class,
-		'update_daily_stats_post_processor'      => UpdateDailyStats::class,
-		'update_spam_count_post_processor'       => UpdateSpamCount::class,
-		'update_spam_log_post_processor'         => UpdateSpamLog::class,
-		'comment_handler'                        => Comment::class,
-		'trackback_handler'                      => Trackback::class,
-		'helpers_options_helper'                 => new OptionsHelper(),
-		'helpers_dashboard_helper'               => new DashboardWidgets(),
-		'helpers_stats_helpers'                  => new StatsHelpers(),
+		'admin_dashboard_helper'                  => new DashboardWidgets(),
+		'admin_settings_page'                     => new SettingsPage(),
+		'handlers_comment_handler'                => new Comment(),
+		'handlers_trackback_handler'              => new Trackback(),
+		'helpers_assets_loader'                   => new AssetsLoader(),
+		'helpers_comments_columns'                => new CommentsColumns(),
+		'helpers_options_helper'                  => new OptionsHelper(),
+		'helpers_stats_helpers'                   => new StatsHelpers(),
+		'post_processor_delete'                   => new Delete(),
+		'post_processor_delete_for_reasons'       => new DeleteForReasons(),
+		'post_processor_save_reason'              => new SaveReason(),
+		'post_processor_send_email'               => new SendEmail(),
+		'post_processor_update_daily_stats'       => new UpdateDailyStats(),
+		'post_processor_update_spam_count'        => new UpdateSpamCount(),
+		'post_processor_update_spam_log'          => new UpdateSpamLog(),
+		'rules_approved_email'                    => new ApprovedEmail(),
+		'rules_bbcode'                            => new BBCode(),
+		'rules_country_spam'                      => new CountrySpam(),
+		'rules_db_spam'                           => new DbSpam(),
+		'rules_honeypot'                          => new HoneypotRule(),
+		'rules_lang_spam'                         => new LangSpam(),
+		'rules_regexp_spam'                       => new RegexpSpam(),
+		'rules_shortest_time'                     => new ShortestTime(),
+		'rules_trackback_from_myself'             => new TrackbackFromMyself(),
+		'rules_trackback_post_title_is_blog_name' => new TrackbackPostTitleIsBlogName(),
+		'rules_valid_gravatar'                    => new ValidGravatar(),
 	];
 
 	// Initialize all modules.
