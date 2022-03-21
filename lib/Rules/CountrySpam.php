@@ -46,7 +46,6 @@ class CountrySpam implements Verifiable, Controllable {
 		 *
 		 * @return null|boolean The `is_country_spam` result or null.
 		 * @since 2.10.0
-		 *
 		 */
 		$is_country_spam = apply_filters( 'antispam_bee_is_country_spam', null, $ip, $allowed, $denied );
 
@@ -61,7 +60,6 @@ class CountrySpam implements Verifiable, Controllable {
 		 *
 		 * @return string The changed IPLocate API key or null.
 		 * @since 2.10.0
-		 *
 		 */
 		$apikey = apply_filters( 'antispam_bee_country_spam_apikey', '' );
 
@@ -122,16 +120,20 @@ class CountrySpam implements Verifiable, Controllable {
 		$link1 = sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
 			esc_url(
-				__( 'https://antispambee.pluginkollektiv.org/documentation/#block-comments-from-specific-countries',
-					'antispam-bee' ),
+				__(
+					'https://antispambee.pluginkollektiv.org/documentation/#block-comments-from-specific-countries',
+					'antispam-bee'
+				),
 				'https'
 			)
 		);
 
 		return sprintf(
 		/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
-			esc_html__( 'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.',
-				'antispam-bee' ),
+			esc_html__(
+				'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.',
+				'antispam-bee'
+			),
 			wp_kses_post( $link1 ),
 			'</a>'
 		);

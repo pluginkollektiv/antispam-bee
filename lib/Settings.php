@@ -21,36 +21,36 @@ class Settings {
 	protected static function init_options() {
 		self::$defaults = array(
 			'options' => array(
-				'regexp_check'      => 1,
-				'spam_ip'           => 1,
-				'already_commented' => 1,
-				'gravatar_check'    => 0,
-				'time_check'        => 0,
-				'ignore_pings'      => 0,
+				'regexp_check'             => 1,
+				'spam_ip'                  => 1,
+				'already_commented'        => 1,
+				'gravatar_check'           => 0,
+				'time_check'               => 0,
+				'ignore_pings'             => 0,
 
-				'dashboard_chart' => 0,
-				'dashboard_count' => 0,
+				'dashboard_chart'          => 0,
+				'dashboard_count'          => 0,
 
-				'country_code'    => 0,
-				'country_denied'  => '',
-				'country_allowed' => '',
+				'country_code'             => 0,
+				'country_denied'           => '',
+				'country_allowed'          => '',
 
-				'translate_api'  => 0,
-				'translate_lang' => array(),
+				'translate_api'            => 0,
+				'translate_lang'           => array(),
 
-				'bbcode_check' => 1,
+				'bbcode_check'             => 1,
 
-				'flag_spam'        => 1,
-				'email_notify'     => 0,
-				'no_notice'        => 0,
-				'cronjob_enable'   => 0,
-				'cronjob_interval' => 0,
+				'flag_spam'                => 1,
+				'email_notify'             => 0,
+				'no_notice'                => 0,
+				'cronjob_enable'           => 0,
+				'cronjob_interval'         => 0,
 
-				'ignore_filter' => 0,
-				'ignore_type'   => 0,
+				'ignore_filter'            => 0,
+				'ignore_type'              => 0,
 
-				'reasons_enable' => 0,
-				'ignore_reasons' => array(),
+				'reasons_enable'           => 0,
+				'ignore_reasons'           => array(),
 
 				'delete_data_on_uninstall' => 1,
 			),
@@ -121,7 +121,6 @@ class Settings {
 	}
 
 	private static function render_option( $verifiable ) {
-
 	}
 
 	/**
@@ -156,7 +155,6 @@ class Settings {
 	 * @return  mixed         Field value.
 	 * @since  0.1
 	 * @since  2.4.2
-	 *
 	 */
 	public static function get_option( $field ) {
 		$options = self::get_options();
@@ -204,7 +202,6 @@ class Settings {
 	 *
 	 * @since  0.1
 	 * @since  2.4
-	 *
 	 */
 	public static function update_option( $field, $value ) {
 		self::update_options(

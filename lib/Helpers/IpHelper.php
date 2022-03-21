@@ -47,7 +47,6 @@ class IpHelper {
 	 * @return string The sanitized IP or an empty string.
 	 */
 	private static function _sanitize_ip( $raw_ip ) {
-
 		if ( strpos( $raw_ip, ',' ) !== false ) {
 			$ips    = explode( ',', $raw_ip );
 			$raw_ip = trim( $ips[0] );

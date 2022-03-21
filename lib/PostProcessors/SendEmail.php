@@ -58,32 +58,32 @@ class SendEmail implements PostProcessor, Controllable {
 
 				// Body.
 				$body = sprintf(
-							"%s \"%s\"\r\n\r\n",
-							esc_html__( 'New spam comment on your post', 'antispam-bee' ),
-							strip_tags( $post->post_title )
-						) . sprintf(
-							"%s: %s\r\n",
-							esc_html__( 'Author', 'antispam-bee' ),
-							( empty( $comment['comment_author'] ) ? '' : strip_tags( $comment['comment_author'] ) )
-						) . sprintf(
-							"URL: %s\r\n",
-							// empty check exists.
+					"%s \"%s\"\r\n\r\n",
+					esc_html__( 'New spam comment on your post', 'antispam-bee' ),
+					strip_tags( $post->post_title )
+				) . sprintf(
+					"%s: %s\r\n",
+					esc_html__( 'Author', 'antispam-bee' ),
+					( empty( $comment['comment_author'] ) ? '' : strip_tags( $comment['comment_author'] ) )
+				) . sprintf(
+					"URL: %s\r\n",
+					// empty check exists.
 							esc_url( $comment['comment_author_url'] )
-						) . sprintf(
-							"%s: %s\r\n",
-							esc_html__( 'Type', 'antispam-bee' ),
-							esc_html( $comment_name )
-						) . sprintf(
-							"Whois: http://whois.arin.net/rest/ip/%s\r\n",
-							$comment['comment_author_IP']
-						) . sprintf(
-							"%s: %s\r\n\r\n",
-							esc_html__( 'Spam Reason', 'antispam-bee' ),
-							esc_html( implode( ',', $item['asb_reasons'] ) )
-						) . sprintf(
-							"%s\r\n\r\n\r\n",
-							$content
-						) . (
+				) . sprintf(
+					"%s: %s\r\n",
+					esc_html__( 'Type', 'antispam-bee' ),
+					esc_html( $comment_name )
+				) . sprintf(
+					"Whois: http://whois.arin.net/rest/ip/%s\r\n",
+					$comment['comment_author_IP']
+				) . sprintf(
+					"%s: %s\r\n\r\n",
+					esc_html__( 'Spam Reason', 'antispam-bee' ),
+					esc_html( implode( ',', $item['asb_reasons'] ) )
+				) . sprintf(
+					"%s\r\n\r\n\r\n",
+					$content
+				) . (
 						EMPTY_TRASH_DAYS ? (
 						sprintf(
 							"%s: %s\r\n",

@@ -118,7 +118,6 @@ class OptionsHelper {
 	 *
 	 * @since  0.1
 	 * @since  2.4
-	 *
 	 */
 	public static function update_option( $field, $value ) {
 		self::update_options(

@@ -60,7 +60,7 @@ class AssetsLoader {
 			);
 		}
 
-		if ( in_array( 'wp-i18n',$backend_asset['dependencies'], true ) ) {
+		if ( in_array( 'wp-i18n', $backend_asset['dependencies'], true ) ) {
 			wp_set_script_translations( 'antispam-bee-backend', 'antispam-bee' );
 		}
 	}

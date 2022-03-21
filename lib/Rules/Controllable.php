@@ -25,6 +25,7 @@ interface Controllable {
 	 *       'load' => callable,
 	 *   ]
 	 * ]
+	 *
 	 * @return mixed
 	 */
 	public static function get_options();

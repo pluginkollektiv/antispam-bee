@@ -6,7 +6,7 @@ use AntispamBee\Interfaces\Verifiable;
 
 class Rules {
 	protected $type;
-	protected $spam_reasons = [];
+	protected $spam_reasons    = [];
 	protected $no_spam_reasons = [];
 
 	public function __construct( $type ) {
@@ -52,7 +52,6 @@ class Rules {
 		$rules = [];
 		foreach ( $all_rules as $rule ) {
 			if ( self::is_valid_rule( $rule ) ) {
-
 				$get_supported_types_function = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'get_supported_types' ] : $rule['get_supported_types'];
 				$supported_types              = call_user_func( $get_supported_types_function );
 

@@ -58,7 +58,7 @@ class SettingsPage {
 				new Checkbox( 'ab_dashboard_chart', esc_html( 'Generate statistics as a dashboard widget', 'antispam-bee' ), esc_html( 'Daily updates of spam detection rate', 'antispam-bee' ) ),
 				new Checkbox( 'ab_dashboard_count', esc_html( 'Spam counter on the dashboard', 'antispam-bee' ), esc_html( 'Amount of identified spam comments', 'antispam-bee' ) ),
 				new Checkbox( 'ab_ignore_pings', esc_html( 'Do not check trackbacks / pingbacks', 'antispam-bee' ), esc_html( 'No spam check for link notifications', 'antispam-bee' ) ),
-				new Checkbox( 'ab_use_output_buffer', esc_html( 'Check complete site markup for comment forms', 'antispam-bee' ), sprintf( /* translators: s=filter name */ esc_html( 'Uses output buffering instead of the %s filter.', 'antispam-bee' ), '<code>comment_form_field_comment</code>' ) )
+				new Checkbox( 'ab_use_output_buffer', esc_html( 'Check complete site markup for comment forms', 'antispam-bee' ), sprintf( /* translators: s=filter name */ esc_html( 'Uses output buffering instead of the %s filter.', 'antispam-bee' ), '<code>comment_form_field_comment</code>' ) ),
 			]
 		);
 
@@ -95,10 +95,10 @@ class SettingsPage {
 			<h2><?php esc_html_e( 'Antispam Bee', 'antispam-bee' ); ?></h2>
 
 			<h2 class="nav-tab-wrapper">
-				<?php foreach ( $this->sections as $section ): ?>
-					<?php if ( $section->get_name() === $this->active_section ): ?>
+				<?php foreach ( $this->sections as $section ) : ?>
+					<?php if ( $section->get_name() === $this->active_section ) : ?>
 						<a href="?page=antispam_bee&section=<?php echo $section->get_name(); ?>" class="nav-tab nav-tab-active"><?php echo $section->get_title(); ?></a>
-					<?php else: ?>
+					<?php else : ?>
 						<a href="?page=antispam_bee&section=<?php echo $section->get_name(); ?>" class="nav-tab"><?php echo $section->get_title(); ?></a>
 					<?php endif; ?>
 				<?php endforeach; ?>

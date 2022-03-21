@@ -69,27 +69,31 @@ class Honeypot {
 					)/x'
 				);
 
-				$markup = preg_replace_callback( $regex, function ( $matches ) use ( $honeypot_id, $honeypot_name, $attributes_string ) {
-					$output = '<textarea autocomplete="new-password" ' . $matches['before1'] . $matches['before2'] . $matches['before3'];
+				$markup = preg_replace_callback(
+					$regex,
+					function ( $matches ) use ( $honeypot_id, $honeypot_name, $attributes_string ) {
+						$output = '<textarea autocomplete="new-password" ' . $matches['before1'] . $matches['before2'] . $matches['before3'];
 
-					$id_script = '';
-					if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
-						$output .= 'id="' . self::get_secret_id_for_post() . '" ';
-						if ( ! self::_is_amp() ) {
-							$id_script = '<script data-noptimize type="text/javascript">document.getElementById("' . $honeypot_id . '").setAttribute( "id", "a' . substr( esc_js( md5( time() ) ), 0, 31 ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post() ) . '").setAttribute( "id", "' . $honeypot_id . '" );</script>';
+						$id_script = '';
+						if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
+							$output .= 'id="' . self::get_secret_id_for_post() . '" ';
+							if ( ! self::_is_amp() ) {
+								$id_script = '<script data-noptimize type="text/javascript">document.getElementById("' . $honeypot_id . '").setAttribute( "id", "a' . substr( esc_js( md5( time() ) ), 0, 31 ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post() ) . '").setAttribute( "id", "' . $honeypot_id . '" );</script>';
+							}
 						}
-					}
 
-					$output .= ' name="' . esc_attr( self::get_secret_name_for_post() ) . '" ';
-					$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
-					$output .= $matches['after'] . '>';
-					$output .= $matches['content'];
-					$output .= '</textarea><textarea ' . $attributes_string . '></textarea>';
+						$output .= ' name="' . esc_attr( self::get_secret_name_for_post() ) . '" ';
+						$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
+						$output .= $matches['after'] . '>';
+						$output .= $matches['content'];
+						$output .= '</textarea><textarea ' . $attributes_string . '></textarea>';
 
-					$output .= $id_script;
+						$output .= $id_script;
 
-					return $output;
-				}, $markup );
+						return $output;
+					},
+					$markup
+				);
 				break;
 			case 'input':
 				$item = sprintf(
@@ -113,7 +117,6 @@ class Honeypot {
 	 *
 	 * @return string
 	 * @since 2.10.0 Modify secret generation because `always_allowed` option not longer exists
-	 *
 	 */
 	public static function get_secret_id_for_post() {
 		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
@@ -128,7 +131,6 @@ class Honeypot {
 	 *
 	 * @return string
 	 * @since 2.10.0 Modify secret generation because `always_allowed` option not longer exists
-	 *
 	 */
 	public static function get_secret_name_for_post() {
 		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
@@ -144,7 +146,6 @@ class Honeypot {
 	 * @return string
 	 */
 	public static function ensure_secret_starts_with_letter( $secret ) {
-
 		$first_char = substr( $secret, 0, 1 );
 		if ( is_numeric( $first_char ) ) {
 			return chr( $first_char + 97 ) . substr( $secret, 1 );

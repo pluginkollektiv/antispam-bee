@@ -20,11 +20,13 @@ class ApprovedEmail implements Verifiable, Controllable {
 
 		$email = array_shift( $email );
 
-		$approved_comments_count = get_comments( [
-			'status'       => 'approve',
-			'count'        => true,
-			'author_email' => $email,
-		] );
+		$approved_comments_count = get_comments(
+			[
+				'status'       => 'approve',
+				'count'        => true,
+				'author_email' => $email,
+			]
+		);
 
 		if ( 0 === $approved_comments_count ) {
 			return 0;
