@@ -34,7 +34,7 @@ class RegexpSpam implements Verifiable, Controllable {
 			$email     = $data['comment_author_email'];
 			$author    = $data['comment_author'];
 			$useragent = $data['comment_agent'];
-			$item = array(
+			$item      = array(
 				'ip'        => $ip,
 				'rawurl'    => $url,
 				'host'      => DataHelper::parse_url( $url, 'host' ),
@@ -52,7 +52,7 @@ class RegexpSpam implements Verifiable, Controllable {
 			$post_id   = $data['comment_post_ID'];
 			$type      = $data['comment_type'];
 			$blog_name = $data['comment_author'];
-			$item = [
+			$item      = [
 				'ip'     => $ip,
 				'rawurl' => $url,
 				'host'   => DataHelper::parse_url( $url, 'host' ),

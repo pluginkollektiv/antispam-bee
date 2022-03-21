@@ -22,13 +22,13 @@ class CountrySpam implements Verifiable, Controllable {
 		$allowed = preg_split(
 			'/[\s,;]+/',
 			$options['country_allowed'],
-			-1,
+			- 1,
 			PREG_SPLIT_NO_EMPTY
 		);
-		$denied = preg_split(
+		$denied  = preg_split(
 			'/[\s,;]+/',
 			$options['country_denied'],
-			-1,
+			- 1,
 			PREG_SPLIT_NO_EMPTY
 		);
 
@@ -39,14 +39,14 @@ class CountrySpam implements Verifiable, Controllable {
 		/**
 		 * Filter to hook into the `Country_Spam::verify` functionality, to implement for example a custom IP check.
 		 *
-		 * @since 2.10.0
-		 *
 		 * @param null   $is_country_spam The `is_country_spam` result.
 		 * @param string $ip              The IP address.
 		 * @param array  $allowed         The list of allowed country codes.
 		 * @param array  $denied          The list of denied country codes.
 		 *
 		 * @return null|boolean The `is_country_spam` result or null.
+		 * @since 2.10.0
+		 *
 		 */
 		$is_country_spam = apply_filters( 'antispam_bee_is_country_spam', null, $ip, $allowed, $denied );
 
@@ -57,11 +57,11 @@ class CountrySpam implements Verifiable, Controllable {
 		/**
 		 * Filters the IPLocate API key. With this filter, you can add your own IPLocate API key.
 		 *
-		 * @since 2.10.0
-		 *
 		 * @param string  The current IPLocate API key. Default is `null`.
 		 *
 		 * @return string The changed IPLocate API key or null.
+		 * @since 2.10.0
+		 *
 		 */
 		$apikey = apply_filters( 'antispam_bee_country_spam_apikey', '' );
 
@@ -127,6 +127,7 @@ class CountrySpam implements Verifiable, Controllable {
 				'https'
 			)
 		);
+
 		return sprintf(
 		/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
 			esc_html__( 'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.',

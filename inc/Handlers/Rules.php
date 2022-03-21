@@ -15,13 +15,13 @@ class Rules {
 
 	public function apply( $item ) {
 		$item['asb_item_type'] = $this->type;
-		$rules = self::get( $this->type, true );
+		$rules                 = self::get( $this->type, true );
 
 		$score = 0.0;
 		foreach ( $rules as $rule ) {
-			$verify_function = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'verify' ] : $rule['verify'];
+			$verify_function     = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'verify' ] : $rule['verify'];
 			$get_weight_function = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'get_weight' ] : $rule['get_weight'];
-			$get_slug_function = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'get_slug' ] : $rule['get_slug'];
+			$get_slug_function   = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'get_slug' ] : $rule['get_slug'];
 
 			$rule_score = call_user_func( $verify_function, $item ) * call_user_func( $get_weight_function );
 			if ( $rule_score > 0.0 ) {
@@ -33,7 +33,7 @@ class Rules {
 			$score += $rule_score;
 
 			$no_spam_threshold = (float) apply_filters( 'asb_no_spam_threshold', 0.0 );
-			$spam_threshold = (float) apply_filters( 'asb_spam_threshold', 0.0 );
+			$spam_threshold    = (float) apply_filters( 'asb_spam_threshold', 0.0 );
 			if ( $no_spam_threshold < 0.0 && $score <= $no_spam_threshold ) {
 				return false;
 			}
@@ -54,7 +54,7 @@ class Rules {
 			if ( self::is_valid_rule( $rule ) ) {
 
 				$get_supported_types_function = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'get_supported_types' ] : $rule['get_supported_types'];
-				$supported_types = call_user_func( $get_supported_types_function );
+				$supported_types              = call_user_func( $get_supported_types_function );
 
 				if ( ! in_array( $type, $supported_types ) ) {
 					continue;
@@ -66,7 +66,7 @@ class Rules {
 				}
 
 				$is_active_function = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'is_active' ] : $rule['is_active'];
-				$is_active = call_user_func( $is_active_function, $type );
+				$is_active          = call_user_func( $is_active_function, $type );
 
 				if ( ! $is_active ) {
 					continue;

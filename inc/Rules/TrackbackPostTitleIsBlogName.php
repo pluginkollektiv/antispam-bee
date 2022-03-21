@@ -11,13 +11,14 @@ class TrackbackPostTitleIsBlogName implements Verifiable {
 	use IsActive;
 
 	public static function verify( $data ) {
-		$body = isset( $data['comment_content'] ) ? $data['comment_content'] : null;
+		$body      = isset( $data['comment_content'] ) ? $data['comment_content'] : null;
 		$blog_name = isset( $data['comment_author'] ) ? $data['comment_author'] : null;
 		preg_match( '/<strong>(.*)<\/strong>\\n\\n/', $body, $matches );
 		if ( ! isset( $matches[1] ) ) {
-			return -1;
+			return - 1;
 		}
-		return trim( $matches[1] ) === trim( $blog_name ) ? 1 : -1;
+
+		return trim( $matches[1] ) === trim( $blog_name ) ? 1 : - 1;
 	}
 
 	public static function get_name() {

@@ -18,7 +18,8 @@ class Honeypot implements Verifiable, Controllable {
 		if ( isset( $_POST['ab_spam__hidden_field'] ) && $_POST['ab_spam__hidden_field'] == 1 ) {
 			return 1;
 		}
-		return -1;
+
+		return - 1;
 	}
 
 	public static function precheck() {
@@ -43,10 +44,10 @@ class Honeypot implements Verifiable, Controllable {
 				$fields['plugin_field'] = $key;
 			}
 		}
-		if ( ! empty( $_POST[$fields['hidden_field']] ) ) {
+		if ( ! empty( $_POST[ $fields['hidden_field'] ] ) ) {
 			$_POST['ab_spam__hidden_field'] = 1;
 		} else {
-			$_POST[$fields['hidden_field']] = $_POST[$fields['plugin_field']];
+			$_POST[ $fields['hidden_field'] ] = $_POST[ $fields['plugin_field'] ];
 			unset( $_POST[ HoneypotField::get_secret_name_for_post() ] );
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Missing

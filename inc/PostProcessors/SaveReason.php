@@ -22,7 +22,7 @@ class SaveReason implements PostProcessor, Controllable {
 
 		add_action(
 			'comment_post',
-			function( $comment_id ) use ( $item ) {
+			function ( $comment_id ) use ( $item ) {
 				add_comment_meta(
 					$comment_id,
 					'antispam_bee_reason',
@@ -30,6 +30,7 @@ class SaveReason implements PostProcessor, Controllable {
 				);
 			}
 		);
+
 		return $item;
 	}
 

@@ -7,7 +7,6 @@ use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Helpers\LangHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
-use AntispamBee\Settings;
 
 class LangSpam implements Verifiable, Controllable {
 
@@ -20,7 +19,7 @@ class LangSpam implements Verifiable, Controllable {
 			return 0;
 		}
 		$comment_content = array_shift( $comment_content );
-		$comment_text = wp_strip_all_tags( $comment_content );
+		$comment_text    = wp_strip_all_tags( $comment_content );
 
 		if ( empty( $allowed_lang ) || empty( $comment_text ) ) {
 			return 0;
@@ -29,8 +28,8 @@ class LangSpam implements Verifiable, Controllable {
 		/**
 		 * Filters the detected language. With this filter, other detection methods can skip in and detect the language.
 		 *
-		 * @param  null  $detected_lang  The detected language.
-		 * @param  string  $comment_text  The text, to detect the language.
+		 * @param null   $detected_lang The detected language.
+		 * @param string $comment_text  The text, to detect the language.
 		 *
 		 * @return null|string The detected language or null.
 		 * @since 2.8.2
@@ -71,7 +70,7 @@ class LangSpam implements Verifiable, Controllable {
 		);
 
 		if ( is_wp_error( $response )
-		     || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+			 || wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			return 0;
 		}
 
@@ -85,7 +84,7 @@ class LangSpam implements Verifiable, Controllable {
 			return 0;
 		}
 
-		return (int) ! in_array( LangHelper::map ( $detected_lang->code ), $allowed_lang, true );
+		return (int) ! in_array( LangHelper::map( $detected_lang->code ), $allowed_lang, true );
 	}
 
 	public static function get_name() {

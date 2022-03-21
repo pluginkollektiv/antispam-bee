@@ -4,6 +4,7 @@ namespace AntispamBee\Rules;
 
 interface Controllable {
 	public static function get_label();
+
 	public static function get_description();
 
 	/**
@@ -13,15 +14,15 @@ interface Controllable {
 	 * [
 	 *   [
 	 *     'type' => 'textarea|radio|checkbox|input|select|callable',
-	 *	   'input_type' => 'email|password|number...',
-	 *	   'option_name' => 'asb_deny_langcodes',
-	 *	   'options' => [ 'Option A', 'Option B' ],
-	 *	   'multiple' => true,
-	 *	   'placeholder' => 'My placeholder text',
-	 *	   'default' => 'Default value',
-	 *	   'sanitize' => callable,
-	 *	   'persist' => callable,
-	 *	   'load' => callable,
+	 *       'input_type' => 'email|password|number...',
+	 *       'option_name' => 'asb_deny_langcodes',
+	 *       'options' => [ 'Option A', 'Option B' ],
+	 *       'multiple' => true,
+	 *       'placeholder' => 'My placeholder text',
+	 *       'default' => 'Default value',
+	 *       'sanitize' => callable,
+	 *       'persist' => callable,
+	 *       'load' => callable,
 	 *   ]
 	 * ]
 	 * @return mixed

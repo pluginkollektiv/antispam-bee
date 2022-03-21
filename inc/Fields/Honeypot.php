@@ -10,10 +10,11 @@ class Honeypot {
 
 	/**
 	 * $options['form_id'];
-	$options['form_name'];
-	$options['field_type'];
-	$options['field_id'];
-	$options['field_name'];
+	 * $options['form_name'];
+	 * $options['field_type'];
+	 * $options['field_id'];
+	 * $options['field_name'];
+	 *
 	 * @param $markup
 	 * @param $options
 	 */
@@ -26,9 +27,9 @@ class Honeypot {
 			return;
 		}
 
-		$input_type = $input->nodeName;
-		$honeypot_id = $input->attributes->getNamedItem( 'id' )->textContent;
-		$honeypot_name = $input->attributes->getNamedItem( 'name' )->textContent;
+		$input_type        = $input->nodeName;
+		$honeypot_id       = $input->attributes->getNamedItem( 'id' )->textContent;
+		$honeypot_name     = $input->attributes->getNamedItem( 'name' )->textContent;
 		$attributes_string = sprintf(
 			'id="%s" name="%s" aria-hidden="true" aria-label="hp-comment" autocomplete="new-password" tabindex="-1" style="padding:0 !important;clip:rect(1px, 1px, 1px, 1px) !important;position:absolute !important;white-space:nowrap !important;height:1px !important;width:1px !important;overflow:hidden !important;"',
 			$honeypot_id,
@@ -37,7 +38,7 @@ class Honeypot {
 		switch ( $input_type ) {
 			case 'textarea':
 				$item = sprintf(
-				'<textarea %s></textarea>',
+					'<textarea %s></textarea>',
 					$attributes_string
 				);
 
@@ -68,7 +69,7 @@ class Honeypot {
 					)/x'
 				);
 
-				$markup = preg_replace_callback( $regex, function( $matches ) use ( $honeypot_id, $honeypot_name, $attributes_string ) {
+				$markup = preg_replace_callback( $regex, function ( $matches ) use ( $honeypot_id, $honeypot_name, $attributes_string ) {
 					$output = '<textarea autocomplete="new-password" ' . $matches['before1'] . $matches['before2'] . $matches['before3'];
 
 					$id_script = '';
@@ -86,6 +87,7 @@ class Honeypot {
 					$output .= '</textarea><textarea ' . $attributes_string . '></textarea>';
 
 					$output .= $id_script;
+
 					return $output;
 				}, $markup );
 				break;
@@ -107,28 +109,30 @@ class Honeypot {
 	/**
 	 * Returns the secret of a post used in the textarea id attribute.
 	 *
-	 * @since 2.10.0 Modify secret generation because `always_allowed` option not longer exists
-	 *
 	 * @param int $post_id The post ID.
 	 *
 	 * @return string
+	 * @since 2.10.0 Modify secret generation because `always_allowed` option not longer exists
+	 *
 	 */
 	public static function get_secret_id_for_post() {
 		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
+
 		return self::ensure_secret_starts_with_letter( $secret );
 	}
 
 	/**
 	 * Returns the secret of a post used in the textarea name attribute.
 	 *
-	 * @since 2.10.0 Modify secret generation because `always_allowed` option not longer exists
-	 *
 	 * @param int $post_id The Post ID.
 	 *
 	 * @return string
+	 * @since 2.10.0 Modify secret generation because `always_allowed` option not longer exists
+	 *
 	 */
 	public static function get_secret_name_for_post() {
 		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
+
 		return self::ensure_secret_starts_with_letter( $secret );
 	}
 
@@ -163,6 +167,7 @@ class Honeypot {
 
 	private static function get_salt() {
 		$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
+
 		return substr( sha1( $salt ), 0, 10 );
 	}
 }

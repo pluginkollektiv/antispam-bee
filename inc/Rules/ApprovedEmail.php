@@ -21,8 +21,8 @@ class ApprovedEmail implements Verifiable, Controllable {
 		$email = array_shift( $email );
 
 		$approved_comments_count = get_comments( [
-			'status' => 'approve',
-			'count' => true,
+			'status'       => 'approve',
+			'count'        => true,
 			'author_email' => $email,
 		] );
 
@@ -30,7 +30,7 @@ class ApprovedEmail implements Verifiable, Controllable {
 			return 0;
 		}
 
-		return -1;
+		return - 1;
 	}
 
 	public static function get_name() {

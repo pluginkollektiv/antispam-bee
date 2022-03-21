@@ -11,7 +11,7 @@ class Comment {
 	public static function init() {
 		add_action(
 			'init',
-			function() {
+			function () {
 				if ( ! Honeypot::is_active( ItemTypeHelper::COMMENT_TYPE ) ) {
 					return;
 				}
@@ -37,6 +37,7 @@ class Comment {
 
 		if ( empty( $request_path ) ) {
 			PostProcessors::apply( 'comment', $comment, [ 'empty' ] );
+
 			return $comment;
 		}
 
@@ -55,7 +56,7 @@ class Comment {
 			if ( ! isset( $item['asb_marked_as_delete'] ) ) {
 				add_filter(
 					'pre_comment_approved',
-					function() {
+					function () {
 						return 'spam';
 					}
 				);

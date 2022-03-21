@@ -17,6 +17,7 @@ class BBCode implements Verifiable, Controllable {
 				return 1;
 			}
 		}
+
 		return 0;
 	}
 

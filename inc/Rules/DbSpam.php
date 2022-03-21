@@ -15,7 +15,7 @@ class DbSpam implements Verifiable, Controllable {
 	public static function verify( $data ) {
 		$params = [];
 		$filter = [];
-		$url = DataHelper::get_values_where_key_contains( [ 'url' ], $data );
+		$url    = DataHelper::get_values_where_key_contains( [ 'url' ], $data );
 
 		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';

@@ -71,6 +71,47 @@ class AssetsLoader {
 	public function admin_enqueue_scripts() {
 		wp_enqueue_script( 'antispam-bee-backend' );
 		wp_enqueue_style( 'antispam-bee-backend' );
+
+		// Adding legacy scripts.
+		$this->add_dashboard_script();
+	}
+
+	/**
+	 * Print dashboard scripts
+	 *
+	 * @since  1.9.0
+	 * @since  2.5.8
+	 */
+	public function add_dashboard_script() {
+		if ( ! OptionsHelper::get_option( 'daily_stats' ) ) {
+			return;
+		}
+
+		$plugin = get_plugin_data( ANTISPAM_BEE_FILE );
+
+		wp_enqueue_script(
+			'raphael',
+			plugins_url( 'src/legacy/raphael.min.js', ANTISPAM_BEE_FILE ),
+			[],
+			'2.1.0',
+			true
+		);
+
+		wp_enqueue_script(
+			'ab-raphael',
+			plugins_url( 'src/legacy/raphael.helper.js', ANTISPAM_BEE_FILE ),
+			[ 'raphael' ],
+			$plugin['Version'],
+			true
+		);
+
+		wp_enqueue_script(
+			'ab_chart_js',
+			plugins_url( 'src/legacy/dashboard.js', ANTISPAM_BEE_FILE ),
+			array( 'jquery', 'ab-raphael' ),
+			$plugin['Version'],
+			true
+		);
 	}
 
 	/**

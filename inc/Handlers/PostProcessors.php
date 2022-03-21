@@ -8,20 +8,20 @@ class PostProcessors {
 	public static function apply( $type, $item, $reasons = [] ) {
 		$post_processors = self::get( $type, true );
 
-		$item['asb_reasons'] = $reasons;
+		$item['asb_reasons']   = $reasons;
 		$item['asb_item_type'] = $type;
-		for ( $i = 0; $i < count( $post_processors ); $i++ ) {
-			$post_processor = $post_processors[$i];
+		for ( $i = 0; $i < count( $post_processors ); $i ++ ) {
+			$post_processor           = $post_processors[ $i ];
 			$marks_as_delete_function = isset( $post_processor['post_processor'] ) ? [ $post_processor['post_processor'], 'marks_as_delete' ] : $post_processor['marks_as_delete'];
 			if ( call_user_func( $marks_as_delete_function ) ) {
-				unset( $post_processors[$i] );
+				unset( $post_processors[ $i ] );
 				array_unshift( $post_processors, $post_processor );
 			}
 		}
 
 		foreach ( $post_processors as $post_processor ) {
 			$process_function = isset( $post_processor['post_processor'] ) ? [ $post_processor['post_processor'], 'process' ] : $post_processor['process'];
-			$item = call_user_func( $process_function, $item );
+			$item             = call_user_func( $process_function, $item );
 		}
 
 		return $item;
@@ -29,14 +29,14 @@ class PostProcessors {
 
 	public static function get( $type = null, $only_active = false ) {
 		$all_post_processors = apply_filters( 'asb_post_processors', [] );
-		$post_processors = [];
+		$post_processors     = [];
 		foreach ( $all_post_processors as $key => $post_processor ) {
 			if ( ! self::is_valid_post_processor( $post_processor ) ) {
 				continue;
 			}
 
 			$supported_types_function = isset( $post_processor['post_processor'] ) ? [ $post_processor['post_processor'], 'get_supported_types' ] : $post_processor['get_supported_types'];
-			$supported_types = (array) call_user_func( $supported_types_function, $type );
+			$supported_types          = (array) call_user_func( $supported_types_function, $type );
 			if ( ! in_array( $type, $supported_types ) ) {
 				continue;
 			}
@@ -47,7 +47,7 @@ class PostProcessors {
 			}
 
 			$is_active_function = isset( $post_processor['post_processor'] ) ? [ $post_processor['post_processor'], 'is_active' ] : $post_processor['is_active'];
-			$is_active = call_user_func( $is_active_function, $type );
+			$is_active          = call_user_func( $is_active_function, $type );
 
 			if ( ! $is_active ) {
 				continue;

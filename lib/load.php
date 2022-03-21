@@ -7,6 +7,7 @@
 
 namespace AntispamBee;
 
+use AntispamBee\Admin\DashboardWidgets;
 use AntispamBee\Admin\SettingsPage;
 use AntispamBee\Fields\Honeypot as HoneypotField;
 use AntispamBee\Rules\Honeypot as HoneypotRule;
@@ -33,6 +34,7 @@ use AntispamBee\Rules\ValidGravatar;
 use AntispamBee\Helpers\CommentsColumns;
 use AntispamBee\Helpers\Installer;
 use AntispamBee\Helpers\OptionsHelper;
+use AntispamBee\Helpers\StatsHelpers;
 
 /**
  * Init function of the plugin
@@ -40,30 +42,32 @@ use AntispamBee\Helpers\OptionsHelper;
 function init() {
 	// Construct all modules to initialize.
 	$modules = [
-		'helpers_assets_loader' => new AssetsLoader(),
-		'settings_page' => new SettingsPage(),
-    'helpers_comments_columns' => new CommentsColumns(),
-		'approved_email_rule' => ApprovedEmail::class,
-		'bbcode_rule' => BBCode::class,
-		'country_spam_rule' => CountrySpam::class,
-		'db_spam_rule' => DbSpam::class,
-		'lang_spam_rule' => LangSpam::class,
-		'regexp_spam_rule' => RegexpSpam::class,
-		'shortest_time_rule' => ShortestTime::class,
-		'trackback_from_myself_rule' => TrackbackFromMyself::class,
+		'helpers_assets_loader'                  => new AssetsLoader(),
+		'settings_page'                          => new SettingsPage(),
+		'helpers_comments_columns'               => new CommentsColumns(),
+		'approved_email_rule'                    => ApprovedEmail::class,
+		'bbcode_rule'                            => BBCode::class,
+		'country_spam_rule'                      => CountrySpam::class,
+		'db_spam_rule'                           => DbSpam::class,
+		'lang_spam_rule'                         => LangSpam::class,
+		'regexp_spam_rule'                       => RegexpSpam::class,
+		'shortest_time_rule'                     => ShortestTime::class,
+		'trackback_from_myself_rule'             => TrackbackFromMyself::class,
 		'trackback_post_title_is_blog_name_rule' => TrackbackPostTitleIsBlogName::class,
-		'valid_gravatar_rule' => ValidGravatar::class,
-		'honeypot_rule' => HoneypotRule::class,
-		'delete_post_processor' => Delete::class,
-		'delete_for_reasons_post_processor' => DeleteForReasons::class,
-		'save_reason_post_processor' => SaveReason::class,
-		'send_email_post_processor' => SendEmail::class,
-		'update_daily_stats_post_processor' => UpdateDailyStats::class,
-		'update_spam_count_post_processor' => UpdateSpamCount::class,
-		'update_spam_log_post_processor' => UpdateSpamLog::class,
-		'comment_handler' => Comment::class,
-		'trackback_handler' => Trackback::class,
-		'helpers_options_helper'   => new OptionsHelper(),
+		'valid_gravatar_rule'                    => ValidGravatar::class,
+		'honeypot_rule'                          => HoneypotRule::class,
+		'delete_post_processor'                  => Delete::class,
+		'delete_for_reasons_post_processor'      => DeleteForReasons::class,
+		'save_reason_post_processor'             => SaveReason::class,
+		'send_email_post_processor'              => SendEmail::class,
+		'update_daily_stats_post_processor'      => UpdateDailyStats::class,
+		'update_spam_count_post_processor'       => UpdateSpamCount::class,
+		'update_spam_log_post_processor'         => UpdateSpamLog::class,
+		'comment_handler'                        => Comment::class,
+		'trackback_handler'                      => Trackback::class,
+		'helpers_options_helper'                 => new OptionsHelper(),
+		'helpers_dashboard_helper'               => new DashboardWidgets(),
+		'helpers_stats_helpers'                  => new StatsHelpers(),
 	];
 
 	// Initialize all modules.
@@ -75,7 +79,7 @@ function init() {
 
 	add_filter(
 		'comment_form_field_comment',
-		function( $field_markup ) {
+		function ( $field_markup ) {
 			return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
 		}
 	);

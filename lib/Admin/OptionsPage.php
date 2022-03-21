@@ -44,7 +44,7 @@ class OptionsPage {
 	 * @since  1.6
 	 * @since  2.4
 	 */
-	public static function add_options_script() {
+	public function add_options_script() {
 		// @todo: maybe load some more scripts.
 	}
 
@@ -55,7 +55,7 @@ class OptionsPage {
 	 * @since  1.6
 	 * @since  2.4
 	 */
-	public static function add_options_style() {
+	public function add_options_style() {
 		// @todo: maybe load some more styles.
 	}
 
@@ -63,7 +63,7 @@ class OptionsPage {
 	/**
 	 * Display the GUI.
 	 */
-	public static function options_page() {
+	public function options_page() {
 		// @todo: use new options UI.
 	}
 }

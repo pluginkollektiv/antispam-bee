@@ -3,10 +3,10 @@
 namespace AntispamBee;
 
 use AntispamBee\Rules\Controllable;
-use AntispamBee\Rules\Verifiable;
 
 class Settings {
 	protected static $defaults;
+
 	public static function init() {
 		self::init_options();
 		add_action(
@@ -21,36 +21,36 @@ class Settings {
 	protected static function init_options() {
 		self::$defaults = array(
 			'options' => array(
-				'regexp_check'             => 1,
-				'spam_ip'                  => 1,
-				'already_commented'        => 1,
-				'gravatar_check'           => 0,
-				'time_check'               => 0,
-				'ignore_pings'             => 0,
+				'regexp_check'      => 1,
+				'spam_ip'           => 1,
+				'already_commented' => 1,
+				'gravatar_check'    => 0,
+				'time_check'        => 0,
+				'ignore_pings'      => 0,
 
-				'dashboard_chart'          => 0,
-				'dashboard_count'          => 0,
+				'dashboard_chart' => 0,
+				'dashboard_count' => 0,
 
-				'country_code'             => 0,
-				'country_denied'           => '',
-				'country_allowed'          => '',
+				'country_code'    => 0,
+				'country_denied'  => '',
+				'country_allowed' => '',
 
-				'translate_api'            => 0,
-				'translate_lang'           => array(),
+				'translate_api'  => 0,
+				'translate_lang' => array(),
 
-				'bbcode_check'             => 1,
+				'bbcode_check' => 1,
 
-				'flag_spam'                => 1,
-				'email_notify'             => 0,
-				'no_notice'                => 0,
-				'cronjob_enable'           => 0,
-				'cronjob_interval'         => 0,
+				'flag_spam'        => 1,
+				'email_notify'     => 0,
+				'no_notice'        => 0,
+				'cronjob_enable'   => 0,
+				'cronjob_interval' => 0,
 
-				'ignore_filter'            => 0,
-				'ignore_type'              => 0,
+				'ignore_filter' => 0,
+				'ignore_type'   => 0,
 
-				'reasons_enable'           => 0,
-				'ignore_reasons'           => array(),
+				'reasons_enable' => 0,
+				'ignore_reasons' => array(),
 
 				'delete_data_on_uninstall' => 1,
 			),
@@ -91,7 +91,7 @@ class Settings {
 			</h2>
 
 			<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
-				<input type="hidden" name="action" value="ab_save_changes" />
+				<input type="hidden" name="action" value="ab_save_changes"/>
 
 				<?php
 				wp_nonce_field( '_antispam_bee__settings_nonce' );
@@ -151,11 +151,12 @@ class Settings {
 	/**
 	 * Get single option field
 	 *
+	 * @param string $field Field name.
+	 *
+	 * @return  mixed         Field value.
 	 * @since  0.1
 	 * @since  2.4.2
 	 *
-	 * @param   string $field Field name.
-	 * @return  mixed         Field value.
 	 */
 	public static function get_option( $field ) {
 		$options = self::get_options();
@@ -166,10 +167,11 @@ class Settings {
 	/**
 	 * Update multiple option fields
 	 *
-	 * @since  0.1
+	 * @param array $data Array with plugin option fields.
+	 *
 	 * @since  2.6.1
 	 *
-	 * @param   array $data Array with plugin option fields.
+	 * @since  0.1
 	 */
 	public static function update_options( $data ) {
 		$options = get_option( 'antispam_bee' );
@@ -197,11 +199,12 @@ class Settings {
 	/**
 	 * Update single option field
 	 *
+	 * @param string $field Field name.
+	 * @param mixed  $value The Field value.
+	 *
 	 * @since  0.1
 	 * @since  2.4
 	 *
-	 * @param   string $field Field name.
-	 * @param   mixed  $value The Field value.
 	 */
 	public static function update_option( $field, $value ) {
 		self::update_options(
@@ -214,12 +217,13 @@ class Settings {
 	/**
 	 * Check and return an array key
 	 *
-	 * @since   2.4.2
+	 * @param array  $array Array with values.
+	 * @param string $key   Name of the key.
+	 *
+	 * @return  mixed         Value of the requested key.
 	 * @since   2.10.0 Only return `null` if option does not exist.
 	 *
-	 * @param   array  $array Array with values.
-	 * @param   string $key   Name of the key.
-	 * @return  mixed         Value of the requested key.
+	 * @since   2.4.2
 	 */
 	public static function get_key( $array, $key ) {
 		if ( empty( $array ) || empty( $key ) || ! isset( $array[ $key ] ) ) {
