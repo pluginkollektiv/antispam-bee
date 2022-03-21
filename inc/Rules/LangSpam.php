@@ -2,19 +2,28 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\DataHelper;
+use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\LangHelper;
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
+use AntispamBee\Settings;
+
 class LangSpam implements Verifiable, Controllable {
 
 	use InitRule;
+	use IsActive;
 
 	public static function verify( $data ) {
-		$comment_content = $data;
-
-		$allowed_lang = (array) Antispam_Bee::get_option( 'translate_lang' );
-
+		$comment_content = DataHelper::get_values_where_key_contains( [ 'content' ], $data );
+		if ( empty( $comment_content ) ) {
+			return 0;
+		}
+		$comment_content = array_shift( $comment_content );
 		$comment_text = wp_strip_all_tags( $comment_content );
 
 		if ( empty( $allowed_lang ) || empty( $comment_text ) ) {
-			return false;
+			return 0;
 		}
 
 		/**
@@ -53,30 +62,30 @@ class LangSpam implements Verifiable, Controllable {
 		}
 
 		if ( $word_count < 10 ) {
-			return false;
+			return 0;
 		}
 
 		$response = wp_safe_remote_post(
 			'https://api.pluginkollektiv.org/language/v1/',
-			array( 'body' => wp_json_encode( array( 'body' => $comment_text ) ) )
+			array( 'body' => wp_json_encode( [ 'body' => $comment_text ] ) )
 		);
 
 		if ( is_wp_error( $response )
 		     || wp_remote_retrieve_response_code( $response ) !== 200 ) {
-			return false;
+			return 0;
 		}
 
 		$detected_lang = wp_remote_retrieve_body( $response );
 		if ( ! $detected_lang ) {
-			return false;
+			return 0;
 		}
 
 		$detected_lang = json_decode( $detected_lang );
 		if ( ! $detected_lang || ! isset( $detected_lang->code ) ) {
-			return false;
+			return 0;
 		}
 
-		return ! in_array( Lang_Code_Helper::map ( $detected_lang->code ), $allowed_lang, true );
+		return (int) ! in_array( LangHelper::map ( $detected_lang->code ), $allowed_lang, true );
 	}
 
 	public static function get_name() {
@@ -118,5 +127,9 @@ class LangSpam implements Verifiable, Controllable {
 
 	public static function get_options() {
 		null;
+	}
+
+	public static function get_supported_types() {
+		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 }

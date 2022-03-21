@@ -2,24 +2,32 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
+
 class ShortestTime implements Verifiable, Controllable {
 
 	use InitRule;
+	use IsActive;
 
 	public static function verify( $data ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Everybody can Post.
-		$init_time = (int) self::get_key( $_POST, 'ab_init_time' );
+		if ( ! isset( $_POST['ab_init_time'] ) ) {
+			return 0;
+		}
+		$init_time = (int) $_POST['ab_init_time'];
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		if ( 0 === $init_time ) {
-			return false;
+			return 0;
 		}
 
 		if ( time() - $init_time < apply_filters( 'ab_action_time_limit', 5 ) ) {
-			return true;
+			return 1;
 		}
 
-		return false;
+		return 0;
 	}
 
 	public static function get_name() {
@@ -48,5 +56,9 @@ class ShortestTime implements Verifiable, Controllable {
 
 	public static function get_options() {
 		return null;
+	}
+
+	public static function get_supported_types() {
+		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 }

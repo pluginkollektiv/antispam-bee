@@ -2,15 +2,20 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
+
 class CountrySpam implements Verifiable, Controllable {
 
 	use InitRule;
+	use IsActive;
 
 	public static function verify( $data ) {
-		$ip = \Data_Helper::get_values_by_keys( [ 'comment_author_IP' ], $data );
-		if ( empty( $ip ) ) {
+		if ( ! isset( $data['comment_author_IP'] ) || empty( $data['comment_author_IP'] ) ) {
 			return 0;
 		}
+		$ip = $data['comment_author_IP'];
 
 		$options = self::get_options();
 
@@ -99,10 +104,10 @@ class CountrySpam implements Verifiable, Controllable {
 		}
 
 		if ( ! empty( $denied ) ) {
-			return in_array( $country, $denied, true ) ? 1 : -1;
+			return in_array( $country, $denied, true ) ? 1 : 0;
 		}
 
-		return in_array( $country, $allowed, true ) ? -1 : 1;
+		return in_array( $country, $allowed, true ) ? 0 : 1;
 	}
 
 	public static function get_name() {
@@ -145,5 +150,13 @@ class CountrySpam implements Verifiable, Controllable {
 
 	public static function get_options() {
 		return null;
+	}
+
+	public static function get_supported_types() {
+		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
+	}
+
+	public static function is_active( $type ) {
+		return false;
 	}
 }

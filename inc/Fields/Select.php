@@ -2,6 +2,6 @@
 
 namespace AntispamBee\Fields;
 
-class Checkbox {
+class Select {
 
 }

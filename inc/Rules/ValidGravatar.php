@@ -2,23 +2,18 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
+
 class ValidGravatar implements Verifiable, Controllable {
 
 	use InitRule;
-
-	public static function init() {
-		add_filter( 'asb_rules', function( $rules ) {
-			$rules[] = [
-				'weight' => self::get_weight(),
-				'name' => self::get_name(),
-				'callable' => array( self::class, 'verify' ),
-			];
-		} );
-	}
+	use IsActive;
 
 	public static function verify( $data ) {
 		if ( ! isset( $data['email'] ) ) {
-			return;
+			return 0;
 		}
 
 		$response = wp_safe_remote_get(
@@ -29,14 +24,14 @@ class ValidGravatar implements Verifiable, Controllable {
 		);
 
 		if ( is_wp_error( $response ) ) {
-			return null;
+			return 0;
 		}
 
 		if ( wp_remote_retrieve_response_code( $response ) === 200 ) {
-			return true;
+			return 1;
 		}
 
-		return false;
+		return 0;
 	}
 
 	public static function get_name() {
@@ -77,5 +72,9 @@ class ValidGravatar implements Verifiable, Controllable {
 
 	public static function get_options() {
 		return null;
+	}
+
+	public static function get_supported_types() {
+		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 }
