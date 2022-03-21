@@ -2,9 +2,13 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
+
 class BBCode implements Verifiable, Controllable {
 
 	use InitRule;
+	use IsActive;
 
 	public static function verify( $data ) {
 		foreach ( $data as $value ) {
@@ -39,11 +43,15 @@ class BBCode implements Verifiable, Controllable {
 		return false;
 	}
 
-	public static function render() {
-		return '';
-	}
-
 	public static function get_options() {
 		return null;
+	}
+
+	public static function get_supported_types() {
+		return [ 'comment', 'trackback' ];
+	}
+
+	public static function is_active() {
+		return false;
 	}
 }

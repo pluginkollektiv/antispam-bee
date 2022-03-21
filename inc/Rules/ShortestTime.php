@@ -2,9 +2,13 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
+
 class ShortestTime implements Verifiable, Controllable {
 
 	use InitRule;
+	use IsActive;
 
 	public static function verify( $data ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -48,5 +52,13 @@ class ShortestTime implements Verifiable, Controllable {
 
 	public static function get_options() {
 		return null;
+	}
+
+	public static function get_supported_types() {
+		return [ 'comment', 'trackback' ];
+	}
+
+	public static function is_active() {
+		return false;
 	}
 }

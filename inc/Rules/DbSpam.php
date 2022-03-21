@@ -2,27 +2,33 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Helper\Data_Helper;
+use AntispamBee\Helpers\DataHelper;
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
 
 class DbSpam implements Verifiable, Controllable {
 
 	use InitRule;
+	use IsActive;
 
 	public static function verify( $data ) {
-		$params = array();
-		$filter = array();
-		$url = Data_Helper::get_values_where_key_contains( 'url', $data );
+		$params = [];
+		$filter = [];
+		$url = DataHelper::get_values_where_key_contains( 'url', $data );
+
 		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';
 			$params[] = wp_unslash( $url[0] );
 		}
-		$ip = Data_Helper::get_values_by_keys( 'comment_author_IP', $data );
+		$ip = DataHelper::get_values_by_keys( 'comment_author_IP', $data );
+
 		if ( ! empty( $ip ) ) {
 			$filter[] = '`comment_author_IP` = %s';
 			$params[] = wp_unslash( $ip[0] );
 		}
 
-		$email = Data_Helper::get_values_where_key_contains( 'email' );
+		$email = DataHelper::get_values_where_key_contains( 'email' );
+
 		if ( ! empty( $email ) ) {
 			$filter[] = '`comment_author_email` = %s';
 			$params[] = wp_unslash( $email[0] );
@@ -78,5 +84,13 @@ class DbSpam implements Verifiable, Controllable {
 
 	public static function get_options() {
 		return null;
+	}
+
+	public static function get_supported_types() {
+		return [ 'comment', 'trackback' ];
+	}
+
+	public static function is_active() {
+		return false;
 	}
 }

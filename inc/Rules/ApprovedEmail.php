@@ -2,12 +2,17 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\DataHelper;
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
+
 class ApprovedEmail implements Verifiable, Controllable {
 
 	use InitRule;
+	use IsActive;
 
 	public static function verify( $data ) {
-		$email = Data_Helper::get_values_where_key_contains( 'email', $data );
+		$email = DataHelper::get_values_where_key_contains( 'email', $data );
 		if ( empty( $email ) ) {
 			return 0;
 		}
@@ -53,5 +58,13 @@ class ApprovedEmail implements Verifiable, Controllable {
 
 	public static function get_options() {
 		return null;
+	}
+
+	public static function get_supported_types() {
+		return [ 'comment' ];
+	}
+
+	public static function is_active() {
+		return false;
 	}
 }

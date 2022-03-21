@@ -2,19 +2,13 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
+
 class ValidGravatar implements Verifiable, Controllable {
 
 	use InitRule;
-
-	public static function init() {
-		add_filter( 'asb_rules', function( $rules ) {
-			$rules[] = [
-				'weight' => self::get_weight(),
-				'name' => self::get_name(),
-				'callable' => array( self::class, 'verify' ),
-			];
-		} );
-	}
+	use IsActive;
 
 	public static function verify( $data ) {
 		if ( ! isset( $data['email'] ) ) {
@@ -77,5 +71,13 @@ class ValidGravatar implements Verifiable, Controllable {
 
 	public static function get_options() {
 		return null;
+	}
+
+	public static function get_supported_types() {
+		return [ 'comment', 'trackback' ];
+	}
+
+	public static function is_active() {
+		return false;
 	}
 }

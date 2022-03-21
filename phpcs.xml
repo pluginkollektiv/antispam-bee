@@ -38,6 +38,7 @@
 	<exclude-pattern>/build/</exclude-pattern>
 	<exclude-pattern>/vendor/</exclude-pattern>
 	<exclude-pattern>/node_modules/</exclude-pattern>
+	<exclude-pattern>/tests/</exclude-pattern>
 
 	<!--
 	#############################################################################
@@ -63,7 +64,7 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
-			<property name="prefixes" type="array" value="antispam_bee,AntispamBee"/>
+			<property name="prefixes" type="array" value="asb,antispam_bee,AntispamBee"/>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WP.I18n">
