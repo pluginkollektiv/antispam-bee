@@ -13,17 +13,13 @@ namespace AntispamBee\Helpers;
 class CommentsColumns {
 
 	/**
-	 * The known spam reasons.
-	 *
-	 * @var array
-	 */
-	public static $reasons = [];
-
-	/**
 	 * Registers the module hooks.
 	 */
 	public function init() {
-		// @todo: return early, if not on the correct "filter" page on the comments list.
+		if ( ! DashboardHelper::is_edit_spam_comments_page() && ! OptionsHelper::get_option( 'no_notice' ) ) {
+			return;
+		}
+
 		add_filter( 'manage_edit-comments_columns', [ $this, 'register_plugin_columns' ] );
 		add_filter( 'manage_comments_custom_column', [ $this, 'print_plugin_column' ], 10, 2 );
 		add_filter( 'manage_edit-comments_sortable_columns', [ $this, 'register_sortable_columns' ] );
@@ -31,23 +27,6 @@ class CommentsColumns {
 		add_action( 'restrict_manage_comments', [ $this, 'filter_columns' ] );
 		add_action( 'pre_get_comments', [ $this, 'filter_by_spam_reason' ] );
 		add_filter( 'admin_print_styles-edit-comments.php', [ $this, 'print_column_styles' ] );
-
-		// @todo: replace this with the dynamic list of spam reasons from the rules list.
-		$default_reasons = [
-			'css'           => esc_attr__( 'Honeypot', 'antispam-bee' ),
-			'time'          => esc_attr__( 'Comment time', 'antispam-bee' ),
-			'empty'         => esc_attr__( 'Empty Data', 'antispam-bee' ),
-			'localdb'       => esc_attr__( 'Local DB Spam', 'antispam-bee' ),
-			'server'        => esc_attr__( 'Fake IP', 'antispam-bee' ),
-			'country'       => esc_attr__( 'Country Check', 'antispam-bee' ),
-			'bbcode'        => esc_attr__( 'BBCode', 'antispam-bee' ),
-			'lang'          => esc_attr__( 'Comment Language', 'antispam-bee' ),
-			'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
-			'title_is_name' => esc_attr__( 'Identical Post title and blog title', 'antispam-bee' ),
-			'manually'      => esc_attr__( 'Manually', 'antispam-bee' ),
-		];
-
-		self::$reasons = apply_filters( 'asb_spam_reasons_list', $default_reasons );
 	}
 
 	/**
@@ -71,7 +50,7 @@ class CommentsColumns {
 	/**
 	 * Display plugin column values on comments screen
 	 *
-	 * @param string  $column Currently selected column.
+	 * @param string  $column     Currently selected column.
 	 * @param integer $comment_id Comment ID.
 	 *
 	 * @since   2.6.0
@@ -83,7 +62,7 @@ class CommentsColumns {
 		}
 
 		$spam_reason  = get_comment_meta( $comment_id, $column, true );
-		$spam_reasons = self::$reasons;
+		$spam_reasons = OptionsHelper::get_options( 'reasons' );
 
 		if ( empty( $spam_reason ) || empty( $spam_reasons[ $spam_reason ] ) ) {
 			return;
@@ -140,20 +119,21 @@ class CommentsColumns {
 		<select id="filter-by-comment-spam-reason" name="comment_spam_reason">
 			<option value=""><?php esc_html_e( 'All spam reasons', 'antispam-bee' ); ?></option>
 			<?php
+			$spam_reasons = OptionsHelper::get_options( 'reasons' );
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$reasons = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}commentmeta WHERE meta_key = 'antispam_bee_reason' GROUP BY meta_value", ARRAY_A );
 
 			foreach ( $reasons as $reason ) {
-				if ( ! isset( self::$reasons[ $reason['meta_value'] ] ) ) {
+				if ( ! isset( $spam_reasons[ $reason['meta_value'] ] ) ) {
 					continue;
 				}
 				printf(
 					'<option value="%1$s" %2$s>%3$s</option>',
 					esc_attr( $reason['meta_value'] ),
 					selected( $spam_reason, $reason['meta_value'], false ),
-					esc_html( self::$reasons[ $reason['meta_value'] ] )
+					esc_html( $spam_reasons[ $reason['meta_value'] ] )
 				);
 			}
 			?>
@@ -167,9 +147,10 @@ class CommentsColumns {
 	 * @param \WP_Comment_Query $query Current WordPress query.
 	 */
 	public static function filter_by_spam_reason( $query ) {
+		$spam_reasons = OptionsHelper::get_options( 'reasons' );
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
-		if ( empty( $spam_reason ) || ! in_array( $spam_reason, array_keys( self::$reasons ), true ) ) {
+		if ( empty( $spam_reason ) || ! in_array( $spam_reason, array_keys( $spam_reasons ), true ) ) {
 			return;
 		}
 

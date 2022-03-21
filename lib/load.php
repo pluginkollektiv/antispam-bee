@@ -10,6 +10,7 @@ namespace AntispamBee;
 use AntispamBee\Helpers\AssetsLoader;
 use AntispamBee\Helpers\CommentsColumns;
 use AntispamBee\Helpers\Installer;
+use AntispamBee\Helpers\OptionsHelper;
 
 /**
  * Init function of the plugin
@@ -19,6 +20,7 @@ function init() {
 	$modules = [
 		'helpers_assets_loader'    => new AssetsLoader(),
 		'helpers_comments_columns' => new CommentsColumns(),
+		'helpers_options_helper'   => new OptionsHelper(),
 	];
 
 	// Initialize all modules.
