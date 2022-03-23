@@ -2,7 +2,7 @@
 
 namespace AntispamBee\Helpers;
 
-use AntispamBee\Rules\Controllable;
+use AntispamBee\Interfaces\Controllable;
 
 class Settings {
 	protected static $defaults;
