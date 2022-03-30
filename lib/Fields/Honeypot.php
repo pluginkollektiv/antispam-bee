@@ -37,11 +37,6 @@ class Honeypot {
 		);
 		switch ( $input_type ) {
 			case 'textarea':
-				$item = sprintf(
-					'<textarea %s></textarea>',
-					$attributes_string
-				);
-
 				$regex = str_replace(
 					[ '{{HONEYPOT_ID}}', '{{HONEYPOT_NAME}}' ],
 					[ $honeypot_id, $honeypot_name ],

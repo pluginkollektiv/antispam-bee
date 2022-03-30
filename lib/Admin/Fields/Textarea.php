@@ -11,10 +11,10 @@ class Textarea extends Field implements RenderElement {
 	/**
 	 * Get HTML.
 	 *
-	 * @return string Elment HTML.
+	 * @return string Element HTML.
 	 */
 	public function render() {
-		echo '<textarea name="' . $this->get_name() . '">' . $this->get_value() . '</textarea>';
+		echo '<textarea name="' . $this->get_name() . '">' . $this->get_value() . '</textarea><br>';
 		$this->maybe_show_description();
 	}
 }

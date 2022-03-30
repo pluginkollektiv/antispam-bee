@@ -2,6 +2,7 @@
 
 namespace AntispamBee\Handlers;
 
+use AntispamBee\Helpers\InterfaceHelper;
 use AntispamBee\Interfaces\PostProcessor;
 
 class PostProcessors {
@@ -61,16 +62,7 @@ class PostProcessors {
 
 	private static function is_valid_post_processor( $post_processor ) {
 		if ( isset( $post_processor['post_processor'] ) ) {
-			$interfaces = class_implements( $post_processor['post_processor'] );
-			if ( false === $interfaces || empty( $interfaces ) ) {
-				return false;
-			}
-
-			if ( ! in_array( PostProcessor::class, $interfaces, true ) ) {
-				return false;
-			}
-
-			return true;
+			return InterfaceHelper::class_implements_interface( $post_processor['post_processor'], PostProcessor::class );
 		}
 
 		$post_processor_callables = [
@@ -80,12 +72,6 @@ class PostProcessors {
 			'get_supported_types',
 		];
 
-		foreach ( $post_processor_callables as $key ) {
-			if ( ! isset( $post_processor[ $key ] ) || ! is_callable( $post_processor[ $key ] ) ) {
-				return false;
-			}
-		}
-
-		return true;
+		return InterfaceHelper::array_has_callables( $post_processor, $post_processor_callables );
 	}
 }

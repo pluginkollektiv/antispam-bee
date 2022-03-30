@@ -2,6 +2,11 @@
 
 namespace AntispamBee\Admin;
 
+use AntispamBee\Admin\Fields\Select;
+use AntispamBee\Admin\Fields\Text;
+use AntispamBee\Admin\Fields\Textarea;
+use AntispamBee\Helpers\InterfaceHelper;
+
 /**
  * Sections for admin.
  */
@@ -32,19 +37,54 @@ class Section {
 	 *
 	 * @var Field[]
 	 */
-	private $fields;
+	private $fields = [];
 
-	/**
-	 * Initializung Tab.
-	 *
-	 * @param string    $label    Title for tab
-	 * @param Section[] $sections Sections object array.
-	 */
-	public function __construct( $name, $title, $description = '', $fields ) {
+	private $type;
+
+	public function __construct( $name, $title, $description = '', $type = null ) {
 		$this->name        = $name;
 		$this->title       = $title;
-		$this->fields      = $fields;
 		$this->description = $description;
+		$this->type = $type;
+	}
+
+	public function add_fields( $fields ) {
+		$this->fields = array_merge( $this->fields, $fields );
+	}
+
+	public function add_controllables( $controllables ) {
+		$this->generate_fields( $controllables );
+	}
+
+	private function generate_fields( $controllables ) {
+		$fields = [];
+		foreach ( $controllables as $controllable ) {
+			// Todo: Generate checkbox to activate/deactivate rule
+
+			$options = InterfaceHelper::call( $controllable, 'controllable', 'get_options' );
+			if ( empty( $options ) ) {
+				continue;
+			}
+
+			foreach ( $options as $option ) {
+				$fields[] = $this->generate_field( $option );
+			}
+		}
+
+		$this->fields = array_merge( $this->fields, $fields );
+	}
+
+	private function generate_field( $option ) {
+		switch ( $option['type'] ) {
+			case 'input':
+				return new Text( $this->type . '_' . $option['option_name'], $option['label'], '' );
+			case 'select':
+				return new Select( $this->type . '_' . $option['option_name'], $option['label'],
+					'Hold CTRL to select multiple entries', $option['options'], false );
+			case 'textarea':
+				return new Textarea( $this->type . '_' . $option['option_name'], $option['label'],
+					$option['label'] );
+		}
 	}
 
 	/**

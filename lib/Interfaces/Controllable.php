@@ -15,8 +15,9 @@ interface Controllable {
 	 *   [
 	 *     'type' => 'textarea|radio|checkbox|input|select|callable',
 	 *       'input_type' => 'email|password|number...',
+	 * 	 *   'label' => 'asb_deny_langcodes',
 	 *       'option_name' => 'asb_deny_langcodes',
-	 *       'options' => [ 'Option A', 'Option B' ],
+	 *       'options' => [ [ 'value' => 1, 'label' => 'Option 1' ], [ 'value' => 2, 'label' => 'Option 2' ] ],
 	 *       'multiple' => true,
 	 *       'placeholder' => 'My placeholder text',
 	 *       'default' => 'Default value',

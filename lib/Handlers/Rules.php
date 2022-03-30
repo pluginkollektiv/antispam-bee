@@ -2,7 +2,11 @@
 
 namespace AntispamBee\Handlers;
 
+use AntispamBee\Helpers\InterfaceHelper;
+use AntispamBee\Helpers\IpHelper;
+use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
+use AntispamBee\Rules\ApprovedEmail;
 
 class Rules {
 	protected $type;
@@ -47,65 +51,18 @@ class Rules {
 	}
 
 	public static function get( $type = null, $only_active = false ) {
-		$all_rules = apply_filters( 'asb_rules', [] );
-
-		$rules = [];
-		foreach ( $all_rules as $rule ) {
-			if ( self::is_valid_rule( $rule ) ) {
-				$get_supported_types_function = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'get_supported_types' ] : $rule['get_supported_types'];
-				$supported_types              = call_user_func( $get_supported_types_function );
-
-				if ( ! in_array( $type, $supported_types ) ) {
-					continue;
-				}
-
-				if ( ! $only_active ) {
-					$rules[] = $rule;
-					continue;
-				}
-
-				$is_active_function = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'is_active' ] : $rule['is_active'];
-				$is_active          = call_user_func( $is_active_function, $type );
-
-				if ( ! $is_active ) {
-					continue;
-				}
-
-				$rules[] = $rule;
-			}
-		}
-
-		return $rules;
+		return self::filter( apply_filters( 'asb_rules', [] ), [
+			'type' => $type,
+			'only_active' => $only_active,
+		] );
 	}
 
 	private static function is_valid_rule( $rule ) {
 		if ( isset( $rule['verifiable'] ) ) {
-			$interfaces = class_implements( $rule['verifiable'] );
-			if ( false === $interfaces || empty( $interfaces ) ) {
-				return false;
-			}
-
-			if ( ! in_array( Verifiable::class, $interfaces, true ) ) {
-				return false;
-			}
-
-			return true;
+			return InterfaceHelper::conforms_to_interface( $rule['verifiable'], Verifiable::class );
 		}
 
-		$rule_callables = [
-			'is_active',
-			'verify',
-			'get_slug',
-			'get_supported_types',
-		];
-
-		foreach ( $rule_callables as $key ) {
-			if ( ! isset( $rule[ $key ] ) || ! is_callable( $rule[ $key ] ) ) {
-				return false;
-			}
-		}
-
-		return true;
+		return false;
 	}
 
 	public function get_spam_reasons() {
@@ -114,5 +71,46 @@ class Rules {
 
 	public function get_no_spam_reasons() {
 		return $this->no_spam_reasons;
+	}
+
+	/**
+	 * @param $options
+	 * $options = array(
+	 *   'type'            => 'comment',
+	 *   'only_active'       => true,
+	 *   'is_controllable' => false,
+	 * );
+	 */
+	public static function filter( $rules, $options ) {
+		$type = isset( $options['type'] ) ? $options['type'] : null;
+		$only_active = isset( $options['only_active'] ) ? $options['only_active'] : false;
+		$is_controllable = isset( $options['is_controllable'] ) ? $options['is_controllable'] : false;
+
+		$filtered_rules = [];
+		foreach ( $rules as $rule ) {
+			if ( self::is_valid_rule( $rule ) ) {
+				$supported_types = InterfaceHelper::call( $rule, 'verifiable', 'get_supported_types' );
+				if ( ! is_null( $type ) && ! in_array( $type, $supported_types ) ) {
+					continue;
+				}
+
+				if ( $is_controllable ) {
+					if ( ! isset( $rule['controllable'] )
+					     || ! InterfaceHelper::conforms_to_interface( $rule['controllable'], Controllable::class ) ) {
+						continue;
+					}
+				}
+
+				if ( $only_active ) {
+					if ( ! InterfaceHelper::call( $rule, 'verifiable', 'is_active', $type ) ) {
+						continue;
+					}
+				}
+
+				$filtered_rules[] = $rule;
+			}
+		}
+
+		return $filtered_rules;
 	}
 }

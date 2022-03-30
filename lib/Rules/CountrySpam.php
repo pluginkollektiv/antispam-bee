@@ -152,7 +152,26 @@ class CountrySpam implements Verifiable, Controllable {
 	}
 
 	public static function get_options() {
-		return null;
+		return [
+			[
+				'type' => 'textarea',
+				'label' => __( 'Denied ISO country codes for this option.', 'antispam-bee' ),
+				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
+				'option_name' => 'ab_country_denied',
+				'sanitize' => function( $value ) {
+					return self::sanitize_input( $value );
+				}
+			],
+			[
+				'type' => 'textarea',
+				'label' => __( 'Allowed ISO country codes for this option.', 'antispam-bee' ),
+				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
+				'option_name' => 'ab_country_allowed',
+				'sanitize' => function( $value ) {
+					return self::sanitize_input( $value );
+				}
+			]
+		];
 	}
 
 	public static function get_supported_types() {
@@ -160,6 +179,12 @@ class CountrySpam implements Verifiable, Controllable {
 	}
 
 	public static function is_active( $type ) {
+		return true;
+	}
+
+	private static function sanitize_input( $value ) {
 		return false;
 	}
+
+
 }
