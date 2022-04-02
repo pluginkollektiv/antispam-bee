@@ -37,7 +37,7 @@ class Section {
 	/**
 	 * Initializung Tab.
 	 *
-	 * @param string    $label    Title for tab
+	 * @param string    $label Title for tab
 	 * @param Section[] $sections Sections object array.
 	 */
 	public function __construct( $name, $title, $description = '', $fields ) {
@@ -85,7 +85,10 @@ class Section {
 
 	public function get_callback() {
 		if ( ! empty( $this->description ) ) {
-			echo '<p>' . $this->get_description() . '</p>';
+			printf(
+				'<p>%s</p>',
+				wp_kses_post( $this->get_description() )
+			);
 		}
 	}
 }

@@ -48,6 +48,7 @@ class LangSpam implements Verifiable, Controllable {
 		 * Do not translate into your own language.
 		 */
 		if ( strpos(
+			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			_x( 'words', 'Word count type. Do not translate!' ),
 			'characters'
 		) === 0 && preg_match(

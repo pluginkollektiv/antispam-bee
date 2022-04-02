@@ -74,7 +74,10 @@ abstract class Field {
 	 */
 	protected function maybe_show_description() {
 		if ( ! empty( $this->get_description() ) ) {
-			echo '<span>' . $this->get_description() . '</span>';
+			printf(
+				'<span>%s</span>',
+				wp_kses_post( $this->get_description() )
+			);
 		}
 	}
 

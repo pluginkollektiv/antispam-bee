@@ -29,7 +29,8 @@ class SettingsPage {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'admin_init', [ $this, 'setup_settings' ] );
 
-		$this->active_section = isset( $_GET['section'] ) ? $_GET['section'] : 'general';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$this->active_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'general';
 	}
 
 	/**
@@ -97,9 +98,9 @@ class SettingsPage {
 			<h2 class="nav-tab-wrapper">
 				<?php foreach ( $this->sections as $section ) : ?>
 					<?php if ( $section->get_name() === $this->active_section ) : ?>
-						<a href="?page=antispam_bee&section=<?php echo $section->get_name(); ?>" class="nav-tab nav-tab-active"><?php echo $section->get_title(); ?></a>
+						<a href="?page=antispam_bee&section=<?php echo esc_attr( $section->get_name() ); ?>" class="nav-tab nav-tab-active"><?php echo esc_attr( $section->get_title() ); ?></a>
 					<?php else : ?>
-						<a href="?page=antispam_bee&section=<?php echo $section->get_name(); ?>" class="nav-tab"><?php echo $section->get_title(); ?></a>
+						<a href="?page=antispam_bee&section=<?php echo esc_attr( $section->get_name() ); ?>" class="nav-tab"><?php echo esc_attr( $section->get_title() ); ?></a>
 					<?php endif; ?>
 				<?php endforeach; ?>
 			</h2>

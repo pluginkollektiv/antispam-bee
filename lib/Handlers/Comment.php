@@ -32,7 +32,7 @@ class Comment {
 	public static function process( $comment ) {
 		$comment['comment_author_IP'] = IpHelper::get_client_ip();
 
-		$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : null;
+		$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : null;
 		$request_path = DataHelper::parse_url( $request_uri, 'path' );
 
 		if ( empty( $request_path ) ) {

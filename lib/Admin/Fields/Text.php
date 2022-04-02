@@ -14,7 +14,11 @@ class Text extends Field implements RenderElement {
 	 * @return string Elment HTML.
 	 */
 	public function render() {
-		echo '<input type="checkbox" name="' . $this->get_name() . '" value="' . $this->get_value() . '" />';
+		printf(
+			'<input type="checkbox" name="%s" value="%s" />',
+			esc_attr( $this->get_name() ),
+			esc_attr( $this->get_value() )
+		);
 		$this->maybe_show_description();
 	}
 }

@@ -23,6 +23,8 @@ class ShortestTime implements Verifiable, Controllable {
 			return 0;
 		}
 
+		// @todo: maybe rename this filter to start with `abs` and add a deprecation message.
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		if ( time() - $init_time < apply_filters( 'ab_action_time_limit', 5 ) ) {
 			return 1;
 		}
