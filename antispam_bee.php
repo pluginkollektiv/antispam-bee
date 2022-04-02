@@ -36,7 +36,7 @@ function antispam_bee_pre_init() {
 	add_action( 'plugins_loaded', 'antispam_bee_load_textdomain' );
 
 	// Check, if the min. required PHP version is available and if not, show an admin notice.
-	if ( version_compare( PHP_VERSION, '7.2', '<' ) ) {
+	if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
 		add_action( 'admin_notices', 'antispam_bee_min_php_version_error' );
 
 		// Stop the further processing of the plugin.
