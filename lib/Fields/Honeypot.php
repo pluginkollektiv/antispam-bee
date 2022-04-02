@@ -78,7 +78,12 @@ class Honeypot {
 						if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
 							$output .= 'id="' . self::get_secret_id_for_post() . '" ';
 							if ( ! self::_is_amp() ) {
-								$id_script = '<script data-noptimize type="text/javascript">document.getElementById("' . $honeypot_id . '").setAttribute( "id", "a' . substr( esc_js( md5( time() ) ), 0, 31 ) . '" );document.getElementById("' . esc_js( self::get_secret_id_for_post() ) . '").setAttribute( "id", "' . $honeypot_id . '" );</script>';
+								$id_script = sprintf(
+									'<script data-noptimize>document.getElementById("%1$s").setAttribute( "id", "a%2$s" );document.getElementById("%3$s").setAttribute( "id", "%1$s" );</script>',
+									$honeypot_id,
+									esc_js( substr( md5( time() ), 0, 31 ) ),
+									esc_js( self::get_secret_id_for_post() )
+								);
 							}
 						}
 
