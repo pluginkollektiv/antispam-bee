@@ -1,6 +1,13 @@
 <?php
+/**
+ * The admin UI section.
+ *
+ * @package AntispamBee\Admin
+ */
 
 namespace AntispamBee\Admin;
+
+use AntispamBee\Admin\Fields\Field;
 
 /**
  * Sections for admin.
@@ -37,10 +44,12 @@ class Section {
 	/**
 	 * Initializung Tab.
 	 *
-	 * @param string    $label Title for tab
-	 * @param Section[] $sections Sections object array.
+	 * @param string $name Name of the tab.
+	 * @param string $title Title for tab.
+	 * @param string $description Description of the tab.
+	 * @param array  $fields Fields in the tab.
 	 */
-	public function __construct( $name, $title, $description = '', $fields ) {
+	public function __construct( $name, $title, $description = '', $fields = [] ) {
 		$this->name        = $name;
 		$this->title       = $title;
 		$this->fields      = $fields;
@@ -83,6 +92,9 @@ class Section {
 		return $this->fields;
 	}
 
+	/**
+	 * Print the UI element.
+	 */
 	public function get_callback() {
 		if ( ! empty( $this->description ) ) {
 			printf(

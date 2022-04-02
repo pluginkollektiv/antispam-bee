@@ -8,7 +8,7 @@
 namespace AntispamBee\Helpers;
 
 /**
- * Class AssetsLoader
+ * AssetsLoader helper.
  */
 class AssetsLoader {
 	/**

@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Text Field for the admin UI.
+ *
+ * @package AntispamBee\Admin\Fields
+ */
 
 namespace AntispamBee\Admin\Fields;
 
@@ -10,8 +15,6 @@ use AntispamBee\Admin\RenderElement;
 class Text extends Field implements RenderElement {
 	/**
 	 * Get HTML.
-	 *
-	 * @return string Elment HTML.
 	 */
 	public function render() {
 		printf(

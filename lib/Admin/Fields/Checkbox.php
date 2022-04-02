@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Checkbox Field for the admin UI.
+ *
+ * @package AntispamBee\Admin\Fields
+ */
 
 namespace AntispamBee\Admin\Fields;
 

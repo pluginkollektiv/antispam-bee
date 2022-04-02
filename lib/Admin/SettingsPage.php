@@ -1,4 +1,9 @@
 <?php
+/**
+ * The settings page.
+ *
+ * @package AntispamBee\Admin
+ */
 
 namespace AntispamBee\Admin;
 
@@ -50,22 +55,42 @@ class SettingsPage {
 	 * Setup tabs content.
 	 */
 	public function setup_settings() {
-		// General
+		// General.
 		$sections[] = new Section(
 			'general',
 			__( 'General', 'antispam-bee' ),
 			__( 'Setup global plugin spam settings.', 'antispam-bee' ),
 			[
-				new Checkbox( 'ab_dashboard_chart', esc_html( 'Generate statistics as a dashboard widget', 'antispam-bee' ), esc_html( 'Daily updates of spam detection rate', 'antispam-bee' ) ),
-				new Checkbox( 'ab_dashboard_count', esc_html( 'Spam counter on the dashboard', 'antispam-bee' ), esc_html( 'Amount of identified spam comments', 'antispam-bee' ) ),
-				new Checkbox( 'ab_ignore_pings', esc_html( 'Do not check trackbacks / pingbacks', 'antispam-bee' ), esc_html( 'No spam check for link notifications', 'antispam-bee' ) ),
-				new Checkbox( 'ab_use_output_buffer', esc_html( 'Check complete site markup for comment forms', 'antispam-bee' ), sprintf( /* translators: s=filter name */ esc_html( 'Uses output buffering instead of the %s filter.', 'antispam-bee' ), '<code>comment_form_field_comment</code>' ) ),
+				new Checkbox(
+					'ab_dashboard_chart',
+					esc_html__( 'Generate statistics as a dashboard widget', 'antispam-bee' ),
+					esc_html__( 'Daily updates of spam detection rate', 'antispam-bee' )
+				),
+				new Checkbox(
+					'ab_dashboard_count',
+					esc_html__( 'Spam counter on the dashboard', 'antispam-bee' ),
+					esc_html__( 'Amount of identified spam comments', 'antispam-bee' )
+				),
+				new Checkbox(
+					'ab_ignore_pings',
+					esc_html__( 'Do not check trackbacks / pingbacks', 'antispam-bee' ),
+					esc_html__( 'No spam check for link notifications', 'antispam-bee' )
+				),
+				new Checkbox(
+					'ab_use_output_buffer',
+					esc_html__( 'Check complete site markup for comment forms', 'antispam-bee' ),
+					sprintf(
+					/* translators: %s: filter name */
+						esc_html__( 'Uses output buffering instead of the %s filter.', 'antispam-bee' ),
+						'<code>comment_form_field_comment</code>'
+					)
+				),
 			]
 		);
 
 		$this->sections = apply_filters( 'antispam_bee_sections', $sections );
 
-		// Register option setting
+		// Register option setting.
 		foreach ( $this->sections as $section ) {
 			if ( $section->get_name() !== $this->active_section ) {
 				continue;
