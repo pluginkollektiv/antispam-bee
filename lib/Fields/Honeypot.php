@@ -45,27 +45,27 @@ class Honeypot {
 				$regex = str_replace(
 					[ '{{HONEYPOT_ID}}', '{{HONEYPOT_NAME}}' ],
 					[ $honeypot_id, $honeypot_name ],
-					'/(?P<all>
-						<textarea
-						(
+					'/(?P<all>                                    (?# match the whole textarea tag )
+						<textarea                                        (?# the opening of the textarea and some optional attributes )
+						(                                                (?# match a id attribute followed by some optional ones and the name attribute )
 							(?P<before1>[^>]*)
 							(?P<id1>id=["\']{{HONEYPOT_ID}}["\'])
 							(?P<between1>[^>]*)
 							name=["\']{{HONEYPOT_NAME}}["\']
-							|
+							|                                            (?# match same as before, but with the name attribute before the id attribute )
 							(?P<before2>[^>]*)
 							name=["\']{{HONEYPOT_NAME}}["\']
 							(?P<between2>[^>]*)
 							(?P<id2>id=["\']{{HONEYPOT_ID}}["\'])
-							|
+							|                                            (?# match same as before, but with no id attribute )
 							(?P<before3>[^>]*)
 							name=["\']{{HONEYPOT_NAME}}["\']
 							(?P<between3>[^>]*)
 						)
-						(?P<after>[^>]*)
-						>
-						(?s)(?P<content>.*?)
-						<\/textarea>
+						(?P<after>[^>]*)                                 (?# match any additional optional attributes )
+						>                                                (?# the closing of the textarea opening tag )
+						(?s)(?P<content>.*?)                             (?# any textarea content )
+						<\/textarea>                                     (?# the closing textarea tag )
 					)/x'
 				);
 
