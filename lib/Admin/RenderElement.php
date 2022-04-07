@@ -1,4 +1,9 @@
 <?php
+/**
+ * The interface for rendered elements.
+ *
+ * @package AntispamBee\Admin
+ */
 
 namespace AntispamBee\Admin;
 

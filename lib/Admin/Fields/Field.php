@@ -1,4 +1,9 @@
 <?php
+/**
+ * The base Field class for the admin UI.
+ *
+ * @package AntispamBee\Admin\Fields
+ */
 
 namespace AntispamBee\Admin\Fields;
 
@@ -9,22 +14,22 @@ abstract class Field {
 	/**
 	 * Field Name.
 	 *
-	 * @param string
+	 * @var string
 	 */
 	private $name;
 
 	/**
 	 * Field Description.
 	 *
-	 * @param string
+	 * @var string
 	 */
 	private $description;
 
 	/**
 	 * Initializing field
 	 *
-	 * @param string $name        Name of the field.
-	 * @param string $label       Label of the field.
+	 * @param string $name Name of the field.
+	 * @param string $label Label of the field.
 	 * @param string $description Description of the field.
 	 */
 	public function __construct( $name, $label, $description = '' ) {
@@ -74,7 +79,10 @@ abstract class Field {
 	 */
 	protected function maybe_show_description() {
 		if ( ! empty( $this->get_description() ) ) {
-			echo '<span>' . $this->get_description() . '</span>';
+			printf(
+				'<span>%s</span>',
+				wp_kses_post( $this->get_description() )
+			);
 		}
 	}
 

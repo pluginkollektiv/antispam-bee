@@ -36,8 +36,16 @@ function antispam_bee_pre_init() {
 	add_action( 'plugins_loaded', 'antispam_bee_load_textdomain' );
 
 	// Check, if the min. required PHP version is available and if not, show an admin notice.
-	if ( version_compare( PHP_VERSION, '7.2', '<' ) ) {
+	if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
 		add_action( 'admin_notices', 'antispam_bee_min_php_version_error' );
+
+		// Stop the further processing of the plugin.
+		return;
+	}
+
+	// Check, if the DOMDocument class exists.
+	if ( ! class_exists( 'DOMDocument' ) ) {
+		add_action( 'admin_notices', 'antispam_bee_domdocument_class_error' );
 
 		// Stop the further processing of the plugin.
 		return;
@@ -75,6 +83,15 @@ function antispam_bee_load_textdomain() {
 function antispam_bee_min_php_version_error() {
 	echo '<div class="error"><p>';
 	esc_html_e( 'Antispam Bee requires PHP version 7.2 or higher to function properly. Please upgrade PHP or deactivate Antispam Bee.', 'antispam-bee' );
+	echo '</p></div>';
+}
+
+/**
+ * Show a admin notice error message, if the PHP version is too low
+ */
+function antispam_bee_domdocument_class_error() {
+	echo '<div class="error"><p>';
+	esc_html_e( 'Antispam Bee requires the DOMDocument PHP class. Please install the PHP DOM/XML extension.', 'antispam-bee' );
 	echo '</p></div>';
 }
 

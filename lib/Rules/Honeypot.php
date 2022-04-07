@@ -15,7 +15,8 @@ class Honeypot implements Verifiable, Controllable {
 	use InitRule;
 
 	public static function verify( $data ) {
-		if ( isset( $_POST['ab_spam__hidden_field'] ) && $_POST['ab_spam__hidden_field'] == 1 ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( isset( $_POST['ab_spam__hidden_field'] ) && 1 === $_POST['ab_spam__hidden_field'] ) {
 			return 1;
 		}
 
@@ -47,6 +48,7 @@ class Honeypot implements Verifiable, Controllable {
 		if ( ! empty( $_POST[ $fields['hidden_field'] ] ) ) {
 			$_POST['ab_spam__hidden_field'] = 1;
 		} else {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 			$_POST[ $fields['hidden_field'] ] = $_POST[ $fields['plugin_field'] ];
 			unset( $_POST[ HoneypotField::get_secret_name_for_post() ] );
 		}
@@ -58,7 +60,7 @@ class Honeypot implements Verifiable, Controllable {
 	}
 
 	public static function get_label() {
-		return __( '', 'antispam-bee' );
+		return '';
 	}
 
 	public static function get_description() {

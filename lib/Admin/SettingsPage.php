@@ -1,4 +1,9 @@
 <?php
+/**
+ * The settings page.
+ *
+ * @package AntispamBee\Admin
+ */
 
 namespace AntispamBee\Admin;
 
@@ -45,6 +50,7 @@ class SettingsPage {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'admin_init', [ $this, 'setup_settings' ] );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$this->active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
 	}
 
@@ -122,7 +128,7 @@ class SettingsPage {
 					continue;
 				}
 
-				add_settings_section( $section->get_name(), '<span style="color: #f00">' . $section->get_title() . '</span>', [ $section, 'get_callback' ], 'antispam_bee' );
+			add_settings_section( $section->get_name(), $section->get_title(), [ $section, 'get_callback' ], 'antispam_bee' );
 
 				foreach ( $section->get_fields() as $field ) {
 					add_settings_field(
@@ -150,9 +156,9 @@ class SettingsPage {
 			<h2 class="nav-tab-wrapper">
 				<?php foreach ( $this->tabs as $tab ) : ?>
 						<?php if ( $tab->get_slug() === $this->active_tab ) : ?>
-							<a href="?page=antispam_bee&tab=<?php echo $tab->get_slug(); ?>" class="nav-tab nav-tab-active"><?php echo $tab->get_title(); ?></a>
+							<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>" class="nav-tab nav-tab-active"><?php echo esc_html( $tab->get_title() ); ?></a>
 						<?php else : ?>
-							<a href="?page=antispam_bee&tab=<?php echo $tab->get_slug(); ?>" class="nav-tab"><?php echo $tab->get_title(); ?></a>
+							<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>" class="nav-tab"><?php echo esc_html( $tab->get_title() ); ?></a>
 						<?php endif; ?>
 				<?php endforeach; ?>
 			</h2>

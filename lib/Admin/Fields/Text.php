@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Text Field for the admin UI.
+ *
+ * @package AntispamBee\Admin\Fields
+ */
 
 namespace AntispamBee\Admin\Fields;
 
@@ -19,11 +24,14 @@ class Text extends Field implements RenderElement {
 
 	/**
 	 * Get HTML.
-	 *
-	 * @return string Elment HTML.
 	 */
 	public function render() {
-		echo '<input class="regular-text" name="' . $this->get_name() . '" value="' . $this->get_value() . '" placeholder="' . $this->placeholder . '" />';
+		printf(
+			'<input class="regular-text" name="%s" value="%s" placeholder="%s" />',
+			esc_attr( $this->get_name() ),
+			esc_attr( $this->get_value() ),
+			esc_attr( $this->placeholder )
+		);
 		$this->maybe_show_description();
 	}
 }

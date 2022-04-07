@@ -1,4 +1,9 @@
 <?php
+/**
+ * The admin UI section.
+ *
+ * @package AntispamBee\Admin
+ */
 
 namespace AntispamBee\Admin;
 
@@ -6,6 +11,7 @@ use AntispamBee\Admin\Fields\Select;
 use AntispamBee\Admin\Fields\Text;
 use AntispamBee\Admin\Fields\Textarea;
 use AntispamBee\Helpers\InterfaceHelper;
+use AntispamBee\Admin\Fields\Field;
 
 /**
  * Sections for admin.
@@ -41,6 +47,14 @@ class Section {
 
 	private $type;
 
+	/**
+	 * Initializing Tab.
+	 *
+	 * @param string      $name Name of the tab.
+	 * @param string      $title Title for tab.
+	 * @param string      $description Description of the tab.
+	 * @param string|null $type Item type (e.g. comment, trackback).
+	 */
 	public function __construct( $name, $title, $description = '', $type = null ) {
 		$this->name        = $name;
 		$this->title       = $title;
@@ -123,9 +137,15 @@ class Section {
 		return $this->fields;
 	}
 
+	/**
+	 * Print the UI element.
+	 */
 	public function get_callback() {
 		if ( ! empty( $this->description ) ) {
-			echo '<p>' . $this->get_description() . '</p>';
+			printf(
+				'<p>%s</p>',
+				wp_kses_post( $this->get_description() )
+			);
 		}
 	}
 }
