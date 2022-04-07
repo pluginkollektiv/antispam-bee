@@ -2,68 +2,12 @@
 
 namespace AntispamBee\Helpers;
 
-use AntispamBee\Interfaces\Controllable;
-
 class Settings {
 	protected static $defaults;
 
-	public static function init() {
-		self::init_options();
-	}
+	const ANTISPAM_BEE_OPTION_NAME = 'antispam_bee';
 
-	protected static function init_options() {
-		$defaults = [
-			'options' => [
-				'regexp_check'             => 1,
-				'spam_ip'                  => 1,
-				'already_commented'        => 1,
-				'gravatar_check'           => 0,
-				'time_check'               => 0,
-				'ignore_pings'             => 0,
-
-				'dashboard_chart'          => 0,
-				'dashboard_count'          => 0,
-
-				'country_code'             => 0,
-				'country_denied'           => '',
-				'country_allowed'          => '',
-
-				'translate_api'            => 0,
-				'translate_lang'           => [],
-
-				'bbcode_check'             => 1,
-
-				'flag_spam'                => 1,
-				'email_notify'             => 0,
-				'no_notice'                => 0,
-				'cronjob_enable'           => 0,
-				'cronjob_interval'         => 0,
-
-				'ignore_filter'            => 0,
-				'ignore_type'              => 0,
-
-				'reasons_enable'           => 0,
-				'ignore_reasons'           => [],
-
-				'delete_data_on_uninstall' => 1,
-			],
-			'reasons' => [
-				'css'           => esc_attr__( 'Honeypot', 'antispam-bee' ),
-				'time'          => esc_attr__( 'Comment time', 'antispam-bee' ),
-				'empty'         => esc_attr__( 'Empty Data', 'antispam-bee' ),
-				'localdb'       => esc_attr__( 'Local DB Spam', 'antispam-bee' ),
-				'server'        => esc_attr__( 'Fake IP', 'antispam-bee' ),
-				'country'       => esc_attr__( 'Country Check', 'antispam-bee' ),
-				'bbcode'        => esc_attr__( 'BBCode', 'antispam-bee' ),
-				'lang'          => esc_attr__( 'Comment Language', 'antispam-bee' ),
-				'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
-				'title_is_name' => esc_attr__( 'Identical Post title and blog title', 'antispam-bee' ),
-				'manually'      => esc_attr__( 'Manually', 'antispam-bee' ),
-			],
-		];
-
-		self::$defaults = apply_filters( 'asb_default_options', $defaults );
-	}
+	public static function init() {}
 
 	/**
 	 * Get all plugin options
@@ -79,29 +23,23 @@ class Settings {
 			);
 		}
 
-		if ( null === self::$defaults ) {
-			self::init_options();
-		}
-
-		return wp_parse_args(
-			$options,
-			self::$defaults['options']
-		);
+		return $options;
 	}
 
 	/**
 	 * Get single option field
 	 *
-	 * @param string $field Field name.
+	 * @param string $option_name Option name.
+	 * @param string $type        The type.
 	 *
-	 * @return  mixed         Field value.
-	 * @since  0.1
-	 * @since  2.4.2
+	 * @return  mixed Field value.
 	 */
-	public static function get_option( $field ) {
+	public static function get_option( $option_name, $type = 'general' ) {
 		$options = self::get_options();
 
-		return self::get_key( $options, $field );
+		$type = str_replace( '-', '_', $type );
+		$option_name = str_replace( '-', '_', $option_name );
+		return isset( $options[ $type ][ $option_name ] ) ? $options[ $type ][ $option_name ] : null;
 	}
 
 	/**
@@ -163,5 +101,25 @@ class Settings {
 		}
 
 		return $array[ $key ];
+	}
+
+	public static function sanitize( $options ) {
+		$current_options = self::get_options();
+
+		// Todo: Call the sanitize functions for the rules/post processors/settings
+
+		if ( ! isset( $_GET['tab'] ) || empty ( $_GET['tab'] ) ) {
+			return $current_options;
+		}
+
+		$tab = $_GET['tab'];
+		$options = ! empty( $options ) ? $options : [ $tab => [] ];
+		$current_options[ $tab ] = $options[ $tab ];
+
+		echo '<pre>';
+		var_dump( $options, $current_options );
+		echo '</pre>';
+
+		return $current_options;
 	}
 }

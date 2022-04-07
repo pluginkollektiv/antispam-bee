@@ -5,9 +5,10 @@ namespace AntispamBee\Helpers;
 class InterfaceHelper {
 
 	// Todo: adapt method because the methods have to be stored under the verifiable key
-	public static function call( $array, $interface, $method, ...$args ) {
-		if ( isset( $array[ $method ] ) && is_callable( $array[ $method ] ) ) {
-			return call_user_func( $array[ $method ], $args );
+	public static function call( $array, $interface, $method, $args = [] ) {
+		$callable = isset( $array[ $interface ][ $method ] ) ? $array[ $interface ][ $method ] : null;
+		if ( is_callable( $callable ) ) {
+			return call_user_func( $callable, $args );
 		}
 
 		if ( isset( $array[ $interface ] ) && is_callable( array( $array[ $interface ], $method ) ) ) {

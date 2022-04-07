@@ -29,6 +29,9 @@ class PostProcessors {
 	}
 
 	public static function get( $type = null, $only_active = false ) {
+		// Todo: Fix: The name mustn't break the options page, we should sort out everything that can break the plugin.
+		// Todo: Check if other things can break it too
+
 		$all_post_processors = apply_filters( 'asb_post_processors', [] );
 		$post_processors     = [];
 		foreach ( $all_post_processors as $key => $post_processor ) {
@@ -74,4 +77,6 @@ class PostProcessors {
 
 		return InterfaceHelper::array_has_callables( $post_processor, $post_processor_callables );
 	}
+
+	// Todo: Add a filter method like in Rules
 }

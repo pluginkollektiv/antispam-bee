@@ -7,35 +7,35 @@
 
 namespace AntispamBee\Admin\Fields;
 
+use AntispamBee\Helpers\Settings;
+
 /**
  * Abstract class for field.
  */
 abstract class Field {
 	/**
-	 * Field Name.
+	 * Item type.
 	 *
 	 * @var string
 	 */
-	private $name;
+	protected $type;
 
 	/**
-	 * Field Description.
+	 * Field options.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	private $description;
+	protected $option;
 
 	/**
 	 * Initializing field
 	 *
-	 * @param string $name Name of the field.
-	 * @param string $label Label of the field.
-	 * @param string $description Description of the field.
+	 * @param string $type Item type.
+	 * @param array  $option Field options.
 	 */
-	public function __construct( $name, $label, $description = '' ) {
-		$this->name        = $name;
-		$this->label       = $label;
-		$this->description = $description;
+	public function __construct( $type, $option ) {
+		$this->type = $type;
+		$this->option = $option;
 	}
 
 	/**
@@ -44,7 +44,7 @@ abstract class Field {
 	 * @return string Name of the field.
 	 */
 	public function get_name() {
-		return $this->name;
+		return str_replace( '-', '_', 'antispam_bee[' . $this->type . '][' . $this->option['option_name'] . ']' );
 	}
 
 	/**
@@ -53,7 +53,7 @@ abstract class Field {
 	 * @return string Label of the field.
 	 */
 	public function get_label() {
-		return $this->label;
+		return isset( $this->option['label'] ) ? $this->option['label'] : '';
 	}
 
 	/**
@@ -62,7 +62,7 @@ abstract class Field {
 	 * @return string Description of the field.
 	 */
 	public function get_description() {
-		return $this->description;
+		return isset( $this->option['description'] ) ? $this->option['description'] : '';
 	}
 
 	/**
@@ -71,7 +71,7 @@ abstract class Field {
 	 * @return mixed Value stored in database.
 	 */
 	protected function get_value() {
-		return get_option( $this->name );
+		return Settings::get_option( $this->option['option_name'], $this->type );
 	}
 
 	/**
@@ -80,7 +80,7 @@ abstract class Field {
 	protected function maybe_show_description() {
 		if ( ! empty( $this->get_description() ) ) {
 			printf(
-				'<span>%s</span>',
+				'<p class="description">%s</p>',
 				wp_kses_post( $this->get_description() )
 			);
 		}

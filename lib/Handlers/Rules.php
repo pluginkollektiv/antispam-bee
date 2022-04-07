@@ -23,15 +23,13 @@ class Rules {
 
 		$score = 0.0;
 		foreach ( $rules as $rule ) {
-			$verify_function     = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'verify' ] : $rule['verify'];
-			$get_weight_function = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'get_weight' ] : $rule['get_weight'];
-			$get_slug_function   = isset( $rule['verifiable'] ) ? [ $rule['verifiable'], 'get_slug' ] : $rule['get_slug'];
+			$rule_score = InterfaceHelper::call( $rule, 'verifiable', 'verify', $item )
+			              * InterfaceHelper::call( $rule, 'verifiable', 'get_weight' );
 
-			$rule_score = call_user_func( $verify_function, $item ) * call_user_func( $get_weight_function );
 			if ( $rule_score > 0.0 ) {
-				$this->spam_reasons[] = call_user_func( $get_slug_function );
+				$this->spam_reasons[] = InterfaceHelper::call( $rule, 'verifiable', 'get_slug' );
 			} else {
-				$this->no_spam_reasons[] = call_user_func( $get_slug_function );
+				$this->no_spam_reasons[] = InterfaceHelper::call( $rule, 'verifiable', 'get_slug' );
 			}
 
 			$score += $rule_score;
@@ -82,9 +80,13 @@ class Rules {
 	 * );
 	 */
 	public static function filter( $rules, $options ) {
+		// Todo: Fix: The name mustn't break the options page, we should sort out everything that can break the plugin.
+		// Todo: Check if other things can break it too
+
 		$type = isset( $options['type'] ) ? $options['type'] : null;
 		$only_active = isset( $options['only_active'] ) ? $options['only_active'] : false;
-		$is_controllable = isset( $options['is_controllable'] ) ? $options['is_controllable'] : false;
+		// Todo: Change the key from is_controllable to only_controllables
+		$only_controllables = isset( $options['is_controllable'] ) ? $options['is_controllable'] : false;
 
 		$filtered_rules = [];
 		foreach ( $rules as $rule ) {
@@ -94,15 +96,15 @@ class Rules {
 					continue;
 				}
 
-				if ( $is_controllable ) {
-					if ( ! isset( $rule['controllable'] )
-					     || ! InterfaceHelper::conforms_to_interface( $rule['controllable'], Controllable::class ) ) {
-						continue;
-					}
+
+				$conforms_to_controllable = isset( $rule['controllable'] ) ?
+					InterfaceHelper::conforms_to_interface( $rule['controllable'], Controllable::class ) : false;
+				if ( $only_controllables && ! $conforms_to_controllable ) {
+					continue;
 				}
 
 				if ( $only_active ) {
-					if ( ! InterfaceHelper::call( $rule, 'verifiable', 'is_active', $type ) ) {
+					if ( $conforms_to_controllable && ! InterfaceHelper::call( $rule, 'verifiable', 'is_active', $type ) ) {
 						continue;
 					}
 				}

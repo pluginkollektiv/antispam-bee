@@ -15,6 +15,7 @@ use AntispamBee\Handlers\Rules;
 use AntispamBee\Handlers\Trackback;
 use AntispamBee\Helpers\InterfaceHelper;
 use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
@@ -30,18 +31,18 @@ class SettingsPage {
 	private $active_tab = [];
 
 	/**
-	 * Active section
-	 *
-	 * @var string
-	 */
-	private $active_section = [];
-
-	/**
 	 * Tabs
 	 *
 	 * @var Tab[]
 	 */
 	private $tabs = [];
+
+	/**
+	 * The slug used for the Settings page
+	 *
+	 * @var string
+	 */
+	const SETTINGS_PAGE_SLUG = 'antispam_bee';
 
 	/**
 	 * Add Hooks.
@@ -62,7 +63,7 @@ class SettingsPage {
 			__( 'Antispam Bee', 'antispam-bee' ),
 			__( 'Antispam Bee', 'antispam-bee' ),
 			'manage_options',
-			'antispam_bee',
+			self::SETTINGS_PAGE_SLUG,
 			[ $this, 'options_page' ]
 		);
 	}
@@ -71,16 +72,45 @@ class SettingsPage {
 	 * Setup tabs content.
 	 */
 	public function setup_settings() {
+		// Todo: Extract parts of the method in new methods.
 		$general_section = new Section(
 			'general',
 			__( 'General', 'antispam-bee' ),
 			__( 'Setup global plugin spam settings.', 'antispam-bee' ) );
-		$general_section->add_fields( [
-			new Checkbox( 'ab_dashboard_chart', esc_html( 'Generate statistics as a dashboard widget', 'antispam-bee' ), esc_html( 'Daily updates of spam detection rate', 'antispam-bee' ) ),
-			new Checkbox( 'ab_dashboard_count', esc_html( 'Spam counter on the dashboard', 'antispam-bee' ), esc_html( 'Amount of identified spam comments', 'antispam-bee' ) ),
-			new Checkbox( 'ab_ignore_pings', esc_html( 'Do not check trackbacks / pingbacks', 'antispam-bee' ), esc_html( 'No spam check for link notifications', 'antispam-bee' ) ),
-			new Checkbox( 'ab_use_output_buffer', esc_html( 'Check complete site markup for comment forms', 'antispam-bee' ), sprintf( /* translators: s=filter name */ esc_html( 'Uses output buffering instead of the %s filter.', 'antispam-bee' ), '<code>comment_form_field_comment</code>' ) ),
+
+		$general_section->add_rows( [
+			[
+				'label' => __( 'Statistics', 'antispam-bee' ),
+				'fields' => [
+					new Checkbox( 'general', [
+						'option_name' => 'ab_dashboard_chart',
+						'label' => esc_html( 'Generate statistics as a dashboard widget', 'antispam-bee' ),
+						'description' => esc_html( 'Daily updates of spam detection rate', 'antispam-bee' ),
+					] ),
+					new Checkbox( 'general', [
+						'option_name' => 'ab_dashboard_count',
+						'label' => esc_html( 'Spam counter on the dashboard', 'antispam-bee' ),
+						'description' => esc_html( 'Amount of identified spam comments', 'antispam-bee' )
+					] ),
+				]
+			],
+			[
+				'label' => __( 'Pings', 'antispam-bee' ),
+				'fields' => [
+					new Checkbox( 'general', [
+						'option_name' => 'ab_ignore_pings',
+						'label' => esc_html( 'Do not check trackbacks / pingbacks', 'antispam-bee' ),
+						'description' => esc_html( 'No spam check for link notifications', 'antispam-bee' ),
+					] ),
+				]
+			]
 		] );
+
+		// Todo: Add a way to build rows and fields with a fluent interface?
+		// Todo: Fix the weird naming
+		// Todo: Discuss if we want to remove that setting in V3 and maybe have a filter for that.
+		// If we keep it, we have to add it to the comments tab.
+		// new Checkbox( 'ab_use_output_buffer', esc_html( 'Check complete site markup for comment forms', 'antispam-bee' ), sprintf( /* translators: s=filter name */ esc_html( 'Uses output buffering instead of the %s filter.', 'antispam-bee' ), '<code>comment_form_field_comment</code>' ) ),
 		$general_tab = new Tab(
 			'general',
 			__( 'General','antispam-bee' ),
@@ -112,7 +142,7 @@ class SettingsPage {
 				'type' => $type,
 			] ) );
 			$tabs[$type] = new Tab(
-				$type . '_tab',
+				$type,
 				ItemTypeHelper::get_type_name( $type ),
 				[
 					'rules' => $section
@@ -128,18 +158,28 @@ class SettingsPage {
 					continue;
 				}
 
-			add_settings_section( $section->get_name(), $section->get_title(), [ $section, 'get_callback' ], 'antispam_bee' );
+				add_settings_section( $section->get_name(), $section->get_title(), [ $section, 'get_callback' ], self::SETTINGS_PAGE_SLUG );
 
-				foreach ( $section->get_fields() as $field ) {
+				foreach ( $section->get_rows() as $row ) {
 					add_settings_field(
-						$field->get_name(),
-						$field->get_label(),
-						[ $field, 'render' ],
-						'antispam_bee',
+						sanitize_title( $row['label'] ),
+						$row['label'],
+						function() use ( $row ) {
+							$last_field = false;
+							foreach ( $row['fields'] as $key => $field ) {
+								$field->render( $last_field );
+								if ( $key !== count( $row['fields'] ) - 1 ) {
+									echo '<br>';
+								}
+							}
+						},
+						self::SETTINGS_PAGE_SLUG,
 						$section->get_name()
 					);
 
-					register_setting( 'antispam_bee', $field->get_name() );
+					register_setting( self::SETTINGS_PAGE_SLUG, Settings::ANTISPAM_BEE_OPTION_NAME, [
+						'sanitize_callback' => [ Settings::class, 'sanitize' ],
+					] );
 				}
 			}
 		}
@@ -166,8 +206,8 @@ class SettingsPage {
 			<form action="<?php echo esc_url( add_query_arg( 'tab', $this->active_tab, admin_url( 'options.php' ) ) ); ?>" method="post">
 				<input type="hidden" name="action" value="ab_save_changes"/>
 
-				<?php settings_fields( 'antispam_bee' ); ?>
-				<?php do_settings_sections( 'antispam_bee', $this->active_tab ); ?>
+				<?php settings_fields( self::SETTINGS_PAGE_SLUG ); ?>
+				<?php do_settings_sections( self::SETTINGS_PAGE_SLUG, $this->active_tab ); ?>
 
 				<?php submit_button(); ?>
 			</form>

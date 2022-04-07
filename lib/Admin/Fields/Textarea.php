@@ -18,8 +18,9 @@ class Textarea extends Field implements RenderElement {
 	 */
 	public function render() {
 		printf(
-			'<textarea name="%s">%s</textarea>',
+			'<p><label for="%1$s">%2$s</label></p><p><textarea name="%1$s" id="%1$s">%3$s</textarea></p>',
 			esc_attr( $this->get_name() ),
+			esc_html( $this->get_label() ),
 			esc_html( $this->get_value() )
 		);
 		$this->maybe_show_description();

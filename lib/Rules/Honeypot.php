@@ -72,11 +72,11 @@ class Honeypot implements Verifiable, Controllable {
 	}
 
 	public static function get_name() {
-		return __( 'Approved Email', 'antispam-bee' );
+		return __( 'Honeypot', 'antispam-bee' );
 	}
 
 	public static function get_label() {
-		return '';
+		return __( 'Inject hidden field', 'antispam-bee' );
 	}
 
 	public static function get_description() {

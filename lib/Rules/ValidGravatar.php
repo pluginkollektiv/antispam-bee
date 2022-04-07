@@ -35,7 +35,7 @@ class ValidGravatar implements Verifiable, Controllable {
 	}
 
 	public static function get_name() {
-		return '';
+		return __( 'Valid Gravatar', 'antispam-bee' );
 	}
 
 	public static function get_weight() {
@@ -51,7 +51,7 @@ class ValidGravatar implements Verifiable, Controllable {
 	}
 
 	public static function get_label() {
-		__( 'Trust commenters with a Gravatar', 'antispam-bee' );
+		return __( 'Trust commenters with a Gravatar', 'antispam-bee' );
 	}
 
 	public static function get_description() {
@@ -62,7 +62,7 @@ class ValidGravatar implements Verifiable, Controllable {
 				'https'
 			)
 		);
-		printf(
+		return sprintf(
 		/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag */
 			esc_html__( 'Check if commenter has a Gravatar image. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
 			wp_kses_post( $link1 ),

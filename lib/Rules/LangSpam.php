@@ -108,7 +108,7 @@ class LangSpam implements Verifiable, Controllable {
 	}
 
 	public static function get_label() {
-		__( 'Allow comments only in certain language', 'antispam-bee' );
+		return __( 'Allow comments only in certain language', 'antispam-bee' );
 	}
 
 	public static function get_description() {
@@ -120,7 +120,7 @@ class LangSpam implements Verifiable, Controllable {
 			)
 		);
 
-		printf(
+		return sprintf(
 		/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
 			esc_html__( 'Detect and approve only the specified language. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
 			wp_kses_post( $link1 ),

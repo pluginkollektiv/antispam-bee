@@ -7,6 +7,7 @@
 
 namespace AntispamBee\Admin;
 
+use AntispamBee\Admin\Fields\Checkbox;
 use AntispamBee\Admin\Fields\Select;
 use AntispamBee\Admin\Fields\Text;
 use AntispamBee\Admin\Fields\Textarea;
@@ -41,10 +42,15 @@ class Section {
 	/**
 	 * Fields.
 	 *
-	 * @var Field[]
+	 * @var array
 	 */
-	private $fields = [];
+	private $rows = [];
 
+	/**
+	 * Item type.
+	 *
+	 * @var string
+	 */
 	private $type;
 
 	/**
@@ -62,8 +68,12 @@ class Section {
 		$this->type = $type;
 	}
 
-	public function add_fields( $fields ) {
-		$this->fields = array_merge( $this->fields, $fields );
+
+
+	public function add_rows( $rows ) {
+		foreach ( $rows as $row ) {
+			$this->rows[] = $row;
+		}
 	}
 
 	public function add_controllables( $controllables ) {
@@ -71,33 +81,46 @@ class Section {
 	}
 
 	private function generate_fields( $controllables ) {
-		$fields = [];
+		// Todo: DRY - Don’t run for other types than displayed
 		foreach ( $controllables as $controllable ) {
-			// Todo: Generate checkbox to activate/deactivate rule
+			$slug = InterfaceHelper::call( $controllable, 'controllable', 'get_slug' );
+			$label = InterfaceHelper::call( $controllable, 'controllable', 'get_label' );
+			$description = InterfaceHelper::call( $controllable, 'controllable', 'get_description' );
+			$fields = [];
+			$fields[] = $this->generate_field( [
+				'type' => 'checkbox',
+				'option_name' => $slug . '_active',
+				'label' => $label,
+				'description' => $description
+			] );
 
 			$options = InterfaceHelper::call( $controllable, 'controllable', 'get_options' );
-			if ( empty( $options ) ) {
-				continue;
+			if ( ! empty( $options ) ) {
+				foreach ( $options as $option ) {
+					$fields[] = $this->generate_field( $option );
+				}
 			}
 
-			foreach ( $options as $option ) {
-				$fields[] = $this->generate_field( $option );
-			}
+			$this->rows[] = [
+				'label' => InterfaceHelper::call( $controllable, 'controllable', 'get_name' ),
+				'fields' => $fields
+			];
 		}
-
-		$this->fields = array_merge( $this->fields, $fields );
 	}
 
 	private function generate_field( $option ) {
+		$description = isset( $option['description'] ) ? $option['description'] : '';
+		// Todo: Find a more descriptive name for option_name
+		$name = 'antispam_bee[' . $this->type . '][' . $option['option_name'] . ']';
 		switch ( $option['type'] ) {
 			case 'input':
-				return new Text( $this->type . '_' . $option['option_name'], $option['label'], '' );
+				return new Text( $this->type, $option );
 			case 'select':
-				return new Select( $this->type . '_' . $option['option_name'], $option['label'],
-					'Hold CTRL to select multiple entries', $option['options'], false );
+				return new Select( $this->type, $option );
 			case 'textarea':
-				return new Textarea( $this->type . '_' . $option['option_name'], $option['label'],
-					$option['label'] );
+				return new Textarea( $this->type, $option );
+			case 'checkbox':
+				return new Checkbox( $this->type, $option );
 		}
 	}
 
@@ -133,8 +156,8 @@ class Section {
 	 *
 	 * @return Field[]
 	 */
-	public function get_fields() {
-		return $this->fields;
+	public function get_rows() {
+		return $this->rows;
 	}
 
 	/**
@@ -148,4 +171,12 @@ class Section {
 			);
 		}
 	}
+
+	/**
+	 * Section
+	 *   Field Lists/Rows array
+	 *     Left-side Label string
+	 *     Fields array
+	 *       Field
+	 */
 }

@@ -179,11 +179,11 @@ class RegexpSpam implements Verifiable, Controllable {
 	}
 
 	public static function get_label() {
-		__( 'Use regular expressions', 'antispam-bee' );
+		return __( 'Use regular expressions', 'antispam-bee' );
 	}
 
 	public static function get_description() {
-		__( 'Predefined and custom patterns by plugin hook', 'antispam-bee' );
+		return __( 'Predefined and custom patterns by plugin hook', 'antispam-bee' );
 	}
 
 	public static function get_options() {

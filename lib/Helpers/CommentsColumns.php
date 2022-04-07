@@ -64,11 +64,11 @@ class CommentsColumns {
 		$spam_reason  = get_comment_meta( $comment_id, $column, true );
 		$spam_reasons = Settings::get_options( 'reasons' );
 
-		if ( empty( $spam_reason ) || empty( $spam_reasons[ $spam_reason ] ) ) {
+		if ( empty( $spam_reason ) ) {
 			return;
 		}
 
-		echo esc_html( $spam_reasons[ $spam_reason ] );
+		echo esc_html( $spam_reason );
 	}
 
 	/**

@@ -14,8 +14,12 @@ use AntispamBee\Handlers\Comment;
 use AntispamBee\Handlers\Trackback;
 use AntispamBee\Helpers\AssetsLoader;
 use AntispamBee\Helpers\CommentsColumns;
+use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\Installer;
+use AntispamBee\Helpers\InterfaceHelper;
+use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Helpers\Settings;
+use AntispamBee\Interfaces\Controllable;
 use AntispamBee\PostProcessors\Delete;
 use AntispamBee\PostProcessors\DeleteForReasons;
 use AntispamBee\PostProcessors\SaveReason;
@@ -74,6 +78,43 @@ function init() {
 			call_user_func( [ $module, 'init' ] );
 		}
 	}
+
+	// Todo: Allow to give values instead of callables. Test for return types.
+	// Todo: Write a doc how to implement a custom rule and postprocessor.
+	add_filter( 'asb_rules', function( $rules ) {
+		$rule = [];
+		$rule['verifiable']['verify'] = function() {
+			return 1;
+		};
+		$rule['verifiable']['get_name'] = function() {
+			return "Imaginary Rule";
+		};
+		$rule['verifiable']['get_weight'] = function() {
+			return 1000.0;
+		};
+		$rule['verifiable']['get_slug'] = function() {
+			return 'imaginary_rule';
+		};
+		$rule['verifiable']['get_supported_types'] = function() {
+			return [ 'comment', 'webmention' ];
+		};
+		$rule['verifiable']['is_final'] = function() {
+			return true;
+		};
+
+		$rule['controllable']['get_label'] = function() {
+			return 'Imaginary Rule';
+		};
+		$rule['controllable']['get_description'] = function() {
+			return 'Description for our Imaginary Rule';
+		};
+		$rule['controllable']['get_description'] = function() {
+			return 'Description for our Imaginary Rule';
+		};
+
+		$rules[] = $rule;
+		return $rules;
+	} );
 }
 
 add_action( 'plugins_loaded', 'AntispamBee\init' );

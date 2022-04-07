@@ -3,6 +3,7 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
@@ -17,7 +18,7 @@ class CountrySpam implements Verifiable, Controllable {
 		}
 		$ip = $data['comment_author_IP'];
 
-		$options = self::get_options();
+		$options = Settings::get_options();
 
 		$allowed = preg_split(
 			'/[\s,;]+/',
@@ -178,13 +179,8 @@ class CountrySpam implements Verifiable, Controllable {
 		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 
-	public static function is_active( $type ) {
-		return true;
-	}
-
 	private static function sanitize_input( $value ) {
 		return false;
 	}
-
 
 }

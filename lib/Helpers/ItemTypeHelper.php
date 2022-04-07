@@ -15,6 +15,7 @@ class ItemTypeHelper {
 			self::PINGBACK_TYPE  => __( 'Pingback', 'antispam-bee' ),
 		];
 
+		// Todo: Write a doc how to add custom types.
 		$type_names = array_merge( apply_filters( 'asb_item_types', [] ), $type_names );
 		return isset( $type_names[ $item_type ] ) ? $type_names[ $item_type ] : $item_type;
 	}

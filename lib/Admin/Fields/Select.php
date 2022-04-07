@@ -13,13 +13,6 @@ class Select extends Field implements RenderElement {
 
 	protected $multiple;
 
-	public function __construct( $name, $label, $description = '', $options = [], $multiple = false ) {
-		parent::__construct( $name, $label, $description );
-
-		$this->options = $options;
-		$this->multiple = $multiple;
-	}
-
 	/**
 	 * Get HTML.
 	 *

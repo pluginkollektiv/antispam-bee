@@ -30,7 +30,7 @@ class BBCode implements Verifiable, Controllable {
 	}
 
 	public static function get_description() {
-		__( 'Review the comment contents for BBCode links', 'antispam-bee' );
+		return __( 'Review the comment contents for BBCode links', 'antispam-bee' );
 	}
 
 	public static function get_weight() {
@@ -46,36 +46,7 @@ class BBCode implements Verifiable, Controllable {
 	}
 
 	public static function get_options() {
-		return [
-			[
-				'type' => 'input',
-	            'input_type' => 'email|password|number...',
-				'label' => __( 'BBCodes to allow', 'antispam-bee' ),
-	            'option_name' => 'asb_deny_langcodes',
-	            'options' => [ 'Option A', 'Option B' ],
-	            'multiple' => true,
-	            'placeholder' => 'My placeholder text',
-	            'default' => 'Default value'
-			],
-			[
-				'type' => 'select',
-				'label' => __( 'BBCodes to allow', 'antispam-bee' ),
-				'option_name' => 'asb_deny_langcodes',
-				'options' => [
-					[
-						'value' => 1,
-						'label' => 'Option A'
-					],
-					[
-						'value' => 2,
-						'label' => 'Option B'
-					],
-				],
-				'multiple' => false,
-				'placeholder' => 'My placeholder text',
-				'default' => 'Default value'
-			]
-		];
+		return null;
 	}
 
 	public static function get_supported_types() {
