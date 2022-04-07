@@ -14,6 +14,22 @@ class Honeypot implements Verifiable, Controllable {
 	use IsActive;
 	use InitRule;
 
+	/**
+	 * Initialize the rule.
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		add_filter( 'asb_rules', [ __CLASS__, 'add_rule' ] );
+
+		add_filter(
+			'comment_form_field_comment',
+			function ( $field_markup ) {
+				return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
+			}
+		);
+	}
+
 	public static function verify( $data ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['ab_spam__hidden_field'] ) && 1 === $_POST['ab_spam__hidden_field'] ) {

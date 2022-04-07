@@ -74,13 +74,6 @@ function init() {
 			call_user_func( [ $module, 'init' ] );
 		}
 	}
-
-	add_filter(
-		'comment_form_field_comment',
-		function ( $field_markup ) {
-			return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
-		}
-	);
 }
 
 add_action( 'plugins_loaded', 'AntispamBee\init' );
