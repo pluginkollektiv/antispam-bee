@@ -2,7 +2,8 @@
 
 namespace AntispamBee\Handlers;
 
-use AntispamBee\Helpers\InterfaceHelper;
+use AntispamBee\Helpers\Components;
+use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
 
 class PostProcessors {
@@ -29,54 +30,23 @@ class PostProcessors {
 	}
 
 	public static function get( $type = null, $only_active = false ) {
-		// Todo: Fix: The name mustn't break the options page, we should sort out everything that can break the plugin.
-		// Todo: Check if other things can break it too
-
-		$all_post_processors = apply_filters( 'asb_post_processors', [] );
-		$post_processors     = [];
-		foreach ( $all_post_processors as $key => $post_processor ) {
-			if ( ! self::is_valid_post_processor( $post_processor ) ) {
-				continue;
-			}
-
-			$supported_types_function = isset( $post_processor['post_processor'] ) ? [ $post_processor['post_processor'], 'get_supported_types' ] : $post_processor['get_supported_types'];
-			$supported_types          = (array) call_user_func( $supported_types_function, $type );
-			if ( ! in_array( $type, $supported_types ) ) {
-				continue;
-			}
-
-			if ( ! $only_active ) {
-				$post_processors[] = $post_processor;
-				continue;
-			}
-
-			$is_active_function = isset( $post_processor['post_processor'] ) ? [ $post_processor['post_processor'], 'is_active' ] : $post_processor['is_active'];
-			$is_active          = call_user_func( $is_active_function, $type );
-
-			if ( ! $is_active ) {
-				continue;
-			}
-
-			$post_processors[] = $post_processor;
-		}
-
-		return $post_processors;
+		return self::filter( [
+			'type' => $type,
+			'only_active' => $only_active,
+			'implements' => PostProcessor::class,
+		] );
 	}
 
-	private static function is_valid_post_processor( $post_processor ) {
-		if ( isset( $post_processor['post_processor'] ) ) {
-			return InterfaceHelper::class_implements_interface( $post_processor['post_processor'], PostProcessor::class );
-		}
-
-		$post_processor_callables = [
-			'is_active',
-			'process',
-			'get_slug',
-			'get_supported_types',
-		];
-
-		return InterfaceHelper::array_has_callables( $post_processor, $post_processor_callables );
+	public static function get_controllables( $type = null, $only_active = false ) {
+		return self::filter( [
+			'type' => $type,
+			'only_active' => $only_active,
+			'implements' => [ PostProcessor::class, Controllable::class ],
+		] );
 	}
 
-	// Todo: Add a filter method like in Rules
+	private static function filter( $options ) {
+		return Components::filter( apply_filters( 'asb_post_processors', [] ), $options );
+	}
+
 }

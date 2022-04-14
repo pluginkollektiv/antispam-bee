@@ -36,7 +36,7 @@ class UpdateDailyStats implements PostProcessor {
 	}
 
 	public static function get_slug() {
-		return 'asb-send-email';
+		return 'asb-update-daily-stats';
 	}
 
 	public static function get_supported_types() {

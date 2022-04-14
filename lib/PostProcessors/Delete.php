@@ -17,16 +17,20 @@ class Delete implements PostProcessor, Controllable {
 		return $item;
 	}
 
-	public static function get_slug() {
-		return 'asb-mark-spam';
-	}
-
-	public static function get_label() {
+	public static function get_name() {
 		return __( 'Delete spam', 'antispam-bee' );
 	}
 
-	public static function get_description() {
+	public static function get_slug() {
+		return 'asb-delete-spam';
+	}
+
+	public static function get_label() {
 		return __( 'Delete detected spam instead of marking.', 'antispam-bee' );
+	}
+
+	public static function get_description() {
+		return null;
 	}
 
 	public static function get_options() {

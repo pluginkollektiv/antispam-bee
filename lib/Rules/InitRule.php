@@ -24,13 +24,7 @@ trait InitRule {
 	 * @return array
 	 */
 	public static function add_rule( $rules ) {
-		$rule = [];
-		$rule['verifiable'] = self::class;
-		if ( InterfaceHelper::class_implements_interface( self::class, Controllable::class ) ) {
-			$rule['controllable'] = self::class;
-		}
-
-		$rules[] = $rule;
+		$rules[] = self::class;
 		return $rules;
 	}
 }

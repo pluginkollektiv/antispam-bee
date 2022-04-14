@@ -2,6 +2,8 @@
 
 namespace AntispamBee\PostProcessors;
 
+use AntispamBee\Handlers\Rules;
+use AntispamBee\Helpers\Components;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
@@ -28,6 +30,10 @@ class DeleteForReasons implements PostProcessor, Controllable {
 		return $item;
 	}
 
+	public static function get_name() {
+		return __( 'Delete by reasons', 'antispam-bee' );
+	}
+
 	public static function get_slug() {
 		return 'asb-delete-for-reasons';
 	}
@@ -37,11 +43,35 @@ class DeleteForReasons implements PostProcessor, Controllable {
 	}
 
 	public static function get_description() {
-		return __( 'For multiple selections press Ctrl/CMD', 'antispam-bee' );
+		return null;
 	}
 
 	public static function get_options() {
-		return null;
+		// Fetch all rules
+		// All item types
+		$rules = Rules::get();
+
+		$options = [];
+		foreach ( self::get_supported_types() as $type ) {
+			$filtered_rules = Components::filter( $rules, [ 'type' => $type ] );
+			$checkbox_options = [];
+			foreach ( $filtered_rules as $rule ) {
+				$checkbox_options[ $rule::get_slug() ] = $rule::get_name();
+			}
+
+			$options[] = [
+				'valid_for' => $type,
+				'label' => __( 'Reasons', 'antispam-bee' ),
+				'type' => 'checkbox-group',
+				'options' => $checkbox_options,
+				'option_name' => 'asb_delete_reasons',
+				'sanitize' => function( $value ) {
+					return self::sanitize_input( $value );
+				}
+			];
+		}
+
+		return $options;
 	}
 
 	public static function get_supported_types() {
@@ -54,5 +84,10 @@ class DeleteForReasons implements PostProcessor, Controllable {
 
 	public static function is_active( $type ) {
 		return false;
+	}
+
+	protected static function sanitize_input( $value ) {
+		// Todo: Add sanitize functions!
+		return $value;
 	}
 }

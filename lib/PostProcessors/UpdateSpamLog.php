@@ -37,7 +37,7 @@ class UpdateSpamLog implements PostProcessor {
 	}
 
 	public static function get_slug() {
-		return 'asb-send-email';
+		return 'asb-update-spam-log';
 	}
 
 	public static function get_supported_types() {

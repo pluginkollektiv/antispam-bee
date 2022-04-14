@@ -8,10 +8,10 @@
 namespace AntispamBee\Admin;
 
 use AntispamBee\Admin\Fields\Checkbox;
+use AntispamBee\Admin\Fields\CheckboxGroup;
 use AntispamBee\Admin\Fields\Select;
 use AntispamBee\Admin\Fields\Text;
 use AntispamBee\Admin\Fields\Textarea;
-use AntispamBee\Helpers\InterfaceHelper;
 use AntispamBee\Admin\Fields\Field;
 
 /**
@@ -68,8 +68,6 @@ class Section {
 		$this->type = $type;
 	}
 
-
-
 	public function add_rows( $rows ) {
 		foreach ( $rows as $row ) {
 			$this->rows[] = $row;
@@ -83,9 +81,10 @@ class Section {
 	private function generate_fields( $controllables ) {
 		// Todo: DRY - Don’t run for other types than displayed
 		foreach ( $controllables as $controllable ) {
-			$slug = InterfaceHelper::call( $controllable, 'controllable', 'get_slug' );
-			$label = InterfaceHelper::call( $controllable, 'controllable', 'get_label' );
-			$description = InterfaceHelper::call( $controllable, 'controllable', 'get_description' );
+			$controllable = $controllable;
+			$slug = $controllable::get_slug();
+			$label = $controllable::get_label();
+			$description = $controllable::get_description();
 			$fields = [];
 			$fields[] = $this->generate_field( [
 				'type' => 'checkbox',
@@ -94,24 +93,25 @@ class Section {
 				'description' => $description
 			] );
 
-			$options = InterfaceHelper::call( $controllable, 'controllable', 'get_options' );
+			$options = $controllable::get_options();
 			if ( ! empty( $options ) ) {
 				foreach ( $options as $option ) {
+					$valid_for = isset( $option['valid_for'] ) ? $option['valid_for'] : null;
+					if ( $valid_for !== null && $this->type !== $valid_for ) {
+						continue;
+					}
 					$fields[] = $this->generate_field( $option );
 				}
 			}
 
 			$this->rows[] = [
-				'label' => InterfaceHelper::call( $controllable, 'controllable', 'get_name' ),
+				'label' => $controllable::get_name(),
 				'fields' => $fields
 			];
 		}
 	}
 
 	private function generate_field( $option ) {
-		$description = isset( $option['description'] ) ? $option['description'] : '';
-		// Todo: Find a more descriptive name for option_name
-		$name = 'antispam_bee[' . $this->type . '][' . $option['option_name'] . ']';
 		switch ( $option['type'] ) {
 			case 'input':
 				return new Text( $this->type, $option );
@@ -121,6 +121,8 @@ class Section {
 				return new Textarea( $this->type, $option );
 			case 'checkbox':
 				return new Checkbox( $this->type, $option );
+			case 'checkbox-group':
+				return new CheckboxGroup( $this->type, $option );
 		}
 	}
 

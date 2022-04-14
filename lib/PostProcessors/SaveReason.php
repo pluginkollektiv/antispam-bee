@@ -34,6 +34,10 @@ class SaveReason implements PostProcessor, Controllable {
 		return $item;
 	}
 
+	public static function get_name() {
+		return __( 'Save reasons', 'antispam-bee' );
+	}
+
 	public static function get_slug() {
 		return 'asb-save-reason';
 	}
@@ -43,11 +47,11 @@ class SaveReason implements PostProcessor, Controllable {
 	}
 
 	public static function get_label() {
-		return __( 'Delete comments by spam reasons', 'antispam-bee' );
+		return __( 'Save the spam reasons as comment meta', 'antispam-bee' );
 	}
 
 	public static function get_description() {
-		return __( 'For multiple selections press Ctrl/CMD', 'antispam-bee' );
+		return __( 'The reasons are displayed in the spam comments list.', 'antispam-bee' );
 	}
 
 	public static function get_options() {

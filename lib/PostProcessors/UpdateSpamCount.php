@@ -25,7 +25,7 @@ class UpdateSpamCount implements PostProcessor {
 	}
 
 	public static function get_slug() {
-		return 'asb-send-email';
+		return 'asb-update-spam-count';
 	}
 
 	public static function get_supported_types() {

@@ -3,6 +3,8 @@
 namespace AntispamBee\Interfaces;
 
 interface Controllable {
+	public static function get_name();
+
 	public static function get_label();
 
 	public static function get_description();

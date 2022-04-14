@@ -8,16 +8,13 @@
 namespace AntispamBee\Admin;
 
 use AntispamBee\Admin\Fields\Checkbox;
+use AntispamBee\Admin\Fields\Inline;
 use AntispamBee\Admin\Fields\Text;
-use AntispamBee\Admin\Fields\Select;
-use AntispamBee\Admin\Fields\Textarea;
+use AntispamBee\Handlers\PostProcessors;
 use AntispamBee\Handlers\Rules;
-use AntispamBee\Handlers\Trackback;
-use AntispamBee\Helpers\InterfaceHelper;
+use AntispamBee\Helpers\Components;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Helpers\Settings;
-use AntispamBee\Interfaces\Controllable;
-use AntispamBee\Interfaces\Verifiable;
 
 /**
  * Antispam Bee Settings Page
@@ -80,6 +77,24 @@ class SettingsPage {
 
 		$general_section->add_rows( [
 			[
+				'label' => __( 'Delete old spam', 'antispam-bee' ),
+				'fields' => [
+					new Checkbox( 'general', [
+						'option_name' => 'ab_cronjob_enable',
+					] ),
+					new Inline( 'general', [
+						'input' => new Text( 'general', [
+							'input_type' => 'number',
+							'input_size' => 'small',
+							'option_name' => 'ab_cronjob_interval',
+						] ),
+						'option_name' => 'ab_cronjob_enable',
+						'label' => esc_html( 'Delete existing spam after %s days', 'antispam-bee' ),
+						'description' => esc_html( 'Cleaning up the database from old entries', 'antispam-bee' ),
+					] ),
+				]
+			],
+			[
 				'label' => __( 'Statistics', 'antispam-bee' ),
 				'fields' => [
 					new Checkbox( 'general', [
@@ -103,15 +118,21 @@ class SettingsPage {
 						'description' => esc_html( 'No spam check for link notifications', 'antispam-bee' ),
 					] ),
 				]
+			],
+			[
+				'label' => __( 'Uninstall', 'antispam-bee' ),
+				'fields' => [
+					new Checkbox( 'general', [
+						'option_name' => 'delete_data_on_uninstall',
+						'label' => esc_html( 'Delete Antispam Bee data when uninstalling', 'antispam-bee' ),
+						'description' => esc_html( 'If checked, you will delete all data Antispam Bee creates, when uninstalling the plugin.', 'antispam-bee' ),
+					] ),
+				]
 			]
 		] );
 
 		// Todo: Add a way to build rows and fields with a fluent interface?
 		// Todo: Fix the confusing naming. We have a lot of type e.g.
-
-		// Todo: Discuss if we want to remove that setting in V3 and maybe have a filter for that.
-		// If we keep it, we have to add it to the comments tab.
-		// new Checkbox( 'ab_use_output_buffer', esc_html( 'Check complete site markup for comment forms', 'antispam-bee' ), sprintf( /* translators: s=filter name */ esc_html( 'Uses output buffering instead of the %s filter.', 'antispam-bee' ), '<code>comment_form_field_comment</code>' ) ),
 		$general_tab = new Tab(
 			'general',
 			__( 'General','antispam-bee' ),
@@ -120,33 +141,44 @@ class SettingsPage {
 			]
 		);
 
-		$rules = Rules::filter( Rules::get(), [
-			'is_controllable' => true,
-			'only_active' => true,
-		] );
+		$rules = Rules::get_controllables();
+		$post_processors = PostProcessors::get_controllables();
 		$types = [];
 		foreach ( $rules as $rule ) {
-			$types = array_merge( $types, InterfaceHelper::call( $rule, 'controllable', 'get_supported_types' ) );
+			$types = array_merge( $types, $rule::get_supported_types() );
 		}
 		$types = array_unique( $types );
 
 		$tabs = [];
 		$tabs['general'] = $general_tab;
 		foreach ( $types as $type ) {
-			$section = new Section(
+			$rules_section = new Section(
 				'rules',
 				__( 'Rules', 'antispam-bee' ),
 				__( 'Setup rules.', 'antispam-bee' ),
 				$type
 			);
-			$section->add_controllables( Rules::filter( $rules, [
+			$rules_section->add_controllables( Components::filter( $rules, [
 				'type' => $type,
 			] ) );
+
+			$post_processors_section = new Section(
+				'post_processors',
+				__( 'Post Processors', 'antispam-bee' ),
+				__( 'Setup post processors.', 'antispam-bee' ),
+				$type
+			);
+
+			$post_processors_section->add_controllables( Components::filter( $post_processors, [
+				'type' => $type,
+			] ) );
+
 			$tabs[$type] = new Tab(
 				$type,
 				ItemTypeHelper::get_type_name( $type ),
 				[
-					'rules' => $section
+					'rules' => $rules_section,
+					'post_processors' => $post_processors_section
 				]
 			);
 		}
@@ -166,10 +198,12 @@ class SettingsPage {
 						sanitize_title( $row['label'] ),
 						$row['label'],
 						function() use ( $row ) {
-							$last_field = false;
 							foreach ( $row['fields'] as $key => $field ) {
-								$field->render( $last_field );
+								$field->render();
 								if ( $key !== count( $row['fields'] ) - 1 ) {
+									if ( $field instanceof Checkbox && empty( $field->get_label() ) ) {
+										continue;
+									}
 									echo '<br>';
 								}
 							}

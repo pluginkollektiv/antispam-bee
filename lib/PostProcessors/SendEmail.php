@@ -138,6 +138,10 @@ class SendEmail implements PostProcessor, Controllable {
 		return $item;
 	}
 
+	public static function get_name() {
+		return __( 'Send email', 'antispam-bee' );
+	}
+
 	public static function get_slug() {
 		return 'asb-send-email';
 	}

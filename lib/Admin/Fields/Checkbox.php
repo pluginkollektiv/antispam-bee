@@ -17,13 +17,17 @@ class Checkbox extends Field implements RenderElement {
 	 * Get HTML.
 	 */
 	public function render() {
+		$label = ! empty( $this->get_label() ) ? sprintf(
+			'<label for="%s">%s</label>',
+				esc_attr( $this->get_name() ),
+				esc_html( $this->get_label() )
+			) : '';
+
 		printf(
-			'<label for="%1$s">
-						<input type="checkbox" id="%1$s" name="%1$s" %2$s />%3$s
-					</label>',
+			'<input type="checkbox" id="%1$s" name="%1$s" %2$s />%3$s',
 			esc_attr( $this->get_name() ),
 			checked( 'on', $this->get_value(), false ),
-			esc_html( $this->get_label() )
+			$label
 		);
 		$this->maybe_show_description();
 	}
