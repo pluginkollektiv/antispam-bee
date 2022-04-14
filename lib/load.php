@@ -81,6 +81,10 @@ function init() {
 
 	// Todo: Allow to give values instead of callables. Test for return types.
 	// Todo: Write a doc how to implement a custom rule and postprocessor.
+	// Todo: Remove the following code as it is only for testing the extendibility at the moment
+	/*
+	 * Example with callables
+	 *
 	add_filter( 'asb_rules', function( $rules ) {
 		$rule = [];
 		$rule['verifiable']['verify'] = function() {
@@ -115,6 +119,32 @@ function init() {
 		$rules[] = $rule;
 		return $rules;
 	} );
+	*/
+
+	/*
+	 * Example without callables
+	 *
+	add_filter( 'asb_rules', function( $rules ) {
+		$rule = [];
+		$rule['verifiable']['verify'] = function() {
+			return 1;
+		};
+		$rule['verifiable']['get_name'] = 'Imaginary Rule';
+		$rule['verifiable']['get_weight'] = 1000.0;
+		$rule['verifiable']['get_slug'] = 'imaginary_rule';
+		$rule['verifiable']['get_supported_types'] = [ 'comment', 'webmention' ];
+		$rule['verifiable']['is_final'] = true;
+
+		$rule['controllable']['get_label'] = 'Imaginary Rule';
+		$rule['controllable']['get_description'] = 'Description for our Imaginary Rule';
+		$rule['controllable']['is_active'] = function( $type ) {
+			return true;
+		};
+
+		$rules[] = $rule;
+		return $rules;
+	} );
+	*/
 }
 
 add_action( 'plugins_loaded', 'AntispamBee\init' );

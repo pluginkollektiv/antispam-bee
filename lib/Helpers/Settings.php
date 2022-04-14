@@ -116,10 +116,6 @@ class Settings {
 		$options = ! empty( $options ) ? $options : [ $tab => [] ];
 		$current_options[ $tab ] = $options[ $tab ];
 
-		echo '<pre>';
-		var_dump( $options, $current_options );
-		echo '</pre>';
-
 		return $current_options;
 	}
 }

@@ -107,7 +107,8 @@ class SettingsPage {
 		] );
 
 		// Todo: Add a way to build rows and fields with a fluent interface?
-		// Todo: Fix the weird naming
+		// Todo: Fix the confusing naming. We have a lot of type e.g.
+
 		// Todo: Discuss if we want to remove that setting in V3 and maybe have a filter for that.
 		// If we keep it, we have to add it to the comments tab.
 		// new Checkbox( 'ab_use_output_buffer', esc_html( 'Check complete site markup for comment forms', 'antispam-bee' ), sprintf( /* translators: s=filter name */ esc_html( 'Uses output buffering instead of the %s filter.', 'antispam-bee' ), '<code>comment_form_field_comment</code>' ) ),

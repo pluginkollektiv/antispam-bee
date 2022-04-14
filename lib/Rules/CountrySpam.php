@@ -19,6 +19,9 @@ class CountrySpam implements Verifiable, Controllable {
 		$ip = $data['comment_author_IP'];
 
 		$options = Settings::get_options();
+		if ( ! ( isset( $options['country_allowed'] ) && isset( $options['country_denied'] ) ) ) {
+			return 0;
+		}
 
 		$allowed = preg_split(
 			'/[\s,;]+/',

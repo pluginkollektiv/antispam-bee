@@ -4,16 +4,38 @@ namespace AntispamBee\Helpers;
 
 class InterfaceHelper {
 
-	// Todo: adapt method because the methods have to be stored under the verifiable key
+	// Todo: adapt class methods because the callable methods now have to be stored under the interface key
+	/**
+	 * Tries to call a method with different approaches. Firstly it tries to call it via object/fqn and method name.
+	 * Next it tries to call the array element directly. At least it returns the value of the node.
+	 *
+	 * @param array  $array
+	 * @param string $interface
+	 * @param string $method
+	 * @param array  $args
+	 *
+	 * @return mixed|null
+	 */
 	public static function call( $array, $interface, $method, $args = [] ) {
+		// Just return if there is no interface key in the array
+		if ( ! isset ( $array[ $interface ] ) ) {
+			return null;
+		}
+
+		// Call the method if it is an object or fully qualified name and the method is callable
+		$callable = [ $array[ $interface ], $method ];
+		if ( is_callable( $callable ) ) {
+			return call_user_func( $callable, $args );
+		}
+
+		// Call the method if the callable is stored in the array
 		$callable = isset( $array[ $interface ][ $method ] ) ? $array[ $interface ][ $method ] : null;
 		if ( is_callable( $callable ) ) {
 			return call_user_func( $callable, $args );
 		}
 
-		if ( isset( $array[ $interface ] ) && is_callable( array( $array[ $interface ], $method ) ) ) {
-			return call_user_func( [ $array[ $interface ], $method ], $args );
-		}
+		// Return the value at least, if nothing other works
+		return $callable;
 	}
 
 	public static function class_implements_interface( $class_name, $interface ) {

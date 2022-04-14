@@ -96,7 +96,6 @@ class Rules {
 					continue;
 				}
 
-
 				$conforms_to_controllable = isset( $rule['controllable'] ) ?
 					InterfaceHelper::conforms_to_interface( $rule['controllable'], Controllable::class ) : false;
 				if ( $only_controllables && ! $conforms_to_controllable ) {
