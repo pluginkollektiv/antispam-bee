@@ -12,10 +12,11 @@ class RegexpSpam implements Verifiable, Controllable {
 	use InitRule;
 	use IsActive;
 
+	// Todo: Test trackbacks
 	/**
 	 * Usage of regexp, also custom
 	 */
-	public static function verify( $data ) {
+	public static function verify( $item ) {
 		$fields = [
 			'ip',
 			'host',
@@ -25,16 +26,14 @@ class RegexpSpam implements Verifiable, Controllable {
 			'useragent',
 		];
 
-		$item = null;
-
-		if ( ItemTypeHelper::COMMENT_TYPE === $data['asb_item_type'] ) {
-			$ip        = $data['comment_author_IP'];
-			$url       = $data['comment_author_url'];
-			$body      = $data['comment_content'];
-			$email     = $data['comment_author_email'];
-			$author    = $data['comment_author'];
-			$useragent = $data['comment_agent'];
-			$item      = array(
+		if ( ItemTypeHelper::COMMENT_TYPE === $item['asb_item_type'] ) {
+			$ip        = $item['comment_author_IP'];
+			$url       = $item['comment_author_url'];
+			$body      = $item['comment_content'];
+			$email     = $item['comment_author_email'];
+			$author    = $item['comment_author'];
+			$useragent = $item['comment_agent'];
+			$subject      = array(
 				'ip'        => $ip,
 				'rawurl'    => $url,
 				'host'      => DataHelper::parse_url( $url, 'host' ),
@@ -45,14 +44,11 @@ class RegexpSpam implements Verifiable, Controllable {
 			);
 		}
 
-		if ( ItemTypeHelper::TRACKBACK_TYPE === $data['asb_item_type'] ) {
-			$ip        = $data['comment_author_IP'];
-			$url       = $data['comment_author_url'];
-			$body      = $data['comment_content'];
-			$post_id   = $data['comment_post_ID'];
-			$type      = $data['comment_type'];
-			$blog_name = $data['comment_author'];
-			$item      = [
+		if ( ItemTypeHelper::TRACKBACK_TYPE === $item['asb_item_type'] ) {
+			$ip        = $item['comment_author_IP'];
+			$url       = $item['comment_author_url'];
+			$body      = $item['comment_content'];
+			$subject      = [
 				'ip'     => $ip,
 				'rawurl' => $url,
 				'host'   => DataHelper::parse_url( $url, 'host' ),
@@ -62,7 +58,7 @@ class RegexpSpam implements Verifiable, Controllable {
 			];
 		}
 
-		if ( ! $item ) {
+		if ( ! $subject ) {
 			return 0;
 		}
 
@@ -98,7 +94,7 @@ class RegexpSpam implements Verifiable, Controllable {
 			],
 		];
 
-		$quoted_author = preg_quote( $item['author'], '/' );
+		$quoted_author = preg_quote( $subject['author'], '/' );
 		if ( $quoted_author ) {
 			$patterns[] = [
 				'body' => sprintf(
@@ -139,13 +135,13 @@ class RegexpSpam implements Verifiable, Controllable {
 					continue;
 				}
 
-				$item[ $field ] = ( function_exists( 'iconv' ) ? iconv( 'utf-8', 'utf-8//TRANSLIT', $item[ $field ] ) : $item[ $field ] );
+				$subject[ $field ] = ( function_exists( 'iconv' ) ? iconv( 'utf-8', 'utf-8//TRANSLIT', $subject[ $field ] ) : $subject[ $field ] );
 
-				if ( empty( $item[ $field ] ) ) {
+				if ( empty( $subject[ $field ] ) ) {
 					continue;
 				}
 
-				if ( preg_match( '/' . $regexp . '/isu', $item[ $field ] ) ) {
+				if ( preg_match( '/' . $regexp . '/isu', $subject[ $field ] ) ) {
 					$hits[ $field ] = true;
 				}
 			}

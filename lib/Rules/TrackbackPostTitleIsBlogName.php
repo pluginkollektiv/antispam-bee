@@ -9,10 +9,10 @@ class TrackbackPostTitleIsBlogName implements Verifiable {
 
 	use InitRule;
 	use IsActive;
-
-	public static function verify( $data ) {
-		$body      = isset( $data['comment_content'] ) ? $data['comment_content'] : null;
-		$blog_name = isset( $data['comment_author'] ) ? $data['comment_author'] : null;
+	// Todo: test
+	public static function verify( $item ) {
+		$body      = isset( $item['comment_content'] ) ? $item['comment_content'] : null;
+		$blog_name = isset( $item['comment_author'] ) ? $item['comment_author'] : null;
 		preg_match( '/<strong>(.*)<\/strong>\\n\\n/', $body, $matches );
 		if ( ! isset( $matches[1] ) ) {
 			return - 1;

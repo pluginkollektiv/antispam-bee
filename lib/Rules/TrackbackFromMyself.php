@@ -10,9 +10,10 @@ class TrackbackFromMyself implements Verifiable {
 	use InitRule;
 	use IsActive;
 
-	public static function verify( $data ) {
-		$url            = isset( $data['comment_author_url'] ) ? $data['comment_author_url'] : null;
-		$target_post_id = isset( $data['comment_post_ID'] ) ? $data['comment_post_ID'] : null;
+	// Todo: test
+	public static function verify( $item ) {
+		$url            = isset( $item['comment_author_url'] ) ? $item['comment_author_url'] : null;
+		$target_post_id = isset( $item['comment_post_ID'] ) ? $item['comment_post_ID'] : null;
 		if ( empty( $url ) || empty( $target_post_id ) ) {
 			return 0;
 		}

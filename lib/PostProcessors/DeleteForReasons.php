@@ -14,16 +14,18 @@ class DeleteForReasons implements PostProcessor, Controllable {
 	use IsActive;
 	use InitPostProcessor;
 
+	// Todo: Test and maybe complete
 	public static function process( $item ) {
 		if ( isset( $item['asb_marked_as_delete'] ) && $item['asb_marked_as_delete'] === true ) {
 			return $item;
 		}
 
-		$reasons = Settings::get_option( $item['asb_item_type'] . '_' . self::get_slug() );
+		$reasons = (array) Settings::get_option( 'asb_delete_reasons', $item['asb_item_type'] );
 		if ( ! $reasons ) {
-			$reasons = [];
+			return $item;
 		}
-		if ( ! empty( array_intersect( $item['asb_reasons'], $reasons ) ) ) {
+
+		if ( ! empty( array_intersect( $item['asb_reasons'], array_keys( $reasons ) ) ) ) {
 			$item['asb_marked_as_delete'] = true;
 		}
 
@@ -80,10 +82,6 @@ class DeleteForReasons implements PostProcessor, Controllable {
 
 	public static function marks_as_delete() {
 		return true;
-	}
-
-	public static function is_active( $type ) {
-		return false;
 	}
 
 	protected static function sanitize_input( $value ) {

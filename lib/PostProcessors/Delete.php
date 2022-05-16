@@ -11,6 +11,7 @@ class Delete implements PostProcessor, Controllable {
 	use IsActive;
 	use InitPostProcessor;
 
+	// Todo: Test and maybe complete
 	public static function process( $item ) {
 		$item['asb_marked_as_delete'] = true;
 
@@ -43,9 +44,5 @@ class Delete implements PostProcessor, Controllable {
 
 	public static function marks_as_delete() {
 		return true;
-	}
-
-	public static function is_active( $type ) {
-		return false;
 	}
 }

@@ -13,6 +13,7 @@ class SendEmail implements PostProcessor, Controllable {
 	use IsActive;
 	use InitPostProcessor;
 
+	// Todo: Test and maybe complete
 	public static function process( $item ) {
 		if ( isset( $item['asb_marked_as_delete'] ) && $item['asb_marked_as_delete'] === true ) {
 			return $item;

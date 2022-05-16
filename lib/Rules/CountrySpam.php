@@ -2,6 +2,7 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\IpHelper;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\Controllable;
@@ -12,26 +13,27 @@ class CountrySpam implements Verifiable, Controllable {
 	use InitRule;
 	use IsActive;
 
-	public static function verify( $data ) {
-		if ( ! isset( $data['comment_author_IP'] ) || empty( $data['comment_author_IP'] ) ) {
+	// Todo: Test and maybe complete
+	public static function verify( $item ) {
+		if ( ! isset( $item['comment_author_IP'] ) || empty( $item['comment_author_IP'] ) ) {
 			return 0;
 		}
-		$ip = $data['comment_author_IP'];
+		$ip = $item['comment_author_IP'];
 
-		$options = Settings::get_options();
-		if ( ! ( isset( $options['country_allowed'] ) && isset( $options['country_denied'] ) ) ) {
-			return 0;
-		}
+		$country_allowed = Settings::get_option( 'ab_country_allowed', $item['asb_item_type'] );
+		$country_allowed = $country_allowed ? $country_allowed : '';
+		$country_denied = Settings::get_option( 'ab_country_denied', $item['asb_item_type'] );
+		$country_denied = $country_denied ? $country_denied : '';
 
 		$allowed = preg_split(
 			'/[\s,;]+/',
-			$options['country_allowed'],
+			$country_allowed,
 			- 1,
 			PREG_SPLIT_NO_EMPTY
 		);
 		$denied  = preg_split(
 			'/[\s,;]+/',
-			$options['country_denied'],
+			$country_denied,
 			- 1,
 			PREG_SPLIT_NO_EMPTY
 		);
@@ -71,7 +73,7 @@ class CountrySpam implements Verifiable, Controllable {
 			esc_url_raw(
 				sprintf(
 					'https://www.iplocate.io/api/lookup/%s?apikey=%s',
-					self::_anonymize_ip( $ip ),
+					IpHelper::anonymize_ip( $ip ),
 					$apikey
 				),
 				'https'

@@ -60,7 +60,12 @@ class Comment {
 						return 'spam';
 					}
 				);
+
+				return $comment;
 			}
+
+			status_header( 403 );
+			die( 'Spam deleted.' );
 		}
 
 		return $comment;

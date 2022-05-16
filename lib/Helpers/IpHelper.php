@@ -25,14 +25,14 @@ class IpHelper {
 			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED'] );
 		}
 
-		$ip = self::_sanitize_ip( $ip );
+		$ip = self::sanitize_ip( $ip );
 		if ( $ip ) {
 			return $ip;
 		}
 
 		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
 			$ip = wp_unslash( $_SERVER['REMOTE_ADDR'] );
-			return self::_sanitize_ip( $ip );
+			return self::sanitize_ip( $ip );
 		}
 
 		return '';
@@ -46,7 +46,7 @@ class IpHelper {
 	 *
 	 * @return string The sanitized IP or an empty string.
 	 */
-	private static function _sanitize_ip( $raw_ip ) {
+	private static function sanitize_ip( $raw_ip ) {
 		if ( strpos( $raw_ip, ',' ) !== false ) {
 			$ips    = explode( ',', $raw_ip );
 			$raw_ip = trim( $ips[0] );
@@ -63,5 +63,23 @@ class IpHelper {
 			'',
 			$raw_ip
 		);
+	}
+
+	/**
+	 * Anonymize the IP addresses
+	 *
+	 * @since   2.5.1
+	 *
+	 * @param   string $ip Original IP.
+	 * @return  string     Anonymous IP.
+	 */
+	public static function anonymize_ip( $ip ) {
+		preg_match('/\w+([\.:])\w+/', $ip, $matches );
+		$ip_start = $matches[0];
+		if ( '.' === $matches[1] ) {
+			return $ip_start . '.0.0';
+		}
+
+		return $ip_start . '::';
 	}
 }

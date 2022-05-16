@@ -5,13 +5,37 @@ namespace AntispamBee\Rules;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
+use AntispamBee\Helpers\Settings;
 
 class ShortestTime implements Verifiable, Controllable {
 
 	use InitRule;
 	use IsActive;
 
-	public static function verify( $data ) {
+	/**
+	 * Initialize the rule.
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		add_filter( 'asb_rules', [ __CLASS__, 'add_rule' ] );
+
+		add_filter(
+			'comment_form_field_comment',
+			function ( $field_markup ) {
+				if ( ! self::is_active( ItemTypeHelper::COMMENT_TYPE ) ) {
+					return $field_markup;
+				}
+				return $field_markup . sprintf(
+					'<input type="hidden" name="ab_init_time" value="%d" />',
+					time()
+				);
+			}
+		);
+	}
+
+	// Todo: test
+	public static function verify( $item ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Everybody can Post.
 		if ( ! isset( $_POST['ab_init_time'] ) ) {

@@ -3,7 +3,7 @@
 namespace AntispamBee\Interfaces;
 
 interface Verifiable {
-	public static function verify( $data );
+	public static function verify( $item );
 
 	public static function get_weight();
 

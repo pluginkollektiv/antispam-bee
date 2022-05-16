@@ -2,6 +2,7 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
@@ -11,15 +12,17 @@ class ValidGravatar implements Verifiable, Controllable {
 	use InitRule;
 	use IsActive;
 
-	public static function verify( $data ) {
-		if ( ! isset( $data['email'] ) ) {
+	public static function verify( $item ) {
+		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $item );
+		if ( empty( $email ) ) {
 			return 0;
 		}
+		$email = array_shift( $email );
 
 		$response = wp_safe_remote_get(
 			sprintf(
 				'https://www.gravatar.com/avatar/%s?d=404',
-				md5( strtolower( trim( $data['email'] ) ) )
+				md5( strtolower( trim( $email ) ) )
 			)
 		);
 
@@ -28,7 +31,7 @@ class ValidGravatar implements Verifiable, Controllable {
 		}
 
 		if ( wp_remote_retrieve_response_code( $response ) === 200 ) {
-			return 1;
+			return -1;
 		}
 
 		return 0;

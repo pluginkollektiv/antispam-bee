@@ -11,8 +11,8 @@ class BBCode implements Verifiable, Controllable {
 	use InitRule;
 	use IsActive;
 
-	public static function verify( $data ) {
-		foreach ( $data as $value ) {
+	public static function verify( $item ) {
+		foreach ( $item as $value ) {
 			if ( true === (bool) preg_match( '/\[url[=\]].*\[\/url\]/is', $value ) ) {
 				return 1;
 			}

@@ -12,23 +12,23 @@ class DbSpam implements Verifiable, Controllable {
 	use InitRule;
 	use IsActive;
 
-	public static function verify( $data ) {
+	public static function verify( $item ) {
 		$params = [];
 		$filter = [];
-		$url    = DataHelper::get_values_where_key_contains( [ 'url' ], $data );
+		$url    = DataHelper::get_values_where_key_contains( [ 'url' ], $item );
 
 		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';
 			$params[] = wp_unslash( array_shift( $url ) );
 		}
-		$ip = DataHelper::get_values_by_keys( [ 'comment_author_IP' ], $data );
+		$ip = DataHelper::get_values_by_keys( [ 'comment_author_IP' ], $item );
 
 		if ( ! empty( $ip ) ) {
 			$filter[] = '`comment_author_IP` = %s';
 			$params[] = wp_unslash( array_shift( $ip ) );
 		}
 
-		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $data );
+		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $item );
 
 		if ( ! empty( $email ) ) {
 			$filter[] = '`comment_author_email` = %s';

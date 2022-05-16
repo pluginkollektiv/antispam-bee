@@ -10,7 +10,7 @@ class UpdateSpamCount implements PostProcessor {
 
 	use IsActive;
 	use InitPostProcessor;
-
+	// Todo: test
 	public static function process( $item ) {
 		if ( ! Settings::get_option( 'dashboard_count' ) ) {
 			return $item;

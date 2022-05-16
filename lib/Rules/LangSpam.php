@@ -5,6 +5,7 @@ namespace AntispamBee\Rules;
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Helpers\LangHelper;
+use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
@@ -13,34 +14,35 @@ class LangSpam implements Verifiable, Controllable {
 	use InitRule;
 	use IsActive;
 
-	public static function verify( $data ) {
-		$comment_content = DataHelper::get_values_where_key_contains( [ 'content' ], $data );
+	public static function verify( $item ) {
+		$allowed_languages = array_keys( (array) Settings::get_option( 'asb_allowed_lang_codes', $item['asb_item_type'] ) );
+
+		$comment_content = DataHelper::get_values_where_key_contains( [ 'content' ], $item );
 		if ( empty( $comment_content ) ) {
 			return 0;
 		}
 		$comment_content = array_shift( $comment_content );
 		$comment_text    = wp_strip_all_tags( $comment_content );
 
-		if ( empty( $allowed_lang ) || empty( $comment_text ) ) {
+		if ( empty( $allowed_languages ) || empty( $comment_text ) ) {
 			return 0;
 		}
 
 		/**
 		 * Filters the detected language. With this filter, other detection methods can skip in and detect the language.
 		 *
-		 * @param null   $detected_lang The detected language.
+		 * @param null   $detected_language The detected language.
 		 * @param string $comment_text  The text, to detect the language.
 		 *
 		 * @return null|string The detected language or null.
 		 * @since 2.8.2
 		 */
-		$detected_lang = apply_filters( 'antispam_bee_detected_lang', null, $comment_text );
-		if ( null !== $detected_lang ) {
-			return ! in_array( $detected_lang, $allowed_lang, true );
+		$detected_language = apply_filters( 'antispam_bee_detected_lang', null, $comment_text );
+		if ( null !== $detected_language ) {
+			return ! in_array( $detected_language, $allowed_languages, true );
 		}
 
-		$word_count = 0;
-		$text       = trim( preg_replace( "/[\n\r\t ]+/", ' ', $comment_text ), ' ' );
+		$text = trim( preg_replace( "/[\n\r\t ]+/", ' ', $comment_text ), ' ' );
 
 		/*
 		 * translators: If your word count is based on single characters (e.g. East Asian characters),
@@ -56,6 +58,7 @@ class LangSpam implements Verifiable, Controllable {
 			get_option( 'blog_charset' )
 		) ) { // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			preg_match_all( '/./u', $text, $words_array );
+			$word_count = 0;
 			if ( isset( $words_array[0] ) ) {
 				$word_count = count( $words_array[0] );
 			}
@@ -78,17 +81,17 @@ class LangSpam implements Verifiable, Controllable {
 			return 0;
 		}
 
-		$detected_lang = wp_remote_retrieve_body( $response );
-		if ( ! $detected_lang ) {
+		$detected_language = wp_remote_retrieve_body( $response );
+		if ( ! $detected_language ) {
 			return 0;
 		}
 
-		$detected_lang = json_decode( $detected_lang );
-		if ( ! $detected_lang || ! isset( $detected_lang->code ) ) {
+		$detected_language = json_decode( $detected_language );
+		if ( ! $detected_language || ! isset( $detected_language->code ) ) {
 			return 0;
 		}
 
-		return (int) ! in_array( LangHelper::map( $detected_lang->code ), $allowed_lang, true );
+		return (int) ! in_array( LangHelper::map( $detected_language->code ), $allowed_languages, true );
 	}
 
 	public static function get_name() {
@@ -128,8 +131,37 @@ class LangSpam implements Verifiable, Controllable {
 		);
 	}
 
+	// Todo: Use same prefix for ASB everywhere (not sometimes ab, sometimes asb)
+	// Todo: remove unnecessary prefixes for array keys inside asb_option
 	public static function get_options() {
-		null;
+		$languages = [
+			'de' => __( 'German', 'antispam-bee' ),
+			'en' => __( 'English', 'antispam-bee' ),
+			'fr' => __( 'French', 'antispam-bee' ),
+			'it' => __( 'Italian', 'antispam-bee' ),
+			'es' => __( 'Spanish', 'antispam-bee' ),
+		];
+
+		/**
+		 * Filter the possible languages for the language spam test
+		 *
+		 * @since 2.7.1
+		 * @param (array) $languages The languages
+		 * @return (array)
+		 */
+		$languages = (array) apply_filters( 'ab_get_allowed_translate_languages', $languages );
+
+		return [
+			[
+				'type' => 'checkbox-group',
+				'options' => $languages,
+				'label' => __( 'Allowed languages', 'antispam-bee' ),
+				'option_name' => 'asb_allowed_lang_codes',
+				'sanitize' => function( $value ) {
+					return self::sanitize_input( $value );
+				}
+			],
+		];
 	}
 
 	public static function get_supported_types() {

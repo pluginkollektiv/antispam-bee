@@ -25,17 +25,21 @@ class Honeypot implements Verifiable, Controllable {
 		add_filter(
 			'comment_form_field_comment',
 			function ( $field_markup ) {
+				if ( ! self::is_active( ItemTypeHelper::COMMENT_TYPE ) ) {
+					return $field_markup;
+				}
 				return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
 			}
 		);
 	}
 
-	public static function verify( $data ) {
+	public static function verify( $item ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['ab_spam__hidden_field'] ) && 1 === $_POST['ab_spam__hidden_field'] ) {
 			return 1;
 		}
 
+		// Todo: check if we should keep the -1 score.
 		return - 1;
 	}
 

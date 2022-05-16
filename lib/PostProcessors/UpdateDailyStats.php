@@ -11,6 +11,7 @@ class UpdateDailyStats implements PostProcessor {
 	use IsActive;
 	use InitPostProcessor;
 
+	// Todo: Test and maybe complete
 	public static function process( $item ) {
 		if ( ! Settings::get_option( 'dashboard_chart' ) ) {
 			return $item;

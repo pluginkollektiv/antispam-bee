@@ -9,7 +9,7 @@ class UpdateSpamLog implements PostProcessor {
 
 	use IsActive;
 	use InitPostProcessor;
-
+	// Todo: test
 	public static function process( $item ) {
 		if ( ! isset( $item['comment_post_ID'] ) || ! isset( $item['comment_author_IP'] ) ) {
 			return $item['asb_post_processors_failed'][] = self::get_slug();

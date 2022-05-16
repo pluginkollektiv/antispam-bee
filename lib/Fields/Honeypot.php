@@ -116,6 +116,7 @@ class Honeypot {
 					$markup
 				);
 				break;
+				// Todo: Add the possibility to use an input instead a textarea
 			case 'input':
 				$item = sprintf(
 					'<input %s>',

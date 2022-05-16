@@ -12,8 +12,9 @@ class ApprovedEmail implements Verifiable, Controllable {
 	use InitRule;
 	use IsActive;
 
-	public static function verify( $data ) {
-		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $data );
+	// Todo: Discuss if this (and gravatar) should be final rules, and also surpass the Honeypot
+	public static function verify( $item ) {
+		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $item );
 		if ( empty( $email ) ) {
 			return 0;
 		}
@@ -32,7 +33,7 @@ class ApprovedEmail implements Verifiable, Controllable {
 			return 0;
 		}
 
-		return - 1;
+		return -1;
 	}
 
 	public static function get_name() {
