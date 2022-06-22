@@ -3,9 +3,9 @@
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
-* Tested up to:      5.9
+* Tested up to:      6.0
 * Requires PHP:      5.2
-* Stable tag:        2.11.0
+* Stable tag:        2.11.1
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,10 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 A complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ## Changelog ##
+
+### 2.11.1 ###
+  * Tweak: remove superfluous type attribute from inline script tag
+  * Maintenance: Tested up to WordPress 6.0
 
 ### 2.11.0 ###
   * Fix: Allow empty comments if `allow_empty_comment` is set to true
