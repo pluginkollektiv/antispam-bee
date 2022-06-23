@@ -1,5 +1,14 @@
 ## Changelog ##
 
+### 2.11.1 ###
+* **English**
+  * Tweak: remove superfluous type attribute from inline script tag
+  * Maintenance: Tested up to WordPress 6.0
+
+* **Deutsch**
+  * Tweak: Überflüssiges type-Attribut von script-Tag entfernt
+  * Wartung: Getestet mit WordPress 6.0
+
 ### 2.11.0 ###
 * **English**
   * Fix: Allow empty comments if `allow_empty_comment` is set to true
