@@ -19,6 +19,9 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
+use AntispamBee\Crons\DeleteSpamCron;
+use AntispamBee\Helpers\Settings;
+
 define( 'ANTISPAM_BEE_VERSION', '3.0.0' );
 define( 'ANTISPAM_BEE_DB_VERSION', '1.02' );
 define( 'ANTISPAM_BEE_FILE', __FILE__ );
@@ -27,6 +30,8 @@ define( 'ANTISPAM_BEE_URL', plugin_dir_url( ANTISPAM_BEE_FILE ) );
 
 // The pre_init functions check the compatibility of the plugin and calls the init function, if check were successful.
 antispam_bee_pre_init();
+
+// Todo: check why ASB crashes on activation on new install.
 
 /**
  * Pre init function to check the plugins compatibility.
@@ -103,3 +108,5 @@ function antispam_bee_autoloader_missing() {
 	esc_html_e( 'Antispam Bee is missing the Composer autoloader file. Please run `composer install --no-dev -o` in the root folder of the plugin or use a release version including the `vendor` folder.', 'antispam-bee' );
 	echo '</p></div>';
 }
+
+// Todo: Check why the plugin activation sometimes fails with an fatal error

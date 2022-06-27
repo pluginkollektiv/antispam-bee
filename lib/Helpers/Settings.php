@@ -7,7 +7,21 @@ class Settings {
 
 	const ANTISPAM_BEE_OPTION_NAME = 'antispam_bee';
 
-	public static function init() {}
+	public static function init() {
+		add_action(
+			'update_option_' . Settings::ANTISPAM_BEE_OPTION_NAME,
+			[ __CLASS__, 'update_cache' ],
+			1,
+			2
+		);
+	}
+
+	public static function update_cache( $old_value, $value ) {
+		wp_cache_set(
+			self::ANTISPAM_BEE_OPTION_NAME,
+			$value
+		);
+	}
 
 	/**
 	 * Get all plugin options
@@ -15,13 +29,13 @@ class Settings {
 	 * @return  array $options Array with option fields.
 	 */
 	public static function get_options() {
-		$options = wp_cache_get( 'antispam_bee' );
-		if ( ! $options ) {
-			wp_cache_set(
-				'antispam_bee',
-				$options = get_option( 'antispam_bee' )
-			);
+		$options = wp_cache_get( self::ANTISPAM_BEE_OPTION_NAME );
+		if ( $options ) {
+			return $options;
 		}
+
+		$options = get_option( self::ANTISPAM_BEE_OPTION_NAME );
+		wp_cache_set( self::ANTISPAM_BEE_OPTION_NAME, $options );
 
 		return $options;
 	}
@@ -52,7 +66,7 @@ class Settings {
 	 * @since  0.1
 	 */
 	public static function update_options( $data ) {
-		$options = get_option( 'antispam_bee' );
+		$options = get_option( self::ANTISPAM_BEE_OPTION_NAME );
 
 		if ( is_array( $options ) ) {
 			$options = array_merge(
@@ -63,8 +77,7 @@ class Settings {
 			$options = $data;
 		}
 
-		update_option( 'antispam_bee', $options );
-		wp_cache_set( 'antispam_bee', $options );
+		update_option( self::ANTISPAM_BEE_OPTION_NAME, $options );
 	}
 
 	/**

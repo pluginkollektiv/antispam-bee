@@ -13,7 +13,6 @@ class CountrySpam implements Verifiable, Controllable {
 	use InitRule;
 	use IsActive;
 
-	// Todo: Test and maybe complete
 	public static function verify( $item ) {
 		if ( ! isset( $item['comment_author_IP'] ) || empty( $item['comment_author_IP'] ) ) {
 			return 0;

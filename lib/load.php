@@ -9,6 +9,7 @@ namespace AntispamBee;
 
 use AntispamBee\Admin\DashboardWidgets;
 use AntispamBee\Admin\SettingsPage;
+use AntispamBee\Crons\DeleteSpamCron;
 use AntispamBee\Handlers\Comment;
 use AntispamBee\Handlers\Trackback;
 use AntispamBee\Helpers\AssetsLoader;
@@ -42,6 +43,7 @@ function init() {
 	$modules = [
 		'admin_dashboard_helper'                  => new DashboardWidgets(),
 		'admin_settings_page'                     => new SettingsPage(),
+		'handlers_delete_spam_cron_handler'       => new DeleteSpamCron(),
 		'handlers_comment_handler'                => new Comment(),
 		'handlers_trackback_handler'              => new Trackback(),
 		'helpers_assets_loader'                   => new AssetsLoader(),

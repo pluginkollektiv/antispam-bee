@@ -80,15 +80,15 @@ class SettingsPage {
 				'label' => __( 'Delete old spam', 'antispam-bee' ),
 				'fields' => [
 					new Checkbox( 'general', [
-						'option_name' => 'ab_cronjob_enable',
+						'option_name' => 'delete_spam_cronjob_enabled', // Todo: Migrate ab_cronjob_enable
 					] ),
 					new Inline( 'general', [
 						'input' => new Text( 'general', [
 							'input_type' => 'number',
 							'input_size' => 'small',
-							'option_name' => 'ab_cronjob_interval',
+							'option_name' => 'delete_spam_cronjob_days', // Todo: Migrate ab_cronjob_interval
 						] ),
-						'option_name' => 'ab_cronjob_enable',
+						'option_name' => 'delete_spam_cronjob_enabled',
 						'label' => esc_html( 'Delete existing spam after %s days', 'antispam-bee' ),
 						'description' => esc_html( 'Cleaning up the database from old entries', 'antispam-bee' ),
 					] ),

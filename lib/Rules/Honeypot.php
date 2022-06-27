@@ -40,7 +40,7 @@ class Honeypot implements Verifiable, Controllable {
 		}
 
 		// Todo: check if we should keep the -1 score.
-		return - 1;
+		return -1;
 	}
 
 	public static function precheck() {
