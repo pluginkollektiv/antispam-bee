@@ -69,6 +69,6 @@ class Comment {
 		}
 
 		return $comment;
-		// todo: Maybe store no-spam-reasons
+		// todo: Maybe store no-spam-reasons (to discuss)
 	}
 }

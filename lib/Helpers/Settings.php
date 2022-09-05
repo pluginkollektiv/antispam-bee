@@ -2,6 +2,9 @@
 
 namespace AntispamBee\Helpers;
 
+use AntispamBee\Handlers\PostProcessors;
+use AntispamBee\Handlers\Rules;
+
 class Settings {
 	protected static $defaults;
 
@@ -50,10 +53,39 @@ class Settings {
 	 */
 	public static function get_option( $option_name, $type = 'general' ) {
 		$options = self::get_options();
+		$value_path = str_replace( '-', '_', "$type.$option_name" );
+		return self::get_array_value_by_path( $value_path, $options );
+	}
 
-		$type = str_replace( '-', '_', $type );
-		$option_name = str_replace( '-', '_', $option_name );
-		return isset( $options[ $type ][ $option_name ] ) ? $options[ $type ][ $option_name ] : null;
+	/**
+	 * Get value from array by path.
+	 *
+	 * @param string     $path  Dot-separated path to the wanted value.
+	 * @param array      $array
+	 *
+	 * @return null|mixed
+	 */
+	private static function get_array_value_by_path( $path, $array ) {
+		if ( ! is_array( $array ) ) {
+			return null;
+		}
+
+		$path_array = self::get_path_parts( $path );
+		if ( empty( $path_array ) ) {
+			return null;
+		}
+
+		$option_value = $array;
+
+		foreach ( $path_array as $path_part ) {
+			if ( ! isset( $option_value[ $path_part ] ) ) {
+				return null;
+			}
+
+			$option_value = $option_value[ $path_part ];
+		}
+
+		return $option_value;
 	}
 
 	/**
@@ -117,18 +149,142 @@ class Settings {
 	}
 
 	public static function sanitize( $options ) {
+		// Todo: Check if we need to separate rules and post processors in the option.
 		$current_options = self::get_options();
 
-		// Todo: Call the sanitize functions for the rules/post processors/settings
-
 		if ( ! isset( $_GET['tab'] ) || empty ( $_GET['tab'] ) ) {
-			return $current_options;
+			return $_GET['tab'] = 'general';
 		}
 
 		$tab = $_GET['tab'];
+
 		$options = ! empty( $options ) ? $options : [ $tab => [] ];
-		$current_options[ $tab ] = $options[ $tab ];
+
+		// Todo: Call the sanitize functions for the rules/post processors/settings
+		$sanitized_options = self::sanitize_controllables( $options, $tab );
+		$current_options[ $tab ] = $sanitized_options[ $tab ];
 
 		return $current_options;
+	}
+
+	private static function sanitize_controllables( $options, $tab ) {
+		// Todo: Handle the settings from the `General` tab.
+		$controllables = array_merge(
+			Rules::get_controllables( $tab ),
+			PostProcessors::get_controllables( $tab )
+		);
+
+		foreach ( $controllables as $controllable ) {
+			$controllable_options = $controllable::get_options();
+			if ( ! $controllable_options ) {
+				$options = self::sanitize_checkbox( $options, $tab . '.' . $controllable::get_slug() . '_active' );
+				continue;
+			}
+
+			foreach ( $controllable_options as $controllable_option ) {
+				if ( ! isset( $controllable_option['sanitize'] ) ) {
+					continue;
+				}
+
+				if ( ! isset( $controllable_option['option_name'] ) ) {
+					continue;
+				}
+
+				$option_name = $controllable_option['option_name'];
+				$path = "$tab.$option_name";
+				$new_value = self::get_array_value_by_path( $path, $options );
+
+				if ( is_callable( $controllable_option['sanitize'] ) ) {
+					$sanitized = call_user_func( $controllable_option['sanitize'], $new_value );
+					if ( null === $sanitized ) {
+						self::remove_array_key_by_path( $path, $options );
+						continue;
+					}
+
+					self::set_array_value_by_path( $path, $sanitized, $options );
+				}
+			}
+		}
+
+		return $options;
+	}
+
+	private static function sanitize_checkbox( $options, $option_path ) {
+		$option_path = str_replace( '-', '_', $option_path );
+		$active_state = self::get_array_value_by_path( $option_path, $options );
+		if ( ! $active_state || 'on' === $active_state ) {
+			return $options;
+		}
+
+		self::remove_array_key_by_path( $option_path, $options );
+
+		return $options;
+	}
+
+	private static function remove_array_key_by_path( $path, &$array ) {
+		if ( ! is_array( $array ) ) {
+			return $array;
+		}
+
+		$path_parts = self::get_path_parts( $path );
+		if ( empty( $path_parts ) ) {
+			return $array;
+		}
+
+		$tmp = &$array;
+		$last_key = array_key_last( $path_parts );
+		foreach ( $path_parts as $key => $value ) {
+			if ( $key === $last_key ) {
+				unset( $tmp[ $value ] );
+				break;
+			}
+
+			if ( isset( $tmp[ $value ] ) ) {
+				$tmp = &$tmp[ $value ];
+			}
+		}
+	}
+
+	private static function get_path_parts( $path ) {
+		if ( ! is_string( $path ) ) {
+			return [];
+		}
+
+		$path_parts = explode( '.', $path );
+		if ( empty( $path_parts ) ) {
+			return [];
+		}
+
+		return $path_parts;
+	}
+
+	private static function set_array_value_by_path( $path, $sanitized, &$options ) {
+		if ( ! is_array( $options ) ) {
+			return;
+		}
+
+		if ( null === $sanitized ) {
+			return;
+		}
+
+		$path_parts = self::get_path_parts( $path );
+		if ( empty( $path_parts ) ) {
+			return;
+		}
+
+		$last_key = array_key_last( $path_parts );
+		$tmp = &$options;
+		foreach ( $path_parts as $key => $value ) {
+			if ( $key === $last_key ) {
+				$tmp[ $value ] = $sanitized;
+				break;
+			}
+
+			if ( ! isset( $tmp[ $value ] ) ) {
+				$tmp[ $value ] = null;
+			}
+
+			$tmp = &$tmp[ $value ];
+		}
 	}
 }

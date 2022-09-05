@@ -44,7 +44,6 @@ abstract class Field {
 	 * @return string Name of the field.
 	 */
 	public function get_name() {
-		// Todo: Find a more descriptive name for option_name
 		return str_replace( '-', '_', 'antispam_bee[' . $this->type . '][' . $this->option['option_name'] . ']' );
 	}
 

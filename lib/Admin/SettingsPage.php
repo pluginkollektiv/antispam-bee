@@ -131,8 +131,8 @@ class SettingsPage {
 			]
 		] );
 
-		// Todo: Add a way to build rows and fields with a fluent interface?
-		// Todo: Fix the confusing naming. We have a lot of type e.g.
+		// Todo: Add a way to build rows and fields with a fluent interface? (Nice-to-have)
+		// Todo: Fix the confusing naming. We have a lot of type e.g. (Nice-to-have)
 		$general_tab = new Tab(
 			'general',
 			__( 'General','antispam-bee' ),
@@ -211,13 +211,13 @@ class SettingsPage {
 						self::SETTINGS_PAGE_SLUG,
 						$section->get_name()
 					);
-
-					register_setting( self::SETTINGS_PAGE_SLUG, Settings::ANTISPAM_BEE_OPTION_NAME, [
-						'sanitize_callback' => [ Settings::class, 'sanitize' ],
-					] );
 				}
 			}
 		}
+
+		register_setting( self::SETTINGS_PAGE_SLUG, Settings::ANTISPAM_BEE_OPTION_NAME, [
+			'sanitize_callback' => [ Settings::class, 'sanitize' ],
+		] );
 	}
 
 	/**
