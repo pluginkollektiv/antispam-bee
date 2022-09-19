@@ -1,0 +1,19 @@
+<?php
+
+namespace AntispamBee\GeneralOptions;
+
+class Pings extends Base {
+	protected static $slug = 'ignore-pings';
+
+	public static function get_name() {
+		return __( 'Pings', 'antispam-bee' );
+	}
+
+	public static function get_label() {
+		return __( 'Do not check trackbacks / pingbacks', 'antispam-bee' );
+	}
+
+	public static function get_description() {
+		return __( 'No spam check for link notifications', 'antispam-bee' );
+	}
+}

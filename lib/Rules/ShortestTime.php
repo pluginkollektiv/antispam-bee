@@ -7,6 +7,9 @@ use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 use AntispamBee\Helpers\Settings;
 
+/**
+ * Rule that is responsible for checking that at least a certain timespan has passed so that the comment won‘t be marked as invalid.
+ */
 class ShortestTime implements Verifiable, Controllable {
 
 	use InitRule;
@@ -26,6 +29,7 @@ class ShortestTime implements Verifiable, Controllable {
 				if ( ! self::is_active( ItemTypeHelper::COMMENT_TYPE ) ) {
 					return $field_markup;
 				}
+				// Todo: use JS to add the timestamp, so it also works with page caching.
 				return $field_markup . sprintf(
 					'<input type="hidden" name="ab_init_time" value="%d" />',
 					time()
@@ -34,7 +38,6 @@ class ShortestTime implements Verifiable, Controllable {
 		);
 	}
 
-	// Todo: test
 	public static function verify( $item ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Everybody can Post.
@@ -47,7 +50,7 @@ class ShortestTime implements Verifiable, Controllable {
 			return 0;
 		}
 
-		// @todo: maybe rename this filter to start with `abs` and add a deprecation message.
+		// @todo: maybe rename this filter to start with `asb` and add a deprecation message.
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		if ( time() - $init_time < apply_filters( 'ab_action_time_limit', 5 ) ) {
 			return 1;

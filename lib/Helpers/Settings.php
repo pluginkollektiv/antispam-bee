@@ -2,6 +2,8 @@
 
 namespace AntispamBee\Helpers;
 
+use AntispamBee\Admin\Fields\Field;
+use AntispamBee\Handlers\GeneralOptions;
 use AntispamBee\Handlers\PostProcessors;
 use AntispamBee\Handlers\Rules;
 
@@ -149,7 +151,6 @@ class Settings {
 	}
 
 	public static function sanitize( $options ) {
-		// Todo: Check if we need to separate rules and post processors in the option.
 		$current_options = self::get_options();
 
 		if ( ! isset( $_GET['tab'] ) || empty ( $_GET['tab'] ) ) {
@@ -160,7 +161,6 @@ class Settings {
 
 		$options = ! empty( $options ) ? $options : [ $tab => [] ];
 
-		// Todo: Call the sanitize functions for the rules/post processors/settings
 		$sanitized_options = self::sanitize_controllables( $options, $tab );
 		$current_options[ $tab ] = $sanitized_options[ $tab ];
 
@@ -170,38 +170,32 @@ class Settings {
 	private static function sanitize_controllables( $options, $tab ) {
 		// Todo: Handle the settings from the `General` tab.
 		$controllables = array_merge(
+			GeneralOptions::get_controllables( $tab ),
 			Rules::get_controllables( $tab ),
 			PostProcessors::get_controllables( $tab )
 		);
 
 		foreach ( $controllables as $controllable ) {
 			$controllable_options = $controllable::get_options();
+			$option_path = str_replace( '-', '_', $tab . '.' . $controllable::get_slug() . '_active' );
+			$active_state = self::get_array_value_by_path( $option_path, $options );
+			$sanitized = Sanitize::checkbox( $active_state );
+			if ( ! $sanitized ) {
+				self::remove_array_key_by_path( $option_path, $options );
+			}
+
 			if ( ! $controllable_options ) {
-				$options = self::sanitize_checkbox( $options, $tab . '.' . $controllable::get_slug() . '_active' );
 				continue;
 			}
 
 			foreach ( $controllable_options as $controllable_option ) {
-				if ( ! isset( $controllable_option['sanitize'] ) ) {
-					continue;
-				}
-
-				if ( ! isset( $controllable_option['option_name'] ) ) {
-					continue;
-				}
-
-				$option_name = $controllable_option['option_name'];
-				$path = "$tab.$option_name";
-				$new_value = self::get_array_value_by_path( $path, $options );
-
-				if ( is_callable( $controllable_option['sanitize'] ) ) {
-					$sanitized = call_user_func( $controllable_option['sanitize'], $new_value );
-					if ( null === $sanitized ) {
-						self::remove_array_key_by_path( $path, $options );
-						continue;
-					}
-
-					self::set_array_value_by_path( $path, $sanitized, $options );
+				self::call_sanitize_callback( $controllable_option, $options, $tab );
+				if (
+					isset( $controllable_option['input'] )
+					&& $controllable_option['input'] instanceof Field
+					&& isset( $controllable_option['input']->get_option()['sanitize'] )
+				) {
+					self::call_sanitize_callback( $controllable_option['input']->get_option(), $options, $tab );
 				}
 			}
 		}
@@ -209,16 +203,28 @@ class Settings {
 		return $options;
 	}
 
-	private static function sanitize_checkbox( $options, $option_path ) {
-		$option_path = str_replace( '-', '_', $option_path );
-		$active_state = self::get_array_value_by_path( $option_path, $options );
-		if ( ! $active_state || 'on' === $active_state ) {
-			return $options;
+	private static function call_sanitize_callback( $controllable_option, &$options, $tab ) {
+		if ( ! isset( $controllable_option['sanitize'] ) ) {
+			return;
 		}
 
-		self::remove_array_key_by_path( $option_path, $options );
+		if ( ! isset( $controllable_option['option_name'] ) ) {
+			return;
+		}
 
-		return $options;
+		$option_name = $controllable_option['option_name'];
+		$path = "$tab.$option_name";
+		$new_value = self::get_array_value_by_path( $path, $options );
+
+		if ( is_callable( $controllable_option['sanitize'] ) ) {
+			$sanitized = call_user_func( $controllable_option['sanitize'], $new_value );
+			if ( null === $sanitized ) {
+				self::remove_array_key_by_path( $path, $options );
+				return;
+			}
+
+			self::set_array_value_by_path( $path, $sanitized, $options );
+		}
 	}
 
 	private static function remove_array_key_by_path( $path, &$array ) {

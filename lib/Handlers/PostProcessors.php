@@ -49,5 +49,4 @@ class PostProcessors {
 	private static function filter( $options ) {
 		return Components::filter( apply_filters( 'asb_post_processors', [] ), $options );
 	}
-
 }

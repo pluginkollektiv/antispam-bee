@@ -5,10 +5,14 @@ namespace AntispamBee\Rules;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Verifiable;
 
+/**
+ * Rule that is responsible for checking if the trackback post title is a blog name.
+ */
 class TrackbackPostTitleIsBlogName implements Verifiable {
 
 	use InitRule;
 	use IsActive;
+
 	// Todo: test
 	public static function verify( $item ) {
 		$body      = isset( $item['comment_content'] ) ? $item['comment_content'] : null;

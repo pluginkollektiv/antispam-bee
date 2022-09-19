@@ -9,6 +9,9 @@ use AntispamBee\Interfaces\Verifiable;
 use AntispamBee\Helpers\Settings;
 use \AntispamBee\Fields\Honeypot as HoneypotField;
 
+/**
+ * Adds honeypot to comment form and checks if it is filled.
+ */
 class Honeypot implements Verifiable, Controllable {
 
 	use IsActive;

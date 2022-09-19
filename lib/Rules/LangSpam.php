@@ -5,6 +5,7 @@ namespace AntispamBee\Rules;
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Helpers\LangHelper;
+use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
@@ -157,8 +158,8 @@ class LangSpam implements Verifiable, Controllable {
 				'options' => $languages,
 				'label' => __( 'Allowed languages', 'antispam-bee' ),
 				'option_name' => 'asb_allowed_lang_codes',
-				'sanitize' => function( $value ) {
-					return self::sanitize_input( $value );
+				'sanitize' => function( $value ) use ( $languages ) {
+					return Sanitize::checkbox_group( $value, $languages );
 				}
 			],
 		];

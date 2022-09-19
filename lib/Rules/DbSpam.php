@@ -7,6 +7,9 @@ use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
+/**
+ * Checks the spam comments database entries to find matching patterns.
+ */
 class DbSpam implements Verifiable, Controllable {
 
 	use InitRule;

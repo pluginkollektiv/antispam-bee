@@ -6,12 +6,14 @@ use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\PostProcessor;
 use AntispamBee\Helpers\Settings;
 
+/**
+ * Post processor that is responsible for updating the daily stats which are e.g. used from the Dashboard widget.
+ */
 class UpdateDailyStats implements PostProcessor {
 
 	use IsActive;
 	use InitPostProcessor;
 
-	// Todo: Test and maybe complete
 	public static function process( $item ) {
 		if ( ! Settings::get_option( 'dashboard_chart' ) ) {
 			return $item;
@@ -40,6 +42,7 @@ class UpdateDailyStats implements PostProcessor {
 		return 'asb-update-daily-stats';
 	}
 
+	// Todo: add a filter to make the supported types… filterable
 	public static function get_supported_types() {
 		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}

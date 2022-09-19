@@ -7,6 +7,9 @@ use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
+/**
+ * Checks comment fields based on regular expressions.
+ */
 class RegexpSpam implements Verifiable, Controllable {
 
 	use InitRule;

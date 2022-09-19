@@ -75,6 +75,15 @@ abstract class Field {
 	}
 
 	/**
+	 * Get the option payload.
+	 *
+	 * @return array
+	 */
+	public function get_option() {
+		return $this->option;
+	}
+
+	/**
 	 * Show description if not empty.
 	 */
 	protected function maybe_show_description() {

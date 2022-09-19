@@ -8,17 +8,20 @@ use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
 use AntispamBee\Helpers\Settings;
 
+/**
+ * Post processor that is responsible for sending emails to the user.
+ */
 class SendEmail implements PostProcessor, Controllable {
 
 	use IsActive;
 	use InitPostProcessor;
 
-	// Todo: Test and maybe complete
 	public static function process( $item ) {
 		if ( isset( $item['asb_marked_as_delete'] ) && $item['asb_marked_as_delete'] === true ) {
 			return $item;
 		}
 
+		// Todo: Refactor that!
 		add_action(
 			'comment_post',
 			function ( $id ) use ( $item ) {

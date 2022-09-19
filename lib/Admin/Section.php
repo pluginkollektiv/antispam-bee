@@ -9,6 +9,7 @@ namespace AntispamBee\Admin;
 
 use AntispamBee\Admin\Fields\Checkbox;
 use AntispamBee\Admin\Fields\CheckboxGroup;
+use AntispamBee\Admin\Fields\Inline;
 use AntispamBee\Admin\Fields\Select;
 use AntispamBee\Admin\Fields\Text;
 use AntispamBee\Admin\Fields\Textarea;
@@ -81,17 +82,21 @@ class Section {
 	private function generate_fields( $controllables ) {
 		// Todo: DRY - Don’t run for other types than displayed
 		foreach ( $controllables as $controllable ) {
-			$controllable = $controllable;
 			$slug = $controllable::get_slug();
 			$label = $controllable::get_label();
 			$description = $controllable::get_description();
 			$fields = [];
-			$fields[] = $this->generate_field( [
-				'type' => 'checkbox',
-				'option_name' => $slug . '_active',
-				'label' => $label,
-				'description' => $description
-			] );
+			if (
+				method_exists( $controllable, 'only_print_custom_options' )
+				&& ! $controllable::only_print_custom_options()
+			) {
+				$fields[] = $this->generate_field( [
+					'type' => 'checkbox',
+					'option_name' => $slug . '_active',
+					'label' => $label,
+					'description' => $description
+				] );
+			}
 
 			$options = $controllable::get_options();
 			if ( ! empty( $options ) ) {
@@ -123,6 +128,8 @@ class Section {
 				return new Checkbox( $this->type, $option );
 			case 'checkbox-group':
 				return new CheckboxGroup( $this->type, $option );
+			case 'inline':
+				return new Inline( $this->type, $option );
 		}
 	}
 

@@ -6,6 +6,9 @@ use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
+/**
+ * Checks comment content for BBCode URLs.
+ */
 class BBCode implements Verifiable, Controllable {
 
 	use InitRule;

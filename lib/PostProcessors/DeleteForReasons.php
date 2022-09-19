@@ -5,16 +5,19 @@ namespace AntispamBee\PostProcessors;
 use AntispamBee\Handlers\Rules;
 use AntispamBee\Helpers\Components;
 use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
 use AntispamBee\Helpers\Settings;
 
+/**
+ * Marks spam comments for deletion if they have a specific reason.
+ */
 class DeleteForReasons implements PostProcessor, Controllable {
 
 	use IsActive;
 	use InitPostProcessor;
 
-	// Todo: Test and maybe complete
 	public static function process( $item ) {
 		if ( isset( $item['asb_marked_as_delete'] ) && $item['asb_marked_as_delete'] === true ) {
 			return $item;
@@ -67,8 +70,8 @@ class DeleteForReasons implements PostProcessor, Controllable {
 				'type' => 'checkbox-group',
 				'options' => $checkbox_options,
 				'option_name' => 'asb_delete_reasons',
-				'sanitize' => function( $value ) {
-					return self::sanitize_input( $value );
+				'sanitize' => function( $value ) use ( $checkbox_options ) {
+					return Sanitize::checkbox_group( $value, $checkbox_options );
 				}
 			];
 		}
@@ -82,10 +85,5 @@ class DeleteForReasons implements PostProcessor, Controllable {
 
 	public static function marks_as_delete() {
 		return true;
-	}
-
-	protected static function sanitize_input( $value ) {
-		// Todo: Add sanitize functions!
-		return $value;
 	}
 }

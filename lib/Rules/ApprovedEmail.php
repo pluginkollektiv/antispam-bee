@@ -7,6 +7,9 @@ use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
+/**
+ * Checks if the email is from an already approved commenter.
+ */
 class ApprovedEmail implements Verifiable, Controllable {
 
 	use InitRule;

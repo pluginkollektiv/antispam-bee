@@ -10,6 +10,10 @@ namespace AntispamBee;
 use AntispamBee\Admin\DashboardWidgets;
 use AntispamBee\Admin\SettingsPage;
 use AntispamBee\Crons\DeleteSpamCron;
+use AntispamBee\GeneralOptions\DeleteOldSpam;
+use AntispamBee\GeneralOptions\Pings;
+use AntispamBee\GeneralOptions\Statistics;
+use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Handlers\Comment;
 use AntispamBee\Handlers\Trackback;
 use AntispamBee\Helpers\AssetsLoader;
@@ -40,7 +44,7 @@ use AntispamBee\Rules\ValidGravatar;
  */
 function init() {
 	// Construct all modules to initialize.
-	$modules = [
+	$modules = array(
 		'admin_dashboard_helper'                  => new DashboardWidgets(),
 		'admin_settings_page'                     => new SettingsPage(),
 		'handlers_delete_spam_cron_handler'       => new DeleteSpamCron(),
@@ -49,6 +53,10 @@ function init() {
 		'helpers_assets_loader'                   => new AssetsLoader(),
 		'helpers_comments_columns'                => new CommentsColumns(),
 		'helpers_options_helper'                  => new Settings(),
+		'general_option_delete_old_spam'          => new DeleteOldSpam(),
+		'general_option_statistics'               => new Statistics(),
+		'general_option_pings'                    => new Pings(),
+		'general_option_uninstall'                => new Uninstall(),
 		'post_processor_delete'                   => new Delete(),
 		'post_processor_delete_for_reasons'       => new DeleteForReasons(),
 		'post_processor_save_reason'              => new SaveReason(),
@@ -67,7 +75,7 @@ function init() {
 		'rules_trackback_from_myself'             => new TrackbackFromMyself(),
 		'rules_trackback_post_title_is_blog_name' => new TrackbackPostTitleIsBlogName(),
 		'rules_valid_gravatar'                    => new ValidGravatar(),
-	];
+	);
 
 	// Initialize all modules.
 	foreach ( $modules as $module ) {

@@ -10,6 +10,7 @@ namespace AntispamBee\Admin;
 use AntispamBee\Admin\Fields\Checkbox;
 use AntispamBee\Admin\Fields\Inline;
 use AntispamBee\Admin\Fields\Text;
+use AntispamBee\Handlers\GeneralOptions;
 use AntispamBee\Handlers\PostProcessors;
 use AntispamBee\Handlers\Rules;
 use AntispamBee\Helpers\Components;
@@ -70,70 +71,17 @@ class SettingsPage {
 	 */
 	public function setup_settings() {
 		// Todo: Extract parts of the method in new methods.
+		// Todo: Add a way to build rows and fields with a fluent interface? (Nice-to-have)
+		// Todo: Fix the confusing naming. We have a lot of type e.g. (Nice-to-have)
+
 		$general_section = new Section(
 			'general',
 			__( 'General', 'antispam-bee' ),
-			__( 'Setup global plugin spam settings.', 'antispam-bee' ) );
-
-		$general_section->add_rows( [
-			[
-				'label' => __( 'Delete old spam', 'antispam-bee' ),
-				'fields' => [
-					new Checkbox( 'general', [
-						'option_name' => 'delete_spam_cronjob_enabled', // Todo: Migrate ab_cronjob_enable
-					] ),
-					new Inline( 'general', [
-						'input' => new Text( 'general', [
-							'input_type' => 'number',
-							'input_size' => 'small',
-							'option_name' => 'delete_spam_cronjob_days', // Todo: Migrate ab_cronjob_interval
-						] ),
-						'option_name' => 'delete_spam_cronjob_enabled',
-						'label' => esc_html( 'Delete existing spam after %s days', 'antispam-bee' ),
-						'description' => esc_html( 'Cleaning up the database from old entries', 'antispam-bee' ),
-					] ),
-				]
-			],
-			[
-				'label' => __( 'Statistics', 'antispam-bee' ),
-				'fields' => [
-					new Checkbox( 'general', [
-						'option_name' => 'ab_dashboard_chart',
-						'label' => esc_html( 'Generate statistics as a dashboard widget', 'antispam-bee' ),
-						'description' => esc_html( 'Daily updates of spam detection rate', 'antispam-bee' ),
-					] ),
-					new Checkbox( 'general', [
-						'option_name' => 'ab_dashboard_count',
-						'label' => esc_html( 'Spam counter on the dashboard', 'antispam-bee' ),
-						'description' => esc_html( 'Amount of identified spam comments', 'antispam-bee' )
-					] ),
-				]
-			],
-			[
-				'label' => __( 'Pings', 'antispam-bee' ),
-				'fields' => [
-					new Checkbox( 'general', [
-						'option_name' => 'ab_ignore_pings',
-						'label' => esc_html( 'Do not check trackbacks / pingbacks', 'antispam-bee' ),
-						'description' => esc_html( 'No spam check for link notifications', 'antispam-bee' ),
-					] ),
-				]
-			],
-			[
-				'label' => __( 'Uninstall', 'antispam-bee' ),
-				'fields' => [
-					new Checkbox( 'general', [
-						'option_name' => 'delete_data_on_uninstall',
-						'label' => esc_html( 'Delete Antispam Bee data when uninstalling', 'antispam-bee' ),
-						'description' => esc_html( 'If checked, you will delete all data Antispam Bee creates, when uninstalling the plugin.', 'antispam-bee' ),
-					] ),
-				]
-			]
-		] );
-
-		// Todo: Add a way to build rows and fields with a fluent interface? (Nice-to-have)
-		// Todo: Fix the confusing naming. We have a lot of type e.g. (Nice-to-have)
-		$general_tab = new Tab(
+			__( 'Setup global plugin spam settings.', 'antispam-bee' ),
+			'general'
+		);
+		$general_section->add_controllables( GeneralOptions::get_controllables() );
+		$tabs[] = new Tab(
 			'general',
 			__( 'General','antispam-bee' ),
 			[
@@ -149,8 +97,6 @@ class SettingsPage {
 		}
 		$types = array_unique( $types );
 
-		$tabs = [];
-		$tabs['general'] = $general_tab;
 		foreach ( $types as $type ) {
 			$rules_section = new Section(
 				'rules',

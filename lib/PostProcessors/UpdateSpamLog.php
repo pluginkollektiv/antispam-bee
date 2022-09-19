@@ -5,17 +5,25 @@ namespace AntispamBee\PostProcessors;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\PostProcessor;
 
+/**
+ * Post Processor that is responsible for updating the spam log file.
+ */
 class UpdateSpamLog implements PostProcessor {
 
 	use IsActive;
 	use InitPostProcessor;
-	// Todo: test
+
 	public static function process( $item ) {
 		if ( ! isset( $item['comment_post_ID'] ) || ! isset( $item['comment_author_IP'] ) ) {
 			return $item['asb_post_processors_failed'][] = self::get_slug();
 		}
 
-		if ( ! defined( 'ANTISPAM_BEE_LOG_FILE' ) || ! ANTISPAM_BEE_LOG_FILE || ! is_writable( ANTISPAM_BEE_LOG_FILE ) || validate_file( ANTISPAM_BEE_LOG_FILE ) === 1 ) {
+		if (
+			! defined( 'ANTISPAM_BEE_LOG_FILE' )
+			|| ! ANTISPAM_BEE_LOG_FILE
+			|| ! is_writable( ANTISPAM_BEE_LOG_FILE )
+			|| validate_file( ANTISPAM_BEE_LOG_FILE ) === 1
+		) {
 			return $item;
 		}
 

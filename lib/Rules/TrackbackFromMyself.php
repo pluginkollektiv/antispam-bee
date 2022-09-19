@@ -5,6 +5,9 @@ namespace AntispamBee\Rules;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Verifiable;
 
+/**
+ * Rule that is responsible for checking if the trackback is from myself.
+ */
 class TrackbackFromMyself implements Verifiable {
 
 	use InitRule;

@@ -6,12 +6,14 @@ use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
 
+/**
+ * Post processor that marks spam comments so that they are deleted in the end.
+ */
 class Delete implements PostProcessor, Controllable {
 
 	use IsActive;
 	use InitPostProcessor;
 
-	// Todo: Test and maybe complete
 	public static function process( $item ) {
 		$item['asb_marked_as_delete'] = true;
 

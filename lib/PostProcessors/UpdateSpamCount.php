@@ -6,11 +6,14 @@ use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\PostProcessor;
 use AntispamBee\Helpers\Settings;
 
+/**
+ * Post Processor that is responsible for incrementing the spam count and updating the value.
+ */
 class UpdateSpamCount implements PostProcessor {
 
 	use IsActive;
 	use InitPostProcessor;
-	// Todo: test
+
 	public static function process( $item ) {
 		if ( ! Settings::get_option( 'dashboard_count' ) ) {
 			return $item;

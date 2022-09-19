@@ -4,10 +4,14 @@ namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\IpHelper;
 use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\Verifiable;
 
+/**
+ * Checks comments for spam based on the country of the IP address.
+ */
 class CountrySpam implements Verifiable, Controllable {
 
 	use InitRule;
@@ -164,7 +168,7 @@ class CountrySpam implements Verifiable, Controllable {
 				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
 				'option_name' => 'ab_country_denied',
 				'sanitize' => function( $value ) {
-					return self::sanitize_input( $value );
+					return self::sanitize_iso_codes_string( $value );
 				}
 			],
 			[
@@ -173,7 +177,7 @@ class CountrySpam implements Verifiable, Controllable {
 				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
 				'option_name' => 'ab_country_allowed',
 				'sanitize' => function( $value ) {
-					return self::sanitize_input( $value );
+					return self::sanitize_iso_codes_string( $value );
 				}
 			]
 		];
@@ -183,8 +187,11 @@ class CountrySpam implements Verifiable, Controllable {
 		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 
-	private static function sanitize_input( $value ) {
-		return false;
-	}
+	private static function sanitize_iso_codes_string( $value ) {
+		$value = strtoupper( $value );
+		$values = explode( ',', $value );
+		$values = Sanitize::iso_codes( $values );
 
+		return implode( ',', $values );
+	}
 }
