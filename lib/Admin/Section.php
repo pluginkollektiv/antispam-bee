@@ -13,7 +13,8 @@ use AntispamBee\Admin\Fields\Inline;
 use AntispamBee\Admin\Fields\Select;
 use AntispamBee\Admin\Fields\Text;
 use AntispamBee\Admin\Fields\Textarea;
-use AntispamBee\Admin\Fields\Field;
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\PostProcessors\Base as BasePostProcessor;
 
 /**
  * Sections for admin.
@@ -24,7 +25,7 @@ class Section {
 	 *
 	 * @var string
 	 */
-	private $name;
+	private $slug;
 
 	/**
 	 * Title.
@@ -55,47 +56,44 @@ class Section {
 	private $type;
 
 	/**
+	 *
+	 * @var Controllable[]
+	 */
+	private $controllables;
+
+	/**
 	 * Initializing Tab.
 	 *
-	 * @param string      $name Name of the tab.
+	 * @param string      $slug Slug of the tab.
 	 * @param string      $title Title for tab.
 	 * @param string      $description Description of the tab.
 	 * @param string|null $type Item type (e.g. comment, trackback).
 	 */
-	public function __construct( $name, $title, $description = '', $type = null ) {
-		$this->name        = $name;
-		$this->title       = $title;
+	public function __construct( $slug, $title, $description = '', $type = null ) {
+		$this->slug  = $slug;
+		$this->title = $title;
 		$this->description = $description;
 		$this->type = $type;
 	}
 
-	public function add_rows( $rows ) {
-		foreach ( $rows as $row ) {
-			$this->rows[] = $row;
+	public function add_controllables( $controllables ) {
+		if ( ! empty( $controllables ) ) {
+			$this->generate_fields( $controllables );
 		}
 	}
 
-	public function add_controllables( $controllables ) {
-		$this->generate_fields( $controllables );
-	}
-
 	private function generate_fields( $controllables ) {
-		// Todo: DRY - Don’t run for other types than displayed
 		foreach ( $controllables as $controllable ) {
-			$slug = $controllable::get_slug();
 			$label = $controllable::get_label();
 			$description = $controllable::get_description();
 			$fields = [];
-			if (
-				method_exists( $controllable, 'only_print_custom_options' )
-				&& ! $controllable::only_print_custom_options()
-			) {
+			if ( ! $controllable::only_print_custom_options() ) {
 				$fields[] = $this->generate_field( [
 					'type' => 'checkbox',
-					'option_name' => $slug . '_active',
+					'option_name' => 'active',
 					'label' => $label,
 					'description' => $description
-				] );
+				], $controllable );
 			}
 
 			$options = $controllable::get_options();
@@ -105,7 +103,7 @@ class Section {
 					if ( $valid_for !== null && $this->type !== $valid_for ) {
 						continue;
 					}
-					$fields[] = $this->generate_field( $option );
+					$fields[] = $this->generate_field( $option, $controllable );
 				}
 			}
 
@@ -116,20 +114,20 @@ class Section {
 		}
 	}
 
-	private function generate_field( $option ) {
+	private function generate_field( $option, $controllable ) {
 		switch ( $option['type'] ) {
 			case 'input':
-				return new Text( $this->type, $option );
+				return new Text( $this->type, $option, $controllable );
 			case 'select':
-				return new Select( $this->type, $option );
+				return new Select( $this->type, $option, $controllable );
 			case 'textarea':
-				return new Textarea( $this->type, $option );
+				return new Textarea( $this->type, $option, $controllable );
 			case 'checkbox':
-				return new Checkbox( $this->type, $option );
+				return new Checkbox( $this->type, $option, $controllable );
 			case 'checkbox-group':
-				return new CheckboxGroup( $this->type, $option );
+				return new CheckboxGroup( $this->type, $option, $controllable );
 			case 'inline':
-				return new Inline( $this->type, $option );
+				return new Inline( $this->type, $option, $controllable );
 		}
 	}
 
@@ -138,8 +136,8 @@ class Section {
 	 *
 	 * @return string Name of the field.
 	 */
-	public function get_name() {
-		return $this->name;
+	public function get_slug() {
+		return $this->slug;
 	}
 
 	/**
@@ -163,7 +161,7 @@ class Section {
 	/**
 	 * Get fields.
 	 *
-	 * @return Field[]
+	 * @return array
 	 */
 	public function get_rows() {
 		return $this->rows;
@@ -182,10 +180,40 @@ class Section {
 	}
 
 	/**
-	 * Section
-	 *   Field Lists/Rows array
-	 *     Left-side Label string
-	 *     Fields array
-	 *       Field
+	 * Renders the settings section.
 	 */
+	public function render() {
+		add_settings_section( $this->get_slug(), $this->get_title(), [ $this, 'get_callback' ], SettingsPage::SETTINGS_PAGE_SLUG );
+
+		foreach ( $this->get_rows() as $row ) {
+			add_settings_field(
+				'asb-row-' . wp_generate_uuid4(),
+				$row['label'],
+				function() use ( $row ) {
+					$this->render_row_fields( $row );
+				},
+				SettingsPage::SETTINGS_PAGE_SLUG,
+				$this->get_slug()
+			);
+		}
+	}
+
+	/**
+	 * Renders the fields for a row.
+	 *
+	 * @param array $row
+	 */
+	protected function render_row_fields( $row ) {
+		foreach ( $row['fields'] as $key => $field ) {
+			$field->render();
+
+			// Add linebreak after field if not (last and not checkbox without label).
+			if ( $key !== count( $row['fields'] ) - 1 ) {
+				if ( $field instanceof Checkbox && empty( $field->get_label() ) ) {
+					continue;
+				}
+				echo '<br>';
+			}
+		}
+	}
 }

@@ -3,19 +3,14 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\IpHelper;
-use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
-use AntispamBee\Interfaces\Controllable;
-use AntispamBee\Interfaces\Verifiable;
 
 /**
  * Checks comments for spam based on the country of the IP address.
  */
-class CountrySpam implements Verifiable, Controllable {
-
-	use InitRule;
-	use IsActive;
+class CountrySpam extends ControllableBase {
+	protected static $slug = 'asb-country-spam';
 
 	public static function verify( $item ) {
 		if ( ! isset( $item['comment_author_IP'] ) || empty( $item['comment_author_IP'] ) ) {
@@ -23,9 +18,10 @@ class CountrySpam implements Verifiable, Controllable {
 		}
 		$ip = $item['comment_author_IP'];
 
-		$country_allowed = Settings::get_option( 'ab_country_allowed', $item['asb_item_type'] );
+		// Todo: Migrate ab_country_allowed, ab_country_denied
+		$country_allowed = Settings::get_option( static::get_option_name( 'allowed' ), $item['asb_item_type'] );
 		$country_allowed = $country_allowed ? $country_allowed : '';
-		$country_denied = Settings::get_option( 'ab_country_denied', $item['asb_item_type'] );
+		$country_denied = Settings::get_option( static::get_option_name( 'denied' ), $item['asb_item_type'] );
 		$country_denied = $country_denied ? $country_denied : '';
 
 		$allowed = preg_split(
@@ -148,25 +144,13 @@ class CountrySpam implements Verifiable, Controllable {
 		);
 	}
 
-	public static function get_weight() {
-		return 1;
-	}
-
-	public static function get_slug() {
-		return 'asb-country-spam';
-	}
-
-	public static function is_final() {
-		return false;
-	}
-
 	public static function get_options() {
 		return [
 			[
 				'type' => 'textarea',
 				'label' => __( 'Denied ISO country codes for this option.', 'antispam-bee' ),
 				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
-				'option_name' => 'ab_country_denied',
+				'option_name' => 'denied',
 				'sanitize' => function( $value ) {
 					return self::sanitize_iso_codes_string( $value );
 				}
@@ -175,16 +159,12 @@ class CountrySpam implements Verifiable, Controllable {
 				'type' => 'textarea',
 				'label' => __( 'Allowed ISO country codes for this option.', 'antispam-bee' ),
 				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
-				'option_name' => 'ab_country_allowed',
+				'option_name' => 'allowed',
 				'sanitize' => function( $value ) {
 					return self::sanitize_iso_codes_string( $value );
 				}
 			]
 		];
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 
 	private static function sanitize_iso_codes_string( $value ) {

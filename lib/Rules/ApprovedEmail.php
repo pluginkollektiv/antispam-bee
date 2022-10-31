@@ -4,16 +4,14 @@ namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\ItemTypeHelper;
-use AntispamBee\Interfaces\Controllable;
-use AntispamBee\Interfaces\Verifiable;
 
 /**
  * Checks if the email is from an already approved commenter.
  */
-class ApprovedEmail implements Verifiable, Controllable {
+class ApprovedEmail extends ControllableBase {
 
-	use InitRule;
-	use IsActive;
+	protected static $supported_types = [ ItemTypeHelper::COMMENT_TYPE ];
+	protected static $slug = 'asb-approved-email';
 
 	// Todo: Discuss if this (and gravatar) should be final rules, and also surpass the Honeypot
 	public static function verify( $item ) {
@@ -49,25 +47,5 @@ class ApprovedEmail implements Verifiable, Controllable {
 
 	public static function get_description() {
 		return __( 'No review of already commented users', 'antispam-bee' );
-	}
-
-	public static function get_weight() {
-		return 1.0;
-	}
-
-	public static function get_slug() {
-		return 'asb-approved-email';
-	}
-
-	public static function is_final() {
-		return false;
-	}
-
-	public static function get_options() {
-		return null;
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::COMMENT_TYPE ];
 	}
 }

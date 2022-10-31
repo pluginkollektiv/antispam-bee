@@ -34,7 +34,7 @@ class Tab {
 	 * @param string    $title    Title for tab
 	 * @param Section[] $sections Sections object array.
 	 */
-	public function __construct( $slug, $title, $sections ) {
+	public function __construct( $slug, $title, $sections = [] ) {
 		$this->slug  = $slug;
 		$this->title = $title;
 		$this->sections = $sections;

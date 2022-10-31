@@ -17,7 +17,7 @@ interface Controllable {
 	 *   [
 	 *     'type' => 'textarea|radio|checkbox|input|select|callable',
 	 *       'input_type' => 'email|password|number...',
-	 * 	 *   'label' => 'asb_deny_langcodes',
+	 *     *   'label' => 'asb_deny_langcodes',
 	 *       'option_name' => 'asb_deny_langcodes',
 	 *       'options' => [ [ 'value' => 1, 'label' => 'Option 1' ], [ 'value' => 2, 'label' => 'Option 2' ] ],
 	 *       'multiple' => true,
@@ -34,4 +34,17 @@ interface Controllable {
 	public static function get_options();
 
 	public static function is_active( $type );
+
+	public static function only_print_custom_options();
+
+	public static function get_supported_types();
+
+	/**
+	 * @return string Type of the controllable;
+	 */
+	public static function get_type();
+
+	public static function get_slug();
+
+	public static function get_option_name( $name );
 }

@@ -8,12 +8,10 @@ use AntispamBee\Interfaces\Verifiable;
 /**
  * Rule that is responsible for checking if the trackback is from myself.
  */
-class TrackbackFromMyself implements Verifiable {
+class TrackbackFromMyself extends Base {
+	protected static $slug = 'asb-approved-email';
+	protected static $supported_types = [ ItemTypeHelper::TRACKBACK_TYPE ];
 
-	use InitRule;
-	use IsActive;
-
-	// Todo: test
 	public static function verify( $item ) {
 		$url            = isset( $item['comment_author_url'] ) ? $item['comment_author_url'] : null;
 		$target_post_id = isset( $item['comment_post_ID'] ) ? $item['comment_post_ID'] : null;
@@ -53,21 +51,5 @@ class TrackbackFromMyself implements Verifiable {
 
 	public static function get_name() {
 		return __( 'Trackback from myself', 'antispam-bee' );
-	}
-
-	public static function get_weight() {
-		return 1.0;
-	}
-
-	public static function get_slug() {
-		return 'asb-approved-email';
-	}
-
-	public static function is_final() {
-		return false;
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 }

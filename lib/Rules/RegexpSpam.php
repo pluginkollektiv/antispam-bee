@@ -4,18 +4,14 @@ namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\ItemTypeHelper;
-use AntispamBee\Interfaces\Controllable;
-use AntispamBee\Interfaces\Verifiable;
 
 /**
  * Checks comment fields based on regular expressions.
  */
-class RegexpSpam implements Verifiable, Controllable {
+class RegexpSpam extends ControllableBase {
 
-	use InitRule;
-	use IsActive;
+	protected static $slug = 'asb-regexp';
 
-	// Todo: Test trackbacks
 	/**
 	 * Usage of regexp, also custom
 	 */
@@ -161,31 +157,11 @@ class RegexpSpam implements Verifiable, Controllable {
 		return __( 'Regular Expression', 'antispam-bee' );
 	}
 
-	public static function get_weight() {
-		return 1;
-	}
-
-	public static function get_slug() {
-		return 'asb-regexp';
-	}
-
-	public static function is_final() {
-		return false;
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
-	}
-
 	public static function get_label() {
 		return __( 'Use regular expressions', 'antispam-bee' );
 	}
 
 	public static function get_description() {
 		return __( 'Predefined and custom patterns by plugin hook', 'antispam-bee' );
-	}
-
-	public static function get_options() {
-		return null;
 	}
 }

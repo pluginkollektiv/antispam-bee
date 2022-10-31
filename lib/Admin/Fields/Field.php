@@ -8,6 +8,7 @@
 namespace AntispamBee\Admin\Fields;
 
 use AntispamBee\Helpers\Settings;
+use AntispamBee\Interfaces\Controllable;
 
 /**
  * Abstract class for field.
@@ -28,14 +29,21 @@ abstract class Field {
 	protected $option;
 
 	/**
+	 * Type of controllable.
+	 */
+	protected $controllable_option_name;
+
+	/**
 	 * Initializing field
 	 *
 	 * @param string $type Item type.
 	 * @param array  $option Field options.
+	 * @param class-string<Controllable> $controllable The related controllable.
 	 */
-	public function __construct( $type, $option ) {
+	public function __construct( $type, $option, $controllable ) {
 		$this->type = $type;
 		$this->option = $option;
+		$this->controllable_option_name = $controllable::get_option_name( $this->option['option_name'] );
 	}
 
 	/**
@@ -44,7 +52,8 @@ abstract class Field {
 	 * @return string Name of the field.
 	 */
 	public function get_name() {
-		return str_replace( '-', '_', 'antispam_bee[' . $this->type . '][' . $this->option['option_name'] . ']' );
+		$name = "antispam_bee[{$this->type}][{$this->controllable_option_name}]";
+		return str_replace( '-', '_', $name );
 	}
 
 	/**
@@ -71,7 +80,7 @@ abstract class Field {
 	 * @return mixed Value stored in database.
 	 */
 	protected function get_value() {
-		return Settings::get_option( $this->option['option_name'], $this->type );
+		return Settings::get_option( $this->controllable_option_name, $this->type );
 	}
 
 	/**

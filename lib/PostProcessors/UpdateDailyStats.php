@@ -2,6 +2,7 @@
 
 namespace AntispamBee\PostProcessors;
 
+use AntispamBee\GeneralOptions\Statistics;
 use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Interfaces\PostProcessor;
 use AntispamBee\Helpers\Settings;
@@ -9,17 +10,19 @@ use AntispamBee\Helpers\Settings;
 /**
  * Post processor that is responsible for updating the daily stats which are e.g. used from the Dashboard widget.
  */
-class UpdateDailyStats implements PostProcessor {
+class UpdateDailyStats extends Base {
 
-	use IsActive;
-	use InitPostProcessor;
+	protected static $slug = "asb-update-daily-stats";
 
+	// Todo: How to handle the general option cases
 	public static function process( $item ) {
-		if ( ! Settings::get_option( 'dashboard_chart' ) ) {
+		// post_processor_asb_update_…_dashboard_chart
+		// general_asb_update_…_dashboard_chart
+		if ( ! Settings::get_option( Statistics::get_option_name( Statistics::DASHBOARD_CHART_OPTION ) ) ) {
 			return $item;
 		}
 
-		$stats = (array) Settings::get_option( 'daily_stats' );
+		$stats = (array) Settings::get_option( 'daily_stats', '' );
 		$today = (int) strtotime( 'today' );
 
 		if ( array_key_exists( $today, $stats ) ) {
@@ -36,19 +39,6 @@ class UpdateDailyStats implements PostProcessor {
 		);
 
 		return $item;
-	}
-
-	public static function get_slug() {
-		return 'asb-update-daily-stats';
-	}
-
-	// Todo: add a filter to make the supported types… filterable
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
-	}
-
-	public static function marks_as_delete() {
-		return false;
 	}
 }
 

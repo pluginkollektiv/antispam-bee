@@ -3,17 +3,12 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
-use AntispamBee\Helpers\ItemTypeHelper;
-use AntispamBee\Interfaces\Controllable;
-use AntispamBee\Interfaces\Verifiable;
 
 /**
  * Rule that is responsible for checking if the commenter has a valid gravatar.
  */
-class ValidGravatar implements Verifiable, Controllable {
-
-	use InitRule;
-	use IsActive;
+class ValidGravatar extends ControllableBase {
+	protected static $slug = 'asb-valid-gravatar';
 
 	public static function verify( $item ) {
 		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $item );
@@ -44,18 +39,6 @@ class ValidGravatar implements Verifiable, Controllable {
 		return __( 'Valid Gravatar', 'antispam-bee' );
 	}
 
-	public static function get_weight() {
-		return 1;
-	}
-
-	public static function get_slug() {
-		return 'asb-valid-gravatar';
-	}
-
-	public static function is_final() {
-		return false;
-	}
-
 	public static function get_label() {
 		return __( 'Trust commenters with a Gravatar', 'antispam-bee' );
 	}
@@ -74,13 +57,5 @@ class ValidGravatar implements Verifiable, Controllable {
 			wp_kses_post( $link1 ),
 			'</a>'
 		);
-	}
-
-	public static function get_options() {
-		return null;
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 }

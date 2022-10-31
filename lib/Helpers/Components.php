@@ -3,10 +3,12 @@
 namespace AntispamBee\Helpers;
 
 use AntispamBee\Interfaces\Controllable;
+use ReflectionClass;
 
 class Components {
 
 	/**
+	 * @param $components Controllable[]
 	 * @param $options
 	 * $options = array(
 	 *   'type'            => 'comment',
@@ -52,10 +54,17 @@ class Components {
 				}
 			}
 
+			$reflection = new ReflectionClass( $component );
+
+			// Remove third-party components with `asb-` prefix.
+			if ( 0 !== strpos( $reflection->getFileName(), ANTISPAM_BEE_PATH ) && 0 === strpos( $component::get_slug(), 'asb-' ) ) {
+				error_log( __( 'Antispam Bee: You shall not use `asb-` as slug prefix for your custom rules and post processors.', 'antispam-bee' ) );
+				continue;
+			}
+
 			$filtered_components[] = $component;
 		}
 
 		return $filtered_components;
 	}
-
 }

@@ -3,17 +3,13 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
-use AntispamBee\Helpers\ItemTypeHelper;
-use AntispamBee\Interfaces\Controllable;
-use AntispamBee\Interfaces\Verifiable;
 
 /**
  * Checks the spam comments database entries to find matching patterns.
  */
-class DbSpam implements Verifiable, Controllable {
+class DbSpam extends ControllableBase {
 
-	use InitRule;
-	use IsActive;
+	protected static $slug = 'asb-db-spam';
 
 	public static function verify( $item ) {
 		$params = [];
@@ -72,25 +68,5 @@ class DbSpam implements Verifiable, Controllable {
 
 	public static function get_description() {
 		return __( 'Check for spam data on your own blog', 'antispam-bee' );
-	}
-
-	public static function get_weight() {
-		return 1;
-	}
-
-	public static function get_slug() {
-		return 'asb-db-spam';
-	}
-
-	public static function is_final() {
-		return false;
-	}
-
-	public static function get_options() {
-		return null;
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 }

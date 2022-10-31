@@ -11,10 +11,9 @@ use AntispamBee\Helpers\Settings;
 /**
  * Post processor that is responsible for sending emails to the user.
  */
-class SendEmail implements PostProcessor, Controllable {
+class SendEmail extends ControllableBase {
 
-	use IsActive;
-	use InitPostProcessor;
+	protected static $slug = 'asb-send-email';
 
 	public static function process( $item ) {
 		if ( isset( $item['asb_marked_as_delete'] ) && $item['asb_marked_as_delete'] === true ) {
@@ -146,28 +145,12 @@ class SendEmail implements PostProcessor, Controllable {
 		return __( 'Send email', 'antispam-bee' );
 	}
 
-	public static function get_slug() {
-		return 'asb-send-email';
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
-	}
-
 	public static function get_label() {
 		return __( 'Spam-Notification by email', 'antispam-bee' );
 	}
 
 	public static function get_description() {
 		return __( 'Notify admins by e-mail about incoming spam', 'antispam-bee' );
-	}
-
-	public static function get_options() {
-		return null;
-	}
-
-	public static function marks_as_delete() {
-		return false;
 	}
 }
 

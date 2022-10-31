@@ -26,7 +26,7 @@ class SettingsPage {
 	 *
 	 * @var string
 	 */
-	private $active_tab = [];
+	private $active_tab = '';
 
 	/**
 	 * Tabs
@@ -34,6 +34,16 @@ class SettingsPage {
 	 * @var Tab[]
 	 */
 	private $tabs = [];
+
+	/**
+	 * @var Rules[]
+	 */
+	private $rules = [];
+
+	/**
+	 * @var PostProcessors[]
+	 */
+	private $post_processors = [];
 
 	/**
 	 * The slug used for the Settings page
@@ -66,69 +76,40 @@ class SettingsPage {
 		);
 	}
 
+
+
 	/**
 	 * Setup tabs content.
 	 */
 	public function setup_settings() {
-		// Todo: Extract parts of the method in new methods.
 		// Todo: Add a way to build rows and fields with a fluent interface? (Nice-to-have)
 		// Todo: Fix the confusing naming. We have a lot of type e.g. (Nice-to-have)
 
-		$general_section = new Section(
+		$tabs['general'] = new Tab(
 			'general',
-			__( 'General', 'antispam-bee' ),
-			__( 'Setup global plugin spam settings.', 'antispam-bee' ),
-			'general'
-		);
-		$general_section->add_controllables( GeneralOptions::get_controllables() );
-		$tabs[] = new Tab(
-			'general',
-			__( 'General','antispam-bee' ),
-			[
-				$general_section
-			]
+			__( 'General','antispam-bee' )
 		);
 
-		$rules = Rules::get_controllables();
-		$post_processors = PostProcessors::get_controllables();
+		$this->rules = Rules::get_controllables();
+		$this->post_processors = PostProcessors::get_controllables();
 		$types = [];
-		foreach ( $rules as $rule ) {
+		foreach ( $this->rules as $rule ) {
 			$types = array_merge( $types, $rule::get_supported_types() );
+		}
+		foreach ( $this->post_processors as $post_processor ) {
+			$types = array_merge( $types, $post_processor::get_supported_types() );
 		}
 		$types = array_unique( $types );
 
 		foreach ( $types as $type ) {
-			$rules_section = new Section(
-				'rules',
-				__( 'Rules', 'antispam-bee' ),
-				__( 'Setup rules.', 'antispam-bee' ),
-				$type
-			);
-			$rules_section->add_controllables( Components::filter( $rules, [
-				'type' => $type,
-			] ) );
-
-			$post_processors_section = new Section(
-				'post_processors',
-				__( 'Post Processors', 'antispam-bee' ),
-				__( 'Setup post processors.', 'antispam-bee' ),
-				$type
-			);
-
-			$post_processors_section->add_controllables( Components::filter( $post_processors, [
-				'type' => $type,
-			] ) );
-
-			$tabs[$type] = new Tab(
+			$tabs[ $type ] = new Tab(
 				$type,
-				ItemTypeHelper::get_type_name( $type ),
-				[
-					'rules' => $rules_section,
-					'post_processors' => $post_processors_section
-				]
+				ItemTypeHelper::get_type_name( $type )
 			);
 		}
 		$this->tabs = $tabs;
+
+		$this->populate_tabs();
 
 		// Register option setting
 		foreach ( $this->tabs as $tab ) {
@@ -137,33 +118,58 @@ class SettingsPage {
 					continue;
 				}
 
-				add_settings_section( $section->get_name(), $section->get_title(), [ $section, 'get_callback' ], self::SETTINGS_PAGE_SLUG );
-
-				foreach ( $section->get_rows() as $row ) {
-					add_settings_field(
-						sanitize_title( $row['label'] ),
-						$row['label'],
-						function() use ( $row ) {
-							foreach ( $row['fields'] as $key => $field ) {
-								$field->render();
-								if ( $key !== count( $row['fields'] ) - 1 ) {
-									if ( $field instanceof Checkbox && empty( $field->get_label() ) ) {
-										continue;
-									}
-									echo '<br>';
-								}
-							}
-						},
-						self::SETTINGS_PAGE_SLUG,
-						$section->get_name()
-					);
-				}
+				$section->render();
 			}
 		}
 
 		register_setting( self::SETTINGS_PAGE_SLUG, Settings::ANTISPAM_BEE_OPTION_NAME, [
 			'sanitize_callback' => [ Settings::class, 'sanitize' ],
 		] );
+	}
+
+	protected function populate_tabs() {
+		$type = $this->active_tab;
+
+		$data = [];
+
+		if ( 'general' === $type ) {
+			$data['general'] = [
+				'title' => ItemTypeHelper::get_type_name( 'general' ),
+				'description' => __( 'Setup global plugin spam settings.', 'antispam-bee' ),
+				'controllables' => Components::filter( GeneralOptions::get_controllables(), [ 'type' => $type ] )
+			];
+		}
+
+		$data = array_merge(
+			$data,
+			[
+				'rules' => [
+					'title' => __( 'Rules', 'antispam-bee' ),
+					'description' => __( 'Setup rules.', 'antispam-bee' ),
+					'controllables' => Components::filter( $this->rules, [ 'type' => $type ] )
+				],
+				'post_processors' => [
+					'title' => __( 'Post Processors', 'antispam-bee' ),
+					'description' => __( 'Setup post processors.', 'antispam-bee' ),
+					'controllables' => Components::filter( $this->post_processors, [ 'type' => $type ] )
+				]
+			]
+		);
+
+		foreach ( $data as $key => $value ) {
+ 			if ( empty( $value['controllables'] ) ) {
+				continue;
+			}
+
+			$section = new Section(
+				$key,
+				$value['title'],
+				$value['description'],
+				$type
+			);
+			$section->add_controllables( $value['controllables'] );
+			$this->tabs[ $type ]->add_section( $section );
+		}
 	}
 
 	/**

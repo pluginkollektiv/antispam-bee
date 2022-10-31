@@ -3,20 +3,16 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
-use AntispamBee\Helpers\ItemTypeHelper;
 use AntispamBee\Helpers\LangHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
-use AntispamBee\Interfaces\Controllable;
-use AntispamBee\Interfaces\Verifiable;
 
-class LangSpam implements Verifiable, Controllable {
+class LangSpam extends ControllableBase {
 
-	use InitRule;
-	use IsActive;
+	protected static $slug = 'asb-lang-spam';
 
 	public static function verify( $item ) {
-		$allowed_languages = array_keys( (array) Settings::get_option( 'asb_allowed_lang_codes', $item['asb_item_type'] ) );
+		$allowed_languages = array_keys( (array) Settings::get_option( static::get_option_name( 'allowed' ), $item['asb_item_type'] ) );
 
 		$comment_content = DataHelper::get_values_where_key_contains( [ 'content' ], $item );
 		if ( empty( $comment_content ) ) {
@@ -99,18 +95,6 @@ class LangSpam implements Verifiable, Controllable {
 		return __( 'Comment Language', 'antispam-bee' );
 	}
 
-	public static function get_weight() {
-		return 1;
-	}
-
-	public static function get_slug() {
-		return 'asb-lang-spam';
-	}
-
-	public static function is_final() {
-		return false;
-	}
-
 	public static function get_label() {
 		return __( 'Allow comments only in certain language', 'antispam-bee' );
 	}
@@ -132,8 +116,6 @@ class LangSpam implements Verifiable, Controllable {
 		);
 	}
 
-	// Todo: Use same prefix for ASB everywhere (not sometimes ab, sometimes asb)
-	// Todo: remove unnecessary prefixes for array keys inside asb_option
 	public static function get_options() {
 		$languages = [
 			'de' => __( 'German', 'antispam-bee' ),
@@ -143,6 +125,7 @@ class LangSpam implements Verifiable, Controllable {
 			'es' => __( 'Spanish', 'antispam-bee' ),
 		];
 
+		// Todo: Deprecate old filters
 		/**
 		 * Filter the possible languages for the language spam test
 		 *
@@ -150,22 +133,18 @@ class LangSpam implements Verifiable, Controllable {
 		 * @param (array) $languages The languages
 		 * @return (array)
 		 */
-		$languages = (array) apply_filters( 'ab_get_allowed_translate_languages', $languages );
+		$languages = (array) apply_filters( 'antispam_bee_get_allowed_translate_languages', $languages );
 
 		return [
 			[
 				'type' => 'checkbox-group',
 				'options' => $languages,
 				'label' => __( 'Allowed languages', 'antispam-bee' ),
-				'option_name' => 'asb_allowed_lang_codes',
+				'option_name' => 'allowed',
 				'sanitize' => function( $value ) use ( $languages ) {
 					return Sanitize::checkbox_group( $value, $languages );
 				}
 			],
 		];
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 }

@@ -55,7 +55,13 @@ class Settings {
 	 */
 	public static function get_option( $option_name, $type = 'general' ) {
 		$options = self::get_options();
-		$value_path = str_replace( '-', '_', "$type.$option_name" );
+
+		$value_path = "$option_name";
+		if ( ! empty( $type ) ) {
+			$value_path = "$type.$option_name";
+		}
+		$value_path = str_replace( '-', '_', $value_path );
+
 		return self::get_array_value_by_path( $value_path, $options );
 	}
 
@@ -168,7 +174,6 @@ class Settings {
 	}
 
 	private static function sanitize_controllables( $options, $tab ) {
-		// Todo: Handle the settings from the `General` tab.
 		$controllables = array_merge(
 			GeneralOptions::get_controllables( $tab ),
 			Rules::get_controllables( $tab ),
@@ -176,26 +181,26 @@ class Settings {
 		);
 
 		foreach ( $controllables as $controllable ) {
-			$controllable_options = $controllable::get_options();
-			$option_path = str_replace( '-', '_', $tab . '.' . $controllable::get_slug() . '_active' );
+			$option_path = str_replace( '-', '_', $tab . '.' . $controllable::get_option_name( 'active' ) );
 			$active_state = self::get_array_value_by_path( $option_path, $options );
 			$sanitized = Sanitize::checkbox( $active_state );
 			if ( ! $sanitized ) {
 				self::remove_array_key_by_path( $option_path, $options );
 			}
 
+			$controllable_options = $controllable::get_options();
 			if ( ! $controllable_options ) {
 				continue;
 			}
 
 			foreach ( $controllable_options as $controllable_option ) {
-				self::call_sanitize_callback( $controllable_option, $options, $tab );
+				self::call_sanitize_callback( $controllable_option, $options, $tab, $controllable );
 				if (
 					isset( $controllable_option['input'] )
 					&& $controllable_option['input'] instanceof Field
 					&& isset( $controllable_option['input']->get_option()['sanitize'] )
 				) {
-					self::call_sanitize_callback( $controllable_option['input']->get_option(), $options, $tab );
+					self::call_sanitize_callback( $controllable_option['input']->get_option(), $options, $tab, $controllable );
 				}
 			}
 		}
@@ -203,7 +208,7 @@ class Settings {
 		return $options;
 	}
 
-	private static function call_sanitize_callback( $controllable_option, &$options, $tab ) {
+	private static function call_sanitize_callback( $controllable_option, &$options, $tab, $controllable ) {
 		if ( ! isset( $controllable_option['sanitize'] ) ) {
 			return;
 		}
@@ -212,8 +217,8 @@ class Settings {
 			return;
 		}
 
-		$option_name = $controllable_option['option_name'];
-		$path = "$tab.$option_name";
+		$option_name = $controllable::get_option_name( $controllable_option['option_name'] );
+		$path = str_replace( '-', '_', "$tab.$option_name" );
 		$new_value = self::get_array_value_by_path( $path, $options );
 
 		if ( is_callable( $controllable_option['sanitize'] ) ) {

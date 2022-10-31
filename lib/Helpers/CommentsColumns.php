@@ -68,6 +68,8 @@ class CommentsColumns {
 			return;
 		}
 
+		// Todo: format correctly.
+
 		echo esc_html( $spam_reason );
 	}
 

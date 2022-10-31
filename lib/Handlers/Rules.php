@@ -31,8 +31,8 @@ class Rules {
 
 			$score += $rule_score;
 
-			$no_spam_threshold = (float) apply_filters( 'asb_no_spam_threshold', 0.0 );
-			$spam_threshold    = (float) apply_filters( 'asb_spam_threshold', 0.0 );
+			$no_spam_threshold = (float) apply_filters( 'antispam_bee_no_spam_threshold', 0.0 );
+			$spam_threshold    = (float) apply_filters( 'antispam_bee_spam_threshold', 0.0 );
 
 			if ( $no_spam_threshold < 0.0 && $score <= $no_spam_threshold ) {
 				return false;
@@ -63,7 +63,8 @@ class Rules {
 	}
 
 	private static function filter( $options ) {
-		return Components::filter( apply_filters( 'asb_rules', [] ), $options );
+		// Todo: discuss if our rules should be filterable or not.
+		return Components::filter( apply_filters( 'antispam_bee_rules', [] ), $options );
 	}
 
 	public function get_spam_reasons() {

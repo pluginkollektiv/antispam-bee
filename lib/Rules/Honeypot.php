@@ -4,18 +4,15 @@ namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\ItemTypeHelper;
-use AntispamBee\Interfaces\Controllable;
-use AntispamBee\Interfaces\Verifiable;
 use AntispamBee\Helpers\Settings;
 use \AntispamBee\Fields\Honeypot as HoneypotField;
 
 /**
  * Adds honeypot to comment form and checks if it is filled.
  */
-class Honeypot implements Verifiable, Controllable {
-
-	use IsActive;
-	use InitRule;
+class Honeypot extends ControllableBase {
+	protected static $slug = 'asb-honeypot';
+	protected static $supported_types = [ ItemTypeHelper::COMMENT_TYPE ];
 
 	/**
 	 * Initialize the rule.
@@ -23,12 +20,12 @@ class Honeypot implements Verifiable, Controllable {
 	 * @return void
 	 */
 	public static function init() {
-		add_filter( 'asb_rules', [ __CLASS__, 'add_rule' ] );
+		add_filter( 'antispam_bee_rules', [ __CLASS__, 'add_rule' ] );
 
 		add_filter(
 			'comment_form_field_comment',
 			function ( $field_markup ) {
-				if ( ! self::is_active( ItemTypeHelper::COMMENT_TYPE ) ) {
+				if ( ! static::is_active( ItemTypeHelper::COMMENT_TYPE ) ) {
 					return $field_markup;
 				}
 				return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
@@ -90,23 +87,4 @@ class Honeypot implements Verifiable, Controllable {
 		return __( 'No review of already commented users', 'antispam-bee' );
 	}
 
-	public static function get_weight() {
-		return 1.0;
-	}
-
-	public static function get_slug() {
-		return 'asb-honeypot';
-	}
-
-	public static function is_final() {
-		return false;
-	}
-
-	public static function get_options() {
-		return null;
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::COMMENT_TYPE ];
-	}
 }

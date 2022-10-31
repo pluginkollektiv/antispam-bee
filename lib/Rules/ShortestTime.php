@@ -3,17 +3,12 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\ItemTypeHelper;
-use AntispamBee\Interfaces\Controllable;
-use AntispamBee\Interfaces\Verifiable;
-use AntispamBee\Helpers\Settings;
 
 /**
  * Rule that is responsible for checking that at least a certain timespan has passed so that the comment won‘t be marked as invalid.
  */
-class ShortestTime implements Verifiable, Controllable {
-
-	use InitRule;
-	use IsActive;
+class ShortestTime extends ControllableBase {
+	protected static $slug = 'asb-shortest-time';
 
 	/**
 	 * Initialize the rule.
@@ -21,7 +16,7 @@ class ShortestTime implements Verifiable, Controllable {
 	 * @return void
 	 */
 	public static function init() {
-		add_filter( 'asb_rules', [ __CLASS__, 'add_rule' ] );
+		add_filter( 'antispam_bee_rules', [ __CLASS__, 'add_rule' ] );
 
 		add_filter(
 			'comment_form_field_comment',
@@ -52,7 +47,7 @@ class ShortestTime implements Verifiable, Controllable {
 
 		// @todo: maybe rename this filter to start with `asb` and add a deprecation message.
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-		if ( time() - $init_time < apply_filters( 'ab_action_time_limit', 5 ) ) {
+		if ( time() - $init_time < apply_filters( 'antispam_bee_action_time_limit', 5 ) ) {
 			return 1;
 		}
 
@@ -63,31 +58,11 @@ class ShortestTime implements Verifiable, Controllable {
 		return __( 'Comment time', 'antispam-bee' );
 	}
 
-	public static function get_weight() {
-		return 1.0;
-	}
-
-	public static function get_slug() {
-		return 'asb-shortest-time';
-	}
-
-	public static function is_final() {
-		return false;
-	}
-
 	public static function get_label() {
 		return __( 'Consider the comment time', 'antispam-bee' );
 	}
 
 	public static function get_description() {
 		return __( 'Not recommended when using page caching', 'antispam-bee' );
-	}
-
-	public static function get_options() {
-		return null;
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 }

@@ -3,17 +3,14 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\ItemTypeHelper;
-use AntispamBee\Interfaces\Verifiable;
 
 /**
  * Rule that is responsible for checking if the trackback post title is a blog name.
  */
-class TrackbackPostTitleIsBlogName implements Verifiable {
+class TrackbackPostTitleIsBlogName extends Base {
+	protected static $slug = 'asb-approved-email';
+	protected static $supported_types = [ ItemTypeHelper::TRACKBACK_TYPE ];
 
-	use InitRule;
-	use IsActive;
-
-	// Todo: test
 	public static function verify( $item ) {
 		$body      = isset( $item['comment_content'] ) ? $item['comment_content'] : null;
 		$blog_name = isset( $item['comment_author'] ) ? $item['comment_author'] : null;
@@ -27,21 +24,5 @@ class TrackbackPostTitleIsBlogName implements Verifiable {
 
 	public static function get_name() {
 		return __( 'Trackback post title is blog name', 'antispam-bee' );
-	}
-
-	public static function get_weight() {
-		return 1.0;
-	}
-
-	public static function get_slug() {
-		return 'asb-approved-email';
-	}
-
-	public static function is_final() {
-		return false;
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::TRACKBACK_TYPE ];
 	}
 }

@@ -3,15 +3,13 @@
 namespace AntispamBee\PostProcessors;
 
 use AntispamBee\Helpers\ItemTypeHelper;
-use AntispamBee\Interfaces\PostProcessor;
 
 /**
  * Post Processor that is responsible for updating the spam log file.
  */
-class UpdateSpamLog implements PostProcessor {
+class UpdateSpamLog extends Base {
 
-	use IsActive;
-	use InitPostProcessor;
+	protected static $slug = 'asb-update-spam-log';
 
 	public static function process( $item ) {
 		if ( ! isset( $item['comment_post_ID'] ) || ! isset( $item['comment_author_IP'] ) ) {
@@ -42,18 +40,6 @@ class UpdateSpamLog implements PostProcessor {
 		);
 
 		return $item;
-	}
-
-	public static function get_slug() {
-		return 'asb-update-spam-log';
-	}
-
-	public static function get_supported_types() {
-		return [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
-	}
-
-	public static function marks_as_delete() {
-		return false;
 	}
 }
 

@@ -25,14 +25,18 @@ class DeleteOldSpam extends Base {
 		return [
 			[
 				'type' => 'inline',
-				'input' => new Text( 'general', [
-					'input_type' => 'number',
-					'input_size' => 'small',
-					'option_name' => 'delete_spam_cronjob_days',
-					'sanitize' => function( $value ) {
-						return absint( $value );
-					}
-				] ),
+				'input' => new Text(
+					'general',
+					[
+						'input_type' => 'number',
+						'input_size' => 'small',
+						'option_name' => 'delete_spam_cronjob_days',
+						'sanitize' => function( $value ) {
+							return absint( $value );
+						}
+					],
+					static::class
+				),
 				'option_name' => 'delete_spam_cronjob_enabled_active',
 				'label' => esc_html( 'Delete existing spam after %s days', 'antispam-bee' ),
 				'description' => esc_html( 'Cleaning up the database from old entries', 'antispam-bee' ),
