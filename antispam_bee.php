@@ -151,6 +151,11 @@ class Antispam_Bee {
 
 		self::_init_internal_vars();
 
+        if ( self::_current_page( 'dashboard' ) || self::_current_page( 'plugins' ) || self::_current_page( 'options' ) || self::_current_page( 'edit-comments' ) ) {
+            self::load_plugin_lang();
+            self::add_reasons_to_defaults();
+        }
+
 		if ( defined( 'DOING_CRON' ) ) {
 			add_action(
 				'antispam_bee_daily_cronjob',
@@ -170,13 +175,6 @@ class Antispam_Bee {
 			);
 
 			if ( self::_current_page( 'dashboard' ) ) {
-				add_action(
-					'init',
-					array(
-						__CLASS__,
-						'load_plugin_lang',
-					)
-				);
 				add_filter(
 					'dashboard_glance_items',
 					array(
@@ -193,13 +191,6 @@ class Antispam_Bee {
 				);
 
 			} elseif ( self::_current_page( 'plugins' ) ) {
-				add_action(
-					'init',
-					array(
-						__CLASS__,
-						'load_plugin_lang',
-					)
-				);
 				add_filter(
 					'plugin_row_meta',
 					array(
@@ -218,13 +209,6 @@ class Antispam_Bee {
 				);
 
 			} elseif ( self::_current_page( 'options' ) ) {
-				add_action(
-					'admin_init',
-					array(
-						__CLASS__,
-						'load_plugin_lang',
-					)
-				);
 				add_action(
 					'admin_init',
 					array(
@@ -256,8 +240,6 @@ class Antispam_Bee {
 				if ( ! empty( $_GET['comment_status'] ) && 'spam' === $_GET['comment_status'] && ! self::get_option( 'no_notice' ) ) {
 					// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
 					require_once dirname( __FILE__ ) . '/inc/columns.class.php';
-
-					self::load_plugin_lang();
 
 					add_filter(
 						'manage_edit-comments_columns',
@@ -484,21 +466,32 @@ class Antispam_Bee {
 
 				'delete_data_on_uninstall' => 1,
 			),
-			'reasons' => array(
-				'css'           => esc_attr__( 'Honeypot', 'antispam-bee' ),
-				'time'          => esc_attr__( 'Comment time', 'antispam-bee' ),
-				'empty'         => esc_attr__( 'Empty Data', 'antispam-bee' ),
-				'localdb'       => esc_attr__( 'Local DB Spam', 'antispam-bee' ),
-				'server'        => esc_attr__( 'Fake IP', 'antispam-bee' ),
-				'country'       => esc_attr__( 'Country Check', 'antispam-bee' ),
-				'bbcode'        => esc_attr__( 'BBCode', 'antispam-bee' ),
-				'lang'          => esc_attr__( 'Comment Language', 'antispam-bee' ),
-				'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
-				'title_is_name' => esc_attr__( 'Identical Post title and blog title', 'antispam-bee' ),
-				'manually'      => esc_attr__( 'Manually', 'antispam-bee' ),
-			),
 		);
 	}
+
+    /**
+     * Adds spam reason labels to the `$defaults` array.
+     *
+     * That is done in an extra method instead of `_init_internal_vars`
+     * so that the translations are loaded before.
+     *
+     * @since 2.11.2
+     */
+    private static function add_reasons_to_defaults() {
+        self::$defaults['reasons'] = array(
+            'css'           => esc_attr__( 'Honeypot', 'antispam-bee' ),
+            'time'          => esc_attr__( 'Comment time', 'antispam-bee' ),
+            'empty'         => esc_attr__( 'Empty Data', 'antispam-bee' ),
+            'localdb'       => esc_attr__( 'Local DB Spam', 'antispam-bee' ),
+            'server'        => esc_attr__( 'Fake IP', 'antispam-bee' ),
+            'country'       => esc_attr__( 'Country Check', 'antispam-bee' ),
+            'bbcode'        => esc_attr__( 'BBCode', 'antispam-bee' ),
+            'lang'          => esc_attr__( 'Comment Language', 'antispam-bee' ),
+            'regexp'        => esc_attr__( 'Regular Expression', 'antispam-bee' ),
+            'title_is_name' => esc_attr__( 'Identical Post title and blog title', 'antispam-bee' ),
+            'manually'      => esc_attr__( 'Manually', 'antispam-bee' ),
+        );
+    }
 
 	/**
 	 * Check and return an array key
