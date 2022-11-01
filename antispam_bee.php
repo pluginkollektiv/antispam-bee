@@ -2703,7 +2703,7 @@ class Antispam_Bee {
 	 */
 	private static function _get_spam_count() {
 		// Init.
-		$count = self::get_option( 'spam_count' );
+		$count = intval( self::get_option( 'spam_count' ) );
 
 		// Fire.
 		return ( get_locale() === 'de_DE' ? number_format( $count, 0, '', '.' ) : number_format_i18n( $count ) );
