@@ -50,7 +50,7 @@ class DeleteForReasons extends ControllableBase {
 
 		$options = [];
 		foreach ( self::get_supported_types() as $type ) {
-			$filtered_rules = Components::filter( $rules, [ 'type' => $type ] );
+			$filtered_rules = Components::filter( $rules, [ 'content_type' => $type ] );
 			$checkbox_options = [];
 
 			// Todo: we need to filter out the positive rules here, like Approved Email and Gravatar.

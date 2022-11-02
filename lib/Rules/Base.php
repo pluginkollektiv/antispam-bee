@@ -2,14 +2,14 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Interfaces\Verifiable;
 
 abstract class Base implements Verifiable {
 	protected static $slug;
 	protected static $weight = 1;
 	protected static $is_final = false;
-	protected static $supported_types = [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
+	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE, ContentTypeHelper::TRACKBACK_TYPE ];
 
 	/**
 	 * Initialize the rule.

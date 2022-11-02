@@ -4,7 +4,7 @@ namespace AntispamBee\Handlers;
 
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\IpHelper;
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Rules\Honeypot;
 
 class Comment {
@@ -12,7 +12,7 @@ class Comment {
 		add_action(
 			'init',
 			function () {
-				if ( ! Honeypot::is_active( ItemTypeHelper::COMMENT_TYPE ) ) {
+				if ( ! Honeypot::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
 					return;
 				}
 				Honeypot::precheck();

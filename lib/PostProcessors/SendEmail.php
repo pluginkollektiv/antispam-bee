@@ -2,7 +2,7 @@
 
 namespace AntispamBee\PostProcessors;
 
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\LangHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
@@ -57,7 +57,7 @@ class SendEmail extends ControllableBase {
 				}
 
 				// Prepare Comment Type.
-				$comment_name = ItemTypeHelper::get_type_name( $item['comment_type'] );
+				$comment_name = ContentTypeHelper::get_type_name( $item['comment_type'] );
 
 				// Body.
 				$body = sprintf(

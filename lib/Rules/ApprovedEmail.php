@@ -3,14 +3,14 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 
 /**
  * Checks if the email is from an already approved commenter.
  */
 class ApprovedEmail extends ControllableBase {
 
-	protected static $supported_types = [ ItemTypeHelper::COMMENT_TYPE ];
+	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 	protected static $slug = 'asb-approved-email';
 
 	// Todo: Discuss if this (and gravatar) should be final rules, and also surpass the Honeypot

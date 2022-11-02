@@ -3,7 +3,7 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\Settings;
 use \AntispamBee\Fields\Honeypot as HoneypotField;
 
@@ -12,7 +12,7 @@ use \AntispamBee\Fields\Honeypot as HoneypotField;
  */
 class Honeypot extends ControllableBase {
 	protected static $slug = 'asb-honeypot';
-	protected static $supported_types = [ ItemTypeHelper::COMMENT_TYPE ];
+	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
 	/**
 	 * Initialize the rule.
@@ -25,7 +25,7 @@ class Honeypot extends ControllableBase {
 		add_filter(
 			'comment_form_field_comment',
 			function ( $field_markup ) {
-				if ( ! static::is_active( ItemTypeHelper::COMMENT_TYPE ) ) {
+				if ( ! static::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
 					return $field_markup;
 				}
 				return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );

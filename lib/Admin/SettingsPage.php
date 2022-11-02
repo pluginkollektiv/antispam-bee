@@ -14,7 +14,7 @@ use AntispamBee\Handlers\GeneralOptions;
 use AntispamBee\Handlers\PostProcessors;
 use AntispamBee\Handlers\Rules;
 use AntispamBee\Helpers\Components;
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\Settings;
 
 /**
@@ -104,7 +104,7 @@ class SettingsPage {
 		foreach ( $types as $type ) {
 			$tabs[ $type ] = new Tab(
 				$type,
-				ItemTypeHelper::get_type_name( $type )
+				ContentTypeHelper::get_type_name( $type )
 			);
 		}
 		$this->tabs = $tabs;
@@ -134,9 +134,9 @@ class SettingsPage {
 
 		if ( 'general' === $type ) {
 			$data['general'] = [
-				'title' => ItemTypeHelper::get_type_name( 'general' ),
+				'title' => ContentTypeHelper::get_type_name( 'general' ),
 				'description' => __( 'Setup global plugin spam settings.', 'antispam-bee' ),
-				'controllables' => Components::filter( GeneralOptions::get_controllables(), [ 'type' => $type ] )
+				'controllables' => Components::filter( GeneralOptions::get_controllables(), [ 'content_type' => $type ] )
 			];
 		}
 
@@ -146,12 +146,12 @@ class SettingsPage {
 				'rules' => [
 					'title' => __( 'Rules', 'antispam-bee' ),
 					'description' => __( 'Setup rules.', 'antispam-bee' ),
-					'controllables' => Components::filter( $this->rules, [ 'type' => $type ] )
+					'controllables' => Components::filter( $this->rules, [ 'content_type' => $type ] )
 				],
 				'post_processors' => [
 					'title' => __( 'Post Processors', 'antispam-bee' ),
 					'description' => __( 'Setup post processors.', 'antispam-bee' ),
-					'controllables' => Components::filter( $this->post_processors, [ 'type' => $type ] )
+					'controllables' => Components::filter( $this->post_processors, [ 'content_type' => $type ] )
 				]
 			]
 		);

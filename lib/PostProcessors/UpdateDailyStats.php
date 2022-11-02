@@ -3,7 +3,7 @@
 namespace AntispamBee\PostProcessors;
 
 use AntispamBee\GeneralOptions\Statistics;
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Interfaces\PostProcessor;
 use AntispamBee\Helpers\Settings;
 

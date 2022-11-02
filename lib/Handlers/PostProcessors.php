@@ -8,11 +8,18 @@ use AntispamBee\Interfaces\PostProcessor;
 use ReflectionClass;
 
 class PostProcessors {
-	public static function apply( $type, $item, $reasons = [] ) {
-		$post_processors = self::get( $type, true );
+	/**
+	 * @param string $content_type one of the supported content types.
+	 * @param $item
+	 * @param $reasons
+	 *
+	 * @return mixed
+	 */
+	public static function apply( $content_type, $item, $reasons = [] ) {
+		$post_processors = self::get( $content_type, true );
 
 		$item['asb_reasons']   = $reasons;
-		$item['asb_item_type'] = $type;
+		$item['asb_item_type'] = $content_type;
 
 		// Move the post processors that mark an item as to delete to front,
 		// so that following processors know if they handle an item that will be deleted.
@@ -31,17 +38,17 @@ class PostProcessors {
 		return $item;
 	}
 
-	public static function get( $type = null, $only_active = false ) {
+	public static function get( $content_type = null, $only_active = false ) {
 		return self::filter( [
-			'type' => $type,
+			'type' => $content_type,
 			'only_active' => $only_active,
 			'implements' => PostProcessor::class,
 		] );
 	}
 
-	public static function get_controllables( $type = null, $only_active = false ) {
+	public static function get_controllables( $content_type = null, $only_active = false ) {
 		return self::filter( [
-			'type' => $type,
+			'type' => $content_type,
 			'only_active' => $only_active,
 			'implements' => [ PostProcessor::class, Controllable::class ],
 		] );

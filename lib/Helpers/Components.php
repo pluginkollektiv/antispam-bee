@@ -11,16 +11,15 @@ class Components {
 	 * @param $components Controllable[]
 	 * @param $options
 	 * $options = array(
-	 *   'type'            => 'comment',
-	 *   'only_active'       => true,
+	 *   'content_type'    => 'comment',
+	 *   'only_active'     => true,
 	 *   'is_controllable' => false,
 	 * );
 	 */
 	public static function filter( $components, $options ) {
-		// Todo: Find way to ensure that rule slugs are unique (adding a unique prefix per extension that adds filters/rules, or something like that).
 		// Todo: Check if other things can break it too
 
-		$type = isset( $options['type'] ) ? $options['type'] : null;
+		$content_type = isset( $options['content_type'] ) ? $options['content_type'] : null;
 		$only_active = isset( $options['only_active'] ) ? $options['only_active'] : false;
 
 		$filtered_components = [];
@@ -41,15 +40,18 @@ class Components {
 				}
 			}
 
+			// Filter by supported types like Comment, Trackback
 			$supported_types = $component::get_supported_types();
-			if ( ! is_null( $type ) && ! in_array( $type, $supported_types ) ) {
+			if ( ! is_null( $content_type ) && ! in_array( $content_type, $supported_types ) ) {
 				continue;
 			}
 
+			// Filters if the component implements the Controllable interface
 			$conforms_to_controllable = InterfaceHelper::class_implements_interface( $component, Controllable::class );
 
+			// Filters out components that are not active
 			if ( $only_active ) {
-				if ( $conforms_to_controllable && ! $component::is_active( $type ) ) {
+				if ( $conforms_to_controllable && ! $component::is_active( $content_type ) ) {
 					continue;
 				}
 			}

@@ -7,16 +7,30 @@
 
 namespace AntispamBee\Helpers;
 
+use AntispamBee\PostProcessors\SaveReason;
+
 /**
  * Class CommentsColumns
  */
 class CommentsColumns {
-
+	
 	/**
 	 * Registers the module hooks.
 	 */
 	public function init() {
-		if ( ! DashboardHelper::is_edit_spam_comments_page() && ! Settings::get_option( 'no_notice' ) ) {
+		if ( ! DashboardHelper::is_edit_spam_comments_page() ) {
+			return;
+		}
+
+		$supported_types = SaveReason::get_supported_types();
+		$show_column = false;
+		foreach ( $supported_types as $type ) {
+			$show_column = Settings::get_option( SaveReason::get_option_name( 'active' ), $type );
+			if ( $show_column ) {
+				break;
+			}
+		}
+		if ( ! $show_column  ) {
 			return;
 		}
 
@@ -62,7 +76,6 @@ class CommentsColumns {
 		}
 
 		$spam_reason  = get_comment_meta( $comment_id, $column, true );
-		$spam_reasons = Settings::get_options( 'reasons' );
 
 		if ( empty( $spam_reason ) ) {
 			return;

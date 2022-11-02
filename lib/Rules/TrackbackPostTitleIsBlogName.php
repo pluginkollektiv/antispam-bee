@@ -2,14 +2,14 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 
 /**
  * Rule that is responsible for checking if the trackback post title is a blog name.
  */
 class TrackbackPostTitleIsBlogName extends Base {
 	protected static $slug = 'asb-approved-email';
-	protected static $supported_types = [ ItemTypeHelper::TRACKBACK_TYPE ];
+	protected static $supported_types = [ ContentTypeHelper::TRACKBACK_TYPE ];
 
 	public static function verify( $item ) {
 		$body      = isset( $item['comment_content'] ) ? $item['comment_content'] : null;

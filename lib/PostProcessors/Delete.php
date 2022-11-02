@@ -2,7 +2,7 @@
 
 namespace AntispamBee\PostProcessors;
 
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 
 /**
  * Post processor that marks spam comments so that they are deleted in the end.

@@ -2,7 +2,7 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Interfaces\Verifiable;
 
 /**
@@ -10,7 +10,7 @@ use AntispamBee\Interfaces\Verifiable;
  */
 class TrackbackFromMyself extends Base {
 	protected static $slug = 'asb-approved-email';
-	protected static $supported_types = [ ItemTypeHelper::TRACKBACK_TYPE ];
+	protected static $supported_types = [ ContentTypeHelper::TRACKBACK_TYPE ];
 
 	public static function verify( $item ) {
 		$url            = isset( $item['comment_author_url'] ) ? $item['comment_author_url'] : null;

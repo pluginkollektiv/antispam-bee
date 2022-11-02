@@ -3,7 +3,7 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 
 /**
  * Checks comment fields based on regular expressions.
@@ -25,7 +25,7 @@ class RegexpSpam extends ControllableBase {
 			'useragent',
 		];
 
-		if ( ItemTypeHelper::COMMENT_TYPE === $item['asb_item_type'] ) {
+		if ( ContentTypeHelper::COMMENT_TYPE === $item['asb_item_type'] ) {
 			$ip        = $item['comment_author_IP'];
 			$url       = $item['comment_author_url'];
 			$body      = $item['comment_content'];
@@ -43,7 +43,7 @@ class RegexpSpam extends ControllableBase {
 			);
 		}
 
-		if ( ItemTypeHelper::TRACKBACK_TYPE === $item['asb_item_type'] ) {
+		if ( ContentTypeHelper::TRACKBACK_TYPE === $item['asb_item_type'] ) {
 			$ip        = $item['comment_author_IP'];
 			$url       = $item['comment_author_url'];
 			$body      = $item['comment_content'];

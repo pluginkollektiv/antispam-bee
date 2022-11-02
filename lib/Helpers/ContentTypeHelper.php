@@ -2,7 +2,7 @@
 
 namespace AntispamBee\Helpers;
 
-class ItemTypeHelper {
+class ContentTypeHelper {
 
 	const GENERAL_TYPE   = 'general';
 	const COMMENT_TYPE   = 'comment';

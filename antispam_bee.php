@@ -38,7 +38,7 @@ antispam_bee_pre_init();
  */
 function antispam_bee_pre_init() {
 	// Load the translation, as they might be needed in pre_init.
-	add_action( 'plugins_loaded', 'antispam_bee_load_textdomain' );
+	add_action( 'plugins_loaded', 'antispam_bee_load_textdomain', 5 );
 
 	// Check, if the min. required PHP version is available and if not, show an admin notice.
 	if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {

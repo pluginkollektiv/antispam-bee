@@ -2,13 +2,13 @@
 
 namespace AntispamBee\PostProcessors;
 
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Interfaces\PostProcessor;
 
 abstract class Base implements PostProcessor {
 
 	protected static $slug;
-	protected static $supported_types = [ ItemTypeHelper::COMMENT_TYPE, ItemTypeHelper::TRACKBACK_TYPE ];
+	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE, ContentTypeHelper::TRACKBACK_TYPE ];
 	protected static $marks_as_delete = false;
 
 	/**

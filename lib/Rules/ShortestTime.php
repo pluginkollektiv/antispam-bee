@@ -2,7 +2,7 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Helpers\ItemTypeHelper;
+use AntispamBee\Helpers\ContentTypeHelper;
 
 /**
  * Rule that is responsible for checking that at least a certain timespan has passed so that the comment won‘t be marked as invalid.
@@ -21,7 +21,7 @@ class ShortestTime extends ControllableBase {
 		add_filter(
 			'comment_form_field_comment',
 			function ( $field_markup ) {
-				if ( ! self::is_active( ItemTypeHelper::COMMENT_TYPE ) ) {
+				if ( ! self::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
 					return $field_markup;
 				}
 				// Todo: use JS to add the timestamp, so it also works with page caching.
