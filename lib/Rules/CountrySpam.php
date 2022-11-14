@@ -5,11 +5,12 @@ namespace AntispamBee\Rules;
 use AntispamBee\Helpers\IpHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
+use AntispamBee\Interfaces\SpamReason;
 
 /**
  * Checks comments for spam based on the country of the IP address.
  */
-class CountrySpam extends ControllableBase {
+class CountrySpam extends ControllableBase implements SpamReason {
 	protected static $slug = 'asb-country-spam';
 
 	public static function verify( $item ) {
@@ -19,9 +20,9 @@ class CountrySpam extends ControllableBase {
 		$ip = $item['comment_author_IP'];
 
 		// Todo: Migrate ab_country_allowed, ab_country_denied
-		$country_allowed = Settings::get_option( static::get_option_name( 'allowed' ), $item['asb_item_type'] );
+		$country_allowed = Settings::get_option( static::get_option_name( 'allowed' ), $item['content_type'] );
 		$country_allowed = $country_allowed ? $country_allowed : '';
-		$country_denied = Settings::get_option( static::get_option_name( 'denied' ), $item['asb_item_type'] );
+		$country_denied = Settings::get_option( static::get_option_name( 'denied' ), $item['content_type'] );
 		$country_denied = $country_denied ? $country_denied : '';
 
 		$allowed = preg_split(
@@ -173,5 +174,9 @@ class CountrySpam extends ControllableBase {
 		$values = Sanitize::iso_codes( $values );
 
 		return implode( ',', $values );
+	}
+
+	public static function get_reason_text() {
+		return __( 'Country', 'antispam-bee' );
 	}
 }

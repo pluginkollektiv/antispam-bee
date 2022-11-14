@@ -3,11 +3,12 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
+use AntispamBee\Interfaces\SpamReason;
 
 /**
  * Checks the spam comments database entries to find matching patterns.
  */
-class DbSpam extends ControllableBase {
+class DbSpam extends ControllableBase implements SpamReason {
 
 	protected static $slug = 'asb-db-spam';
 
@@ -68,5 +69,9 @@ class DbSpam extends ControllableBase {
 
 	public static function get_description() {
 		return __( 'Check for spam data on your own blog', 'antispam-bee' );
+	}
+
+	public static function get_reason_text() {
+		return __( 'Local DB', 'antispam-bee' );
 	}
 }

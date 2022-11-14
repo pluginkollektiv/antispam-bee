@@ -3,12 +3,15 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\ContentTypeHelper;
+use AntispamBee\Interfaces\SpamReason;
 
 /**
  * Rule that is responsible for checking that at least a certain timespan has passed so that the comment won‘t be marked as invalid.
  */
-class ShortestTime extends ControllableBase {
-	protected static $slug = 'asb-shortest-time';
+class TooFastSubmit extends ControllableBase implements SpamReason {
+	protected static $slug = 'asb-too-fast-submit';
+
+	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
 	/**
 	 * Initialize the rule.
@@ -45,7 +48,6 @@ class ShortestTime extends ControllableBase {
 			return 0;
 		}
 
-		// @todo: maybe rename this filter to start with `asb` and add a deprecation message.
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		if ( time() - $init_time < apply_filters( 'antispam_bee_action_time_limit', 5 ) ) {
 			return 1;
@@ -64,5 +66,9 @@ class ShortestTime extends ControllableBase {
 
 	public static function get_description() {
 		return __( 'Not recommended when using page caching', 'antispam-bee' );
+	}
+
+	public static function get_reason_text() {
+		return _x( 'Created too quickly', 'spam-reason-text', 'antispam-bee' );
 	}
 }

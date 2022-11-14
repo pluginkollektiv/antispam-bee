@@ -19,7 +19,7 @@ class PostProcessors {
 		$post_processors = self::get( $content_type, true );
 
 		$item['asb_reasons']   = $reasons;
-		$item['asb_item_type'] = $content_type;
+		$item['content_type'] = $content_type;
 
 		// Move the post processors that mark an item as to delete to front,
 		// so that following processors know if they handle an item that will be deleted.
@@ -40,7 +40,7 @@ class PostProcessors {
 
 	public static function get( $content_type = null, $only_active = false ) {
 		return self::filter( [
-			'type' => $content_type,
+			'content_type' => $content_type,
 			'only_active' => $only_active,
 			'implements' => PostProcessor::class,
 		] );
@@ -48,7 +48,7 @@ class PostProcessors {
 
 	public static function get_controllables( $content_type = null, $only_active = false ) {
 		return self::filter( [
-			'type' => $content_type,
+			'content_type' => $content_type,
 			'only_active' => $only_active,
 			'implements' => [ PostProcessor::class, Controllable::class ],
 		] );

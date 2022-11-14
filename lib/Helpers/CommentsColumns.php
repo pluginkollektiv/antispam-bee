@@ -7,17 +7,19 @@
 
 namespace AntispamBee\Helpers;
 
+use AntispamBee\Handlers\Rules;
 use AntispamBee\PostProcessors\SaveReason;
 
+// Todo: move class to `Admin` folder.
 /**
  * Class CommentsColumns
  */
 class CommentsColumns {
-	
+
 	/**
 	 * Registers the module hooks.
 	 */
-	public function init() {
+	public static function init() {
 		if ( ! DashboardHelper::is_edit_spam_comments_page() ) {
 			return;
 		}
@@ -34,13 +36,13 @@ class CommentsColumns {
 			return;
 		}
 
-		add_filter( 'manage_edit-comments_columns', [ $this, 'register_plugin_columns' ] );
-		add_filter( 'manage_comments_custom_column', [ $this, 'print_plugin_column' ], 10, 2 );
-		add_filter( 'manage_edit-comments_sortable_columns', [ $this, 'register_sortable_columns' ] );
-		add_action( 'pre_get_comments', [ $this, 'set_orderby_query' ] );
-		add_action( 'restrict_manage_comments', [ $this, 'filter_columns' ] );
-		add_action( 'pre_get_comments', [ $this, 'filter_by_spam_reason' ] );
-		add_filter( 'admin_print_styles-edit-comments.php', [ $this, 'print_column_styles' ] );
+		add_filter( 'manage_edit-comments_columns', [ __CLASS__, 'register_plugin_columns' ] );
+		add_filter( 'manage_comments_custom_column', [ __CLASS__, 'print_plugin_column' ], 10, 2 );
+		add_filter( 'manage_edit-comments_sortable_columns', [ __CLASS__, 'register_sortable_columns' ] );
+		add_action( 'pre_get_comments', [ __CLASS__, 'set_orderby_query' ] );
+		add_action( 'restrict_manage_comments', [ __CLASS__, 'filter_columns' ] );
+		add_action( 'pre_get_comments', [ __CLASS__, 'filter_by_spam_reason' ] );
+		add_filter( 'admin_print_styles-edit-comments.php', [ __CLASS__, 'print_column_styles' ] );
 	}
 
 	/**
@@ -78,12 +80,14 @@ class CommentsColumns {
 		$spam_reason  = get_comment_meta( $comment_id, $column, true );
 
 		if ( empty( $spam_reason ) ) {
+			echo esc_html_x( 'No data available', 'spam-reason-column-text', 'antispam-bee' );
 			return;
 		}
 
-		// Todo: format correctly.
+		$reasons = explode( ',', $spam_reason );
+		$reason_texts = SpamReasonTextHelper::get_texts_by_slugs( $reasons );
 
-		echo esc_html( $spam_reason );
+		echo implode( ',<br>', $reason_texts );
 	}
 
 	/**

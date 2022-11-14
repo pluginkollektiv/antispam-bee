@@ -4,11 +4,12 @@ namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\ContentTypeHelper;
+use AntispamBee\Interfaces\SpamReason;
 
 /**
  * Checks comment fields based on regular expressions.
  */
-class RegexpSpam extends ControllableBase {
+class RegexpSpam extends ControllableBase implements SpamReason {
 
 	protected static $slug = 'asb-regexp';
 
@@ -25,7 +26,7 @@ class RegexpSpam extends ControllableBase {
 			'useragent',
 		];
 
-		if ( ContentTypeHelper::COMMENT_TYPE === $item['asb_item_type'] ) {
+		if ( ContentTypeHelper::COMMENT_TYPE === $item['content_type'] ) {
 			$ip        = $item['comment_author_IP'];
 			$url       = $item['comment_author_url'];
 			$body      = $item['comment_content'];
@@ -43,7 +44,7 @@ class RegexpSpam extends ControllableBase {
 			);
 		}
 
-		if ( ContentTypeHelper::TRACKBACK_TYPE === $item['asb_item_type'] ) {
+		if ( ContentTypeHelper::TRACKBACK_TYPE === $item['content_type'] ) {
 			$ip        = $item['comment_author_IP'];
 			$url       = $item['comment_author_url'];
 			$body      = $item['comment_content'];
@@ -163,5 +164,9 @@ class RegexpSpam extends ControllableBase {
 
 	public static function get_description() {
 		return __( 'Predefined and custom patterns by plugin hook', 'antispam-bee' );
+	}
+
+	public static function get_reason_text() {
+		return _x( 'RegExp match', 'spam-reason-text', 'antispam-bee' );
 	}
 }

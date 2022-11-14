@@ -6,11 +6,12 @@ use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\Settings;
 use \AntispamBee\Fields\Honeypot as HoneypotField;
+use AntispamBee\Interfaces\SpamReason;
 
 /**
  * Adds honeypot to comment form and checks if it is filled.
  */
-class Honeypot extends ControllableBase {
+class Honeypot extends ControllableBase implements SpamReason {
 	protected static $slug = 'asb-honeypot';
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
@@ -39,7 +40,7 @@ class Honeypot extends ControllableBase {
 			return 1;
 		}
 
-		// Todo: check if we should keep the -1 score.
+		// Todo: to discuss if we should keep the -1 score.
 		return -1;
 	}
 
@@ -76,7 +77,7 @@ class Honeypot extends ControllableBase {
 	}
 
 	public static function get_name() {
-		return __( 'Honeypot', 'antispam-bee' );
+		return _x( 'Honeypot', 'spam-reason-form-name', 'antispam-bee' );
 	}
 
 	public static function get_label() {
@@ -87,4 +88,7 @@ class Honeypot extends ControllableBase {
 		return __( 'No review of already commented users', 'antispam-bee' );
 	}
 
+	public static function get_reason_text() {
+		return _x( 'Honeypot', 'spam-reason-text', 'antispam-bee' );
+	}
 }

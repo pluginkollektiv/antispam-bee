@@ -17,8 +17,6 @@ class Components {
 	 * );
 	 */
 	public static function filter( $components, $options ) {
-		// Todo: Check if other things can break it too
-
 		$content_type = isset( $options['content_type'] ) ? $options['content_type'] : null;
 		$only_active = isset( $options['only_active'] ) ? $options['only_active'] : false;
 

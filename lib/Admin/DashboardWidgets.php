@@ -19,11 +19,11 @@ class DashboardWidgets {
 	/**
 	 * Initialize the dashboard widgets.
 	 */
-	public function init() {
+	public static function init() {
 		if ( DashboardHelper::is_dashboard_page() ) {
-			add_action( 'antispam_bee_count', [ $this, 'the_spam_count' ] );
-			add_filter( 'dashboard_glance_items', [ $this, 'add_dashboard_count' ] );
-			add_action( 'wp_dashboard_setup', [ $this, 'add_dashboard_chart' ] );
+			add_action( 'antispam_bee_count', [ __CLASS__, 'the_spam_count' ] );
+			add_filter( 'dashboard_glance_items', [ __CLASS__, 'add_dashboard_count' ] );
+			add_action( 'wp_dashboard_setup', [ __CLASS__, 'add_dashboard_chart' ] );
 		}
 	}
 
@@ -36,7 +36,7 @@ class DashboardWidgets {
 	 * @since  0.1
 	 * @since  2.6.5
 	 */
-	public function add_dashboard_count( $items = array() ) {
+	public static function add_dashboard_count( $items = array() ) {
 		if ( ! current_user_can( 'manage_options' ) || ! Settings::get_option( Statistics::get_option_name( Statistics::DASHBOARD_CHART_OPTION ) ) ) {
 			return $items;
 		}
@@ -47,7 +47,7 @@ class DashboardWidgets {
 			sprintf(
 				// translators: The number of spam comments Antispam Bee blocked so far.
 				__( '%s Blocked', 'antispam-bee' ),
-				$this->get_spam_count()
+				self::get_spam_count()
 			)
 		) . '</span>';
 
@@ -60,7 +60,7 @@ class DashboardWidgets {
 	 * @since  1.9
 	 * @since  2.5.6
 	 */
-	public function add_dashboard_chart() {
+	public static function add_dashboard_chart() {
 		if ( ! current_user_can( 'publish_posts' ) || ! Settings::get_option( Statistics::get_option_name( Statistics::DASHBOARD_CHART_OPTION ) ) ) {
 			return;
 		}
@@ -68,7 +68,7 @@ class DashboardWidgets {
 		wp_add_dashboard_widget(
 			'ab_widget',
 			'Antispam Bee',
-			[ $this, 'show_spam_chart' ]
+			[ __CLASS__, 'show_spam_chart' ]
 		);
 	}
 
@@ -78,7 +78,7 @@ class DashboardWidgets {
 	 * @since  1.9.0
 	 * @since  2.5.8
 	 */
-	public function show_spam_chart() {
+	public static function show_spam_chart() {
 		$items = (array) Settings::get_option( 'daily_stats', '' );
 
 		if ( empty( $items ) ) {
@@ -117,7 +117,7 @@ class DashboardWidgets {
 	 * @since  0.1
 	 * @since  2.4
 	 */
-	public function get_spam_count() {
+	private static function get_spam_count() {
 		$count = Settings::get_option( 'spam_count', '' );
 
 		return ( get_locale() === 'de_DE' ? number_format( $count, 0, '', '.' ) : number_format_i18n( $count ) );
@@ -129,7 +129,7 @@ class DashboardWidgets {
 	 * @since  0.1
 	 * @since  2.4
 	 */
-	public function the_spam_count() {
-		echo esc_html( $this->get_spam_count() );
+	public static function the_spam_count() {
+		echo esc_html( self::get_spam_count() );
 	}
 }

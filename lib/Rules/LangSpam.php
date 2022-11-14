@@ -6,13 +6,14 @@ use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\LangHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
+use AntispamBee\Interfaces\SpamReason;
 
-class LangSpam extends ControllableBase {
+class LangSpam extends ControllableBase implements SpamReason {
 
 	protected static $slug = 'asb-lang-spam';
 
 	public static function verify( $item ) {
-		$allowed_languages = array_keys( (array) Settings::get_option( static::get_option_name( 'allowed' ), $item['asb_item_type'] ) );
+		$allowed_languages = array_keys( (array) Settings::get_option( static::get_option_name( 'allowed' ), $item['content_type'] ) );
 
 		$comment_content = DataHelper::get_values_where_key_contains( [ 'content' ], $item );
 		if ( empty( $comment_content ) ) {
@@ -92,11 +93,11 @@ class LangSpam extends ControllableBase {
 	}
 
 	public static function get_name() {
-		return __( 'Comment Language', 'antispam-bee' );
+		return __( 'Language', 'antispam-bee' );
 	}
 
 	public static function get_label() {
-		return __( 'Allow comments only in certain language', 'antispam-bee' );
+		return __( 'Allow reactions only in certain language', 'antispam-bee' );
 	}
 
 	public static function get_description() {
@@ -146,5 +147,9 @@ class LangSpam extends ControllableBase {
 				}
 			],
 		];
+	}
+
+	public static function get_reason_text() {
+		return __( 'Language', 'antispam-bee' );
 	}
 }

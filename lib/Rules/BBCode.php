@@ -2,10 +2,12 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Interfaces\SpamReason;
+
 /**
  * Checks comment content for BBCode URLs.
  */
-class BBCode extends ControllableBase {
+class BBCode extends ControllableBase implements SpamReason {
 	protected static $slug = 'asb-bbcode';
 
 	public static function verify( $item ) {
@@ -19,7 +21,7 @@ class BBCode extends ControllableBase {
 	}
 
 	public static function get_name() {
-		return __( 'BBCode', 'antispam-bee' );
+		return _x( 'BBCode', 'spam-reason-form-name', 'antispam-bee' );
 	}
 
 	public static function get_label() {
@@ -28,5 +30,9 @@ class BBCode extends ControllableBase {
 
 	public static function get_description() {
 		return __( 'Review the comment contents for BBCode links', 'antispam-bee' );
+	}
+
+	public static function get_reason_text() {
+		return _x( 'BBCode', 'spam-reason-text', 'antispam-bee' );
 	}
 }

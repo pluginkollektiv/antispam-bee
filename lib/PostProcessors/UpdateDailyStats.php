@@ -14,10 +14,7 @@ class UpdateDailyStats extends Base {
 
 	protected static $slug = "asb-update-daily-stats";
 
-	// Todo: How to handle the general option cases
 	public static function process( $item ) {
-		// post_processor_asb_update_…_dashboard_chart
-		// general_asb_update_…_dashboard_chart
 		if ( ! Settings::get_option( Statistics::get_option_name( Statistics::DASHBOARD_CHART_OPTION ) ) ) {
 			return $item;
 		}

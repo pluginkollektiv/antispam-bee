@@ -19,7 +19,7 @@ class DeleteForReasons extends ControllableBase {
 			return $item;
 		}
 
-		$reasons = (array) Settings::get_option( static::get_option_name( 'reasons' ), $item['asb_item_type'] );
+		$reasons = (array) Settings::get_option( static::get_option_name( 'reasons' ), $item['content_type'] );
 		if ( ! $reasons ) {
 			return $item;
 		}
@@ -50,11 +50,9 @@ class DeleteForReasons extends ControllableBase {
 
 		$options = [];
 		foreach ( self::get_supported_types() as $type ) {
-			$filtered_rules = Components::filter( $rules, [ 'content_type' => $type ] );
+			$filtered_rules = Rules::get_spam_rules( $type );
 			$checkbox_options = [];
 
-			// Todo: we need to filter out the positive rules here, like Approved Email and Gravatar.
-			// Maybe we can add a flag to those rules, like `is_positive` or something like that.
 			foreach ( $filtered_rules as $rule ) {
 				$checkbox_options[ $rule::get_slug() ] = $rule::get_name();
 			}

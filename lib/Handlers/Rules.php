@@ -4,6 +4,7 @@ namespace AntispamBee\Handlers;
 
 use AntispamBee\Helpers\Components;
 use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\SpamReason;
 use AntispamBee\Interfaces\Verifiable;
 
 class Rules {
@@ -16,8 +17,8 @@ class Rules {
 	}
 
 	public function apply( $item ) {
-		$item['asb_item_type'] = $this->type;
-		$rules                 = self::get( $this->type, true );
+		$item['content_type'] = $this->type;
+		$rules                = self::get( $this->type, true );
 
 		$score = 0.0;
 		foreach ( $rules as $rule ) {
@@ -48,7 +49,7 @@ class Rules {
 
 	public static function get( $type = null, $only_active = false ) {
 		return self::filter( [
-			'type' => $type,
+			'content_type' => $type,
 			'only_active' => $only_active,
 			'implements' => Verifiable::class,
 		] );
@@ -56,9 +57,18 @@ class Rules {
 
 	public static function get_controllables( $type = null, $only_active = false ) {
 		return self::filter( [
-			'type' => $type,
+			'content_type' => $type,
 			'only_active' => $only_active,
 			'implements' => [ Verifiable::class, Controllable::class ],
+		] );
+	}
+
+	// Todo: Try to find a better suited method name.
+	public static function get_spam_rules( $type = null, $only_active = false ) {
+		return self::filter( [
+			'content_type' => $type,
+			'only_active' => $only_active,
+			'implements' => [ Verifiable::class, SpamReason::class ],
 		] );
 	}
 

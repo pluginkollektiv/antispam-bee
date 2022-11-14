@@ -14,16 +14,16 @@ class AssetsLoader {
 	/**
 	 * Registers all assets used in frontend and backend.
 	 */
-	public function init() {
-		add_action( 'init', [ $this, 'register_assets' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ], 11 );
-		add_action( 'admin_footer', [ $this, 'include_svg_icons' ], 9999 );
+	public static function init() {
+		add_action( 'init', [ __CLASS__, 'register_assets' ] );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'admin_enqueue_scripts' ], 11 );
+		add_action( 'admin_footer', [ __CLASS__, 'include_svg_icons' ], 9999 );
 	}
 
 	/**
 	 * Register the assets for the backend.
 	 */
-	public function register_assets() {
+	public static function register_assets() {
 		$backend_assets_path  = 'build/backend.asset.php';
 		$backend_scripts_path = 'build/backend.js';
 		$backend_style_path   = 'build/backend.css';
@@ -68,12 +68,12 @@ class AssetsLoader {
 	/**
 	 * Enqueue the backend assets.
 	 */
-	public function admin_enqueue_scripts() {
+	public static function admin_enqueue_scripts() {
 		wp_enqueue_script( 'antispam-bee-backend' );
 		wp_enqueue_style( 'antispam-bee-backend' );
 
 		// Adding legacy scripts.
-		$this->add_dashboard_script();
+		self::add_dashboard_script();
 	}
 
 	/**
@@ -82,7 +82,7 @@ class AssetsLoader {
 	 * @since  1.9.0
 	 * @since  2.5.8
 	 */
-	public function add_dashboard_script() {
+	private static function add_dashboard_script() {
 		if ( ! Settings::get_option( 'daily_stats' ) ) {
 			return;
 		}
@@ -108,7 +108,7 @@ class AssetsLoader {
 		wp_enqueue_script(
 			'ab_chart_js',
 			plugins_url( 'src/legacy/dashboard.js', ANTISPAM_BEE_FILE ),
-			array( 'jquery', 'ab-raphael' ),
+			[ 'jquery', 'ab-raphael' ],
 			$plugin['Version'],
 			true
 		);
@@ -117,7 +117,7 @@ class AssetsLoader {
 	/**
 	 * Add SVG definitions to footer.
 	 */
-	public function include_svg_icons() {
+	public static function include_svg_icons() {
 		$svg_icons = ANTISPAM_BEE_PATH . 'build/images/icons/sprite.svg';
 
 		if ( file_exists( $svg_icons ) ) {
