@@ -89,6 +89,7 @@ class AssetsLoader {
 
 		$plugin = get_plugin_data( ANTISPAM_BEE_FILE );
 
+		// Todo: check if we need that (is there a statistic graph)? If we need it, remove jquery dependency.
 		wp_enqueue_script(
 			'raphael',
 			plugins_url( 'src/legacy/raphael.min.js', ANTISPAM_BEE_FILE ),
