@@ -7,6 +7,11 @@
 
 namespace AntispamBee\Helpers;
 
+use const AntispamBee\ANTISPAM_BEE_FILE;
+use const AntispamBee\ANTISPAM_BEE_PATH;
+use const AntispamBee\ANTISPAM_BEE_URL;
+use const AntispamBee\ANTISPAM_BEE_VERSION;
+
 /**
  * AssetsLoader helper.
  */

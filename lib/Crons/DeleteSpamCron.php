@@ -3,6 +3,7 @@
 namespace AntispamBee\Crons;
 
 use AntispamBee\Helpers\Settings;
+use const AntispamBee\ANTISPAM_BEE_PATH;
 
 class DeleteSpamCron {
 

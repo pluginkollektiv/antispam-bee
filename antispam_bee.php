@@ -19,22 +19,21 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-use AntispamBee\Crons\DeleteSpamCron;
-use AntispamBee\Helpers\Settings;
+namespace AntispamBee;
 
-define( 'ANTISPAM_BEE_VERSION', '3.0.0' );
-define( 'ANTISPAM_BEE_DB_VERSION', '1.02' );
-define( 'ANTISPAM_BEE_FILE', __FILE__ );
-define( 'ANTISPAM_BEE_PATH', plugin_dir_path( ANTISPAM_BEE_FILE ) );
-define( 'ANTISPAM_BEE_URL', plugin_dir_url( ANTISPAM_BEE_FILE ) );
+define( __NAMESPACE__ . '\ANTISPAM_BEE_VERSION', '3.0.0' );
+define( __NAMESPACE__ . '\ANTISPAM_BEE_DB_VERSION', '1.02' );
+define( __NAMESPACE__ . '\ANTISPAM_BEE_FILE', __FILE__ );
+define( __NAMESPACE__ . '\ANTISPAM_BEE_PATH', plugin_dir_path( ANTISPAM_BEE_FILE ) );
+define( __NAMESPACE__ . '\ANTISPAM_BEE_URL', plugin_dir_url( ANTISPAM_BEE_FILE ) );
 
 // The pre_init functions check the compatibility of the plugin and calls the init function, if check were successful.
-antispam_bee_pre_init();
+pre_init();
 
 /**
  * Pre init function to check the plugins compatibility.
  */
-function antispam_bee_pre_init() {
+function pre_init() {
 	// Load the translation, as they might be needed in pre_init.
 	add_action( 'plugins_loaded', 'antispam_bee_load_textdomain', 5 );
 

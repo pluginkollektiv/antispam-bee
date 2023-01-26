@@ -4,6 +4,7 @@ namespace AntispamBee\Helpers;
 
 use AntispamBee\Interfaces\Controllable;
 use ReflectionClass;
+use const AntispamBee\ANTISPAM_BEE_PATH;
 
 class Components {
 
