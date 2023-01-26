@@ -194,6 +194,10 @@ class Settings {
 			}
 
 			foreach ( $controllable_options as $controllable_option ) {
+				if ( isset( $controllable_option['valid_for'] ) && $controllable_option['valid_for'] !== $tab ) {
+					continue;
+				}
+				
 				self::call_sanitize_callback( $controllable_option, $options, $tab, $controllable );
 				if (
 					isset( $controllable_option['input'] )
