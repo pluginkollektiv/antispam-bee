@@ -37,7 +37,7 @@ class DeleteOldSpam extends Base {
 					],
 					static::class
 				),
-				'option_name' => 'delete_spam_cronjob_enabled_active',
+				'option_name' => 'active',
 				'label' => esc_html( 'Delete existing spam after %s days', 'antispam-bee' ),
 				'description' => esc_html( 'Cleaning up the database from old entries', 'antispam-bee' ),
 				'sanitize' => function( $value ) {
