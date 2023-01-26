@@ -48,16 +48,15 @@ function init() {
 	$modules = array(
 		DashboardWidgets::class,
 		new SettingsPage(),
+		CommentsColumns::class,
 		DeleteSpamCron::class,
+		Settings::class,
+		AssetsLoader::class,
 		// Handlers
 		Comment::class,
 		Trackback::class,
 		// Helpers
-		// Todo: move those classes elsewhere (except SpamReasonTextHelper :D).
-		AssetsLoader::class,
-		CommentsColumns::class,
 		SpamReasonTextHelper::class,
-		Settings::class,
 		// Post Processors
 		DeleteOldSpam::class,
 		Statistics::class,
