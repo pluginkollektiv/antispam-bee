@@ -27,10 +27,25 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 				if ( ! self::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
 					return $field_markup;
 				}
-				// Todo: use JS to add the timestamp, so it also works with page caching.
+
+				$unique_id = uniqid( 'antispam-bee-time-' );
+				$script = sprintf(
+					'<script>(function() {
+						var time = Math.floor(Date.now() / 1000),
+							timeField = document.querySelector(\'input[data-unique-id="%s"]\');
+							
+						if (timeField) {
+							timeField.value = time;
+						}
+					}());</script>',
+					$unique_id
+				);
+
 				return $field_markup . sprintf(
-					'<input type="hidden" name="ab_init_time" value="%d" />',
-					time()
+					'<input type="hidden" name="ab_init_time" data-unique-id="%s" value="%d" />%s',
+					$unique_id,
+					time(),
+					$script
 				);
 			}
 		);
