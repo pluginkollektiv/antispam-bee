@@ -38,8 +38,15 @@ abstract class Base implements Verifiable {
 	 * @return array
 	 */
 	public static function get_supported_types() {
-		// Todo: add filter.
-		return static::$supported_types;
+		/**
+		 * Filter the reaction types that are supported by the rule.
+		 *
+		 * @param array $supported_types The supported types.
+		 * @param string $slug The rule’s slug.
+		 *
+		 * @return array Array of supported types.
+		 */
+		return apply_filters( 'antispam_bee_rule_supported_types', static::$supported_types, static::$slug );
 	}
 
 	public static function get_weight() {
