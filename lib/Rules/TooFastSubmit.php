@@ -33,7 +33,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 					'<script>(function() {
 						var time = Math.floor(Date.now() / 1000),
 							timeField = document.querySelector(\'input[data-unique-id="%s"]\');
-							
+
 						if (timeField) {
 							timeField.value = time;
 						}
