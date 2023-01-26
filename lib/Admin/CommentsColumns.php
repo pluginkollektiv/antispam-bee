@@ -5,12 +5,13 @@
  * @package AntispamBee\Helpers
  */
 
-namespace AntispamBee\Helpers;
+namespace AntispamBee\Admin;
 
-use AntispamBee\Handlers\Rules;
+use AntispamBee\Helpers\DashboardHelper;
+use AntispamBee\Helpers\Settings;
+use AntispamBee\Helpers\SpamReasonTextHelper;
 use AntispamBee\PostProcessors\SaveReason;
 
-// Todo: move class to `Admin` folder.
 /**
  * Class CommentsColumns
  */

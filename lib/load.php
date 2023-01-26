@@ -7,6 +7,7 @@
 
 namespace AntispamBee;
 
+use AntispamBee\Admin\CommentsColumns;
 use AntispamBee\Admin\DashboardWidgets;
 use AntispamBee\Admin\SettingsPage;
 use AntispamBee\Crons\DeleteSpamCron;
@@ -17,7 +18,6 @@ use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Handlers\Comment;
 use AntispamBee\Handlers\Trackback;
 use AntispamBee\Helpers\AssetsLoader;
-use AntispamBee\Helpers\CommentsColumns;
 use AntispamBee\Helpers\Installer;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Helpers\SpamReasonTextHelper;
