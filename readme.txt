@@ -101,6 +101,7 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
   * Tweak: make FAQ link an anchor link
   * Fix: spam counter no longer raises a warning with PHP 8.1 if no spam is present yet
   * Fix: spam reasons are now localized correctly
+  * Fix: Translations were loaded twice on some admin pages
   * Maintenance: Tested up to WordPress 6.1
 
 ### 2.11.1 ###

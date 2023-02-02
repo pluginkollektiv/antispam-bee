@@ -6,13 +6,15 @@
   * Tweak: make FAQ link an anchor link
   * Fix: spam counter no longer raises a warning with PHP 8.1 if no spam is present yet
   * Fix: spam reasons are now localized correctly
+  * Fix: Translations were loaded twice on some admin pages
   * Maintenance: Tested up to WordPress 6.1
 
 * **Deutsch**
-  * Tweak: Überflüssiges Übersetzungen entfernt
+  * Tweak: Überflüssige Übersetzungen entfernt
   * Tweak: Link zu den FAQ ist jetzt ein Anker-Link
   * Fix: Der Spam-Zähler erzeugt mit PHP 8.1 keine Warnung mehr, wenn noch kein Spam vorhanden ist
   * Fix: Spam-Gründe werden nun korrekt übersetzt
+  * Fix: Übersetzungen wurden auf einzelnen Adminseiten doppelt geladen
   * Wartung: Getestet mit WordPress 6.1
 
 ### 2.11.1 ###
