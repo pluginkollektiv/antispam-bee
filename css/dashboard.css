@@ -1,8 +1,48 @@
 #ab_chart {
 	color: #a7aaad;
+	flex: 0 0 100%;
+	direction: rtl;
 	height: 140px;
 	margin: 0 -4px;
+	overflow-x: auto;
+	overflow-y: hidden;
 	text-align: center;
+}
+
+#ab_chart .ct-label.ct-vertical.ct-start {
+	justify-content: flex-start;
+	text-align: left;
+	text-anchor: start;
+}
+
+#ab_chart .ct-line {
+	stroke: #3582c4;
+	stroke-width: 2px;
+}
+
+#ab_chart .ct-point {
+	fill: #fff;
+	stroke: #3582c4;
+	stroke-width: 1.5px;
+}
+
+#ab_chart .ct-area {
+	fill: #3582c4;
+}
+
+.ab-chartist-tooltip {
+	border: 1px solid #000;
+	background-color: #fff;
+	border-radius: 0.2em;
+	padding: 0.1em 0.5em;
+}
+
+.ab-chartist-tooltip::before {
+	border-top-color: #0009;
+}
+
+.ab-chartist-tooltip .chartist-tooltip-meta {
+	color: #3582c4;
 }
 
 #ab_chart_data {

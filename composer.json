@@ -69,7 +69,7 @@
       "npx stylelint css/dashboard.css css/styles.css"
     ],
     "lint-js": [
-      "npx eslint js/dashboard.js js/raphael.helper.js js/scripts.js"
+      "npx eslint js/dashboard.js js/scripts.js"
     ],
     "lint-php": [
       "phpcs --standard=phpcs.xml -s"
@@ -78,7 +78,6 @@
       "minifycss css/dashboard.css > css/dashboard.min.css",
       "minifycss css/styles.css > css/styles.min.css",
       "minifyjs js/dashboard.js > js/dashboard.min.js",
-      "minifyjs js/raphael.helper.js > js/raphael.helper.min.js",
       "minifyjs js/scripts.js > js/scripts.min.js"
     ]
   }
