@@ -17,6 +17,6 @@ class GeneralOptions {
 			return [];
 		}
 
-		return apply_filters( 'antispam_bee_general_options', []);
+		return apply_filters( 'antispam_bee_general_options', [] );
 	}
 }

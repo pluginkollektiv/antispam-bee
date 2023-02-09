@@ -22,8 +22,8 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		// Todo: Migrate ab_country_allowed, ab_country_denied
 		$country_allowed = Settings::get_option( static::get_option_name( 'allowed' ), $item['content_type'] );
 		$country_allowed = $country_allowed ? $country_allowed : '';
-		$country_denied = Settings::get_option( static::get_option_name( 'denied' ), $item['content_type'] );
-		$country_denied = $country_denied ? $country_denied : '';
+		$country_denied  = Settings::get_option( static::get_option_name( 'denied' ), $item['content_type'] );
+		$country_denied  = $country_denied ? $country_denied : '';
 
 		$allowed = preg_split(
 			'/[\s,;]+/',
@@ -148,28 +148,28 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	public static function get_options() {
 		return [
 			[
-				'type' => 'textarea',
-				'label' => __( 'Denied ISO country codes for this option.', 'antispam-bee' ),
+				'type'        => 'textarea',
+				'label'       => __( 'Denied ISO country codes for this option.', 'antispam-bee' ),
 				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
 				'option_name' => 'denied',
-				'sanitize' => function( $value ) {
+				'sanitize'    => function( $value ) {
 					return self::sanitize_iso_codes_string( $value );
-				}
+				},
 			],
 			[
-				'type' => 'textarea',
-				'label' => __( 'Allowed ISO country codes for this option.', 'antispam-bee' ),
+				'type'        => 'textarea',
+				'label'       => __( 'Allowed ISO country codes for this option.', 'antispam-bee' ),
 				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
 				'option_name' => 'allowed',
-				'sanitize' => function( $value ) {
+				'sanitize'    => function( $value ) {
 					return self::sanitize_iso_codes_string( $value );
-				}
-			]
+				},
+			],
 		];
 	}
 
 	private static function sanitize_iso_codes_string( $value ) {
-		$value = strtoupper( $value );
+		$value  = strtoupper( $value );
 		$values = explode( ',', $value );
 		$values = Sanitize::iso_codes( $values );
 

@@ -36,7 +36,7 @@ abstract class Base implements PostProcessor {
 		return static::$slug;
 	}
 
-	public static function get_supported_types(){
+	public static function get_supported_types() {
 		return static::$supported_types;
 	}
 

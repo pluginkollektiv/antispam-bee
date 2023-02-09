@@ -12,7 +12,7 @@ use AntispamBee\Helpers\Settings;
  */
 class UpdateDailyStats extends Base {
 
-	protected static $slug = "asb-update-daily-stats";
+	protected static $slug = 'asb-update-daily-stats';
 
 	public static function process( $item ) {
 		if ( ! Settings::get_option( Statistics::get_option_name( Statistics::DASHBOARD_CHART_OPTION ) ) ) {

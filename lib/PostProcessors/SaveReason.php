@@ -6,7 +6,7 @@ namespace AntispamBee\PostProcessors;
  * Post processor that is responsible for persisting the reason why something was marked as spam.
  */
 class SaveReason extends ControllableBase {
-	protected static $slug = "asb-save-reason";
+	protected static $slug = 'asb-save-reason';
 
 	public static function process( $item ) {
 		if ( isset( $item['asb_marked_as_delete'] ) && $item['asb_marked_as_delete'] === true ) {

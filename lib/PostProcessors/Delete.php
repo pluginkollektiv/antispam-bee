@@ -9,7 +9,7 @@ use AntispamBee\Helpers\ContentTypeHelper;
  */
 class Delete extends ControllableBase {
 
-	protected static $slug = 'asb-delete-spam';
+	protected static $slug            = 'asb-delete-spam';
 	protected static $marks_as_delete = true;
 
 	public static function process( $item ) {

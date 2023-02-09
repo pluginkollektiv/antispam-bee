@@ -33,7 +33,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			$email     = $item['comment_author_email'];
 			$author    = $item['comment_author'];
 			$useragent = $item['comment_agent'];
-			$subject      = array(
+			$subject   = array(
 				'ip'        => $ip,
 				'rawurl'    => $url,
 				'host'      => DataHelper::parse_url( $url, 'host' ),
@@ -45,10 +45,10 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		}
 
 		if ( ContentTypeHelper::TRACKBACK_TYPE === $item['content_type'] ) {
-			$ip        = $item['comment_author_IP'];
-			$url       = $item['comment_author_url'];
-			$body      = $item['comment_content'];
-			$subject      = [
+			$ip      = $item['comment_author_IP'];
+			$url     = $item['comment_author_url'];
+			$body    = $item['comment_content'];
+			$subject = [
 				'ip'     => $ip,
 				'rawurl' => $url,
 				'host'   => DataHelper::parse_url( $url, 'host' ),

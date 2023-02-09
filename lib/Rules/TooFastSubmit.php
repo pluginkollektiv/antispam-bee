@@ -29,7 +29,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 				}
 
 				$unique_id = uniqid( 'antispam-bee-time-' );
-				$script = sprintf(
+				$script    = sprintf(
 					'<script>(function() {
 						var time = Math.floor(Date.now() / 1000),
 							timeField = document.querySelector(\'input[data-unique-id="%s"]\');

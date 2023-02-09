@@ -10,7 +10,7 @@ use AntispamBee\Interfaces\Verifiable;
  * Rule that is responsible for checking if the trackback is from myself.
  */
 class TrackbackFromMyself extends Base implements SpamReason {
-	protected static $slug = 'asb-approved-email';
+	protected static $slug            = 'asb-approved-email';
 	protected static $supported_types = [ ContentTypeHelper::TRACKBACK_TYPE ];
 
 	public static function verify( $item ) {

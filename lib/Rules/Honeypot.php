@@ -12,7 +12,7 @@ use AntispamBee\Interfaces\SpamReason;
  * Adds honeypot to comment form and checks if it is filled.
  */
 class Honeypot extends ControllableBase implements SpamReason {
-	protected static $slug = 'asb-honeypot';
+	protected static $slug            = 'asb-honeypot';
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
 	/**

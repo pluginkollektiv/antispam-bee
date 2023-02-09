@@ -16,6 +16,7 @@ use AntispamBee\GeneralOptions\Pings;
 use AntispamBee\GeneralOptions\Statistics;
 use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Handlers\Comment;
+use AntispamBee\Handlers\PluginUpdate;
 use AntispamBee\Handlers\Trackback;
 use AntispamBee\Helpers\AssetsLoader;
 use AntispamBee\Helpers\Installer;
@@ -80,7 +81,7 @@ function init() {
 		TooFastSubmit::class,
 		TrackbackFromMyself::class,
 		TrackbackPostTitleIsBlogName::class,
-		ValidGravatar::class
+		ValidGravatar::class,
 	);
 
 	// Initialize all modules.
@@ -91,7 +92,11 @@ function init() {
 	}
 }
 
-add_action( 'plugins_loaded', 'AntispamBee\init' );
+add_action( 'plugins_loaded', __NAMESPACE__ . '\init' );
+
+add_action( 'upgrader_process_complete', [ PluginUpdate::class, 'upgrader_process_complete' ], 10, 2 );
+add_action( 'upgrader_overwrote_package', [ PluginUpdate::class, 'upgrader_overwrote_package' ], 10, 3 );
+
 
 // Register the activation, deactivation and uninstall hooks.
 register_activation_hook( ANTISPAM_BEE_FILE, [ Installer::class, 'activate' ] );

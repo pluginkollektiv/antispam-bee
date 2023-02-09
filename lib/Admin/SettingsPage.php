@@ -91,12 +91,12 @@ class SettingsPage {
 
 		$tabs['general'] = new Tab(
 			'general',
-			__( 'General','antispam-bee' )
+			__( 'General', 'antispam-bee' )
 		);
 
-		$this->rules = Rules::get_controllables();
+		$this->rules           = Rules::get_controllables();
 		$this->post_processors = PostProcessors::get_controllables();
-		$types = [];
+		$types                 = [];
 		foreach ( $this->rules as $rule ) {
 			$types = array_merge( $types, $rule::get_supported_types() );
 		}
@@ -126,9 +126,13 @@ class SettingsPage {
 			}
 		}
 
-		register_setting( self::SETTINGS_PAGE_SLUG, Settings::ANTISPAM_BEE_OPTION_NAME, [
-			'sanitize_callback' => [ Settings::class, 'sanitize' ],
-		] );
+		register_setting(
+			self::SETTINGS_PAGE_SLUG,
+			Settings::ANTISPAM_BEE_OPTION_NAME,
+			[
+				'sanitize_callback' => [ Settings::class, 'sanitize' ],
+			]
+		);
 	}
 
 	protected function populate_tabs() {
@@ -138,30 +142,30 @@ class SettingsPage {
 
 		if ( 'general' === $type ) {
 			$data['general'] = [
-				'title' => ContentTypeHelper::get_type_name( 'general' ),
-				'description' => __( 'Setup global plugin spam settings.', 'antispam-bee' ),
-				'controllables' => Components::filter( GeneralOptions::get_controllables(), [ 'content_type' => $type ] )
+				'title'         => ContentTypeHelper::get_type_name( 'general' ),
+				'description'   => __( 'Setup global plugin spam settings.', 'antispam-bee' ),
+				'controllables' => Components::filter( GeneralOptions::get_controllables(), [ 'content_type' => $type ] ),
 			];
 		}
 
 		$data = array_merge(
 			$data,
 			[
-				'rules' => [
-					'title' => __( 'Rules', 'antispam-bee' ),
-					'description' => __( 'Setup rules.', 'antispam-bee' ),
-					'controllables' => Components::filter( $this->rules, [ 'content_type' => $type ] )
+				'rules'           => [
+					'title'         => __( 'Rules', 'antispam-bee' ),
+					'description'   => __( 'Setup rules.', 'antispam-bee' ),
+					'controllables' => Components::filter( $this->rules, [ 'content_type' => $type ] ),
 				],
 				'post_processors' => [
-					'title' => __( 'Post Processors', 'antispam-bee' ),
-					'description' => __( 'Setup post processors.', 'antispam-bee' ),
-					'controllables' => Components::filter( $this->post_processors, [ 'content_type' => $type ] )
-				]
+					'title'         => __( 'Post Processors', 'antispam-bee' ),
+					'description'   => __( 'Setup post processors.', 'antispam-bee' ),
+					'controllables' => Components::filter( $this->post_processors, [ 'content_type' => $type ] ),
+				],
 			]
 		);
 
 		foreach ( $data as $key => $value ) {
- 			if ( empty( $value['controllables'] ) ) {
+			if ( empty( $value['controllables'] ) ) {
 				continue;
 			}
 

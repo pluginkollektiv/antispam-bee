@@ -48,28 +48,34 @@ class Rules {
 	}
 
 	public static function get( $type = null, $only_active = false ) {
-		return self::filter( [
-			'content_type' => $type,
-			'only_active' => $only_active,
-			'implements' => Verifiable::class,
-		] );
+		return self::filter(
+			[
+				'content_type' => $type,
+				'only_active'  => $only_active,
+				'implements'   => Verifiable::class,
+			]
+		);
 	}
 
 	public static function get_controllables( $type = null, $only_active = false ) {
-		return self::filter( [
-			'content_type' => $type,
-			'only_active' => $only_active,
-			'implements' => [ Verifiable::class, Controllable::class ],
-		] );
+		return self::filter(
+			[
+				'content_type' => $type,
+				'only_active'  => $only_active,
+				'implements'   => [ Verifiable::class, Controllable::class ],
+			]
+		);
 	}
 
 	// Todo: Try to find a better suited method name.
 	public static function get_spam_rules( $type = null, $only_active = false ) {
-		return self::filter( [
-			'content_type' => $type,
-			'only_active' => $only_active,
-			'implements' => [ Verifiable::class, SpamReason::class ],
-		] );
+		return self::filter(
+			[
+				'content_type' => $type,
+				'only_active'  => $only_active,
+				'implements'   => [ Verifiable::class, SpamReason::class ],
+			]
+		);
 	}
 
 	private static function filter( $options ) {

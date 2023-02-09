@@ -36,13 +36,13 @@ abstract class Field {
 	/**
 	 * Initializing field
 	 *
-	 * @param string $type Item type.
-	 * @param array  $option Field options.
+	 * @param string                     $type Item type.
+	 * @param array                      $option Field options.
 	 * @param class-string<Controllable> $controllable The related controllable.
 	 */
 	public function __construct( $type, $option, $controllable ) {
-		$this->type = $type;
-		$this->option = $option;
+		$this->type                     = $type;
+		$this->option                   = $option;
 		$this->controllable_option_name = $controllable::get_option_name( $this->option['option_name'] );
 	}
 

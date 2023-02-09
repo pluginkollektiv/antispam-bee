@@ -11,7 +11,7 @@ use AntispamBee\Helpers\Settings;
  * Marks spam comments for deletion if they have a specific reason.
  */
 class DeleteForReasons extends ControllableBase {
-	protected static $slug = "asb-delete-for-reasons";
+	protected static $slug            = 'asb-delete-for-reasons';
 	protected static $marks_as_delete = true;
 
 	public static function process( $item ) {
@@ -44,13 +44,9 @@ class DeleteForReasons extends ControllableBase {
 	}
 
 	public static function get_options() {
-		// Fetch all rules
-		// All item types
-		$rules = Rules::get();
-
 		$options = [];
 		foreach ( self::get_supported_types() as $type ) {
-			$filtered_rules = Rules::get_spam_rules( $type );
+			$filtered_rules   = Rules::get_spam_rules( $type );
 			$checkbox_options = [];
 
 			foreach ( $filtered_rules as $rule ) {
@@ -58,14 +54,14 @@ class DeleteForReasons extends ControllableBase {
 			}
 
 			$options[] = [
-				'valid_for' => $type,
-				'label' => __( 'Reasons', 'antispam-bee' ),
-				'type' => 'checkbox-group',
-				'options' => $checkbox_options,
+				'valid_for'   => $type,
+				'label'       => __( 'Reasons', 'antispam-bee' ),
+				'type'        => 'checkbox-group',
+				'options'     => $checkbox_options,
 				'option_name' => 'reasons',
-				'sanitize' => function( $value ) use ( $checkbox_options ) {
+				'sanitize'    => function( $value ) use ( $checkbox_options ) {
 					return Sanitize::checkbox_group( $value, $checkbox_options );
-				}
+				},
 			];
 		}
 

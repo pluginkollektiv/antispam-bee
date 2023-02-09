@@ -11,8 +11,8 @@ class Inline extends Field implements RenderElement {
 			echo '';
 			return;
 		}
-		$inject_field_object = $this->option['input'];
-		$inject_markup = $inject_field_object->get_injectable_markup();
+		$inject_field_object     = $this->option['input'];
+		$inject_markup           = $inject_field_object->get_injectable_markup();
 		$label_with_inline_field = sprintf(
 			$this->get_label(),
 			'</label>' . $inject_markup . sprintf(

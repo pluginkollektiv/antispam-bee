@@ -70,10 +70,10 @@ class Section {
 	 * @param string|null $type Item type (e.g. comment, trackback).
 	 */
 	public function __construct( $slug, $title, $description = '', $type = null ) {
-		$this->slug  = $slug;
-		$this->title = $title;
+		$this->slug        = $slug;
+		$this->title       = $title;
 		$this->description = $description;
-		$this->type = $type;
+		$this->type        = $type;
 	}
 
 	public function add_controllables( $controllables ) {
@@ -84,16 +84,19 @@ class Section {
 
 	private function generate_fields( $controllables ) {
 		foreach ( $controllables as $controllable ) {
-			$label = $controllable::get_label();
+			$label       = $controllable::get_label();
 			$description = $controllable::get_description();
-			$fields = [];
+			$fields      = [];
 			if ( ! $controllable::only_print_custom_options() ) {
-				$fields[] = $this->generate_field( [
-					'type' => 'checkbox',
-					'option_name' => 'active',
-					'label' => $label,
-					'description' => $description
-				], $controllable );
+				$fields[] = $this->generate_field(
+					[
+						'type'        => 'checkbox',
+						'option_name' => 'active',
+						'label'       => $label,
+						'description' => $description,
+					],
+					$controllable
+				);
 			}
 
 			$options = $controllable::get_options();
@@ -108,8 +111,8 @@ class Section {
 			}
 
 			$this->rows[] = [
-				'label' => $controllable::get_name(),
-				'fields' => $fields
+				'label'  => $controllable::get_name(),
+				'fields' => $fields,
 			];
 		}
 	}

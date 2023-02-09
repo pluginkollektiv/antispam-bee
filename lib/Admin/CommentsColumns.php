@@ -26,14 +26,14 @@ class CommentsColumns {
 		}
 
 		$supported_types = SaveReason::get_supported_types();
-		$show_column = false;
+		$show_column     = false;
 		foreach ( $supported_types as $type ) {
 			$show_column = Settings::get_option( SaveReason::get_option_name( 'active' ), $type );
 			if ( $show_column ) {
 				break;
 			}
 		}
-		if ( ! $show_column  ) {
+		if ( ! $show_column ) {
 			return;
 		}
 
@@ -78,14 +78,14 @@ class CommentsColumns {
 			return;
 		}
 
-		$spam_reason  = get_comment_meta( $comment_id, $column, true );
+		$spam_reason = get_comment_meta( $comment_id, $column, true );
 
 		if ( empty( $spam_reason ) ) {
 			echo esc_html_x( 'No data available', 'spam-reason-column-text', 'antispam-bee' );
 			return;
 		}
 
-		$reasons = explode( ',', $spam_reason );
+		$reasons      = explode( ',', $spam_reason );
 		$reason_texts = SpamReasonTextHelper::get_texts_by_slugs( $reasons );
 
 		echo implode( ',<br>', $reason_texts );

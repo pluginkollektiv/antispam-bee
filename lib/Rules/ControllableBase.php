@@ -27,8 +27,8 @@ abstract class ControllableBase extends Base implements Controllable {
 	}
 
 	public static function get_option_name( $name ) {
-		$type = static::get_type();
-		$slug = static::get_slug();
+		$type        = static::get_type();
+		$slug        = static::get_slug();
 		$option_name = "{$type}_{$slug}_{$name}";
 		return str_replace( '-', '_', $option_name );
 	}

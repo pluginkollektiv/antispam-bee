@@ -19,7 +19,7 @@ class Components {
 	 */
 	public static function filter( $components, $options ) {
 		$content_type = isset( $options['content_type'] ) ? $options['content_type'] : null;
-		$only_active = isset( $options['only_active'] ) ? $options['only_active'] : false;
+		$only_active  = isset( $options['only_active'] ) ? $options['only_active'] : false;
 
 		$filtered_components = [];
 		foreach ( $components as $component ) {

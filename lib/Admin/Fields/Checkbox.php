@@ -19,9 +19,9 @@ class Checkbox extends Field implements RenderElement {
 	public function render() {
 		$label = ! empty( $this->get_label() ) ? sprintf(
 			'<label for="%s">%s</label>',
-				esc_attr( $this->get_name() ),
-				esc_html( $this->get_label() )
-			) : '';
+			esc_attr( $this->get_name() ),
+			esc_html( $this->get_label() )
+		) : '';
 
 		printf(
 			'<input type="checkbox" id="%1$s" name="%1$s" %2$s />%3$s',

@@ -43,6 +43,6 @@ class CheckboxGroup extends Field implements RenderElement {
 	protected function get_custom_value( $key ) {
 		$options = Settings::get_option( "{$this->controllable_option_name}", $this->type );
 
-		return isset ( $options[ $key ] ) ? $options[ $key ] : null;
+		return isset( $options[ $key ] ) ? $options[ $key ] : null;
 	}
 }

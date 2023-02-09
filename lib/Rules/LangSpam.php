@@ -138,13 +138,13 @@ class LangSpam extends ControllableBase implements SpamReason {
 
 		return [
 			[
-				'type' => 'checkbox-group',
-				'options' => $languages,
-				'label' => __( 'Allowed languages', 'antispam-bee' ),
+				'type'        => 'checkbox-group',
+				'options'     => $languages,
+				'label'       => __( 'Allowed languages', 'antispam-bee' ),
 				'option_name' => 'allowed',
-				'sanitize' => function( $value ) use ( $languages ) {
+				'sanitize'    => function( $value ) use ( $languages ) {
 					return Sanitize::checkbox_group( $value, $languages );
-				}
+				},
 			],
 		];
 	}

@@ -46,8 +46,8 @@ class Text extends Field implements RenderElement {
 	}
 
 	protected function get_class() {
-		$classes = [
-			'small' => 'small-text',
+		$classes    = [
+			'small'   => 'small-text',
 			'regular' => 'regular-text',
 		];
 		$field_size = isset( $this->option['input_size'] ) ? $this->option['input_size'] : '';

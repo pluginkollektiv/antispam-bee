@@ -10,11 +10,13 @@ use AntispamBee\Handlers\Rules;
 class Settings {
 	protected static $defaults;
 
-	const ANTISPAM_BEE_OPTION_NAME = 'antispam_bee';
+	// @todo: change option name so that users can test the new version without loosing their options.
+	// @todo: check if code is PHP 7 compatible
+	const ANTISPAM_BEE_OPTION_NAME = 'antispam_bee_options';
 
 	public static function init() {
 		add_action(
-			'update_option_' . Settings::ANTISPAM_BEE_OPTION_NAME,
+			'update_option_' . self::ANTISPAM_BEE_OPTION_NAME,
 			[ __CLASS__, 'update_cache' ],
 			1,
 			2
@@ -68,8 +70,8 @@ class Settings {
 	/**
 	 * Get value from array by path.
 	 *
-	 * @param string     $path  Dot-separated path to the wanted value.
-	 * @param array      $array
+	 * @param string $path  Dot-separated path to the wanted value.
+	 * @param array  $array
 	 *
 	 * @return null|mixed
 	 */
@@ -159,7 +161,7 @@ class Settings {
 	public static function sanitize( $options ) {
 		$current_options = self::get_options();
 
-		if ( ! isset( $_GET['tab'] ) || empty ( $_GET['tab'] ) ) {
+		if ( ! isset( $_GET['tab'] ) || empty( $_GET['tab'] ) ) {
 			return $_GET['tab'] = 'general';
 		}
 
@@ -167,7 +169,7 @@ class Settings {
 
 		$options = ! empty( $options ) ? $options : [ $tab => [] ];
 
-		$sanitized_options = self::sanitize_controllables( $options, $tab );
+		$sanitized_options       = self::sanitize_controllables( $options, $tab );
 		$current_options[ $tab ] = $sanitized_options[ $tab ];
 
 		return $current_options;
@@ -181,9 +183,9 @@ class Settings {
 		);
 
 		foreach ( $controllables as $controllable ) {
-			$option_path = str_replace( '-', '_', $tab . '.' . $controllable::get_option_name( 'active' ) );
+			$option_path  = str_replace( '-', '_', $tab . '.' . $controllable::get_option_name( 'active' ) );
 			$active_state = self::get_array_value_by_path( $option_path, $options );
-			$sanitized = Sanitize::checkbox( $active_state );
+			$sanitized    = Sanitize::checkbox( $active_state );
 			if ( ! $sanitized ) {
 				self::remove_array_key_by_path( $option_path, $options );
 			}
@@ -197,7 +199,7 @@ class Settings {
 				if ( isset( $controllable_option['valid_for'] ) && $controllable_option['valid_for'] !== $tab ) {
 					continue;
 				}
-				
+
 				self::call_sanitize_callback( $controllable_option, $options, $tab, $controllable );
 				if (
 					isset( $controllable_option['input'] )
@@ -222,8 +224,8 @@ class Settings {
 		}
 
 		$option_name = $controllable::get_option_name( $controllable_option['option_name'] );
-		$path = str_replace( '-', '_', "$tab.$option_name" );
-		$new_value = self::get_array_value_by_path( $path, $options );
+		$path        = str_replace( '-', '_', "$tab.$option_name" );
+		$new_value   = self::get_array_value_by_path( $path, $options );
 
 		if ( is_callable( $controllable_option['sanitize'] ) ) {
 			$sanitized = call_user_func( $controllable_option['sanitize'], $new_value );
@@ -246,7 +248,7 @@ class Settings {
 			return $array;
 		}
 
-		$tmp = &$array;
+		$tmp      = &$array;
 		$last_key = array_key_last( $path_parts );
 		foreach ( $path_parts as $key => $value ) {
 			if ( $key === $last_key ) {
@@ -288,7 +290,7 @@ class Settings {
 		}
 
 		$last_key = array_key_last( $path_parts );
-		$tmp = &$options;
+		$tmp      = &$options;
 		foreach ( $path_parts as $key => $value ) {
 			if ( $key === $last_key ) {
 				$tmp[ $value ] = $sanitized;

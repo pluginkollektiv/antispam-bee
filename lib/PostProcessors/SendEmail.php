@@ -108,25 +108,25 @@ class SendEmail extends ControllableBase {
 			esc_html__( 'New spam comment on your post “%s”,', 'antispam-bee' ),
 			'{{post_title}}'
 		);
-		$author = esc_html__( 'Author', 'antispam-bee' );
-		$url = esc_html__( 'URL', 'antispam-bee' );
-		$type = esc_html__( 'Type', 'antispam-bee' );
-		$spam_reasons = esc_html__( 'Spam Reasons', 'antispam-bee' );
+		$author           = esc_html__( 'Author', 'antispam-bee' );
+		$url              = esc_html__( 'URL', 'antispam-bee' );
+		$type             = esc_html__( 'Type', 'antispam-bee' );
+		$spam_reasons     = esc_html__( 'Spam Reasons', 'antispam-bee' );
 
 		$remove_label = esc_html__( 'Delete it', 'antispam-bee' );
-		$remove_url = admin_url( 'comment.php?action=delete&c={{comment_id}}' );
+		$remove_url   = admin_url( 'comment.php?action=delete&c={{comment_id}}' );
 		if ( EMPTY_TRASH_DAYS ) {
 			$remove_label = esc_html__( 'Trash it', 'antispam-bee' );
-			$remove_url = admin_url( 'comment.php?action=trash&c={{comment_id}}' );
+			$remove_url   = admin_url( 'comment.php?action=trash&c={{comment_id}}' );
 		}
 		$approve_label = esc_html__( 'Approve it', 'antispam-bee' );
-		$approve_url = admin_url( 'comment.php?action=approve&c={{comment_id}}' );
+		$approve_url   = admin_url( 'comment.php?action=approve&c={{comment_id}}' );
 
 		$spam_list_label = esc_html__( 'Spam list', 'antispam-bee' );
-		$spam_list_url = admin_url( 'edit-comments.php?comment_status=spam' );
+		$spam_list_url   = admin_url( 'edit-comments.php?comment_status=spam' );
 
 		$asb_message = esc_html__( 'Notify message by Antispam Bee', 'antispam-bee' );
-		$asb_url = esc_html__( 'https://antispambee.pluginkollektiv.org/', 'antispam-bee' );
+		$asb_url     = esc_html__( 'https://antispambee.pluginkollektiv.org/', 'antispam-bee' );
 
 		$body = <<<EOF
 $new_spam_comment
@@ -157,30 +157,34 @@ EOF;
 	protected static function get_body( $post, $comment, $item ) {
 		$template_content = self::get_body_template();
 
-		$content = self::get_content( $comment );
+		$content      = self::get_content( $comment );
 		$content_type = ContentTypeHelper::get_type_name( $item['content_type'] );
 
 		$spam_reasons = SpamReasonTextHelper::get_texts_by_slugs( $item['asb_reasons'] );
 
-		return str_replace( [
-			'{{post_title}}',
-			'{{comment_author}}',
-			'{{comment_author_url}}',
-			'{{content_type}}',
-			'{{comment_author_IP}}',
-			'{{spam_reasons}}',
-			'{{content}}',
-			'{{comment_id}}'
-		], [
-			strip_tags( $post->post_title ),
-			( empty( $comment['comment_author'] ) ? '' : strip_tags( $comment['comment_author'] ) ),
-			esc_url( $comment['comment_author_url'] ),
-			esc_html( $content_type ),
-			$comment['comment_author_IP'],
-			esc_html( implode( ', ', $spam_reasons ) ),
-			$content,
-			$comment['comment_ID']
-		], $template_content );
+		return str_replace(
+			[
+				'{{post_title}}',
+				'{{comment_author}}',
+				'{{comment_author_url}}',
+				'{{content_type}}',
+				'{{comment_author_IP}}',
+				'{{spam_reasons}}',
+				'{{content}}',
+				'{{comment_id}}',
+			],
+			[
+				strip_tags( $post->post_title ),
+				( empty( $comment['comment_author'] ) ? '' : strip_tags( $comment['comment_author'] ) ),
+				esc_url( $comment['comment_author_url'] ),
+				esc_html( $content_type ),
+				$comment['comment_author_IP'],
+				esc_html( implode( ', ', $spam_reasons ) ),
+				$content,
+				$comment['comment_ID'],
+			],
+			$template_content
+		);
 	}
 }
 
