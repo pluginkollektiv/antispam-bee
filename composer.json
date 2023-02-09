@@ -41,13 +41,13 @@
   },
   "autoload": {
     "psr-4": {
-      "AntispamBee\\": "lib/"
+      "AntispamBee\\": "src/"
     }
   },
   "autoload-dev": {
     "classmap": [
       "antispam_bee.php",
-      "lib/"
+      "src/"
     ],
     "psr-4": {
       "AntispamBee\\Tests\\": "tests/"
@@ -74,10 +74,10 @@
       "@lint-css"
     ],
     "lint-css": [
-      "npx stylelint css/dashboard.css css/styles.css"
+      "npx stylelint assets/src/css/dashboard.css assets/src/css/styles.css"
     ],
     "lint-js": [
-      "npx eslint js/dashboard.js js/raphael.helper.js js/scripts.js"
+      "npx eslint assets/src/js/dashboard.js assets/src/js/raphael.helper.js assets/src/js/scripts.js"
     ],
     "lint-php": [
       "phpcs --standard=phpcs.xml -s"

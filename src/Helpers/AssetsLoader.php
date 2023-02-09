@@ -29,9 +29,9 @@ class AssetsLoader {
 	 * Register the assets for the backend.
 	 */
 	public static function register_assets() {
-		$backend_assets_path  = 'build/backend.asset.php';
-		$backend_scripts_path = 'build/backend.js';
-		$backend_style_path   = 'build/backend.css';
+		$backend_assets_path  = 'assets/dist/js/backend.asset.php';
+		$backend_scripts_path = 'assets/dist/js/backend.js';
+		$backend_style_path   = 'assets/dist/js/backend.css';
 
 		if ( file_exists( ANTISPAM_BEE_PATH . $backend_assets_path ) ) {
 			$backend_asset = require ANTISPAM_BEE_PATH . $backend_assets_path;
@@ -124,7 +124,7 @@ class AssetsLoader {
 	 * Add SVG definitions to footer.
 	 */
 	public static function include_svg_icons() {
-		$svg_icons = ANTISPAM_BEE_PATH . 'build/images/icons/sprite.svg';
+		$svg_icons = ANTISPAM_BEE_PATH . 'assets/dist/images/icons/sprite.svg';
 
 		if ( file_exists( $svg_icons ) ) {
 			echo '<div style="position: absolute; width: 0; height: 0; overflow: hidden;">';

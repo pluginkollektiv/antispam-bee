@@ -13,7 +13,11 @@ const SVGSpritemapPlugin = require( 'svg-spritemap-webpack-plugin' );
 module.exports = {
 	...defaultConfig,
 	entry: {
-		backend: path.resolve( process.cwd(), 'src', 'backend.js' ),
+		backend: path.resolve( process.cwd(), 'assets/src', 'backend.js' ),
+	},
+	output: {
+		filename: '[name].js',
+		path: path.resolve( process.cwd(), 'assets/dist' ),
 	},
 	module: {
 		rules: [
@@ -32,7 +36,7 @@ module.exports = {
 		 *
 		 * @see https://github.com/cascornelissen/svg-spritemap-webpack-plugin
 		 */
-		new SVGSpritemapPlugin( 'src/images/icons/**/*.svg', {
+		new SVGSpritemapPlugin( 'assets/src/images/icons/**/*.svg', {
 			output: {
 				filename: 'images/icons/sprite.svg',
 			},

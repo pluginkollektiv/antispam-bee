@@ -1,6 +1,4 @@
-*.css.map
-css/*.min.css
-js/*.min.js
+assets/dist
 .idea/
 build/
 node_modules/

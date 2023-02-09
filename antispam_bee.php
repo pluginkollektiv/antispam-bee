@@ -67,7 +67,7 @@ function pre_init() {
 	}
 
 	// If all checks were successful, load the plugin.
-	require_once ANTISPAM_BEE_PATH . 'lib/load.php';
+	require_once ANTISPAM_BEE_PATH . 'src/load.php';
 }
 
 /**
