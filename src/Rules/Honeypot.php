@@ -2,17 +2,17 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Helpers\DataHelper;
+use AntispamBee\Fields\Honeypot as HoneypotField;
 use AntispamBee\Helpers\ContentTypeHelper;
+use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\Settings;
-use \AntispamBee\Fields\Honeypot as HoneypotField;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
  * Adds honeypot to comment form and checks if it is filled.
  */
 class Honeypot extends ControllableBase implements SpamReason {
-	protected static $slug            = 'asb-honeypot';
+	protected static $slug = 'asb-honeypot';
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
 	/**
@@ -29,6 +29,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 				if ( ! static::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
 					return $field_markup;
 				}
+
 				return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
 			}
 		);

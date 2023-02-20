@@ -7,9 +7,6 @@
 
 namespace AntispamBee\Admin;
 
-use AntispamBee\Admin\Fields\Checkbox;
-use AntispamBee\Admin\Fields\Inline;
-use AntispamBee\Admin\Fields\Text;
 use AntispamBee\Handlers\GeneralOptions;
 use AntispamBee\Handlers\PostProcessors;
 use AntispamBee\Handlers\Rules;
@@ -191,15 +188,19 @@ class SettingsPage {
 
 			<h2 class="nav-tab-wrapper">
 				<?php foreach ( $this->tabs as $tab ) : ?>
-						<?php if ( $tab->get_slug() === $this->active_tab ) : ?>
-							<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>" class="nav-tab nav-tab-active"><?php echo esc_html( $tab->get_title() ); ?></a>
-						<?php else : ?>
-							<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>" class="nav-tab"><?php echo esc_html( $tab->get_title() ); ?></a>
-						<?php endif; ?>
+					<?php if ( $tab->get_slug() === $this->active_tab ) : ?>
+						<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
+						   class="nav-tab nav-tab-active"><?php echo esc_html( $tab->get_title() ); ?></a>
+					<?php else : ?>
+						<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
+						   class="nav-tab"><?php echo esc_html( $tab->get_title() ); ?></a>
+					<?php endif; ?>
 				<?php endforeach; ?>
 			</h2>
 
-			<form action="<?php echo esc_url( add_query_arg( 'tab', $this->active_tab, admin_url( 'options.php' ) ) ); ?>" method="post">
+			<form
+				action="<?php echo esc_url( add_query_arg( 'tab', $this->active_tab, admin_url( 'options.php' ) ) ); ?>"
+				method="post">
 				<input type="hidden" name="action" value="ab_save_changes"/>
 
 				<?php settings_fields( self::SETTINGS_PAGE_SLUG ); ?>

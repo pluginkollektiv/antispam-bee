@@ -29,7 +29,7 @@ class ValidGravatar extends ControllableBase {
 		}
 
 		if ( wp_remote_retrieve_response_code( $response ) === 200 ) {
-			return -1;
+			return - 1;
 		}
 
 		return 0;
@@ -51,6 +51,7 @@ class ValidGravatar extends ControllableBase {
 				'https'
 			)
 		);
+
 		return sprintf(
 		/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag */
 			esc_html__( 'Check if commenter has a Gravatar image. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),

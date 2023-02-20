@@ -2,9 +2,6 @@
 
 namespace AntispamBee\GeneralOptions;
 
-use AntispamBee\Admin\Fields\Text;
-use AntispamBee\Helpers\Sanitize;
-
 class Uninstall extends Base {
 	protected static $slug = 'delete-data-on-uninstall';
 

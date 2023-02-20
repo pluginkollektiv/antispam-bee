@@ -3,7 +3,6 @@
 namespace AntispamBee\PostProcessors;
 
 use AntispamBee\Handlers\Rules;
-use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 
@@ -11,7 +10,7 @@ use AntispamBee\Helpers\Settings;
  * Marks spam comments for deletion if they have a specific reason.
  */
 class DeleteForReasons extends ControllableBase {
-	protected static $slug            = 'asb-delete-for-reasons';
+	protected static $slug = 'asb-delete-for-reasons';
 	protected static $marks_as_delete = true;
 
 	public static function process( $item ) {
@@ -59,7 +58,7 @@ class DeleteForReasons extends ControllableBase {
 				'type'        => 'checkbox-group',
 				'options'     => $checkbox_options,
 				'option_name' => 'reasons',
-				'sanitize'    => function( $value ) use ( $checkbox_options ) {
+				'sanitize'    => function ( $value ) use ( $checkbox_options ) {
 					return Sanitize::checkbox_group( $value, $checkbox_options );
 				},
 			];

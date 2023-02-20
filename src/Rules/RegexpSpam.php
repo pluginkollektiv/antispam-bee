@@ -2,8 +2,8 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\ContentTypeHelper;
+use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Interfaces\SpamReason;
 
 /**

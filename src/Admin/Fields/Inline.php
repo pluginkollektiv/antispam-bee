@@ -9,6 +9,7 @@ class Inline extends Field implements RenderElement {
 	public function render() {
 		if ( ! $this->option['input'] instanceof Field ) {
 			echo '';
+
 			return;
 		}
 		$inject_field_object     = $this->option['input'];

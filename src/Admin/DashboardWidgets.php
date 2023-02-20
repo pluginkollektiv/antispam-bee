@@ -44,12 +44,12 @@ class DashboardWidgets {
 		echo '<style>#dashboard_right_now .ab-count:before {content: "\f117"}</style>';
 
 		$items[] = '<span class="ab-count">' . esc_html(
-			sprintf(
+				sprintf(
 				// translators: The number of spam comments Antispam Bee blocked so far.
-				__( '%s Blocked', 'antispam-bee' ),
-				self::get_spam_count()
-			)
-		) . '</span>';
+					__( '%s Blocked', 'antispam-bee' ),
+					self::get_spam_count()
+				)
+			) . '</span>';
 
 		return $items;
 	}

@@ -29,6 +29,7 @@ abstract class Base implements PostProcessor {
 	 */
 	public static function add_post_processor( $post_processors ) {
 		$post_processors[] = static::class;
+
 		return $post_processors;
 	}
 

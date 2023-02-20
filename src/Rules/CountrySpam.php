@@ -45,10 +45,10 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filter to hook into the `Country_Spam::verify` functionality, to implement for example a custom IP check.
 		 *
-		 * @param null   $is_country_spam The `is_country_spam` result.
-		 * @param string $ip              The IP address.
-		 * @param array  $allowed         The list of allowed country codes.
-		 * @param array  $denied          The list of denied country codes.
+		 * @param null $is_country_spam The `is_country_spam` result.
+		 * @param string $ip The IP address.
+		 * @param array $allowed The list of allowed country codes.
+		 * @param array $denied The list of denied country codes.
 		 *
 		 * @return null|boolean The `is_country_spam` result or null.
 		 * @since 2.10.0
@@ -152,7 +152,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 				'label'       => __( 'Denied ISO country codes for this option.', 'antispam-bee' ),
 				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
 				'option_name' => 'denied',
-				'sanitize'    => function( $value ) {
+				'sanitize'    => function ( $value ) {
 					return self::sanitize_iso_codes_string( $value );
 				},
 			],
@@ -161,7 +161,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 				'label'       => __( 'Allowed ISO country codes for this option.', 'antispam-bee' ),
 				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
 				'option_name' => 'allowed',
-				'sanitize'    => function( $value ) {
+				'sanitize'    => function ( $value ) {
 					return self::sanitize_iso_codes_string( $value );
 				},
 			],

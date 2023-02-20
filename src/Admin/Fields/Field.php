@@ -36,8 +36,8 @@ abstract class Field {
 	/**
 	 * Initializing field
 	 *
-	 * @param string                     $type Item type.
-	 * @param array                      $option Field options.
+	 * @param string $type Item type.
+	 * @param array $option Field options.
 	 * @param class-string<Controllable> $controllable The related controllable.
 	 */
 	public function __construct( $type, $option, $controllable ) {
@@ -53,7 +53,8 @@ abstract class Field {
 	 */
 	public function get_name() {
 		$option_name = Settings::ANTISPAM_BEE_OPTION_NAME;
-		$name = "{$option_name}[{$this->type}][{$this->controllable_option_name}]";
+		$name        = "{$option_name}[{$this->type}][{$this->controllable_option_name}]";
+
 		return str_replace( '-', '_', $name );
 	}
 

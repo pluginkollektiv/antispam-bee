@@ -27,6 +27,7 @@ class DeleteSpamCron {
 	public static function maybe_change_cron_state() {
 		if ( ! Settings::get_option( 'delete_spam_cronjob_enabled' ) ) {
 			self::unregister();
+
 			return;
 		}
 

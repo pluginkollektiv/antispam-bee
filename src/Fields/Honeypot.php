@@ -25,14 +25,14 @@ class Honeypot {
 	 * Inject the honeypot field.
 	 *
 	 * @param string $markup The field markup.
-	 * @param array  $options {
+	 * @param array $options {
 	 *      The field options.
 	 *
-	 * @type string  $form_id The form id.
-	 * @type string  $form_name The form name.
-	 * @type string  $field_type The field type.
-	 * @type string  $field_id The field id.
-	 * @type string  $field_name The field name.
+	 * @type string $form_id The form id.
+	 * @type string $form_name The form name.
+	 * @type string $field_type The field type.
+	 * @type string $field_id The field id.
+	 * @type string $field_name The field name.
 	 * }
 	 *
 	 * @return string
@@ -116,7 +116,7 @@ class Honeypot {
 					$markup
 				);
 				break;
-				// Todo: Add the possibility to use an input instead a textarea (for next version).
+			// Todo: Add the possibility to use an input instead a textarea (for next version).
 			default:
 				break;
 		}

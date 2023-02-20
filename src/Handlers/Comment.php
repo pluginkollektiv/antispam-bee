@@ -2,9 +2,9 @@
 
 namespace AntispamBee\Handlers;
 
+use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\IpHelper;
-use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Rules\Honeypot;
 
 class Comment {

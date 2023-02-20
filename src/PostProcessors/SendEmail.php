@@ -3,11 +3,7 @@
 namespace AntispamBee\PostProcessors;
 
 use AntispamBee\Helpers\ContentTypeHelper;
-use AntispamBee\Helpers\LangHelper;
 use AntispamBee\Helpers\SpamReasonTextHelper;
-use AntispamBee\Interfaces\Controllable;
-use AntispamBee\Interfaces\PostProcessor;
-use AntispamBee\Helpers\Settings;
 
 /**
  * Post processor that is responsible for sending emails to the user.

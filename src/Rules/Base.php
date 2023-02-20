@@ -7,8 +7,8 @@ use AntispamBee\Interfaces\Verifiable;
 
 abstract class Base implements Verifiable {
 	protected static $slug;
-	protected static $weight          = 1;
-	protected static $is_final        = false;
+	protected static $weight = 1;
+	protected static $is_final = false;
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE, ContentTypeHelper::TRACKBACK_TYPE ];
 
 	/**
@@ -29,6 +29,7 @@ abstract class Base implements Verifiable {
 	 */
 	public static function add_rule( $rules ) {
 		$rules[] = static::class;
+
 		return $rules;
 	}
 

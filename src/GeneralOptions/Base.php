@@ -17,9 +17,15 @@ abstract class Base implements Controllable {
 		return static::$slug;
 	}
 
-	public static function get_label() {}
-	public static function get_name() {}
-	public static function get_description() {}
+	public static function get_label() {
+	}
+
+	public static function get_name() {
+	}
+
+	public static function get_description() {
+	}
+
 	public static function get_options() {
 		return null;
 	}
@@ -27,9 +33,9 @@ abstract class Base implements Controllable {
 	/**
 	 * Add setting to list of general options.
 	 *
+	 * @return void
 	 * @since 3.0.0
 	 *
-	 * @return void
 	 */
 	public static function init() {
 		add_filter( 'antispam_bee_general_options', [ static::class, 'add_general_option' ] );
@@ -40,12 +46,13 @@ abstract class Base implements Controllable {
 	 *
 	 * @param array $options
 	 *
+	 * @return mixed
 	 * @since 3.0.0
 	 *
-	 * @return mixed
 	 */
 	public static function add_general_option( $options ) {
 		$options[] = static::class;
+
 		return $options;
 	}
 
@@ -69,6 +76,7 @@ abstract class Base implements Controllable {
 		$type        = static::get_type();
 		$slug        = static::get_slug();
 		$option_name = "{$type}_{$slug}_{$name}";
+
 		return str_replace( '-', '_', $option_name );
 	}
 }

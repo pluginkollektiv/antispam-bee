@@ -11,6 +11,8 @@ use AntispamBee\Helpers\DashboardHelper;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Helpers\SpamReasonTextHelper;
 use AntispamBee\PostProcessors\SaveReason;
+use WP_Comment_Query;
+use wpdb;
 
 /**
  * Class CommentsColumns
@@ -67,7 +69,7 @@ class CommentsColumns {
 	/**
 	 * Display plugin column values on comments screen
 	 *
-	 * @param string  $column     Currently selected column.
+	 * @param string $column Currently selected column.
 	 * @param integer $comment_id Comment ID.
 	 *
 	 * @since   2.6.0
@@ -82,6 +84,7 @@ class CommentsColumns {
 
 		if ( empty( $spam_reason ) ) {
 			echo esc_html_x( 'No data available', 'spam-reason-column-text', 'antispam-bee' );
+
 			return;
 		}
 
@@ -109,7 +112,7 @@ class CommentsColumns {
 	/**
 	 * Adjust orderby query
 	 *
-	 * @param \WP_Comment_Query $query Current WordPress query.
+	 * @param WP_Comment_Query $query Current WordPress query.
 	 *
 	 * @since   2.6.3
 	 * @change  2.6.3
@@ -130,12 +133,13 @@ class CommentsColumns {
 	/**
 	 * Filter comments by the spam reason
 	 *
-	 * @global \wpdb $wpdb
+	 * @global wpdb $wpdb
 	 */
 	public static function filter_columns() {
 		global $wpdb;
 		?>
-		<label class="screen-reader-text" for="filter-by-comment-spam-reason"><?php esc_html_e( 'Filter by spam reason', 'antispam-bee' ); ?></label>
+		<label class="screen-reader-text"
+			   for="filter-by-comment-spam-reason"><?php esc_html_e( 'Filter by spam reason', 'antispam-bee' ); ?></label>
 		<select id="filter-by-comment-spam-reason" name="comment_spam_reason">
 			<option value=""><?php esc_html_e( 'All spam reasons', 'antispam-bee' ); ?></option>
 			<?php
@@ -164,7 +168,7 @@ class CommentsColumns {
 	/**
 	 * Filter comments by the spam reason
 	 *
-	 * @param \WP_Comment_Query $query Current WordPress query.
+	 * @param WP_Comment_Query $query Current WordPress query.
 	 */
 	public static function filter_by_spam_reason( $query ) {
 		$spam_reasons = Settings::get_options( 'reasons' );

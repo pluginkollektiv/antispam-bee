@@ -2,8 +2,6 @@
 
 namespace AntispamBee\PostProcessors;
 
-use AntispamBee\Helpers\ContentTypeHelper;
-
 /**
  * Post Processor that is responsible for updating the spam log file.
  */

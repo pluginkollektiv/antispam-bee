@@ -7,11 +7,11 @@ class LangHelper {
 	/**
 	 * Map franc language codes
 	 *
-	 * @since   2.9.0
-	 *
-	 * @param  string $franc_code The franc code, received from the service.
+	 * @param string $franc_code The franc code, received from the service.
 	 *
 	 * @return string             Mapped ISO code
+	 * @since   2.9.0
+	 *
 	 */
 	public static function map( $franc_code ) {
 		$codes = [

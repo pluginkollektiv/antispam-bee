@@ -31,7 +31,7 @@ class DeleteOldSpam extends Base {
 						'input_type'  => 'number',
 						'input_size'  => 'small',
 						'option_name' => 'delete_spam_cronjob_days',
-						'sanitize'    => function( $value ) {
+						'sanitize'    => function ( $value ) {
 							return absint( $value );
 						},
 					],
@@ -40,7 +40,7 @@ class DeleteOldSpam extends Base {
 				'option_name' => 'active',
 				'label'       => esc_html( 'Delete existing spam after %s days', 'antispam-bee' ),
 				'description' => esc_html( 'Cleaning up the database from old entries', 'antispam-bee' ),
-				'sanitize'    => function( $value ) {
+				'sanitize'    => function ( $value ) {
 					return Sanitize::checkbox( $value );
 				},
 			],

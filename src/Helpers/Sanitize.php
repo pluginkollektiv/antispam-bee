@@ -18,9 +18,9 @@ class Sanitize {
 	 * @param array $values
 	 * @param array $valid_options
 	 *
+	 * @return array Intersection of values and valid options.
 	 * @since 3.0.0
 	 *
-	 * @return array Intersection of values and valid options.
 	 */
 	public static function checkbox_group( $values, array $valid_options ) {
 		if ( ! is_array( $values ) ) {
@@ -35,9 +35,9 @@ class Sanitize {
 	 *
 	 * @param array $codes
 	 *
+	 * @return array
 	 * @since 3.0.0
 	 *
-	 * @return array
 	 */
 	public static function iso_codes( $codes ) {
 		if ( ! is_array( $codes ) ) {
@@ -139,6 +139,7 @@ class Sanitize {
 			$sanitized = call_user_func( $controllable_option['sanitize'], $new_value );
 			if ( null === $sanitized ) {
 				Settings::remove_array_key_by_path( $path, $options );
+
 				return;
 			}
 

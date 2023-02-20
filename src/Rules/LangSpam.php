@@ -29,8 +29,8 @@ class LangSpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filters the detected language. With this filter, other detection methods can skip in and detect the language.
 		 *
-		 * @param null   $detected_language The detected language.
-		 * @param string $comment_text  The text, to detect the language.
+		 * @param null $detected_language The detected language.
+		 * @param string $comment_text The text, to detect the language.
 		 *
 		 * @return null|string The detected language or null.
 		 * @since 2.8.2
@@ -51,10 +51,10 @@ class LangSpam extends ControllableBase implements SpamReason {
 			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			_x( 'words', 'Word count type. Do not translate!' ),
 			'characters'
-		) === 0 && preg_match(
-			'/^utf\-?8$/i',
-			get_option( 'blog_charset' )
-		) ) { // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+			) === 0 && preg_match(
+				'/^utf\-?8$/i',
+				get_option( 'blog_charset' )
+			) ) { // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			preg_match_all( '/./u', $text, $words_array );
 			$word_count = 0;
 			if ( isset( $words_array[0] ) ) {
@@ -75,7 +75,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 		);
 
 		if ( is_wp_error( $response )
-			 || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+		     || wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			return 0;
 		}
 
@@ -130,9 +130,10 @@ class LangSpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filter the possible languages for the language spam test
 		 *
-		 * @since 2.7.1
 		 * @param (array) $languages The languages
+		 *
 		 * @return (array)
+		 * @since 2.7.1
 		 */
 		$languages = (array) apply_filters( 'antispam_bee_get_allowed_translate_languages', $languages );
 
@@ -142,7 +143,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 				'options'     => $languages,
 				'label'       => __( 'Allowed languages', 'antispam-bee' ),
 				'option_name' => 'allowed',
-				'sanitize'    => function( $value ) use ( $languages ) {
+				'sanitize'    => function ( $value ) use ( $languages ) {
 					return Sanitize::checkbox_group( $value, $languages );
 				},
 			],

@@ -14,7 +14,6 @@ use AntispamBee\Admin\Fields\Select;
 use AntispamBee\Admin\Fields\Text;
 use AntispamBee\Admin\Fields\Textarea;
 use AntispamBee\Interfaces\Controllable;
-use AntispamBee\PostProcessors\Base as BasePostProcessor;
 
 /**
  * Sections for admin.
@@ -64,9 +63,9 @@ class Section {
 	/**
 	 * Initializing Tab.
 	 *
-	 * @param string      $slug Slug of the tab.
-	 * @param string      $title Title for tab.
-	 * @param string      $description Description of the tab.
+	 * @param string $slug Slug of the tab.
+	 * @param string $title Title for tab.
+	 * @param string $description Description of the tab.
 	 * @param string|null $type Item type (e.g. comment, trackback).
 	 */
 	public function __construct( $slug, $title, $description = '', $type = null ) {
@@ -186,13 +185,16 @@ class Section {
 	 * Renders the settings section.
 	 */
 	public function render() {
-		add_settings_section( $this->get_slug(), $this->get_title(), [ $this, 'get_callback' ], SettingsPage::SETTINGS_PAGE_SLUG );
+		add_settings_section( $this->get_slug(), $this->get_title(), [
+			$this,
+			'get_callback'
+		], SettingsPage::SETTINGS_PAGE_SLUG );
 
 		foreach ( $this->get_rows() as $row ) {
 			add_settings_field(
 				'asb-row-' . wp_generate_uuid4(),
 				$row['label'],
-				function() use ( $row ) {
+				function () use ( $row ) {
 					$this->render_row_fields( $row );
 				},
 				SettingsPage::SETTINGS_PAGE_SLUG,

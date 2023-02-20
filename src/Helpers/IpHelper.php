@@ -32,6 +32,7 @@ class IpHelper {
 
 		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
 			$ip = wp_unslash( $_SERVER['REMOTE_ADDR'] );
+
 			return self::sanitize_ip( $ip );
 		}
 
@@ -68,10 +69,11 @@ class IpHelper {
 	/**
 	 * Anonymize the IP addresses
 	 *
+	 * @param string $ip Original IP.
+	 *
+	 * @return  string     Anonymous IP.
 	 * @since   2.5.1
 	 *
-	 * @param   string $ip Original IP.
-	 * @return  string     Anonymous IP.
 	 */
 	public static function anonymize_ip( $ip ) {
 		preg_match( '/\w+([\.:])\w+/', $ip, $matches );

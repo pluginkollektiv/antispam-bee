@@ -42,11 +42,11 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 				);
 
 				return $field_markup . sprintf(
-					'<input type="hidden" name="ab_init_time" data-unique-id="%s" value="%d" />%s',
-					$unique_id,
-					time(),
-					$script
-				);
+						'<input type="hidden" name="ab_init_time" data-unique-id="%s" value="%d" />%s',
+						$unique_id,
+						time(),
+						$script
+					);
 			}
 		);
 	}

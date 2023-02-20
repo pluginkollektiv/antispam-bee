@@ -5,11 +5,10 @@ namespace AntispamBee\Handlers;
 use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
-use ReflectionClass;
 
 class PostProcessors {
 	/**
-	 * @param string  $content_type one of the supported content types.
+	 * @param string $content_type one of the supported content types.
 	 * @param $item
 	 * @param $reasons
 	 *

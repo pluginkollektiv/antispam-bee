@@ -9,7 +9,7 @@ use AntispamBee\Interfaces\Verifiable;
 
 class Rules {
 	protected $type;
-	protected $spam_reasons    = [];
+	protected $spam_reasons = [];
 	protected $no_spam_reasons = [];
 
 	public function __construct( $type ) {
