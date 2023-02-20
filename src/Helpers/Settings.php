@@ -8,9 +8,23 @@ use AntispamBee\Handlers\PostProcessors;
 use AntispamBee\Handlers\Rules;
 
 class Settings {
-	protected static $defaults;
+	protected static $defaults = [
+		'comment' => [
+			'rule_asb_regexp_active' => 'on',
+			'rule_asb_honeypot_active' => 'on',
+			'rule_asb_db_spam_active' => 'on',
+			'rule_asb_bbcode_active' => 'on',
+		],
+		'trackback' => [
+			'rule_asb_regexp_active' => 'on',
+			'rule_asb_db_spam_active' => 'on',
+			'rule_asb_bbcode_active' => 'on',
+		],
+		'general' => [
+			'general_delete_data_on_uninstall_active' => 'on',
+		],
+	];
 
-	// @todo: change option name so that users can test the new version without loosing their options.
 	// @todo: check if code is PHP 7 compatible
 	const ANTISPAM_BEE_OPTION_NAME = 'antispam_bee_options';
 
@@ -41,7 +55,7 @@ class Settings {
 			return $options;
 		}
 
-		$options = get_option( self::ANTISPAM_BEE_OPTION_NAME );
+		$options = get_option( self::ANTISPAM_BEE_OPTION_NAME, self::$defaults );
 		wp_cache_set( self::ANTISPAM_BEE_OPTION_NAME, $options );
 
 		return $options;

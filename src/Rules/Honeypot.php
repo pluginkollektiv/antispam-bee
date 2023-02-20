@@ -41,7 +41,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 		}
 
 		// Todo: to discuss if we should keep the -1 score.
-		return -1;
+		return 0;
 	}
 
 	public static function precheck() {

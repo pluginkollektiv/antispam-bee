@@ -88,7 +88,7 @@ class PluginUpdate {
 		// DB version was raised in ASB 2.10.0 to 1.02.
 		if ( $version_from_db < 1.02 ) {
 			// Update option names.
-			$options = Settings::get_options();
+			$options = get_option( 'antispam_bee' );
 			if ( isset( $options['country_black'] ) ) {
 				$options['country_denied'] = $options['country_black'];
 				unset( $options['country_black'] );
@@ -99,12 +99,12 @@ class PluginUpdate {
 			}
 
 			update_option(
-				Settings::ANTISPAM_BEE_OPTION_NAME,
+				'antispam_bee',
 				$options
 			);
 
 			wp_cache_set(
-				Settings::ANTISPAM_BEE_OPTION_NAME,
+				'antispam_bee',
 				$options
 			);
 		}
@@ -141,258 +141,56 @@ class PluginUpdate {
 				}
 			}
 
-			$options_mapping = array(
-				'flag_spam'                => [
-					'comment'   => [
-						'post_processor_asb_delete_spam_active' => isset( $options['flag_spam'] ) ? ! $options['flag_spam'] : false,
-					],
-					'trackback' => [
-						'post_processor_asb_delete_spam_active' => isset( $options['flag_spam'] ) ? ! $options['flag_spam'] : false,
-					],
+			$new_options = [
+				'comment' => [
+					'post_processor_asb_delete_spam_active' => isset( $options['flag_spam'] ) && ! $options['flag_spam'],
+					'post_processor_asb_send_email_active' => $options['email_notify'] ?? false,
+					'post_processor_asb_save_reason_active' => isset( $options['no_notice'] ) && ! $options['no_notice'],
+					'rule_asb_regexp_active' => $options['regexp_check'] ?? false,
+					'rule_asb_honeypot_active' => 'on',
+					'rule_asb_db_spam_active' => $options['spam_ip'] ?? false,
+					'rule_asb_approved_email_active' => $options['already_commented'] ?? false,
+					'rule_asb_too_fast_submit_active' => $options['time_check'] ?? false,
+					'post_processor_asb_delete_for_reasons_reasons' => $options['ignore_reasons'] ?? [],
+					'rule_asb_bbcode_active' => $options['gravatar_check'] ?? true,
+					'rule_asb_valid_gravatar_active' => $options['gravatar_check'] ?? false,
+					'rule_asb_country_spam_active' => $options['country_code'] ?? false,
+					'rule_asb_country_spam_denied' => $options['country_denied'] ?? '',
+					'rule_asb_country_spam_allowed' => $options['country_allowed'] ?? '',
+					'rule_asb_lang_spam_active' => $options['translate_api'] ?? false,
+					'rule_asb_lang_spam_allowed' => $options['translate_api'] ?? [],
 				],
-				'email_notify'             => [
-					'comment'   => [
-						'post_processor_asb_send_email_active' => $options['email_notify'] ?? false,
-					],
-					'trackback' => [
-						'post_processor_asb_send_email_active' => $options['email_notify'] ?? false,
-					],
+				'trackback' => [
+					'post_processor_asb_delete_spam_active' => isset( $options['flag_spam'] ) && ! $options['flag_spam'],
+					'post_processor_asb_send_email_active' => $options['email_notify'] ?? false,
+					'post_processor_asb_save_reason_active' => isset( $options['no_notice'] ) && ! $options['no_notice'],
+					'rule_asb_regexp_active' => $options['regexp_check'] ?? false,
+					'rule_asb_db_spam_active' => $options['spam_ip'] ?? false,
+					'post_processor_asb_delete_for_reasons_reasons' => $options['ignore_reasons'] ?? [],
+					'rule_asb_bbcode_active' => $options['gravatar_check'] ?? true,
+					'rule_asb_valid_gravatar_active' => $options['gravatar_check'] ?? false,
+					'rule_asb_lang_spam_active' => $options['translate_api'] ?? false,
+					'rule_asb_lang_spam_allowed' => $options['translate_api'] ?? [],
 				],
-				'cronjob_enable'           => [
-					'general' => [
-						'general_delete_spam_cronjob_enabled_active' => $options['cronjob_enable'] ?? false,
-					],
+				'general' => [
+					'general_delete_spam_cronjob_enabled_active' => $options['cronjob_enable'] ?? false,
+					'general_delete_spam_cronjob_enabled_delete_spam_cronjob_days' => $options['cronjob_interval'] ?? 0,
+					'general_statistics_on_dashboard_dashboard_count' => $options['dashboard_count'] ?? 0,
+					'general_statistics_on_dashboard_dashboard_chart' => $options['dashboard_count'] ?? 0,
+					'general_ignore_pings_active' => $options['ignore_pings'] ?? false,
+					'general_delete_data_on_uninstall_active' => $options['delete_data_on_uninstall'] ?? false,
 				],
-				'cronjob_interval'         => [
-					'general' => [
-						'general_delete_spam_cronjob_enabled_delete_spam_cronjob_days' => $options['cronjob_interval'] ?? 0,
-					],
-				],
-				'no_notice'                => [
-					'comment'   => [
-						'post_processor_asb_save_reason_active' => isset( $options['no_notice'] ) ? ! $options['no_notice'] : false,
-					],
-					'trackback' => [
-						'post_processor_asb_save_reason_active' => isset( $options['no_notice'] ) ? ! $options['no_notice'] : false,
-					],
-				],
-				'dashboard_count'          => [
-					'general' => [
-						'general_statistics_on_dashboard_dashboard_count' => $options['dashboard_count'] ?? 0,
-					],
-				],
-				'dashboard_chart'          => [
-					'general' => [
-						'general_statistics_on_dashboard_dashboard_chart' => $options['dashboard_count'] ?? 0,
-					],
-				],
-				'regexp_check'             => [
-					'comment'   => [
-						'rule_asb_regexp_active' => $options['regexp_check'] ?? false,
-					],
-					'trackback' => [
-						'rule_asb_regexp_active' => $options['regexp_check'] ?? false,
-					],
-				],
-				'spam_ip'                  => [
-					'comment'   => [
-						'rule_asb_db_spam_active' => $options['spam_ip'] ?? false,
-					],
-					'trackback' => [
-						'rule_asb_db_spam_active' => $options['spam_ip'] ?? false,
-					],
-				],
-				'already_commented'        => [
-					'comment' => [
-						'rule_asb_approved_email_active' => $options['already_commented'] ?? false,
-					],
-				],
-				'time_check'               => [
-					'comment' => [
-						'rule_asb_too_fast_submit_active' => $options['time_check'] ?? false,
-					],
-				],
-				'ignore_pings'             => [
-					'general' => [
-						'general_ignore_pings_active' => $options['ignore_pings'] ?? false,
-					],
-				],
-				'ignore_filter'            => null,
-				'ignore_type'              => null,
-				'reasons_enable'           => [
-					'comment'   => [
-						'rule_asb_db_spam_active' => $options['spam_ip'] ?? false,
-					],
-					'trackback' => [
-						'rule_asb_db_spam_active' => $options['spam_ip'] ?? false,
-					],
-				],
-				'ignore_reasons'           => [
-					'comment'   => [
-						'post_processor_asb_delete_for_reasons_reasons' => $options['ignore_reasons'] ?? [],
-					],
-					'trackback' => [
-						'post_processor_asb_delete_for_reasons_reasons' => $options['ignore_reasons'] ?? [],
-					],
-				],
-				'bbcode_check'             => [
-					'comment'   => [
-						'rule_asb_bbcode_active' => $options['gravatar_check'] ?? true,
-					],
-					'trackback' => [
-						'rule_asb_bbcode_active' => $options['gravatar_check'] ?? true,
-					],
-				],
-				'gravatar_check'           => [
-					'comment'   => [
-						'rule_asb_valid_gravatar_active' => $options['gravatar_check'] ?? false,
-					],
-					'trackback' => [
-						'rule_asb_valid_gravatar_active' => $options['gravatar_check'] ?? false,
-					],
-				],
-				'country_code'             => [
-					'comment' => [
-						'rule_asb_country_spam_active' => $options['country_code'] ?? false,
-					],
-				],
-				'country_denied'           => [
-					'comment' => [
-						'rule_asb_country_spam_denied' => $options['country_denied'] ?? '',
-					],
-				],
-				'country_allowed'          => [
-					'comment' => [
-						'rule_asb_country_spam_allowed' => $options['country_allowed'] ?? '',
-					],
-				],
-				'translate_api'            => [
-					'comment'   => [
-						'rule_asb_lang_spam_active' => $options['translate_api'] ?? false,
-					],
-					'trackback' => [
-						'rule_asb_lang_spam_active' => $options['translate_api'] ?? false,
-					],
-				],
-				'translate_lang'           => [
-					'comment'   => [
-						'rule_asb_lang_spam_allowed' => $options['translate_api'] ?? [],
-					],
-					'trackback' => [
-						'rule_asb_lang_spam_allowed' => $options['translate_api'] ?? [],
-					],
-				],
-				'delete_data_on_uninstall' => [
-					'general' => [
-						'general_delete_data_on_uninstall_active' => $options['delete_data_on_uninstall'] ?? false,
-					],
-				],
-				'use_output_buffer'        => null,
-			);
-			/*
-			Array
-			(
-				[general] => Array
-				(
-					[general_delete_spam_cronjob_enabled_active] => on
-					[general_delete_spam_cronjob_enabled_delete_spam_cronjob_days] => 2
-			[general_statistics_on_dashboard_dashboard_chart] => on
-			[general_statistics_on_dashboard_dashboard_count] => on
-			[general_ignore_pings_active] => on
-			[general_delete_data_on_uninstall_active] => on
-			)
+			];
 
-			[comment] => Array
-			(
-				[rule_asb_approved_email_active] => on
-				[rule_asb_bbcode_active] => on
-			[rule_asb_country_spam_active] => on
-			[rule_asb_country_spam_denied] => DE,MX,RE
-			[rule_asb_country_spam_allowed] => EN,US
-			[rule_asb_db_spam_active] => on
-			[rule_asb_honeypot_active] => on
-			[rule_asb_lang_spam_active] => on
-			[rule_asb_lang_spam_allowed] => Array
-			(
-				[de] => on
-				[en] => on
-			[fr] => on
-			[it] => on
-			[es] => on
-				)
-
-			[rule_asb_regexp_active] => on
-			[rule_asb_too_fast_submit_active] => on
-			[rule_asb_valid_gravatar_active] => on
-			[post_processor_asb_delete_spam_active] => on
-			[post_processor_asb_delete_for_reasons_active] => on
-			[post_processor_asb_delete_for_reasons_reasons] => Array
-			(
-				[bbcode] => on
-				[country-spam] => on
-			[asb-db-spam] => on
-			[asb-honeypot] => on
-			[asb-lang-spam] => on
-			[asb-regexp] => on
-			[asb-too-fast-submit] => on
-				)
-
-			[post_processor_asb_save_reason_active] => on
-			[post_processor_asb_send_email_active] => on
-			)
-
-			[daily_stats] => Array
-			(
-				[1674691200] => 4
-			[1674510099] => 4
-			)
-
-			[spam_count] => 3
-			[trackback] => Array
-			(
-				[rule_asb_bbcode_active] => on
-				[rule_asb_country_spam_active] => on
-			[rule_asb_country_spam_denied] => US,GB
-			[rule_asb_country_spam_allowed] => DE
-			[rule_asb_db_spam_active] => on
-			[rule_asb_lang_spam_active] => on
-			[rule_asb_lang_spam_allowed] => Array
-			(
-				[de] => on
-				[en] => on
-			[fr] => on
-			[it] => on
-			[es] => on
-				)
-
-			[rule_asb_regexp_active] => on
-			[rule_asb_valid_gravatar_active] => on
-			[post_processor_asb_delete_spam_active] => on
-			[post_processor_asb_delete_for_reasons_active] => on
-			[post_processor_asb_delete_for_reasons_reasons] => Array
-			(
-				[bbcode] => on
-				[country-spam] => on
-			[asb-db-spam] => on
-			[asb-lang-spam] => on
-			[asb-regexp] => on
-			[asb-approved-email] => on
-				)
-
-			[post_processor_asb_save_reason_active] => on
-			[post_processor_asb_send_email_active] => on
-			)
-
-			)*/
 			/*
 			update_option(
 				Settings::ANTISPAM_BEE_OPTION_NAME,
-				$options
+				$new_options
 			);
 
 			wp_cache_set(
 				Settings::ANTISPAM_BEE_OPTION_NAME,
-				$options
+				$new_options
 			);*/
 		}
 
