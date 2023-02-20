@@ -22,35 +22,6 @@ class DashboardHelper {
 	}
 
 	/**
-	 * Check, if we are on the options page.
-	 *
-	 * @return bool
-	 */
-	public static function is_options_page() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		return ( ! empty( $_GET['page'] ) && 'antispam_bee' === $_GET['page'] );
-	}
-
-	/**
-	 * Check, if we are on the plugins page.
-	 *
-	 * @return bool
-	 */
-	public static function is_plugins_page() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		return ( ! empty( $_GET['page'] ) && 'antispam_bee' === $_GET['page'] );
-	}
-
-	/**
-	 * Check, if we are on the admin post page.
-	 *
-	 * @return bool
-	 */
-	public static function is_admin_post_page() {
-		return ( ! empty( $GLOBALS['pagenow'] ) && 'admin-post.php' === $GLOBALS['pagenow'] );
-	}
-
-	/**
 	 * Check, if we are on the edit comments page.
 	 *
 	 * @return bool

@@ -2,6 +2,7 @@
 
 namespace AntispamBee\Helpers;
 
+use AntispamBee\Handlers\PluginUpdate;
 use AntispamBee\Handlers\Rules;
 
 class SpamReasonTextHelper {
@@ -20,19 +21,6 @@ class SpamReasonTextHelper {
 	}
 
 	/**
-	 * Gets an array with rule slugs as keys and reason texts as value.
-	 *
-	 * @return array
-	 */
-	public static function get_slug_text_array() {
-		if ( self::$slug_text_array ) {
-			return self::$slug_text_array;
-		}
-
-		throw new \Exception( 'Slug reason text array not populated. Try later than the `init` hook with priority `10`!' );
-	}
-
-	/**
 	 * Gets the spam reason texts by an array of slugs
 	 *
 	 * @param array $slugs
@@ -42,8 +30,17 @@ class SpamReasonTextHelper {
 	public static function get_texts_by_slugs( array $slugs ) {
 		$texts = [];
 		foreach ( $slugs as $slug ) {
-			if ( isset( self::$slug_text_array[ $slug ] ) ) {
-				$texts[] = esc_html( self::$slug_text_array[ $slug ] );
+			$text = self::$slug_text_array[ $slug ] ?? null;
+
+			if ( null === $text ) {
+				$slug = PluginUpdate::$spam_reasons_mapping[ $slug ] ?? null;
+				if ( $slug ) {
+					$text = self::$slug_text_array[ $slug ] ?? null;
+				}
+			}
+
+			if ( null !== $text ) {
+				$texts[] = esc_html( $text );
 				continue;
 			}
 

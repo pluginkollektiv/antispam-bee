@@ -11,6 +11,24 @@ use const AntispamBee\ANTISPAM_BEE_DB_VERSION;
  */
 class PluginUpdate {
 	/**
+	 * Mapping of spam reason keys (key is pre-3.0, value 3.0 and later).
+	 *
+	 * @var array
+	 */
+	public static $spam_reasons_mapping = [
+		'css'           => 'asb-honeypot',
+		'time'          => 'asb-too-fast-submit',
+		'empty'         => null,
+		'localdb'       => 'asb-db-spam',
+		'server'        => null,
+		'country'       => 'asb-country-spam',
+		'bbcode'        => 'asb-bbcode',
+		'lang'          => 'asb-lang-spam',
+		'regexp'        => 'asb-regexp',
+		'title_is_spam' => null,
+		'manually'      => null,
+	];
+	/**
 	 * Runs after completed upgrade.
 	 *
 	 * @param \WP_Upgrader $wp_upgrader WP_Upgrader instance.
@@ -115,29 +133,15 @@ class PluginUpdate {
 			$options = get_option( 'antispam_bee' );
 
 			if ( isset( $options['ignore_reasons'] ) && is_array( $options['ignore_reasons'] ) ) {
-				// @todo: here we have a few reasons that we do not handle yet (the ones with `null`).
-				$ignore_reasons_mapping = [
-					'css'           => 'asb-honeypot',
-					'time'          => 'asb-too-fast-submit',
-					'empty'         => null,
-					'localdb'       => 'asb-db-spam',
-					'server'        => null,
-					'country'       => 'asb-country-spam',
-					'bbcode'        => 'asb-bbcode',
-					'lang'          => 'asb-lang-spam',
-					'regexp'        => 'asb-regexp',
-					'title_is_spam' => null,
-					'manually'      => null,
-				];
 				foreach ( $options['ignore_reasons'] as $key => $reason ) {
 					$value = $options['ignore_reasons'][ $key ];
 					unset( $options['ignore_reasons'][ $key ] );
 
-					if ( ! isset( $ignore_reasons_mapping[ $key ] ) ) {
+					if ( ! isset( self::$spam_reasons_mapping[ $key ] ) ) {
 						continue;
 					}
 
-					$options['ignore_reasons'][ $ignore_reasons_mapping[ $key ] ] = $value;
+					$options['ignore_reasons'][ self::$spam_reasons_mapping[ $key ] ] = $value;
 				}
 			}
 
