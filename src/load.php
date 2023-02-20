@@ -7,6 +7,7 @@
 
 namespace AntispamBee;
 
+use AntispamBee\Admin\AssetsLoader;
 use AntispamBee\Admin\CommentsColumns;
 use AntispamBee\Admin\DashboardWidgets;
 use AntispamBee\Admin\SettingsPage;
@@ -16,10 +17,9 @@ use AntispamBee\GeneralOptions\Pings;
 use AntispamBee\GeneralOptions\Statistics;
 use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Handlers\Comment;
+use AntispamBee\Handlers\PluginStateChangeHandler;
 use AntispamBee\Handlers\PluginUpdate;
 use AntispamBee\Handlers\Trackback;
-use AntispamBee\Helpers\AssetsLoader;
-use AntispamBee\Helpers\Installer;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Helpers\SpamReasonTextHelper;
 use AntispamBee\PostProcessors\Delete;
@@ -99,6 +99,6 @@ add_action( 'upgrader_overwrote_package', [ PluginUpdate::class, 'upgrader_overw
 
 
 // Register the activation, deactivation and uninstall hooks.
-register_activation_hook( ANTISPAM_BEE_FILE, [ Installer::class, 'activate' ] );
-register_deactivation_hook( ANTISPAM_BEE_FILE, [ Installer::class, 'deactivate' ] );
-register_uninstall_hook( ANTISPAM_BEE_FILE, [ Installer::class, 'uninstall' ] );
+register_activation_hook( ANTISPAM_BEE_FILE, [ PluginStateChangeHandler::class, 'activate' ] );
+register_deactivation_hook( ANTISPAM_BEE_FILE, [ PluginStateChangeHandler::class, 'deactivate' ] );
+register_uninstall_hook( ANTISPAM_BEE_FILE, [ PluginStateChangeHandler::class, 'uninstall' ] );

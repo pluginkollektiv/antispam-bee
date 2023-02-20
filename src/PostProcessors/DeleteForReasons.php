@@ -3,7 +3,7 @@
 namespace AntispamBee\PostProcessors;
 
 use AntispamBee\Handlers\Rules;
-use AntispamBee\Helpers\Components;
+use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 

@@ -5,8 +5,9 @@
  * @package AntispamBee\Helpers
  */
 
-namespace AntispamBee\Helpers;
+namespace AntispamBee\Admin;
 
+use AntispamBee\Helpers\Settings;
 use const AntispamBee\ANTISPAM_BEE_FILE;
 use const AntispamBee\ANTISPAM_BEE_PATH;
 use const AntispamBee\ANTISPAM_BEE_URL;

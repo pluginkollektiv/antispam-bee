@@ -5,14 +5,14 @@
  * @package AntispamBee\Helpers
  */
 
-namespace AntispamBee\Helpers;
+namespace AntispamBee\Handlers;
 
 use AntispamBee\Crons\DeleteSpamCron;
 
 /**
  * Class Installer
  */
-class Installer {
+class PluginStateChangeHandler {
 
 	/**
 	 * Activate callback.

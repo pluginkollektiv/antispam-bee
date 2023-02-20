@@ -6,7 +6,7 @@ use AntispamBee\Interfaces\Controllable;
 use ReflectionClass;
 use const AntispamBee\ANTISPAM_BEE_PATH;
 
-class Components {
+class ComponentsHelper {
 
 	/**
 	 * @param $components Controllable[]

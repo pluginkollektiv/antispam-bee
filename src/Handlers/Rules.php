@@ -2,7 +2,7 @@
 
 namespace AntispamBee\Handlers;
 
-use AntispamBee\Helpers\Components;
+use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\SpamReason;
 use AntispamBee\Interfaces\Verifiable;
@@ -80,7 +80,7 @@ class Rules {
 
 	private static function filter( $options ) {
 		// Todo: discuss if our rules should be filterable or not.
-		return Components::filter( apply_filters( 'antispam_bee_rules', [] ), $options );
+		return ComponentsHelper::filter( apply_filters( 'antispam_bee_rules', [] ), $options );
 	}
 
 	public function get_spam_reasons() {

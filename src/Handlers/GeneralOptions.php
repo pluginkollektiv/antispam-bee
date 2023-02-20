@@ -2,7 +2,7 @@
 
 namespace AntispamBee\Handlers;
 
-use AntispamBee\Helpers\Components;
+use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Interfaces\Controllable;
 
 class GeneralOptions {

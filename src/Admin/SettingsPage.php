@@ -13,8 +13,9 @@ use AntispamBee\Admin\Fields\Text;
 use AntispamBee\Handlers\GeneralOptions;
 use AntispamBee\Handlers\PostProcessors;
 use AntispamBee\Handlers\Rules;
-use AntispamBee\Helpers\Components;
+use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Helpers\ContentTypeHelper;
+use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 
 /**
@@ -130,7 +131,7 @@ class SettingsPage {
 			self::SETTINGS_PAGE_SLUG,
 			Settings::ANTISPAM_BEE_OPTION_NAME,
 			[
-				'sanitize_callback' => [ Settings::class, 'sanitize' ],
+				'sanitize_callback' => [ Sanitize::class, 'sanitize_options' ],
 			]
 		);
 	}
@@ -144,7 +145,7 @@ class SettingsPage {
 			$data['general'] = [
 				'title'         => ContentTypeHelper::get_type_name( 'general' ),
 				'description'   => __( 'Setup global plugin spam settings.', 'antispam-bee' ),
-				'controllables' => Components::filter( GeneralOptions::get_controllables(), [ 'content_type' => $type ] ),
+				'controllables' => ComponentsHelper::filter( GeneralOptions::get_controllables(), [ 'content_type' => $type ] ),
 			];
 		}
 
@@ -154,12 +155,12 @@ class SettingsPage {
 				'rules'           => [
 					'title'         => __( 'Rules', 'antispam-bee' ),
 					'description'   => __( 'Setup rules.', 'antispam-bee' ),
-					'controllables' => Components::filter( $this->rules, [ 'content_type' => $type ] ),
+					'controllables' => ComponentsHelper::filter( $this->rules, [ 'content_type' => $type ] ),
 				],
 				'post_processors' => [
 					'title'         => __( 'Post Processors', 'antispam-bee' ),
 					'description'   => __( 'Setup post processors.', 'antispam-bee' ),
-					'controllables' => Components::filter( $this->post_processors, [ 'content_type' => $type ] ),
+					'controllables' => ComponentsHelper::filter( $this->post_processors, [ 'content_type' => $type ] ),
 				],
 			]
 		);
