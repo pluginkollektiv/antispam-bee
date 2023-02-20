@@ -9,11 +9,14 @@ class Settings {
 			'rule_asb_honeypot_active' => 'on',
 			'rule_asb_db_spam_active'  => 'on',
 			'rule_asb_bbcode_active'   => 'on',
+			'post_processor_asb_save_reason_active' => 'on',
+			'rule_asb_approved_email_active' => 'on',
 		],
 		'trackback' => [
 			'rule_asb_regexp_active'  => 'on',
 			'rule_asb_db_spam_active' => 'on',
 			'rule_asb_bbcode_active'  => 'on',
+			'post_processor_asb_save_reason_active' => 'on',
 		],
 		'general'   => [
 			'general_delete_data_on_uninstall_active' => 'on',

@@ -38,6 +38,7 @@ class PluginStateChangeHandler {
 	 * Uninstall callback.
 	 */
 	public static function uninstall() {
+		// @todo: also remove old option.
 		if ( ! self::get_option( 'delete_data_on_uninstall' ) ) {
 			return;
 		}

@@ -37,6 +37,7 @@ class SpamReasonTextHelper {
 				continue;
 			}
 
+			// @todo: don’t mark our old rules as »unknown« but »legacy«
 			$texts[] = esc_html_x(
 			/* translators: s=slug of unknown spam reason */
 				sprintf( 'Unknown rule: %s', $slug ),
