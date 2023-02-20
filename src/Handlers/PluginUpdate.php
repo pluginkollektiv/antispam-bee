@@ -16,6 +16,7 @@ class PluginUpdate {
 	 * @var array
 	 */
 	public static $spam_reasons_mapping = [
+		// @todo: check how the `null` reasons are handled in the old ASB version.
 		'css'           => 'asb-honeypot',
 		'time'          => 'asb-too-fast-submit',
 		'empty'         => null,

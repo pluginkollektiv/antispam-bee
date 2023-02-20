@@ -7,6 +7,8 @@
 
 namespace AntispamBee\Admin;
 
+use AntispamBee\Handlers\PluginUpdate;
+use AntispamBee\Handlers\Rules;
 use AntispamBee\Helpers\DashboardHelper;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Helpers\SpamReasonTextHelper;
@@ -143,21 +145,30 @@ class CommentsColumns {
 		<select id="filter-by-comment-spam-reason" name="comment_spam_reason">
 			<option value=""><?php esc_html_e( 'All spam reasons', 'antispam-bee' ); ?></option>
 			<?php
-			$spam_reasons = Settings::get_options( 'reasons' );
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
-			$reasons = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}commentmeta WHERE meta_key = 'antispam_bee_reason' GROUP BY meta_value", ARRAY_A );
+			$tmp = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}commentmeta WHERE meta_key = 'antispam_bee_reason' GROUP BY meta_value", ARRAY_A );
+			$reasons = [];
+			foreach ( $tmp as $t ) {
+				$reasons = array_merge( $reasons, explode( ',', $t['meta_value'] ) );
+			}
+
+			$reasons = array_unique( $reasons );
+			$reason_mapping = PluginUpdate::$spam_reasons_mapping;
 
 			foreach ( $reasons as $reason ) {
-				if ( ! isset( $spam_reasons[ $reason['meta_value'] ] ) ) {
-					continue;
+				if ( isset( $reason_mapping[ $reason ] ) ) {
+					if ( in_array( $reason_mapping[ $reason ], $reasons ) ) {
+						continue;
+					}
+
+					$reason = $reason_mapping[ $reason ];
 				}
 				printf(
 					'<option value="%1$s" %2$s>%3$s</option>',
-					esc_attr( $reason['meta_value'] ),
-					selected( $spam_reason, $reason['meta_value'], false ),
-					esc_html( $spam_reasons[ $reason['meta_value'] ] )
+					esc_attr( $reason ),
+					selected( $spam_reason, $reason, false ),
+					esc_html( SpamReasonTextHelper::get_texts_by_slugs( [ $reason ] )[0] )
 				);
 			}
 			?>
@@ -171,17 +182,33 @@ class CommentsColumns {
 	 * @param WP_Comment_Query $query Current WordPress query.
 	 */
 	public static function filter_by_spam_reason( $query ) {
-		$spam_reasons = Settings::get_options( 'reasons' );
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
-		if ( empty( $spam_reason ) || ! in_array( $spam_reason, array_keys( $spam_reasons ), true ) ) {
+
+		$reasons_mapping = PluginUpdate::$spam_reasons_mapping;
+		if ( ! in_array( $spam_reason, $reasons_mapping ) && ! isset( $reasons_mapping[ $spam_reason ] ) ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			$query->query_vars['meta_key'] = 'antispam_bee_reason';
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			$query->query_vars['meta_value'] = $spam_reason;
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_compare
+			$query->query_vars['meta_compare'] = 'LIKE';
+
 			return;
 		}
 
-		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-		$query->query_vars['meta_key'] = 'antispam_bee_reason';
-		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-		$query->query_vars['meta_value'] = $spam_reason;
+		$query->query_vars['meta_query'] = [
+			'relation' => 'OR',
+			[
+				'key' => 'antispam_bee_reason',
+				'value' => $spam_reason,
+				'compare' => 'LIKE',
+			],
+			[
+				'key' => 'antispam_bee_reason',
+				'value' => array_flip( $reasons_mapping )[ $spam_reason ],
+				'compare' => 'LIKE',
+			],
+		];
 	}
 
 	/**

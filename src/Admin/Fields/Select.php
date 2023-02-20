@@ -11,8 +11,6 @@ class Select extends Field implements RenderElement {
 
 	/**
 	 * Get HTML.
-	 *
-	 * @return string Elment HTML.
 	 */
 	public function render() {
 		$name     = $this->get_name();

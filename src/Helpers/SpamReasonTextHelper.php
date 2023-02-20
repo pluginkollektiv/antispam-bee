@@ -32,13 +32,6 @@ class SpamReasonTextHelper {
 		foreach ( $slugs as $slug ) {
 			$text = self::$slug_text_array[ $slug ] ?? null;
 
-			if ( null === $text ) {
-				$slug = PluginUpdate::$spam_reasons_mapping[ $slug ] ?? null;
-				if ( $slug ) {
-					$text = self::$slug_text_array[ $slug ] ?? null;
-				}
-			}
-
 			if ( null !== $text ) {
 				$texts[] = esc_html( $text );
 				continue;

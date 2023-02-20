@@ -14,6 +14,7 @@ use AntispamBee\Admin\Fields\Select;
 use AntispamBee\Admin\Fields\Text;
 use AntispamBee\Admin\Fields\Textarea;
 use AntispamBee\Interfaces\Controllable;
+use Exception;
 
 /**
  * Sections for admin.
@@ -111,7 +112,7 @@ class Section {
 
 			$this->rows[] = [
 				'label'  => $controllable::get_name(),
-				'fields' => $fields,
+				'fields' => array_filter( $fields ),
 			];
 		}
 	}
@@ -131,6 +132,9 @@ class Section {
 			case 'inline':
 				return new Inline( $this->type, $option, $controllable );
 		}
+
+		error_log( 'Missing or invalid `type` for field' );
+		return null;
 	}
 
 	/**

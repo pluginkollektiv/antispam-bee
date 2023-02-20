@@ -169,12 +169,12 @@ class Settings {
 
 	public static function remove_array_key_by_path( $path, &$array ) {
 		if ( ! is_array( $array ) ) {
-			return $array;
+			return;
 		}
 
 		$path_parts = self::get_path_parts( $path );
 		if ( empty( $path_parts ) ) {
-			return $array;
+			return;
 		}
 
 		$tmp      = &$array;
