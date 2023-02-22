@@ -26,7 +26,7 @@ class PluginUpdate {
 		'bbcode'        => 'asb-bbcode',
 		'lang'          => 'asb-lang-spam',
 		'regexp'        => 'asb-regexp',
-		'title_is_spam' => null,
+		'title_is_name' => null,
 		'manually'      => 'asb-marked-manually',
 	];
 
