@@ -18,6 +18,14 @@ class SpamReasonTextHelper {
 		foreach ( $rules as $rule ) {
 			self::$slug_text_array[ $rule::get_slug() ] = $rule::get_reason_text();
 		}
+
+		/**
+		 * Allow to add more reasons.
+		 *
+		 * @param $additional_reasons array Array of additional reasons. Key is the reason slug, value the label users see in the backend.
+		 */
+		$additional_reasons = (array) apply_filters( 'antispam_bee_additional_spam_reasons', [] );
+		self::$slug_text_array = array_merge( $additional_reasons, self::$slug_text_array );
 	}
 
 	/**

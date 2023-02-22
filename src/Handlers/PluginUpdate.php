@@ -27,7 +27,7 @@ class PluginUpdate {
 		'lang'          => 'asb-lang-spam',
 		'regexp'        => 'asb-regexp',
 		'title_is_spam' => null,
-		'manually'      => null,
+		'manually'      => 'asb-marked-manually',
 	];
 
 	/**

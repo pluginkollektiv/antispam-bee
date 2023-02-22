@@ -183,6 +183,9 @@ class CommentsColumns {
 	 */
 	public static function filter_by_spam_reason( $query ) {
 		$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
+		if ( empty( $spam_reason ) ) {
+			return;
+		}
 
 		$reasons_mapping = PluginUpdate::$spam_reasons_mapping;
 		if ( ! in_array( $spam_reason, $reasons_mapping ) && ! isset( $reasons_mapping[ $spam_reason ] ) ) {
