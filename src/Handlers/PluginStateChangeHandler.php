@@ -8,6 +8,7 @@
 namespace AntispamBee\Handlers;
 
 use AntispamBee\Crons\DeleteSpamCron;
+use AntispamBee\Helpers\Settings;
 
 /**
  * Class Installer
@@ -38,13 +39,13 @@ class PluginStateChangeHandler {
 	 * Uninstall callback.
 	 */
 	public static function uninstall() {
-		// @todo: also remove old option.
 		if ( ! self::get_option( 'delete_data_on_uninstall' ) ) {
 			return;
 		}
 		global $wpdb;
 
 		delete_option( Settings::ANTISPAM_BEE_OPTION_NAME );
+		delete_option( 'antispam_bee' );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$wpdb->query( 'DELETE FROM `' . $wpdb->commentmeta . '`WHERE `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")' );
