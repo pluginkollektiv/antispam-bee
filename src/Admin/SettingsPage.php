@@ -15,6 +15,7 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 
+// @todo: add `ids` to the `h2` section headlines.
 /**
  * Antispam Bee Settings Page
  */

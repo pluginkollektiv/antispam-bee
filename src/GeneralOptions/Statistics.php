@@ -30,15 +30,6 @@ class Statistics extends Base {
 		return [
 			[
 				'type'        => 'checkbox',
-				'option_name' => static::DASHBOARD_CHART_OPTION,
-				'label'       => esc_html( 'Generate statistics as a dashboard widget', 'antispam-bee' ),
-				'description' => esc_html( 'Daily updates of spam detection rate', 'antispam-bee' ),
-				'sanitize'    => function ( $value ) {
-					return Sanitize::checkbox( $value );
-				},
-			],
-			[
-				'type'        => 'checkbox',
 				'option_name' => static::DASHBOARD_COUNT_OPTION,
 				'label'       => esc_html( 'Spam counter on the dashboard', 'antispam-bee' ),
 				'description' => esc_html( 'Amount of identified spam comments', 'antispam-bee' ),

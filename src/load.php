@@ -7,7 +7,6 @@
 
 namespace AntispamBee;
 
-use AntispamBee\Admin\AssetsLoader;
 use AntispamBee\Admin\CommentsColumns;
 use AntispamBee\Admin\DashboardWidgets;
 use AntispamBee\Admin\SettingsPage;
@@ -26,7 +25,6 @@ use AntispamBee\PostProcessors\Delete;
 use AntispamBee\PostProcessors\DeleteForReasons;
 use AntispamBee\PostProcessors\SaveReason;
 use AntispamBee\PostProcessors\SendEmail;
-use AntispamBee\PostProcessors\UpdateDailyStats;
 use AntispamBee\PostProcessors\UpdateSpamCount;
 use AntispamBee\PostProcessors\UpdateSpamLog;
 use AntispamBee\Rules\ApprovedEmail;
@@ -52,7 +50,6 @@ function init() {
 		CommentsColumns::class,
 		DeleteSpamCron::class,
 		Settings::class,
-		AssetsLoader::class,
 		// Handlers
 		Comment::class,
 		Trackback::class,
@@ -67,7 +64,6 @@ function init() {
 		DeleteForReasons::class,
 		SaveReason::class,
 		SendEmail::class,
-		UpdateDailyStats::class,
 		UpdateSpamCount::class,
 		UpdateSpamLog::class,
 		// Rules

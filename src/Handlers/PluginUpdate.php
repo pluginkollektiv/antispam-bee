@@ -182,7 +182,6 @@ class PluginUpdate {
 					'general_delete_spam_cronjob_enabled_active'                   => $options['cronjob_enable'] ?? false,
 					'general_delete_spam_cronjob_enabled_delete_spam_cronjob_days' => $options['cronjob_interval'] ?? 0,
 					'general_statistics_on_dashboard_dashboard_count'              => $options['dashboard_count'] ?? 0,
-					'general_statistics_on_dashboard_dashboard_chart'              => $options['dashboard_count'] ?? 0,
 					'general_ignore_pings_active'                                  => $options['ignore_pings'] ?? false,
 					'general_delete_data_on_uninstall_active'                      => $options['delete_data_on_uninstall'] ?? false,
 				],
