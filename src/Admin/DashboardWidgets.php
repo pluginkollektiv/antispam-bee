@@ -10,7 +10,6 @@ namespace AntispamBee\Admin;
 use AntispamBee\GeneralOptions\Statistics;
 use AntispamBee\Helpers\DashboardHelper;
 use AntispamBee\Helpers\Settings;
-// @todo: add current spam count to at a glance widget with a link to the spam list
 /**
  * Class DashboardWidgets
  */
@@ -27,7 +26,7 @@ class DashboardWidgets {
 	}
 
 	/**
-	 * Display the spam counter on the dashboard
+	 * Display the spam counts on the dashboard
 	 *
 	 * @param array $items Initial array with dashboard items.
 	 *
@@ -40,15 +39,25 @@ class DashboardWidgets {
 			return $items;
 		}
 
-		echo '<style>#dashboard_right_now .ab-count:before {content: "\f117"}</style>';
+		echo '<style>#dashboard_right_now .ab-count::before {content: "\f117"} #dashboard_right_now .ab-current-spam::before {content: "\f17e"}</style>';
 
 		$items[] = '<span class="ab-count">' . esc_html(
 				sprintf(
 				// translators: The number of spam comments Antispam Bee blocked so far.
-					__( '%s Blocked', 'antispam-bee' ),
+					__( '%s comments blocked', 'antispam-bee' ),
 					self::get_spam_count()
 				)
 			) . '</span>';
+
+		$link = add_query_arg( 'comment_status', 'spam', admin_url( 'edit-comments.php' ) );
+		$comments_number = wp_count_comments();
+		$items[] = '<a href="' . $link . '" class="ab-current-spam">' . esc_html(
+				sprintf(
+				// translators: The number of spam comments in the local spam database.
+					__( '%s comments in your local spam db', 'antispam-bee' ),
+					$comments_number->spam
+				)
+			) . '</a>';
 
 		return $items;
 	}
