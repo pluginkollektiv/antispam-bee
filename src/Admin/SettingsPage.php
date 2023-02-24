@@ -15,7 +15,7 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 
-// @todo: add `ids` to the `h2` section headlines.
+// @todo: add `ids` to the `h2` section headlines. After first analyzation, that seems only to be possible via JS
 /**
  * Antispam Bee Settings Page
  */
@@ -185,10 +185,12 @@ class SettingsPage {
 	public function options_page() {
 		?>
 		<div class="wrap" id="ab_main">
-			<h2><?php esc_html_e( 'Antispam Bee', 'antispam-bee' ); ?></h2>
+			<h1><?php esc_html_e( 'Antispam Bee', 'antispam-bee' ); ?></h1>
 
-			<h2 class="nav-tab-wrapper">
+			<ul class="nav-tab-wrapper">
+				<style>.nav-tab-wrapper li { margin-bottom: 0; }</style>
 				<?php foreach ( $this->tabs as $tab ) : ?>
+				<li>
 					<?php if ( $tab->get_slug() === $this->active_tab ) : ?>
 						<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
 						   class="nav-tab nav-tab-active"><?php echo esc_html( $tab->get_title() ); ?></a>
@@ -196,8 +198,9 @@ class SettingsPage {
 						<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
 						   class="nav-tab"><?php echo esc_html( $tab->get_title() ); ?></a>
 					<?php endif; ?>
+				</li>
 				<?php endforeach; ?>
-			</h2>
+			</ul>
 
 			<form
 				action="<?php echo esc_url( add_query_arg( 'tab', $this->active_tab, admin_url( 'options.php' ) ) ); ?>"
@@ -205,7 +208,7 @@ class SettingsPage {
 				<input type="hidden" name="action" value="ab_save_changes"/>
 
 				<?php settings_fields( self::SETTINGS_PAGE_SLUG ); ?>
-				<?php do_settings_sections( self::SETTINGS_PAGE_SLUG, $this->active_tab ); ?>
+				<?php do_settings_sections( self::SETTINGS_PAGE_SLUG ); ?>
 
 				<?php submit_button(); ?>
 			</form>
