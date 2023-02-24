@@ -19,7 +19,7 @@ class PluginUpdate {
 		// @todo: check how the `null` reasons are handled in the old ASB version.
 		'css'           => 'asb-honeypot',
 		'time'          => 'asb-too-fast-submit',
-		'empty'         => null,
+		'empty'         => 'asb-empty',
 		'localdb'       => 'asb-db-spam',
 		'server'        => null,
 		'country'       => 'asb-country-spam',

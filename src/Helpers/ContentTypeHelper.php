@@ -22,4 +22,19 @@ class ContentTypeHelper {
 
 		return isset( $type_names[ $item_type ] ) ? $type_names[ $item_type ] : $item_type;
 	}
+
+	/**
+	 * Checks if a given comment is a ping.
+	 *
+	 * @param array $comment Comment data
+	 *
+	 * @return mixed|void
+	 */
+	public static function is_ping( $comment ) {
+		$ping_types = [ 'pingback', 'trackback', 'pings' ];
+		$comment_type = $comment['comment_type'] ?? '';
+
+		$is_ping = apply_filters( 'antispam_bee_is_ping', in_array( $comment_type, $ping_types ), $comment );
+		return $is_ping;
+	}
 }
