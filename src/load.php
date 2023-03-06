@@ -18,7 +18,7 @@ use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Handlers\Comment;
 use AntispamBee\Handlers\PluginStateChangeHandler;
 use AntispamBee\Handlers\PluginUpdate;
-use AntispamBee\Handlers\Trackback;
+use AntispamBee\Handlers\Linkback;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Helpers\SpamReasonTextHelper;
 use AntispamBee\PostProcessors\Delete;
@@ -35,8 +35,8 @@ use AntispamBee\Rules\Honeypot as HoneypotRule;
 use AntispamBee\Rules\LangSpam;
 use AntispamBee\Rules\RegexpSpam;
 use AntispamBee\Rules\TooFastSubmit;
-use AntispamBee\Rules\TrackbackFromMyself;
-use AntispamBee\Rules\TrackbackPostTitleIsBlogName;
+use AntispamBee\Rules\LinkbackFromMyself;
+use AntispamBee\Rules\LinkbackPostTitleIsBlogName;
 use AntispamBee\Rules\ValidGravatar;
 
 /**
@@ -52,7 +52,7 @@ function init() {
 		Settings::class,
 		// Handlers
 		Comment::class,
-		Trackback::class,
+		Linkback::class,
 		// Helpers
 		SpamReasonTextHelper::class,
 		// Post Processors
@@ -75,8 +75,8 @@ function init() {
 		LangSpam::class,
 		RegexpSpam::class,
 		TooFastSubmit::class,
-		TrackbackFromMyself::class,
-		TrackbackPostTitleIsBlogName::class,
+		LinkbackFromMyself::class,
+		LinkbackPostTitleIsBlogName::class,
 		ValidGravatar::class,
 	);
 

@@ -6,11 +6,11 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
- * Rule that is responsible for checking if the trackback post title is a blog name.
+ * Rule that is responsible for checking if the linkback post title is a blog name.
  */
-class TrackbackPostTitleIsBlogName extends Base implements SpamReason {
+class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
 	protected static $slug = 'asb-approved-email';
-	protected static $supported_types = [ ContentTypeHelper::TRACKBACK_TYPE ];
+	protected static $supported_types = [ ContentTypeHelper::LINKBACK_TYPE ];
 
 	public static function verify( $item ) {
 		$body      = isset( $item['comment_content'] ) ? $item['comment_content'] : null;
@@ -24,10 +24,10 @@ class TrackbackPostTitleIsBlogName extends Base implements SpamReason {
 	}
 
 	public static function get_name() {
-		return __( 'Trackback post title is blog name', 'antispam-bee' );
+		return __( 'Linkback post title is blog name', 'antispam-bee' );
 	}
 
 	public static function get_reason_text() {
-		return _x( 'Trackback Post Title', 'spam-reason-text', 'antispam-bee' );
+		return _x( 'Linkback Post Title', 'spam-reason-text', 'antispam-bee' );
 	}
 }

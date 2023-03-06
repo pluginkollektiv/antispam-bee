@@ -6,11 +6,11 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
- * Rule that is responsible for checking if the trackback is from myself.
+ * Rule that is responsible for checking if the linkback is from myself.
  */
-class TrackbackFromMyself extends Base implements SpamReason {
+class LinkbackFromMyself extends Base implements SpamReason {
 	protected static $slug = 'asb-approved-email';
-	protected static $supported_types = [ ContentTypeHelper::TRACKBACK_TYPE ];
+	protected static $supported_types = [ ContentTypeHelper::LINKBACK_TYPE ];
 
 	public static function verify( $item ) {
 		$url            = isset( $item['comment_author_url'] ) ? $item['comment_author_url'] : null;
@@ -50,10 +50,10 @@ class TrackbackFromMyself extends Base implements SpamReason {
 	}
 
 	public static function get_name() {
-		return __( 'Trackback from myself', 'antispam-bee' );
+		return __( 'Linkback from myself', 'antispam-bee' );
 	}
 
 	public static function get_reason_text() {
-		return _x( 'Trackback from myself', 'spam-reason-text', 'antispam-bee' );
+		return _x( 'Linkback from myself', 'spam-reason-text', 'antispam-bee' );
 	}
 }

@@ -8,7 +8,7 @@ use AntispamBee\Interfaces\PostProcessor;
 abstract class Base implements PostProcessor {
 
 	protected static $slug;
-	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE, ContentTypeHelper::TRACKBACK_TYPE ];
+	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE, ContentTypeHelper::LINKBACK_TYPE ];
 	protected static $marks_as_delete = false;
 
 	/**

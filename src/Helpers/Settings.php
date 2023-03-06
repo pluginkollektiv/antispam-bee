@@ -12,7 +12,7 @@ class Settings {
 			'post_processor_asb_save_reason_active' => 'on',
 			'rule_asb_approved_email_active' => 'on',
 		],
-		'trackback' => [
+		'linkback' => [
 			'rule_asb_regexp_active'  => 'on',
 			'rule_asb_db_spam_active' => 'on',
 			'rule_asb_bbcode_active'  => 'on',

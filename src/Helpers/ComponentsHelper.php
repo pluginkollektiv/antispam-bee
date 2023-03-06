@@ -39,7 +39,7 @@ class ComponentsHelper {
 				}
 			}
 
-			// Filter by supported types like Comment, Trackback
+			// Filter by supported types like Comment, Linkback
 			$supported_types = $component::get_supported_types();
 			if ( ! is_null( $content_type ) && ! in_array( $content_type, $supported_types ) ) {
 				continue;

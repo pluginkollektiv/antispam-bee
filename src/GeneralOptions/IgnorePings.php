@@ -10,7 +10,7 @@ class IgnorePings extends Base {
 	}
 
 	public static function get_label() {
-		return __( 'Do not check trackbacks / pingbacks', 'antispam-bee' );
+		return __( 'Do not check linkbacks (pingbacks, trackbacks)', 'antispam-bee' );
 	}
 
 	public static function get_description() {

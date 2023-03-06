@@ -6,15 +6,13 @@ class ContentTypeHelper {
 
 	const GENERAL_TYPE = 'general';
 	const COMMENT_TYPE = 'comment';
-	const TRACKBACK_TYPE = 'trackback';
-	const PINGBACK_TYPE = 'pingback';
+	const LINKBACK_TYPE = 'linkback';
 
 	public static function get_type_name( $item_type ) {
 		$type_names = [
-			self::GENERAL_TYPE   => __( 'General', 'antispam-bee' ),
-			self::COMMENT_TYPE   => __( 'Comment', 'antispam-bee' ),
-			self::TRACKBACK_TYPE => __( 'Trackback', 'antispam-bee' ),
-			self::PINGBACK_TYPE  => __( 'Pingback', 'antispam-bee' ),
+			self::GENERAL_TYPE  => __( 'General', 'antispam-bee' ),
+			self::COMMENT_TYPE  => __( 'Comment', 'antispam-bee' ),
+			self::LINKBACK_TYPE => __( 'Linkback', 'antispam-bee' ),
 		];
 
 		// Todo: Write a doc how to add custom types.

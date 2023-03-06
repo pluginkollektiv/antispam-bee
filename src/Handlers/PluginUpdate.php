@@ -166,7 +166,7 @@ class PluginUpdate {
 					'rule_asb_lang_spam_active'                     => $options['translate_api'] ?? false,
 					'rule_asb_lang_spam_allowed'                    => $options['translate_api'] ?? [],
 				],
-				'trackback' => [
+				'linkback' => [
 					'post_processor_asb_delete_spam_active'         => isset( $options['flag_spam'] ) && ! $options['flag_spam'],
 					'post_processor_asb_send_email_active'          => $options['email_notify'] ?? false,
 					'post_processor_asb_save_reason_active'         => isset( $options['no_notice'] ) && ! $options['no_notice'],

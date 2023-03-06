@@ -44,7 +44,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			);
 		}
 
-		if ( ContentTypeHelper::TRACKBACK_TYPE === $item['content_type'] ) {
+		if ( ContentTypeHelper::LINKBACK_TYPE === $item['content_type'] ) {
 			$ip      = $item['comment_author_IP'];
 			$url     = $item['comment_author_url'];
 			$body    = $item['comment_content'];
