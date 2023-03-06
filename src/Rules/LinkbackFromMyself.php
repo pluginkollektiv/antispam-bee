@@ -9,7 +9,7 @@ use AntispamBee\Interfaces\SpamReason;
  * Rule that is responsible for checking if the linkback is from myself.
  */
 class LinkbackFromMyself extends Base implements SpamReason {
-	protected static $slug = 'asb-approved-email';
+	protected static $slug = 'asb-linkback-from-myself';
 	protected static $supported_types = [ ContentTypeHelper::LINKBACK_TYPE ];
 
 	public static function verify( $item ) {
