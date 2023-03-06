@@ -35,7 +35,7 @@ class DashboardWidgets {
 	 * @since  2.6.5
 	 */
 	public static function add_dashboard_count( $items = array() ) {
-		if ( ! current_user_can( 'manage_options' ) || ! Settings::get_option( Statistics::get_option_name( Statistics::DASHBOARD_COUNT_OPTION ) ) ) {
+		if ( ! current_user_can( 'manage_options' ) || ! Statistics::is_active() ) {
 			return $items;
 		}
 

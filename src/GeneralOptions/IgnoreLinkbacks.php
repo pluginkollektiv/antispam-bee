@@ -2,11 +2,11 @@
 
 namespace AntispamBee\GeneralOptions;
 
-class IgnorePings extends Base {
-	protected static $slug = 'ignore-pings';
+class IgnoreLinkbacks extends Base {
+	protected static $slug = 'ignore-linkbacks';
 
 	public static function get_name() {
-		return __( 'Pings', 'antispam-bee' );
+		return __( 'Linkbacks', 'antispam-bee' );
 	}
 
 	public static function get_label() {

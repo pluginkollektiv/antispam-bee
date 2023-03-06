@@ -2,7 +2,7 @@
 
 namespace AntispamBee\Handlers;
 
-use AntispamBee\GeneralOptions\IgnorePings;
+use AntispamBee\GeneralOptions\IgnoreLinkbacks;
 use AntispamBee\Helpers\ContentTypeHelper;
 
 class Linkback {
@@ -22,7 +22,7 @@ class Linkback {
 			return $linkback;
 		}
 
-		if ( IgnorePings::is_active() ) {
+		if ( IgnoreLinkbacks::is_active() ) {
 			return $linkback;
 		}
 
