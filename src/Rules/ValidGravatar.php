@@ -2,6 +2,7 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\DataHelper;
 
 /**
@@ -9,6 +10,8 @@ use AntispamBee\Helpers\DataHelper;
  */
 class ValidGravatar extends ControllableBase {
 	protected static $slug = 'asb-valid-gravatar';
+
+	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
 	public static function verify( $item ) {
 		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $item );

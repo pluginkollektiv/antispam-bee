@@ -38,6 +38,7 @@ abstract class Base implements PostProcessor {
 	}
 
 	public static function get_supported_types() {
+		// @todo: add filter
 		return static::$supported_types;
 	}
 

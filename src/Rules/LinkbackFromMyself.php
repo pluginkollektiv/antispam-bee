@@ -7,6 +7,8 @@ use AntispamBee\Interfaces\SpamReason;
 
 /**
  * Rule that is responsible for checking if the linkback is from myself.
+ *
+ * @todo: check on remote server.
  */
 class LinkbackFromMyself extends Base implements SpamReason {
 	protected static $slug = 'asb-linkback-from-myself';

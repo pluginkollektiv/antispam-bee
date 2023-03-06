@@ -8,6 +8,7 @@ use AntispamBee\Helpers\IpHelper;
 use AntispamBee\Rules\Honeypot;
 use WP_Comment;
 
+// @todo: extend the `Reaction` class
 class Comment {
 	public static function init() {
 		add_action(
@@ -29,6 +30,7 @@ class Comment {
 			1
 		);
 
+		// @todo: move that to a general class.
 		add_action( 'transition_comment_status', [ __CLASS__, 'handle_comment_status_changes' ], 10, 3 );
 
 		// Add our manual spam reason to the list of reasons.
@@ -39,7 +41,7 @@ class Comment {
 	}
 
 	public static function process( $comment ) {
-		if ( ! ContentTypeHelper::reaction_is_one_of( $comment, [ 'comment' ] ) ) {
+		if ( ! ContentTypeHelper::reaction_is_one_of( $comment, [ 'comment', '' ], 'comment' ) ) {
 			return $comment;
 		}
 
