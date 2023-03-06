@@ -2,7 +2,7 @@
 
 namespace AntispamBee\GeneralOptions;
 
-class Pings extends Base {
+class IgnorePings extends Base {
 	protected static $slug = 'ignore-pings';
 
 	public static function get_name() {

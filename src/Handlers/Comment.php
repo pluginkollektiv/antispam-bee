@@ -39,7 +39,7 @@ class Comment {
 	}
 
 	public static function process( $comment ) {
-		if ( ContentTypeHelper::is_ping( $comment ) ) {
+		if ( ! ContentTypeHelper::reaction_is_one_of( $comment, [ 'comment' ] ) ) {
 			return $comment;
 		}
 

@@ -24,17 +24,16 @@ class ContentTypeHelper {
 	}
 
 	/**
-	 * Checks if a given comment is a ping.
+	 * Checks if a given reaction type matches the types provided in the second parameter.
 	 *
-	 * @param array $comment Comment data
+	 * @param array $reaction       Reaction data array.
+	 * @param array $reaction_types Array of reaction types to check for.
 	 *
-	 * @return mixed|void
+	 * @return bool
 	 */
-	public static function is_ping( $comment ) {
-		$ping_types = [ 'pingback', 'trackback', 'pings' ];
-		$comment_type = $comment['comment_type'] ?? '';
+	public static function reaction_is_one_of( $reaction, $reaction_types ) {
+		$comment_type = $reaction['comment_type'] ?? '';
 
-		$is_ping = apply_filters( 'antispam_bee_is_ping', in_array( $comment_type, $ping_types ), $comment );
-		return $is_ping;
+		return in_array( $comment_type, $reaction_types );
 	}
 }

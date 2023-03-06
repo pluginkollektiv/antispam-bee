@@ -56,7 +56,7 @@ abstract class Base implements Controllable {
 		return $options;
 	}
 
-	public static function is_active( $type ) {
+	public static function is_active( $type = 'general' ) {
 		return Settings::get_option( static::get_slug() . '_active', $type );
 	}
 

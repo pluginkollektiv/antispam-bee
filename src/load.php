@@ -12,7 +12,7 @@ use AntispamBee\Admin\DashboardWidgets;
 use AntispamBee\Admin\SettingsPage;
 use AntispamBee\Crons\DeleteSpamCron;
 use AntispamBee\GeneralOptions\DeleteOldSpam;
-use AntispamBee\GeneralOptions\Pings;
+use AntispamBee\GeneralOptions\IgnorePings;
 use AntispamBee\GeneralOptions\Statistics;
 use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Handlers\Comment;
@@ -58,7 +58,7 @@ function init() {
 		// Post Processors
 		DeleteOldSpam::class,
 		Statistics::class,
-		Pings::class,
+		IgnorePings::class,
 		Uninstall::class,
 		Delete::class,
 		DeleteForReasons::class,
