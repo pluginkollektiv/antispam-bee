@@ -19,7 +19,6 @@ abstract class Reaction {
 	}
 
 	public static function process( $reaction ) {
-		$tmp = static::$content_type;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		$rules   = new Rules( static::$content_type );
 		$is_spam = $rules->apply( $reaction );

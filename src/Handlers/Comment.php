@@ -9,7 +9,7 @@ use AntispamBee\Rules\Honeypot;
 use WP_Comment;
 
 // @todo: extend the `Reaction` class
-class Comment {
+class Comment extends Reaction {
 	public static function init() {
 		add_action(
 			'init',
@@ -21,14 +21,7 @@ class Comment {
 			}
 		);
 
-		add_filter(
-			'preprocess_comment',
-			[
-				__CLASS__,
-				'process',
-			],
-			1
-		);
+		parent::init();
 
 		// @todo: move that to a general class.
 		add_action( 'transition_comment_status', [ __CLASS__, 'handle_comment_status_changes' ], 10, 3 );
