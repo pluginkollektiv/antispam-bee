@@ -5,7 +5,7 @@
  * @package AntispamBee\Fields
  */
 
-namespace AntispamBee\Fields;
+namespace AntispamBee\Helpers;
 
 use DOMDocument;
 use DOMXPath;

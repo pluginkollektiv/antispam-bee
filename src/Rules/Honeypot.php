@@ -2,7 +2,7 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Fields\Honeypot as HoneypotField;
+use AntispamBee\Helpers\Honeypot as HoneypotField;
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\Settings;
