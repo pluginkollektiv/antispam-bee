@@ -286,7 +286,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 									$iso_codes_link = sprintf(
 										'<a href="%s" target="_blank" rel="noopener noreferrer">',
 										esc_url(
-											__( 'https://www.iso.org/obp/ui/#search', 'antispam-bee' ),
+											__( 'https://www.iso.org/obp/ui/#search/code/', 'antispam-bee' ),
 											'https'
 										)
 									);
