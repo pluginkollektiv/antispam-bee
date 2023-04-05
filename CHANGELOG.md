@@ -1,5 +1,16 @@
 ## Changelog ##
 
+### 2.11.3 ###
+* **English**
+  * Fix: Multiselect for "Delete comments by spam reasons" was not saving values
+  * Fix: Fix broken link for ISO country codes
+  * Maintenance: Added test for PHP 8.2
+
+* **Deutsch**
+  * Behoben: Multiselect für "Kommentare aus Spamgründen löschen" speicherte keine Werte
+  * Fix: Fehlerhafter Link für ISO-Ländercodes behoben
+  * Wartung: Test für PHP 8.2 hinzugefügt
+  
 ### 2.11.2 ###
 * **English**
   * Tweak: remove superfluous translations

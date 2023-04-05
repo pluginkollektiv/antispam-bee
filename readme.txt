@@ -3,9 +3,9 @@
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
-* Tested up to:      6.1
+* Tested up to:      6.2
 * Requires PHP:      5.2
-* Stable tag:        2.11.2
+* Stable tag:        2.11.3
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,11 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 A complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ## Changelog ##
+
+### 2.11.3 ###
+  * Fix: Multiselect for "Delete comments by spam reasons" was not saving values
+  * Fix: Fix broken link for ISO country codes
+  * Maintenance: Added test for PHP 8.2
 
 ### 2.11.2 ###
   * Tweak: remove superfluous translations
