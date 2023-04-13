@@ -100,6 +100,7 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
   * Fix: Multiselect for "Delete comments by spam reasons" was not saving values
   * Fix: Fix broken link for ISO country codes
   * Maintenance: Added test for PHP 8.2
+  * Maintenance: Tested up to WordPress 6.2
 
 ### 2.11.2 ###
   * Tweak: remove superfluous translations
