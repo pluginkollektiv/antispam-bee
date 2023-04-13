@@ -1,5 +1,18 @@
 ## Changelog ##
 
+### 2.11.3 ###
+* **English**
+  * Fix: Multiselect for "Delete comments by spam reasons" was not saving values
+  * Fix: Fix broken link for ISO country codes
+  * Maintenance: Added test for PHP 8.2
+  * Maintenance: Tested up to WordPress 6.2
+
+* **Deutsch**
+  * Behoben: Multiselect für "Kommentare aus Spamgründen löschen" speicherte keine Werte
+  * Fix: Fehlerhafter Link für ISO-Ländercodes behoben
+  * Wartung: Test für PHP 8.2 hinzugefügt
+  * Wartung: Getestet mit WordPress 6.2
+  
 ### 2.11.2 ###
 * **English**
   * Tweak: remove superfluous translations
