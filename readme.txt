@@ -272,6 +272,9 @@ For the complete changelog, check out our [GitHub repository](https://github.com
 
 == Upgrade Notice ==
 
+= 2.11.3 =
+The multiselect field for "Delete comments by spam reasons" did not store any values in the last version - please check the setting after the update!
+
 = 2.8.0 =
 This update makes sure your spam check is GDPR compliant, no matter the options you choose. Please make sure to update before May 25th!
 
