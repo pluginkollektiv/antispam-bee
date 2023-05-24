@@ -34,7 +34,7 @@ class ApprovedEmail extends ControllableBase {
 			return 0;
 		}
 
-		return - 1;
+		return -100;
 	}
 
 	public static function get_name() {

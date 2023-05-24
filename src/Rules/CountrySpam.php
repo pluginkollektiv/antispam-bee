@@ -56,7 +56,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		$is_country_spam = apply_filters( 'antispam_bee_is_country_spam', null, $ip, $allowed, $denied );
 
 		if ( is_bool( $is_country_spam ) ) {
-			return $is_country_spam;
+			return (int) $is_country_spam;
 		}
 
 		/**

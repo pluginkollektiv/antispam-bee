@@ -38,7 +38,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	public static function verify( $item ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['ab_spam__hidden_field'] ) && 1 === $_POST['ab_spam__hidden_field'] ) {
-			return 1;
+			return 999;
 		}
 
 		return 0;
