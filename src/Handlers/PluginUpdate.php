@@ -16,17 +16,17 @@ class PluginUpdate {
 	 * @var array
 	 */
 	public static $spam_reasons_mapping = [
-		// @todo: check how the `null` reasons are handled in the old ASB version.
 		'css'           => 'asb-honeypot',
 		'time'          => 'asb-too-fast-submit',
 		'empty'         => 'asb-empty',
 		'localdb'       => 'asb-db-spam',
+		// this is a reason we removed but need to keep because of old spam comments having that reason.
 		'server'        => null,
 		'country'       => 'asb-country-spam',
 		'bbcode'        => 'asb-bbcode',
 		'lang'          => 'asb-lang-spam',
 		'regexp'        => 'asb-regexp',
-		'title_is_name' => null,
+		'title_is_name' => 'asb-title-is-blogname',
 		'manually'      => 'asb-marked-manually',
 	];
 
@@ -89,6 +89,8 @@ class PluginUpdate {
 	 * Makes database changes, if needed.
 	 */
 	private static function maybe_update_database() {
+		// Run that everytime when a `get_settings()` is run and then check for the version.
+		// https://github.com/Automattic/wordpress-activitypub/blob/master/activitypub.php#L159
 		if ( self::db_version_is_current() ) {
 			return;
 		}

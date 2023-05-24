@@ -41,7 +41,6 @@ class Honeypot extends ControllableBase implements SpamReason {
 			return 1;
 		}
 
-		// Todo: to discuss if we should keep the -1 score.
 		return 0;
 	}
 

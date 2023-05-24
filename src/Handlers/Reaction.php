@@ -24,23 +24,26 @@ abstract class Reaction {
 		$is_spam = $rules->apply( $reaction );
 
 		if ( $is_spam ) {
-			$item = PostProcessors::apply( static::$content_type, $reaction, $rules->get_spam_reasons() );
-			if ( ! isset( $item['asb_marked_as_delete'] ) ) {
-				add_filter(
-					'pre_comment_approved',
-					function () {
-						return 'spam';
-					}
-				);
-
-				return $reaction;
-			}
-
-			status_header( 403 );
-			die( 'Spam deleted.' );
+			return self::handle_spam( $reaction, $rules );
 		}
 
 		return $reaction;
-		// todo: Maybe store no-spam-reasons (to discuss)
+	}
+
+	protected static function handle_spam( $reaction, $rules ) {
+		$item = PostProcessors::apply( static::$content_type, $reaction, $rules->get_spam_reasons() );
+		if ( ! isset( $item['asb_marked_as_delete'] ) ) {
+			add_filter(
+				'pre_comment_approved',
+				function () {
+					return 'spam';
+				}
+			);
+
+			return $reaction;
+		}
+
+		status_header( 403 );
+		die( 'Spam deleted.' );
 	}
 }

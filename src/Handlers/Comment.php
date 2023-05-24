@@ -8,7 +8,6 @@ use AntispamBee\Helpers\IpHelper;
 use AntispamBee\Rules\Honeypot;
 use WP_Comment;
 
-// @todo: extend the `Reaction` class
 class Comment extends Reaction {
 	public static function init() {
 		add_action(
@@ -23,7 +22,7 @@ class Comment extends Reaction {
 
 		parent::init();
 
-		// @todo: move that to a general class.
+		// @todo: maybe move that to a general class.
 		add_action( 'transition_comment_status', [ __CLASS__, 'handle_comment_status_changes' ], 10, 3 );
 
 		// Add our manual spam reason to the list of reasons.
@@ -44,17 +43,13 @@ class Comment extends Reaction {
 		$request_path = DataHelper::parse_url( $request_uri, 'path' );
 
 		if ( empty( $request_path ) ) {
-			PostProcessors::apply( 'comment', $comment, [ 'asb-empty' ] );
-
-			return $comment;
+			return self::handle_spam( $comment, [ 'asb-empty' ] );
 		}
 
 		$allow_empty_comment = apply_filters( 'allow_empty_comment', false, $comment );
 		$comment_content = $comment['comment_content'] ?? '';
 		if ( ! $allow_empty_comment && empty( $comment_content ) ) {
-			PostProcessors::apply( 'comment', $comment, [ 'asb-empty' ] );
-
-			return $comment;
+			return self::handle_spam( $comment, [ 'asb-empty' ] );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -63,29 +58,9 @@ class Comment extends Reaction {
 			return $comment;
 		}
 
-		// phpcs:enable WordPress.Security.NonceVerification.Missing
-		$rules   = new Rules( 'comment' );
-		$is_spam = $rules->apply( $comment );
-
-		if ( $is_spam ) {
-			$item = PostProcessors::apply( 'comment', $comment, $rules->get_spam_reasons() );
-			if ( ! isset( $item['asb_marked_as_delete'] ) ) {
-				add_filter(
-					'pre_comment_approved',
-					function () {
-						return 'spam';
-					}
-				);
-
-				return $comment;
-			}
-
-			status_header( 403 );
-			die( 'Spam deleted.' );
-		}
+		parent::process( $comment );
 
 		return $comment;
-		// todo: Maybe store no-spam-reasons (to discuss)
 	}
 
 	/**
