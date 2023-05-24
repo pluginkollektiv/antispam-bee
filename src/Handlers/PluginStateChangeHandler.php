@@ -44,7 +44,7 @@ class PluginStateChangeHandler {
 		}
 		global $wpdb;
 
-		delete_option( Settings::ANTISPAM_BEE_OPTION_NAME );
+		delete_option( Settings::OPTION_NAME );
 		delete_option( 'antispam_bee' );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery

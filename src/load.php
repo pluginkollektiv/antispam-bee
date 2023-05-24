@@ -91,6 +91,6 @@ function init() {
 add_action( 'plugins_loaded', __NAMESPACE__ . '\init' );
 
 // Register the activation, deactivation and uninstall hooks.
-register_activation_hook( ANTISPAM_BEE_FILE, [ PluginStateChangeHandler::class, 'activate' ] );
-register_deactivation_hook( ANTISPAM_BEE_FILE, [ PluginStateChangeHandler::class, 'deactivate' ] );
-register_uninstall_hook( ANTISPAM_BEE_FILE, [ PluginStateChangeHandler::class, 'uninstall' ] );
+register_activation_hook( MAIN_PLUGIN_FILE, [ PluginStateChangeHandler::class, 'activate' ] );
+register_deactivation_hook( MAIN_PLUGIN_FILE, [ PluginStateChangeHandler::class, 'deactivate' ] );
+register_uninstall_hook( MAIN_PLUGIN_FILE, [ PluginStateChangeHandler::class, 'uninstall' ] );

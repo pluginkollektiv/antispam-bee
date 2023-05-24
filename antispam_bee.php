@@ -21,11 +21,8 @@
 
 namespace AntispamBee;
 
-define( __NAMESPACE__ . '\ANTISPAM_BEE_VERSION', '3.0.0' );
-define( __NAMESPACE__ . '\ANTISPAM_BEE_DB_VERSION', '1.02' );
-define( __NAMESPACE__ . '\ANTISPAM_BEE_FILE', __FILE__ );
-define( __NAMESPACE__ . '\ANTISPAM_BEE_PATH', plugin_dir_path( ANTISPAM_BEE_FILE ) );
-define( __NAMESPACE__ . '\ANTISPAM_BEE_URL', plugin_dir_url( ANTISPAM_BEE_FILE ) );
+define( __NAMESPACE__ . '\MAIN_PLUGIN_FILE', __FILE__ );
+define( __NAMESPACE__ . '\PLUGIN_PATH', plugin_dir_path( MAIN_PLUGIN_FILE ) );
 
 // The pre_init functions check the compatibility of the plugin and calls the init function, if check were successful.
 pre_init();
@@ -53,13 +50,13 @@ function pre_init() {
 		return;
 	}
 
-	if ( file_exists( ANTISPAM_BEE_PATH . 'composer.json' ) && ! file_exists( ANTISPAM_BEE_PATH . 'vendor/autoload.php' ) ) {
+	if ( file_exists( PLUGIN_PATH . 'composer.json' ) && ! file_exists( PLUGIN_PATH . 'vendor/autoload.php' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\autoloader_missing' );
 
 		// Stop the further processing of the plugin.
 		return;
 	} else {
-		$autoloader = ANTISPAM_BEE_PATH . 'vendor/autoload.php';
+		$autoloader = PLUGIN_PATH . 'vendor/autoload.php';
 
 		if ( is_readable( $autoloader ) ) {
 			include $autoloader;
@@ -67,7 +64,7 @@ function pre_init() {
 	}
 
 	// If all checks were successful, load the plugin.
-	require_once ANTISPAM_BEE_PATH . 'src/load.php';
+	require_once PLUGIN_PATH . 'src/load.php';
 }
 
 /**

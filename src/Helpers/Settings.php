@@ -26,11 +26,11 @@ class Settings {
 	];
 
 	// @todo: check if code is PHP 7 compatible
-	const ANTISPAM_BEE_OPTION_NAME = 'antispam_bee_options';
+	const OPTION_NAME = 'antispam_bee_options';
 
 	public static function init() {
 		add_action(
-			'update_option_' . self::ANTISPAM_BEE_OPTION_NAME,
+			'update_option_' . self::OPTION_NAME,
 			[ __CLASS__, 'update_cache' ],
 			1,
 			2
@@ -39,7 +39,7 @@ class Settings {
 
 	public static function update_cache( $old_value, $value ) {
 		wp_cache_set(
-			self::ANTISPAM_BEE_OPTION_NAME,
+			self::OPTION_NAME,
 			$value
 		);
 	}
@@ -51,13 +51,13 @@ class Settings {
 	 */
 	public static function get_options() {
 		PluginUpdate::maybe_run_plugin_updated_logic();
-		$options = wp_cache_get( self::ANTISPAM_BEE_OPTION_NAME );
+		$options = wp_cache_get( self::OPTION_NAME );
 		if ( $options ) {
 			return $options;
 		}
 
-		$options = get_option( self::ANTISPAM_BEE_OPTION_NAME, self::$defaults );
-		wp_cache_set( self::ANTISPAM_BEE_OPTION_NAME, $options );
+		$options = get_option( self::OPTION_NAME, self::$defaults );
+		wp_cache_set( self::OPTION_NAME, $options );
 
 		return $options;
 	}
@@ -123,7 +123,7 @@ class Settings {
 	 * @since  0.1
 	 */
 	public static function update_options( $data ) {
-		$options = get_option( self::ANTISPAM_BEE_OPTION_NAME );
+		$options = get_option( self::OPTION_NAME );
 
 		if ( is_array( $options ) ) {
 			$options = array_merge(
@@ -134,7 +134,7 @@ class Settings {
 			$options = $data;
 		}
 
-		update_option( self::ANTISPAM_BEE_OPTION_NAME, $options );
+		update_option( self::OPTION_NAME, $options );
 	}
 
 	/**

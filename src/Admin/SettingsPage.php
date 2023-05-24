@@ -127,7 +127,7 @@ class SettingsPage {
 
 		register_setting(
 			self::SETTINGS_PAGE_SLUG,
-			Settings::ANTISPAM_BEE_OPTION_NAME,
+			Settings::OPTION_NAME,
 			[
 				'sanitize_callback' => [ Sanitize::class, 'sanitize_options' ],
 			]

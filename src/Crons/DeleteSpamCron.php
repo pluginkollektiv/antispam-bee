@@ -3,7 +3,7 @@
 namespace AntispamBee\Crons;
 
 use AntispamBee\Helpers\Settings;
-use const AntispamBee\ANTISPAM_BEE_PATH;
+use const AntispamBee\PLUGIN_PATH;
 
 class DeleteSpamCron {
 
@@ -11,7 +11,7 @@ class DeleteSpamCron {
 
 	public static function init() {
 		add_action(
-			'update_option_' . Settings::ANTISPAM_BEE_OPTION_NAME,
+			'update_option_' . Settings::OPTION_NAME,
 			[ __CLASS__, 'maybe_change_cron_state' ]
 		);
 
@@ -60,7 +60,7 @@ class DeleteSpamCron {
 		}
 
 		$days = (int) Settings::get_option( 'delete_spam_cronjob_days' );
-		error_log( $days, 3, trailingslashit( ANTISPAM_BEE_PATH ) . 'error.log' );
+		error_log( $days, 3, trailingslashit( PLUGIN_PATH ) . 'error.log' );
 		if ( empty( $days ) ) {
 			return;
 		}

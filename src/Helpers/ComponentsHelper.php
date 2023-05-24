@@ -4,7 +4,7 @@ namespace AntispamBee\Helpers;
 
 use AntispamBee\Interfaces\Controllable;
 use ReflectionClass;
-use const AntispamBee\ANTISPAM_BEE_PATH;
+use const AntispamBee\PLUGIN_PATH;
 
 class ComponentsHelper {
 
@@ -58,7 +58,7 @@ class ComponentsHelper {
 			$reflection = new ReflectionClass( $component );
 
 			// Remove third-party components with `asb-` prefix.
-			if ( 0 !== strpos( $reflection->getFileName(), ANTISPAM_BEE_PATH ) && 0 === strpos( $component::get_slug(), 'asb-' ) ) {
+			if ( 0 !== strpos( $reflection->getFileName(), PLUGIN_PATH ) && 0 === strpos( $component::get_slug(), 'asb-' ) ) {
 				error_log( __( 'Antispam Bee: You shall not use `asb-` as slug prefix for your custom rules and post processors.', 'antispam-bee' ) );
 				continue;
 			}

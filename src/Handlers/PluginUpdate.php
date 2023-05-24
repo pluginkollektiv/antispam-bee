@@ -3,7 +3,7 @@
 namespace AntispamBee\Handlers;
 
 use AntispamBee\Helpers\Settings;
-use const AntispamBee\ANTISPAM_BEE_FILE;
+use const AntispamBee\MAIN_PLUGIN_FILE;
 
 /**
  * Runs, if needed, things after a plugin update.
@@ -141,12 +141,12 @@ class PluginUpdate {
 			];
 
 			update_option(
-				Settings::ANTISPAM_BEE_OPTION_NAME,
+				Settings::OPTION_NAME,
 				$new_options
 			);
 
 			wp_cache_set(
-				Settings::ANTISPAM_BEE_OPTION_NAME,
+				Settings::OPTION_NAME,
 				$new_options
 			);
 		}
@@ -155,7 +155,7 @@ class PluginUpdate {
 	}
 
 	private static function get_plugin_version() {
-		$meta = get_file_data( ANTISPAM_BEE_FILE, [ 'Version' => 'Version' ] );
+		$meta = get_file_data( MAIN_PLUGIN_FILE, [ 'Version' => 'Version' ] );
 
 		return $meta['Version'];
 	}

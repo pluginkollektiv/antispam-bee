@@ -52,7 +52,7 @@ abstract class Field {
 	 * @return string Name of the field.
 	 */
 	public function get_name() {
-		$option_name = Settings::ANTISPAM_BEE_OPTION_NAME;
+		$option_name = Settings::OPTION_NAME;
 		$name        = "{$option_name}[{$this->type}][{$this->controllable_option_name}]";
 
 		return str_replace( '-', '_', $name );
