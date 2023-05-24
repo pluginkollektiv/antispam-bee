@@ -2,9 +2,8 @@
 
 namespace AntispamBee\Handlers;
 
-use Plugin_Upgrader;
-use WP_Upgrader;
-use const AntispamBee\ANTISPAM_BEE_DB_VERSION;
+use AntispamBee\Helpers\Settings;
+use const AntispamBee\ANTISPAM_BEE_FILE;
 
 /**
  * Runs, if needed, things after a plugin update.
@@ -31,57 +30,15 @@ class PluginUpdate {
 	];
 
 	/**
-	 * Runs after completed upgrade.
-	 *
-	 * @param WP_Upgrader $wp_upgrader WP_Upgrader instance.
-	 * @param array $hook_extra Array of bulk item update data.
-	 */
-	public static function upgrader_process_complete( $wp_upgrader, $hook_extra ) {
-		if ( ! $wp_upgrader instanceof Plugin_Upgrader || ! isset( $hook_extra['plugins'] ) ) {
-			return;
-		}
-
-		$updated_plugins = $hook_extra['plugins'];
-		$asb_updated     = false;
-		foreach ( $updated_plugins as $updated_plugin ) {
-			if ( $updated_plugin !== self::$_base ) {
-				continue;
-			}
-			$asb_updated = true;
-		}
-
-		if ( false === $asb_updated ) {
-			return;
-		}
-
-		self::plugin_updated();
-	}
-
-	/**
-	 * Runs after an upgrade via an uploaded ZIP package was completed.
-	 *
-	 * @param string $package The package file.
-	 * @param array $data The new plugin or theme data.
-	 * @param string $package_type The package type.
-	 */
-	public static function upgrader_overwrote_package( $package, $data, $package_type ) {
-		if ( 'plugin' !== $package_type ) {
-			return;
-		}
-
-		$text_domain = isset( $data['TextDomain'] ) ? $data['TextDomain'] : '';
-
-		if ( 'antispam-bee' !== $text_domain ) {
-			return;
-		}
-
-		self::plugin_updated();
-	}
-
-	/**
 	 * Runs after Antispam Bee was upgraded.
 	 */
-	private static function plugin_updated() {
+	public static function maybe_run_plugin_updated_logic() {
+		// Todo: we need to check if the migration is working, so we exit early for now.
+		return;
+		if (self::db_version_is_current()) {
+			return;
+		}
+
 		self::maybe_update_database();
 	}
 
@@ -89,13 +46,7 @@ class PluginUpdate {
 	 * Makes database changes, if needed.
 	 */
 	private static function maybe_update_database() {
-		// Run that everytime when a `get_settings()` is run and then check for the version.
-		// https://github.com/Automattic/wordpress-activitypub/blob/master/activitypub.php#L159
-		if ( self::db_version_is_current() ) {
-			return;
-		}
-
-		$version_from_db = floatval( get_option( 'antispambee_db_version', 0 ) );
+		$version_from_db = get_option( 'antispambee_db_version', 0 );
 		if ( $version_from_db < 1.01 ) {
 			global $wpdb;
 
@@ -189,7 +140,6 @@ class PluginUpdate {
 				],
 			];
 
-			/*
 			update_option(
 				Settings::ANTISPAM_BEE_OPTION_NAME,
 				$new_options
@@ -198,10 +148,16 @@ class PluginUpdate {
 			wp_cache_set(
 				Settings::ANTISPAM_BEE_OPTION_NAME,
 				$new_options
-			);*/
+			);
 		}
 
-		update_option( 'antispambee_db_version', ANTISPAM_BEE_DB_VERSION );
+		update_option( 'antispambee_db_version', self::get_plugin_version() );
+	}
+
+	private static function get_plugin_version() {
+		$meta = get_file_data( ANTISPAM_BEE_FILE, [ 'Version' => 'Version' ] );
+
+		return $meta['Version'];
 	}
 
 	/**
@@ -210,8 +166,10 @@ class PluginUpdate {
 	 * @return bool
 	 */
 	private static function db_version_is_current() {
-		$current_version = floatval( get_option( 'antispambee_db_version', 0 ) );
-
-		return $current_version === ANTISPAM_BEE_DB_VERSION;
+		return (bool) version_compare(
+			get_option( 'antispambee_db_version', '1.0' ),
+			self::get_plugin_version(),
+			'=='
+		);
 	}
 }

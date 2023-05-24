@@ -2,6 +2,8 @@
 
 namespace AntispamBee\Helpers;
 
+use AntispamBee\Handlers\PluginUpdate;
+
 class Settings {
 	protected static $defaults = [
 		'comment'   => [
@@ -48,6 +50,7 @@ class Settings {
 	 * @return  array $options Array with option fields.
 	 */
 	public static function get_options() {
+		PluginUpdate::maybe_run_plugin_updated_logic();
 		$options = wp_cache_get( self::ANTISPAM_BEE_OPTION_NAME );
 		if ( $options ) {
 			return $options;
