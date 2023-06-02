@@ -35,13 +35,12 @@ class Text extends Field implements RenderElement {
 
 	public function get_injectable_markup() {
 		return sprintf(
-			'<input type="%1$s" id="%2$s" name="%2$s" value="%3$s" class="%4$s" placeholder="%5$s" %6$s>',
+			'<input type="%1$s" id="%2$s" name="%2$s" value="%3$s" class="%4$s" placeholder="%5$s">',
 			esc_attr( $this->get_type() ),
 			esc_attr( $this->get_name() ),
 			esc_attr( $this->get_value() ),
 			esc_attr( $this->get_class() ),
-			esc_attr( $this->get_placeholder() ),
-			'number' === $this->get_type() ? ' min="1"' : ''
+			esc_attr( $this->get_placeholder() )
 		);
 	}
 
