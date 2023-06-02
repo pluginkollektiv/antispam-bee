@@ -60,7 +60,6 @@ class DeleteSpamCron {
 		}
 
 		$days = (int) Settings::get_option( 'delete_spam_cronjob_days' );
-		error_log( $days, 3, trailingslashit( PLUGIN_PATH ) . 'error.log' );
 		if ( empty( $days ) ) {
 			return;
 		}

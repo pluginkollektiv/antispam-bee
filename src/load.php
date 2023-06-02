@@ -52,7 +52,7 @@ function init() {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
 	}
-	
+
 	// Construct all modules to initialize.
 	$modules = array(
 		DashboardWidgets::class,
