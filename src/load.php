@@ -43,6 +43,16 @@ use AntispamBee\Rules\ValidGravatar;
  * Init function of the plugin
  */
 function init() {
+	$disallow_ajax = apply_filters( 'antispam_bee_disallow_ajax_calls', true );
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX && $disallow_ajax ) {
+		return;
+	}
+
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	
 	// Construct all modules to initialize.
 	$modules = array(
 		DashboardWidgets::class,
