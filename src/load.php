@@ -25,6 +25,7 @@ use AntispamBee\PostProcessors\Delete;
 use AntispamBee\PostProcessors\DeleteForReasons;
 use AntispamBee\PostProcessors\SaveReason;
 use AntispamBee\PostProcessors\SendEmail;
+use AntispamBee\PostProcessors\UpdateSpamCount;
 use AntispamBee\PostProcessors\UpdateSpamLog;
 use AntispamBee\Rules\ApprovedEmail;
 use AntispamBee\Rules\BBCode;
@@ -63,6 +64,7 @@ function init() {
 		DeleteForReasons::class,
 		SaveReason::class,
 		SendEmail::class,
+		UpdateSpamCount::class,
 		UpdateSpamLog::class,
 		// Rules
 		ApprovedEmail::class,
