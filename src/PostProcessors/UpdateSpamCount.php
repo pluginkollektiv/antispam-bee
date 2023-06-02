@@ -13,7 +13,7 @@ class UpdateSpamCount extends Base {
 	protected static $slug = 'asb-update-spam-count';
 
 	public static function process( $item ) {
-		if ( ! Settings::get_option( Statistics::get_option_name( Statistics::DASHBOARD_COUNT_OPTION ) ) ) {
+		if ( ! Statistics::is_active() ) {
 			return $item;
 		}
 

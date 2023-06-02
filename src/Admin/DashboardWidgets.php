@@ -69,7 +69,7 @@ class DashboardWidgets {
 	 * @since  2.4
 	 */
 	private static function get_spam_count() {
-		$count = intval( Settings::get_option( 'spam_count' ) );
+		$count = intval( Settings::get_option( 'spam_count', '' ) );
 
 		return ( get_locale() === 'de_DE' ? number_format( $count, 0, '', '.' ) : number_format_i18n( $count ) );
 	}
