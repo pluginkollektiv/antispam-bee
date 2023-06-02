@@ -146,10 +146,21 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	}
 
 	public static function get_options() {
+		$iso_codes_link = 'https://www.iso.org/obp/ui/#search/code/';
 		return [
 			[
 				'type'        => 'textarea',
-				'label'       => __( 'Denied ISO country codes for this option.', 'antispam-bee' ),
+				'label'       => sprintf( /* translators: 1=opening link tag to ISO codes list, 2=closing link tag. */
+					__( 'Denied %1$sISO country codes%2$s for this option.', 'antispam-bee' ),
+					"<a href='{$iso_codes_link}' target='_blank'>",
+					'</a>'
+				),
+				'label_kses'  => [
+					'a' => [
+						'href' => true,
+						'target' => true,
+					],
+				],
 				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
 				'option_name' => 'denied',
 				'sanitize'    => function ( $value ) {
@@ -158,7 +169,17 @@ class CountrySpam extends ControllableBase implements SpamReason {
 			],
 			[
 				'type'        => 'textarea',
-				'label'       => __( 'Allowed ISO country codes for this option.', 'antispam-bee' ),
+				'label'       => sprintf( /* translators: 1=opening link tag to ISO codes list, 2=closing link tag. */
+					__( 'Allowed %1$sISO country codes%2$s for this option.', 'antispam-bee' ),
+					"<a href='{$iso_codes_link}' target='_blank'>",
+					'</a>'
+				),
+				'label_kses'  => [
+					'a' => [
+						'href' => true,
+						'target' => true,
+					],
+				],
 				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
 				'option_name' => 'allowed',
 				'sanitize'    => function ( $value ) {

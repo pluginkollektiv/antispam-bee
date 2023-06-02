@@ -27,7 +27,7 @@ class Text extends Field implements RenderElement {
 		printf(
 			'<p><label for="%s">%s</label></p><p>%s</p>',
 			esc_attr( $this->get_name() ),
-			esc_html( $this->get_label() ),
+			$this->get_label(),
 			$this->get_injectable_markup()
 		);
 		$this->maybe_show_description();

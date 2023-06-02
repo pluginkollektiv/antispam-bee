@@ -18,10 +18,11 @@ class Textarea extends Field implements RenderElement {
 	 */
 	public function render() {
 		printf(
-			'<p><label for="%1$s">%2$s</label></p><p><textarea name="%1$s" id="%1$s">%3$s</textarea></p>',
+			'<p><label for="%1$s">%2$s</label></p><p><textarea name="%1$s" id="%1$s" placeholder="%4$s">%3$s</textarea></p>',
 			esc_attr( $this->get_name() ),
-			esc_html( $this->get_label() ),
-			esc_html( $this->get_value() )
+			$this->get_label(),
+			esc_html( $this->get_value() ),
+			esc_attr( $this->get_placeholder() )
 		);
 		$this->maybe_show_description();
 	}

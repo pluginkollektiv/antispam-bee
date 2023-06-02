@@ -20,7 +20,7 @@ class Checkbox extends Field implements RenderElement {
 		$label = ! empty( $this->get_label() ) ? sprintf(
 			'<label for="%s">%s</label>',
 			esc_attr( $this->get_name() ),
-			esc_html( $this->get_label() )
+			$this->get_label()
 		) : '';
 
 		printf(
