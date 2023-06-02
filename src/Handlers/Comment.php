@@ -42,6 +42,14 @@ class Comment extends Reaction {
 			return self::handle_spam( $comment, [ 'asb-empty' ] );
 		}
 
+		if ( empty( $comment['comment_author_IP'] ) ) {
+			return self::handle_spam( $comment, [ 'asb-empty' ] );
+		}
+
+		if ( get_option( 'require_name_email' ) && ( empty( $comment['comment_author_email'] ) || empty( $comment['comment_author'] ) ) ) {
+			return self::handle_spam( $comment, [ 'asb-empty' ] );
+		}
+
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Everybody can post.
 		if ( strpos( $request_path, 'wp-comments-post.php' ) === false || empty( $_POST ) ) {
