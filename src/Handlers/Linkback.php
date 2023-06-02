@@ -22,11 +22,11 @@ class Linkback extends Reaction {
 			return self::handle_spam( $linkback, [ 'asb-title-is-blogname' ] );
 		}
 
-		$ip   = IpHelper::get_client_ip();
+		$linkback['comment_author_IP'] = IpHelper::get_client_ip();
 		$url  = $linkback['comment_author_url'] ?? '';
 		$body = $linkback['comment_content'];
 
-		if ( empty( $url ) || empty( $body ) || empty( $ip ) ) {
+		if ( empty( $url ) || empty( $body ) || empty( $linkback['comment_author_IP'] ) ) {
 			return self::handle_spam( $linkback, [ 'asb-empty' ] );
 		}
 
