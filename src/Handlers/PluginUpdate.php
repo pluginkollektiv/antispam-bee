@@ -25,7 +25,7 @@ class PluginUpdate {
 		'bbcode'        => 'asb-bbcode',
 		'lang'          => 'asb-lang-spam',
 		'regexp'        => 'asb-regexp',
-		'title_is_name' => 'asb-title-is-blogname',
+		'title_is_name' => 'asb-linkback-post-title-is-blogname',
 		'manually'      => 'asb-marked-manually',
 	];
 
@@ -33,8 +33,6 @@ class PluginUpdate {
 	 * Runs after Antispam Bee was upgraded.
 	 */
 	public static function maybe_run_plugin_updated_logic() {
-		// Todo: we need to check if the migration is working, so we exit early for now.
-		return;
 		if (self::db_version_is_current()) {
 			return;
 		}
@@ -83,61 +81,60 @@ class PluginUpdate {
 		}
 
 		// DB version was raised in ASB 3.0.0 to 1.03.
-		if ( $version_from_db < 3 ) {
+		if ( version_compare(
+			$version_from_db,
+			'3.0.0',
+			'<'
+		) ) {
 			// Update options (we migrate to a new option name `antispam_bee_options` in this release).
 			$options = get_option( 'antispam_bee' );
 
-			if ( isset( $options['ignore_reasons'] ) && is_array( $options['ignore_reasons'] ) ) {
-				foreach ( $options['ignore_reasons'] as $key => $reason ) {
-					$value = $options['ignore_reasons'][ $key ];
-					unset( $options['ignore_reasons'][ $key ] );
+			$allowed_languages = self::convert_multiselect_values( $options['translate_lang'] ?? [] );
 
-					if ( ! isset( self::$spam_reasons_mapping[ $key ] ) ) {
-						continue;
-					}
-
-					$options['ignore_reasons'][ self::$spam_reasons_mapping[ $key ] ] = $value;
-				}
-			}
+			$delete_reasons = self::convert_multiselect_values( $options['ignore_reasons'] ?? [], self::$spam_reasons_mapping );
 
 			$new_options = [
 				'comment'    => [
-					'post_processor_asb_delete_spam_active'                => isset( $options['flag_spam'] ) && ! $options['flag_spam'],
-					'post_processor_asb_send_email_active'                 => $options['email_notify'] ?? false,
-					'post_processor_asb_save_reason_active'                => isset( $options['no_notice'] ) && ! $options['no_notice'],
-					'rule_asb_regexp_active'                               => $options['regexp_check'] ?? false,
+					'post_processor_asb_delete_spam_active'                => isset( $options['flag_spam'] ) && ! $options['flag_spam'] ? 'on' : '',
+					'post_processor_asb_send_email_active'                 => $options['email_notify'] ? 'on' : '',
+					'post_processor_asb_save_reason_active'                => isset( $options['no_notice'] ) && ! $options['no_notice'] ? 'on' : '',
+					'rule_asb_regexp_active'                               => $options['regexp_check'] ? 'on' : '',
 					'rule_asb_honeypot_active'                             => 'on',
-					'rule_asb_db_spam_active'                              => $options['spam_ip'] ?? false,
-					'rule_asb_approved_email_active'                       => $options['already_commented'] ?? false,
-					'rule_asb_too_fast_submit_active'                      => $options['time_check'] ?? false,
-					'post_processor_asb_delete_for_reasons_reasons_active' => $options['reasons_enable'] ?? false,
-					'post_processor_asb_delete_for_reasons_reasons'        => $options['ignore_reasons'] ?? [],
-					'rule_asb_bbcode_active'                               => $options['bbcode_check'] ?? true,
-					'rule_asb_valid_gravatar_active'                       => $options['gravatar_check'] ?? false,
-					'rule_asb_country_spam_active'                         => $options['country_code'] ?? false,
+					'rule_asb_db_spam_active'                              => $options['spam_ip'] ? 'on' : '',
+					'rule_asb_approved_email_active'                       => $options['already_commented'] ? 'on' : '',
+					'rule_asb_too_fast_submit_active'                      => $options['time_check'] ? 'on' : '',
+					'post_processor_asb_delete_for_reasons_active'         => $options['reasons_enable'] ? 'on' : '',
+					'post_processor_asb_delete_for_reasons_reasons'        => $delete_reasons,
+					'rule_asb_bbcode_active'                               => $options['bbcode_check'] ? 'on' : '',
+					'rule_asb_valid_gravatar_active'                       => $options['gravatar_check'] ? 'on' : '',
+					'rule_asb_country_spam_active'                         => $options['country_code'] ? 'on' : '',
 					'rule_asb_country_spam_denied'                         => $options['country_denied'] ?? '',
 					'rule_asb_country_spam_allowed'                        => $options['country_allowed'] ?? '',
-					'rule_asb_lang_spam_active'                            => $options['translate_api'] ?? false,
-					'rule_asb_lang_spam_allowed'                           => $options['translate_lang'] ?? [],
+					'rule_asb_lang_spam_active'                            => $options['translate_api'] ? 'on' : '',
+					'rule_asb_lang_spam_allowed'                           => $allowed_languages,
 				],
 				'linkback'   => [
-					'post_processor_asb_delete_spam_active'         => isset( $options['flag_spam'] ) && ! $options['flag_spam'],
-					'post_processor_asb_send_email_active'          => $options['email_notify'] ?? false,
-					'post_processor_asb_save_reason_active'         => isset( $options['no_notice'] ) && ! $options['no_notice'],
-					'rule_asb_regexp_active'                        => $options['regexp_check'] ?? false,
-					'rule_asb_db_spam_active'                       => $options['spam_ip'] ?? false,
-					'post_processor_asb_delete_for_reasons_reasons' => $options['ignore_reasons'] ?? [],
-					'rule_asb_bbcode_active'                        => $options['bbcode_check'] ?? true,
-					'rule_asb_valid_gravatar_active'                => $options['gravatar_check'] ?? false,
-					'rule_asb_lang_spam_active'                     => $options['translate_api'] ?? false,
-					'rule_asb_lang_spam_allowed'                    => $options['translate_lang'] ?? [],
+					'post_processor_asb_delete_spam_active'         => isset( $options['flag_spam'] ) && ! $options['flag_spam'] ? 'on' : '',
+					'post_processor_asb_send_email_active'          => $options['email_notify'] ? 'on' : '',
+					'post_processor_asb_save_reason_active'         => isset( $options['no_notice'] ) && ! $options['no_notice'] ? 'on' : '',
+					'rule_asb_regexp_active'                        => $options['regexp_check'] ? 'on' : '',
+					'rule_asb_db_spam_active'                       => $options['spam_ip'] ? 'on' : '',
+					'post_processor_asb_delete_for_reasons_active'  => $options['reasons_enable'] ? 'on' : '',
+					'post_processor_asb_delete_for_reasons_reasons' => $delete_reasons,
+					'rule_asb_bbcode_active'                        => $options['bbcode_check'] ? 'on' : '',
+					'rule_asb_valid_gravatar_active'                => $options['gravatar_check'] ? 'on' : '',
+					'rule_asb_country_spam_active'                  => $options['country_code'] ? 'on' : '',
+					'rule_asb_country_spam_denied'                  => $options['country_denied'] ?? '',
+					'rule_asb_country_spam_allowed'                 => $options['country_allowed'] ?? '',
+					'rule_asb_lang_spam_active'                     => $options['translate_api'] ? 'on' : '',
+					'rule_asb_lang_spam_allowed'                    => $allowed_languages,
 				],
 				'general'    => [
-					'general_delete_spam_cronjob_enabled_active'                   => $options['cronjob_enable'] ?? false,
+					'general_delete_spam_cronjob_enabled_active'                   => $options['cronjob_enable'] ? 'on' : '',
 					'general_delete_spam_cronjob_enabled_delete_spam_cronjob_days' => $options['cronjob_interval'] ?? 30,
-					'general_statistics_on_dashboard_active'                       => $options['dashboard_count'] ?? 0,
-					'general_ignore_pings_active'                                  => $options['ignore_pings'] ?? false,
-					'general_delete_data_on_uninstall_active'                      => $options['delete_data_on_uninstall'] ?? false,
+					'general_statistics_on_dashboard_active'                       => $options['dashboard_count'] ? 'on' : '',
+					'general_ignore_pings_active'                                  => $options['ignore_pings'] ? 'on' : '',
+					'general_delete_data_on_uninstall_active'                      => $options['delete_data_on_uninstall'] ? 'on' : '',
 				],
 				'spam_count' => $options['spam_count'] ?? 0,
 			];
@@ -154,6 +151,23 @@ class PluginUpdate {
 		}
 
 		update_option( 'antispambee_db_version', self::get_plugin_version() );
+	}
+
+	private static function convert_multiselect_values( $values, $mapping = [] ) {
+		if ( ! is_array( $values ) || empty( $values ) ) {
+			return $values;
+		}
+
+		$flipped_values = array_flip( $values );
+		$new_array = [];
+		foreach ( $flipped_values as $key => $value ) {
+			if ( ! empty( $mapping ) && array_key_exists( $key, $mapping ) ) {
+				$key = $mapping[ $key ];
+			}
+			$new_array[ $key ] = 'on';
+		}
+
+		return $new_array;
 	}
 
 	private static function get_plugin_version() {

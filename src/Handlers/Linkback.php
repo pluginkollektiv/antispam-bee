@@ -19,7 +19,7 @@ class Linkback extends Reaction {
 		}
 
 		if ( self::is_linkback_title_blog_name( $linkback ) ) {
-			return self::handle_spam( $linkback, [ 'asb-title-is-blogname' ] );
+			return self::handle_spam( $linkback, [ 'asb-linkback-post-title-is-blogname' ] );
 		}
 
 		$linkback['comment_author_IP'] = IpHelper::get_client_ip();
