@@ -64,7 +64,7 @@ abstract class Field {
 	 * @return string Label of the field.
 	 */
 	public function get_label() {
-		$kses = (array) isset( $this->option['label_kses'] ) ? $this->option['label_kses'] : [];
+		$kses = isset( $this->option['label_kses'] ) ? $this->option['label_kses'] : [];
 		$label = isset( $this->option['label'] ) ? $this->option['label'] : '';
 		if ( ! $kses ) {
 			return esc_html( $label );
