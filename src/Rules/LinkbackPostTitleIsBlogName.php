@@ -9,7 +9,7 @@ use AntispamBee\Interfaces\SpamReason;
  * Rule that is responsible for checking if the linkback post title is a blog name.
  */
 class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
-	protected static $slug = 'asb-approved-email';
+	protected static $slug = 'asb-linkback-post-title-is-blogname';
 	protected static $supported_types = [ ContentTypeHelper::LINKBACK_TYPE ];
 
 	public static function verify( $item ) {
