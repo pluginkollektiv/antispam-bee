@@ -29,11 +29,15 @@ class PluginUpdate {
 		'manually'      => 'asb-marked-manually',
 	];
 
+	private static $db_update_triggered = false;
+
+	private static $db_version_is_current = null;
+
 	/**
 	 * Runs after Antispam Bee was upgraded.
 	 */
 	public static function maybe_run_plugin_updated_logic() {
-		if (self::db_version_is_current()) {
+		if ( self::db_version_is_current() || self::$db_update_triggered ) {
 			return;
 		}
 
@@ -44,7 +48,13 @@ class PluginUpdate {
 	 * Makes database changes, if needed.
 	 */
 	private static function maybe_update_database() {
+		// Prevent further update triggers during the same request that run before the DB version is updated.
+		self::$db_update_triggered = true;
+
 		$version_from_db = get_option( 'antispambee_db_version', 0 );
+
+		update_option( 'antispambee_db_version', self::get_plugin_version() );
+
 		if ( $version_from_db < 1.01 ) {
 			global $wpdb;
 
@@ -133,7 +143,7 @@ class PluginUpdate {
 					'general_delete_spam_cronjob_enabled_active'                   => $options['cronjob_enable'] ? 'on' : '',
 					'general_delete_spam_cronjob_enabled_delete_spam_cronjob_days' => $options['cronjob_interval'] ?? 30,
 					'general_statistics_on_dashboard_active'                       => $options['dashboard_count'] ? 'on' : '',
-					'general_ignore_pings_active'                                  => $options['ignore_pings'] ? 'on' : '',
+					'general_ignore_linkbacks_active'                                  => $options['ignore_pings'] ? 'on' : '',
 					'general_delete_data_on_uninstall_active'                      => $options['delete_data_on_uninstall'] ? 'on' : '',
 				],
 				'spam_count' => $options['spam_count'] ?? 0,
@@ -149,8 +159,6 @@ class PluginUpdate {
 				$new_options
 			);
 		}
-
-		update_option( 'antispambee_db_version', self::get_plugin_version() );
 	}
 
 	private static function convert_multiselect_values( $values, $mapping = [] ) {
@@ -182,10 +190,16 @@ class PluginUpdate {
 	 * @return bool
 	 */
 	private static function db_version_is_current() {
-		return (bool) version_compare(
+		if ( ! is_null( self::$db_version_is_current ) ) {
+			return self::$db_version_is_current;
+		}
+
+		self::$db_version_is_current = (bool) version_compare(
 			get_option( 'antispambee_db_version', '1.0' ),
 			self::get_plugin_version(),
 			'=='
 		);
+
+		return self::$db_version_is_current;
 	}
 }
