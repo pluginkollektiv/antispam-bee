@@ -50,6 +50,9 @@ class DeleteForReasons extends ControllableBase {
 			$checkbox_options = [];
 
 			foreach ( $filtered_rules as $rule ) {
+				if ( $rule::is_invisible() ) {
+					continue;
+				}
 				$checkbox_options[ $rule::get_slug() ] = $rule::get_name();
 			}
 

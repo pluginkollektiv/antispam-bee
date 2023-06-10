@@ -13,6 +13,7 @@ use AntispamBee\Interfaces\SpamReason;
 class LinkbackFromMyself extends Base implements SpamReason {
 	protected static $slug = 'asb-linkback-from-myself';
 	protected static $supported_types = [ ContentTypeHelper::LINKBACK_TYPE ];
+	protected static $is_invisible = true;
 
 	public static function verify( $item ) {
 		$url            = isset( $item['comment_author_url'] ) ? $item['comment_author_url'] : null;
@@ -44,7 +45,7 @@ class LinkbackFromMyself extends Base implements SpamReason {
 		}
 		foreach ( $urls as $url ) {
 			if ( strpos( $url, $url_to_find ) === 0 ) {
-				return -10;
+				return -100;
 			}
 		}
 

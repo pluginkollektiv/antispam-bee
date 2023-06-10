@@ -11,6 +11,10 @@ abstract class Base implements Verifiable {
 	protected static $is_final = false;
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE, ContentTypeHelper::LINKBACK_TYPE ];
 
+	// Set to `true`, if the rule should not be displayed anywhere,
+	// like in the reasons list for the DeleteForReasons rule.
+	protected static $is_invisible = false;
+
 	/**
 	 * Initialize the rule.
 	 *
@@ -60,5 +64,9 @@ abstract class Base implements Verifiable {
 
 	public static function is_final() {
 		return static::$is_final;
+	}
+
+	public static function is_invisible() {
+		return static::$is_invisible;
 	}
 }
