@@ -129,7 +129,7 @@ $new_spam_comment
 
 $author: {{comment_author}}
 $url: {{comment_author_url}}
-$type: {{content_type}}
+$type: {{reaction_type}}
 Whois: http://whois.arin.net/rest/ip/{{comment_author_IP}}
 $spam_reasons: {{spam_reasons}}
 
@@ -154,7 +154,7 @@ EOF;
 		$template_content = self::get_body_template();
 
 		$content      = self::get_content( $comment );
-		$content_type = ContentTypeHelper::get_type_name( $item['content_type'] );
+		$reaction_type = ContentTypeHelper::get_type_name( $item['reaction_type'] );
 
 		$spam_reasons = SpamReasonTextHelper::get_texts_by_slugs( $item['asb_reasons'] );
 
@@ -163,7 +163,7 @@ EOF;
 				'{{post_title}}',
 				'{{comment_author}}',
 				'{{comment_author_url}}',
-				'{{content_type}}',
+				'{{reaction_type}}',
 				'{{comment_author_IP}}',
 				'{{spam_reasons}}',
 				'{{content}}',
@@ -173,7 +173,7 @@ EOF;
 				strip_tags( $post->post_title ),
 				( empty( $comment['comment_author'] ) ? '' : strip_tags( $comment['comment_author'] ) ),
 				esc_url( $comment['comment_author_url'] ),
-				esc_html( $content_type ),
+				esc_html( $reaction_type ),
 				$comment['comment_author_IP'],
 				esc_html( implode( ', ', $spam_reasons ) ),
 				$content,

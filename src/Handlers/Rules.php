@@ -17,7 +17,7 @@ class Rules {
 	}
 
 	public function apply( $item ) {
-		$item['content_type'] = $this->type;
+		$item['reaction_type'] = $this->type;
 		$rules                = self::get( $this->type, true );
 
 		$score = 0.0;
@@ -50,9 +50,9 @@ class Rules {
 	public static function get( $type = null, $only_active = false ) {
 		return self::filter(
 			[
-				'content_type' => $type,
-				'only_active'  => $only_active,
-				'implements'   => Verifiable::class,
+				'reaction_type' => $type,
+				'only_active'   => $only_active,
+				'implements'    => Verifiable::class,
 			]
 		);
 	}
@@ -60,9 +60,9 @@ class Rules {
 	public static function get_controllables( $type = null, $only_active = false ) {
 		return self::filter(
 			[
-				'content_type' => $type,
-				'only_active'  => $only_active,
-				'implements'   => [ Verifiable::class, Controllable::class ],
+				'reaction_type' => $type,
+				'only_active'   => $only_active,
+				'implements'    => [ Verifiable::class, Controllable::class ],
 			]
 		);
 	}
@@ -71,9 +71,9 @@ class Rules {
 	public static function get_spam_rules( $type = null, $only_active = false ) {
 		return self::filter(
 			[
-				'content_type' => $type,
-				'only_active'  => $only_active,
-				'implements'   => [ Verifiable::class, SpamReason::class ],
+				'reaction_type' => $type,
+				'only_active'   => $only_active,
+				'implements'    => [ Verifiable::class, SpamReason::class ],
 			]
 		);
 	}

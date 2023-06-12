@@ -26,7 +26,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			'useragent',
 		];
 
-		if ( ContentTypeHelper::COMMENT_TYPE === $item['content_type'] ) {
+		if ( ContentTypeHelper::COMMENT_TYPE === $item['reaction_type'] ) {
 			$ip        = $item['comment_author_IP'];
 			$url       = $item['comment_author_url'];
 			$body      = $item['comment_content'];
@@ -44,7 +44,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			);
 		}
 
-		if ( ContentTypeHelper::LINKBACK_TYPE === $item['content_type'] ) {
+		if ( ContentTypeHelper::LINKBACK_TYPE === $item['reaction_type'] ) {
 			$ip      = $item['comment_author_IP'];
 			$url     = $item['comment_author_url'];
 			$body    = $item['comment_content'];

@@ -12,13 +12,13 @@ class ComponentsHelper {
 	 * @param $components Controllable[]
 	 * @param $options
 	 * $options = array(
-	 *   'content_type'    => 'comment',
+	 *   'reaction_type'   => 'comment',
 	 *   'only_active'     => true,
 	 *   'is_controllable' => false,
 	 * );
 	 */
 	public static function filter( $components, $options ) {
-		$content_type = isset( $options['content_type'] ) ? $options['content_type'] : null;
+		$reaction_type = isset( $options['reaction_type'] ) ? $options['reaction_type'] : null;
 		$only_active  = isset( $options['only_active'] ) ? $options['only_active'] : false;
 
 		$filtered_components = [];
@@ -41,7 +41,7 @@ class ComponentsHelper {
 
 			// Filter by supported types like Comment, Linkback
 			$supported_types = $component::get_supported_types();
-			if ( ! is_null( $content_type ) && ! in_array( $content_type, $supported_types ) ) {
+			if ( ! is_null( $reaction_type ) && ! in_array( $reaction_type, $supported_types ) ) {
 				continue;
 			}
 
@@ -50,7 +50,7 @@ class ComponentsHelper {
 
 			// Filters out components that are not active
 			if ( $only_active ) {
-				if ( $conforms_to_controllable && ! $component::is_active( $content_type ) ) {
+				if ( $conforms_to_controllable && ! $component::is_active( $reaction_type ) ) {
 					continue;
 				}
 			}

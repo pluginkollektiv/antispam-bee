@@ -8,17 +8,17 @@ use AntispamBee\Interfaces\PostProcessor;
 
 class PostProcessors {
 	/**
-	 * @param string $content_type one of the supported content types.
+	 * @param string $reaction_type one of the supported content types.
 	 * @param $item
 	 * @param $reasons
 	 *
 	 * @return mixed
 	 */
-	public static function apply( $content_type, $item, $reasons = [] ) {
-		$post_processors = self::get( $content_type, true );
+	public static function apply( $reaction_type, $item, $reasons = [] ) {
+		$post_processors = self::get( $reaction_type, true );
 
 		$item['asb_reasons']  = $reasons;
-		$item['content_type'] = $content_type;
+		$item['reaction_type'] = $reaction_type;
 
 		// Move the post processors that mark an item as to delete to front,
 		// so that following processors know if they handle an item that will be deleted.
@@ -37,22 +37,22 @@ class PostProcessors {
 		return $item;
 	}
 
-	public static function get( $content_type = null, $only_active = false ) {
+	public static function get( $reaction_type = null, $only_active = false ) {
 		return self::filter(
 			[
-				'content_type' => $content_type,
-				'only_active'  => $only_active,
-				'implements'   => PostProcessor::class,
+				'reaction_type' => $reaction_type,
+				'only_active'   => $only_active,
+				'implements'    => PostProcessor::class,
 			]
 		);
 	}
 
-	public static function get_controllables( $content_type = null, $only_active = false ) {
+	public static function get_controllables( $reaction_type = null, $only_active = false ) {
 		return self::filter(
 			[
-				'content_type' => $content_type,
-				'only_active'  => $only_active,
-				'implements'   => [ PostProcessor::class, Controllable::class ],
+				'reaction_type' => $reaction_type,
+				'only_active'   => $only_active,
+				'implements'    => [ PostProcessor::class, Controllable::class ],
 			]
 		);
 	}

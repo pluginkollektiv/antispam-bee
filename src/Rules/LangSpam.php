@@ -13,7 +13,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	protected static $slug = 'asb-lang-spam';
 
 	public static function verify( $item ) {
-		$allowed_languages = array_keys( (array) Settings::get_option( static::get_option_name( 'allowed' ), $item['content_type'] ) );
+		$allowed_languages = array_keys( (array) Settings::get_option( static::get_option_name( 'allowed' ), $item['reaction_type'] ) );
 
 		$comment_content = DataHelper::get_values_where_key_contains( [ 'content' ], $item );
 		if ( empty( $comment_content ) ) {

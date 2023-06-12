@@ -35,7 +35,7 @@
 		   ```
 		   The `apply` method of `\AntispamBee\Handlers\PostProcessors` returns the Item again with added data:
 			* In `$item['asb_reasons']` the reasons are stored that are provided as the third parameter to the `apply` method.
-			* `$item['content_type']` holds the content type that is passed as the first parameter to the `apply` method.
+			* `$item['reaction_type']` holds the content type that is passed as the first parameter to the `apply` method.
 			* If `$item['asb_marked_as_delete']` is set, one or more post processors were applied that indicate that the comment should not be stored.
 	2. **The user visiting the dashboard:**\
 	   The `\AntispamBee\Admin\DashboardWidgets` class handles displaying the spam counts in the dashboard widget, if it is enabled.

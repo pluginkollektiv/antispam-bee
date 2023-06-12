@@ -7,7 +7,7 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use WP_Comment;
 
 abstract class Reaction {
-	protected static $content_type = 'comment';
+	protected static $type = 'comment';
 	public static function init() {
 		add_filter(
 			'preprocess_comment',
@@ -29,7 +29,7 @@ abstract class Reaction {
 
 	public static function process( $reaction ) {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
-		$rules   = new Rules( static::$content_type );
+		$rules   = new Rules( static::$type );
 		$is_spam = $rules->apply( $reaction );
 
 		if ( $is_spam ) {
@@ -40,7 +40,7 @@ abstract class Reaction {
 	}
 
 	protected static function handle_spam( $reaction, $rules ) {
-		$item = PostProcessors::apply( static::$content_type, $reaction, $rules->get_spam_reasons() );
+		$item = PostProcessors::apply( static::$type, $reaction, $rules->get_spam_reasons() );
 		if ( ! isset( $item['asb_marked_as_delete'] ) ) {
 			add_filter(
 				'pre_comment_approved',

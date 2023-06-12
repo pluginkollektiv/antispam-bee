@@ -18,7 +18,7 @@ class DeleteForReasons extends ControllableBase {
 			return $item;
 		}
 
-		$reasons = (array) Settings::get_option( static::get_option_name( 'reasons' ), $item['content_type'] );
+		$reasons = (array) Settings::get_option( static::get_option_name( 'reasons' ), $item['reaction_type'] );
 		if ( ! $reasons ) {
 			return $item;
 		}

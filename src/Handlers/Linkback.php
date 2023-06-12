@@ -7,7 +7,7 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\IpHelper;
 
 class Linkback extends Reaction {
-	protected static $content_type = 'linkback';
+	protected static $type = 'linkback';
 
 	public static function process( $linkback ) {
 		if ( ! ContentTypeHelper::reaction_is_one_of( $linkback, [ 'pingback', 'trackback', 'pings' ], '' ) ) {
