@@ -50,6 +50,13 @@ class Honeypot extends ControllableBase implements SpamReason {
 			return;
 		}
 
+		/**
+		 * @todo errors from my error log (Flo).
+		 * [13-Jun-2023 11:36:50 UTC] PHP Warning:  Undefined array key "hidden_field" in /html/wp-content/plugins/antispam-bee/src/Rules/Honeypot.php on line 69
+		[13-Jun-2023 11:36:50 UTC] PHP Warning:  Undefined array key "hidden_field" in /html/wp-content/plugins/antispam-bee/src/Rules/Honeypot.php on line 73
+		[13-Jun-2023 11:36:50 UTC] PHP Warning:  Undefined array key "plugin_field" in /html/wp-content/plugins/antispam-bee/src/Rules/Honeypot.php on line 73
+		[13-Jun-2023 11:36:50 UTC] PHP Warning:  Undefined array key "" in /html/wp-content/plugins/antispam-bee/src/Rules/Honeypot.php on line 73
+		 */
 		$request_uri  = Settings::get_key( $_SERVER, 'REQUEST_URI' );
 		$request_path = DataHelper::parse_url( $request_uri, 'path' );
 
