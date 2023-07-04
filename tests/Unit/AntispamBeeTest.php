@@ -64,12 +64,11 @@ class FactoryTest extends TestCase {
 	public function test_gets_ip_address() {
 		$comment = $this->get_base_comment();
 
-		$_SERVER['HTTP_CLIENT_IP'] = '12.23.34.45';
 		$_SERVER['REQUEST_URI']    = 'https://domain.com/wp-comments-post.php';
 		$_POST['comment']          = $comment;
 
 		$result = Testee::handle_incoming_request( $comment );
-		$this->assertSame( '12.23.34.45', $result['comment_author_IP'] );
+		$this->assertSame( $_SERVER['REMOTE_ADDR'], $result['comment_author_IP'] );
 	}
 
 	/**
