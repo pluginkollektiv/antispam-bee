@@ -55,7 +55,7 @@ class DashboardWidgets {
 				sprintf(
 				// translators: The number of spam comments in the local spam database.
 					__( '%s comments in local spam db', 'antispam-bee' ),
-					$comments_number->spam
+					self::format_number( $comments_number->spam )
 				)
 			) . '</a>';
 
@@ -71,7 +71,11 @@ class DashboardWidgets {
 	private static function get_spam_count() {
 		$count = intval( Settings::get_option( 'spam_count', '' ) );
 
-		return ( get_locale() === 'de_DE' ? number_format( $count, 0, '', '.' ) : number_format_i18n( $count ) );
+		return self::format_number( $count );
+	}
+
+	private static function format_number( $number ) {
+		return ( get_locale() === 'de_DE' ? number_format( $number, 0, '', '.' ) : number_format_i18n( $number ) );
 	}
 
 	/**

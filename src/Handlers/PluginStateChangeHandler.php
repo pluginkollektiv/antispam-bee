@@ -1,6 +1,6 @@
 <?php
 /**
- * Install the plugin.
+ * Handle plugin state changes.
  *
  * @package AntispamBee\Helpers
  */
@@ -8,6 +8,7 @@
 namespace AntispamBee\Handlers;
 
 use AntispamBee\Crons\DeleteSpamCron;
+use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Helpers\Settings;
 
 /**
@@ -39,12 +40,9 @@ class PluginStateChangeHandler {
 	 * Uninstall callback.
 	 */
 	public static function uninstall() {
-		if ( ! self::get_option( 'delete_data_on_uninstall' ) ) {
-			return;
-		}
-
 		if ( ! is_multisite() ) {
-			self::remove_antispam_bee_data();
+			self::maybe_remove_antispam_bee_data();
+			return;
 		}
 
 		$site_ids = get_sites(
@@ -58,20 +56,25 @@ class PluginStateChangeHandler {
 
 		foreach ( $site_ids as $site_id ) {
 			switch_to_blog( $site_id );
-			self::remove_antispam_bee_data();
+			self::maybe_remove_antispam_bee_data();
 			restore_current_blog();
 		}
 
 	}
 
-	private static function remove_antispam_bee_data() {
+	private static function maybe_remove_antispam_bee_data() {
+		if ( ! Uninstall::is_active() ) {
+			return;
+		}
+
 		delete_option( Settings::OPTION_NAME );
 		// @todo: do that when out of beta.
 		// delete_option( 'antispam_bee' );
 
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
-		$wpdb->query( 'DELETE FROM `' . $wpdb->commentmeta . '`WHERE `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")' );
+		// @todo: do that when out of beta.
+		// $wpdb->query( 'DELETE FROM `' . $wpdb->commentmeta . '`WHERE `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")' );
 	}
 
 	/**
