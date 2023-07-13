@@ -11,6 +11,25 @@ class IpHelper {
 	public static function get_client_ip() {
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		// Sanitization of $ip takes place further down.
+		$ip = '';
+
+		if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+			$ip = wp_unslash( $_SERVER['HTTP_CLIENT_IP'] );
+		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+			$ip = wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] );
+		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
+			$ip = wp_unslash( $_SERVER['HTTP_X_FORWARDED'] );
+		} elseif ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
+			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] );
+		} elseif ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
+			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED'] );
+		}
+
+		$ip = self::sanitize_ip( $ip );
+		if ( $ip ) {
+			return $ip;
+		}
+
 		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
 			return self::sanitize_ip( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
 		}
