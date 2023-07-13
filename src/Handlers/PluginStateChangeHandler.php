@@ -45,7 +45,8 @@ class PluginStateChangeHandler {
 		global $wpdb;
 
 		delete_option( Settings::OPTION_NAME );
-		delete_option( 'antispam_bee' );
+		// @todo: do that when out of beta.
+		// delete_option( 'antispam_bee' );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$wpdb->query( 'DELETE FROM `' . $wpdb->commentmeta . '`WHERE `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")' );
