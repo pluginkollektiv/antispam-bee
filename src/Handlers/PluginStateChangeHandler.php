@@ -42,12 +42,34 @@ class PluginStateChangeHandler {
 		if ( ! self::get_option( 'delete_data_on_uninstall' ) ) {
 			return;
 		}
-		global $wpdb;
 
+		if ( ! is_multisite() ) {
+			self::remove_antispam_bee_data();
+		}
+
+		$site_ids = get_sites(
+			array(
+				'fields'                 => 'ids',
+				'number'                 => 100,
+				'update_site_cache'      => false,
+				'update_site_meta_cache' => false,
+			)
+		);
+
+		foreach ( $site_ids as $site_id ) {
+			switch_to_blog( $site_id );
+			self::remove_antispam_bee_data();
+			restore_current_blog();
+		}
+
+	}
+
+	private static function remove_antispam_bee_data() {
 		delete_option( Settings::OPTION_NAME );
 		// @todo: do that when out of beta.
 		// delete_option( 'antispam_bee' );
 
+		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$wpdb->query( 'DELETE FROM `' . $wpdb->commentmeta . '`WHERE `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")' );
 	}
