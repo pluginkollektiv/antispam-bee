@@ -54,7 +54,7 @@ class DashboardWidgets {
 		$items[] = '<a href="' . $link . '" class="ab-current-spam">' . esc_html(
 				sprintf(
 				// translators: The number of spam comments in the local spam database.
-					__( '%s comments in your local spam db', 'antispam-bee' ),
+					__( '%s comments in local spam db', 'antispam-bee' ),
 					$comments_number->spam
 				)
 			) . '</a>';
