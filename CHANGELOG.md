@@ -1,5 +1,55 @@
 ## Changelog ##
 
+### 3.0.0 – WIP ###
+* **English**
+	* Complete code rewrite and backend UI overhaul
+    * Allows to extend Antispam Bee with own rules
+    * Allows to use Antispam Bee rules for other reactions than comments, for example, forms
+
+* **Deutsch**
+	* Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
+    * Möglichkeit der Erweiterung von Antispam Bee um eigene Spam-Regeln
+    * Erlaubt die Nutzung von Antispam Bee für andere Reaktionen als Kommentare, beispielsweise Formulare
+
+### 2.11.3 ###
+* **English**
+	* Fix: Multiselect for "Delete comments by spam reasons" was not saving values
+	* Fix: Fix broken link for ISO country codes
+	* Maintenance: Added test for PHP 8.2
+	* Maintenance: Tested up to WordPress 6.2
+
+* **Deutsch**
+	* Behoben: Multiselect für "Kommentare aus Spamgründen löschen" speicherte keine Werte
+	* Fix: Fehlerhafter Link für ISO-Ländercodes behoben
+	* Wartung: Test für PHP 8.2 hinzugefügt
+	* Wartung: Getestet mit WordPress 6.2
+
+### 2.11.2 ###
+* **English**
+	* Tweak: remove superfluous translations
+	* Tweak: make FAQ link an anchor link
+	* Fix: spam counter no longer raises a warning with PHP 8.1 if no spam is present yet
+	* Fix: spam reasons are now localized correctly
+	* Fix: Translations were loaded twice on some admin pages
+	* Maintenance: Tested up to WordPress 6.1
+
+* **Deutsch**
+	* Tweak: Überflüssige Übersetzungen entfernt
+	* Tweak: Link zu den FAQ ist jetzt ein Anker-Link
+	* Fix: Der Spam-Zähler erzeugt mit PHP 8.1 keine Warnung mehr, wenn noch kein Spam vorhanden ist
+	* Fix: Spam-Gründe werden nun korrekt übersetzt
+	* Fix: Übersetzungen wurden auf einzelnen Adminseiten doppelt geladen
+	* Wartung: Getestet mit WordPress 6.1
+
+### 2.11.1 ###
+* **English**
+	* Tweak: remove superfluous type attribute from inline script tag
+	* Maintenance: Tested up to WordPress 6.0
+
+* **Deutsch**
+	* Tweak: Überflüssiges type-Attribut von script-Tag entfernt
+	* Wartung: Getestet mit WordPress 6.0
+
 ### 2.11.0 ###
 * **English**
   * Fix: Allow empty comments if `allow_empty_comment` is set to true

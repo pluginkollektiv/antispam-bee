@@ -3,16 +3,16 @@
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
-* Tested up to:      5.9
+* Tested up to:      6.2
 * Requires PHP:      7.0
 * Stable tag:        2.11.0
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Antispam plugin with a sophisticated tool set for effective day to day comment and trackback spam-fighting. Build with data protection and privacy in mind.
+Antispam plugin with a sophisticated tool set for effective day to day comment and linkback spam-fighting. Build with data protection and privacy in mind.
 
 ## Description ##
-Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively, without captchas and without sending personal information to third party services. It is free of charge, ad-free and 100% GDPR compliant.
+Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and linkbacks effectively, without captchas and without sending personal information to third party services. It is free of charge, ad-free and 100% GDPR compliant.
 
 ### Feature/Settings Overview ###
 * Trust approved commenters.
@@ -51,7 +51,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * If you don’t know how to install a plugin for WordPress, [here’s how](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
 
 ### Requirements ###
-* PHP 5.2.4 or greater
+* PHP 7.0 or greater
 * WordPress 4.5 or greater
 
 ### Settings ###
@@ -95,6 +95,29 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 A complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ## Changelog ##
+
+### 3.0.0 – WIP ###
+	* Complete code rewrite and backend UI overhaul
+    * Allows to extend Antispam Bee with own rules
+    * Allows to use Antispam Bee rules for other reactions than comments, for example, forms
+
+### 2.11.3 ###
+	* Fix: Multiselect for "Delete comments by spam reasons" was not saving values
+	* Fix: Fix broken link for ISO country codes
+	* Maintenance: Added test for PHP 8.2
+	* Maintenance: Tested up to WordPress 6.2
+
+### 2.11.2 ###
+	* Tweak: remove superfluous translations
+	* Tweak: make FAQ link an anchor link
+	* Fix: spam counter no longer raises a warning with PHP 8.1 if no spam is present yet
+	* Fix: spam reasons are now localized correctly
+	* Fix: Translations were loaded twice on some admin pages
+	* Maintenance: Tested up to WordPress 6.1
+
+### 2.11.1 ###
+	* Tweak: remove superfluous type attribute from inline script tag
+	* Maintenance: Tested up to WordPress 6.0
 
 ### 2.11.0 ###
   * Fix: Allow empty comments if `allow_empty_comment` is set to true

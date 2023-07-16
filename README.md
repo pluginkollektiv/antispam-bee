@@ -2,10 +2,10 @@
 
 [![Build status](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/tests.yml/badge.svg)](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/tests.yml) [![Current Antispam Bee version](https://img.shields.io/wordpress/plugin/v/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/) [![Number of downloads](https://img.shields.io/wordpress/plugin/dt/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/advanced/) [![Number of active installs](https://img.shields.io/wordpress/plugin/installs/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/advanced/) [![WordPress plugin rating](https://img.shields.io/wordpress/plugin/r/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/#reviews) [![Donate with PayPal](https://img.shields.io/badge/PayPal-Donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW)
 
-Antispam plugin with a sophisticated toolset for effective day to day comment and trackback spam-fighting. Built with data protection and privacy in mind.
+Antispam plugin with a sophisticated toolset for effective day to day comment and linkback spam-fighting. Built with data protection and privacy in mind, and extendable with own anti-spam rules and possibility to use Antispam Bee rules for other reactions than comments and linkbacks.
 
 ## Description ##
-Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively and without captchas. It is free of charge, ad-free and compliant with European data privacy standards.
+Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and linkbacks effectively and without captchas. It is free of charge, ad-free and compliant with European data privacy standards.
 
 ### Feature/Settings Overview ###
 * Trust approved commenters.
@@ -45,7 +45,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * If you don’t know how to install a plugin for WordPress, [here’s how](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
 
 ### Requirements ###
-* PHP 5.2.4 or greater
+* PHP 7.0 or greater
 * WordPress 4.5 or greater
 
 ### Settings ###
@@ -63,20 +63,3 @@ A complete documentation is available in the [GitHub repository Wiki](https://gi
 ## Changelog ##
 
 [Changelog](https://github.com/pluginkollektiv/antispam-bee/blob/master/CHANGELOG.md).
-
-## Filters
-
-### `antispam_bee_rule_supported_types`
-
-Filter that allows to modify the reaction types a rule supports. For example, if you only want the BB Code rule to be present for trackbacks, you can use the following code snippet:
-
-```php
-add_filter( 'antispam_bee_rule_supported_types', function( $supported_types, $slug ) {
-	if ( $slug !== 'asb-bbcode' ) {
-		return $supported_types;
-	}
-
-	$supported_types = [ 'trackback' ];
-	return $supported_types;
-}, 10, 2 );
-```
