@@ -5,6 +5,7 @@ namespace AntispamBee\Tests\Unit\Core;
 use Antispam_Bee as Testee;
 use AntispamBee\Tests\TestCase;
 use Brain\Monkey\Functions;
+use Brain\Monkey\WP\Filters;
 
 /**
  * Test case for the factory class.
@@ -64,12 +65,22 @@ class FactoryTest extends TestCase {
 	public function test_gets_ip_address() {
 		$comment = $this->get_base_comment();
 
-		$_SERVER['HTTP_CLIENT_IP'] = '12.23.34.45';
-		$_SERVER['REQUEST_URI']    = 'https://domain.com/wp-comments-post.php';
-		$_POST['comment']          = $comment;
+		$_SERVER['REMOTE_ADDR']          = '192.0.2.1';
+		$_SERVER['HTTP_X_FORWARDED_FOR'] = '192.0.2.2, 10.0.0.10';
+		$_SERVER['HTTP_X_REAL_IP']       = 'bogus';
+		$_SERVER['REQUEST_URI']          = 'https://domain.com/wp-comments-post.php';
+		$_POST['comment']                = $comment;
 
 		$result = Testee::handle_incoming_request( $comment );
-		$this->assertSame( '12.23.34.45', $result['comment_author_IP'] );
+		$this->assertSame( '192.0.2.1', $result['comment_author_IP'], 'Unexpected IP with default detection' );
+
+		Filters::expectApplied( 'antispam_bee_trusted_ip_headers' )
+				->once()
+				->with( array( 'REMOTE_ADDR' ) )
+				->andReturn( array( 'HTTP_X_REAL_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR' ) );
+
+        $result = Testee::handle_incoming_request( $comment );
+        $this->assertSame( '192.0.2.2', $result['comment_author_IP'], 'Unexpected IP with custom hook' );
 	}
 
 	/**
@@ -87,9 +98,9 @@ class FactoryTest extends TestCase {
 	public function test_spam_reasons( $comment, $reason ) {
 		$comment = array_merge( $this->get_base_comment(), $comment );
 
-		$_SERVER['HTTP_CLIENT_IP'] = '12.23.34.45';
-		$_SERVER['REQUEST_URI']    = 'https://domain.com/wp-comments-post.php';
-		$_POST['comment']          = $comment;
+		$_SERVER['REMOTE_ADDR'] = '12.23.34.45';
+		$_SERVER['REQUEST_URI'] = 'https://domain.com/wp-comments-post.php';
+		$_POST['comment']       = $comment;
 
 		// This is where we check for the spam reason that was detected.
 		Functions::expect( 'add_comment_meta' )->once()

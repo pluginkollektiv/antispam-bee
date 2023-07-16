@@ -2423,37 +2423,26 @@ class Antispam_Bee {
 	 *
 	 * @since   2.6.1
 	 *
-	 * @return  mixed  $ip  Client IP
+	 * @hook    array  antispam_bee_trusted_ip_headers  List of trusted headers for client IP detection
+	 *
+	 * @return  string  $ip  Client IP
 	 */
 	public static function get_client_ip() {
-		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		// Sanitization of $ip takes place further down.
-		$ip = '';
+		// Determine trusted headers for the client IP.
+		$trusted_headers = apply_filters( 'antispam_bee_trusted_ip_headers', array( 'REMOTE_ADDR' ) );
 
-		if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-			$ip = wp_unslash( $_SERVER['HTTP_CLIENT_IP'] );
-		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-			$ip = wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] );
-		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
-			$ip = wp_unslash( $_SERVER['HTTP_X_FORWARDED'] );
-		} elseif ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
-			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] );
-		} elseif ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
-			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED'] );
-		}
-
-		$ip = self::_sanitize_ip( $ip );
-		if ( $ip ) {
-			return $ip;
-		}
-
-		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
-			$ip = wp_unslash( $_SERVER['REMOTE_ADDR'] );
-			return self::_sanitize_ip( $ip );
+		// Loop through headers and try to determine a valid IP address.
+		foreach ( $trusted_headers as $header ) {
+			if ( is_string( $header ) && isset( $_SERVER[ $header ] ) ) {
+                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$ip = self::_sanitize_ip( wp_unslash( $_SERVER[ $header ] ) );
+				if ( ! empty( $ip ) ) {
+					return $ip;
+				}
+			}
 		}
 
 		return '';
-        // phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
 	/**
