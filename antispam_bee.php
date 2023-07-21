@@ -1086,10 +1086,10 @@ class Antispam_Bee {
 	 *
 	 * @since  2.12.0
 	 *
-	 * @param array  $plugin_data An array of plugin metadata. See get_plugin_data()
-	 *                            and the {@see 'plugin_row_meta'} filter for the list
-	 *                            of possible values.
-	 * @param object $response    An object of metadata about the available plugin update.
+	 * @param array  $data     An array of plugin metadata. See get_plugin_data()
+	 *                         and the {@see 'plugin_row_meta'} filter for the list
+	 *                         of possible values.
+	 * @param object $response An object of metadata about the available plugin update.
 	 *
 	 * @return void
 	 */
@@ -1097,7 +1097,7 @@ class Antispam_Bee {
 		if ( isset( $data['upgrade_notice'] ) ) {
 			printf(
 				'<div class="update-message">%s</div>',
-				wpautop( $data['upgrade_notice'] )
+				wpautop( esc_html( $data['upgrade_notice '] ) )
 			);
 		}
 	}
