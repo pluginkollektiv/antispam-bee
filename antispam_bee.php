@@ -1081,6 +1081,26 @@ class Antispam_Bee {
 		}
 	}
 
+	/**
+	 * Shows plugin update no
+	 *
+	 * @since  2.12.0
+	 *
+	 * @param array  $plugin_data An array of plugin metadata. See get_plugin_data()
+	 *                            and the {@see 'plugin_row_meta'} filter for the list
+	 *                            of possible values.
+	 * @param object $response    An object of metadata about the available plugin update.
+	 *
+	 * @return void
+	 */
+	public static function upgrade_notice( $data, $response ) {
+		if ( isset( $data['upgrade_notice'] ) ) {
+			printf(
+				'<div class="update-message">%s</div>',
+				wpautop( $data['upgrade_notice'] )
+			);
+		}
+	}
 
 
 	/*
@@ -3034,4 +3054,15 @@ register_uninstall_hook(
 		'Antispam_Bee',
 		'uninstall',
 	)
+);
+
+// Upgrade notice.
+add_action(
+	'in_plugin_update_message-' . __FILE__,
+	array(
+		'Antispam_Bee',
+		'upgrade_notice',
+	),
+	10,
+	2
 );
