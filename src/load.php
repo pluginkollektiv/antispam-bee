@@ -17,7 +17,6 @@ use AntispamBee\GeneralOptions\Statistics;
 use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Handlers\Comment;
 use AntispamBee\Handlers\PluginStateChangeHandler;
-use AntispamBee\Handlers\PluginUpdate;
 use AntispamBee\Handlers\Linkback;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Helpers\SpamReasonTextHelper;
@@ -43,18 +42,8 @@ use AntispamBee\Rules\ValidGravatar;
  * Init function of the plugin
  */
 function init() {
-	$disallow_ajax = apply_filters( 'antispam_bee_disallow_ajax_calls', true );
-
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX && $disallow_ajax ) {
-		return;
-	}
-
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-		return;
-	}
-
 	// Construct all modules to initialize.
-	$modules = array(
+	$modules = [
 		DashboardWidgets::class,
 		new SettingsPage(),
 		CommentsColumns::class,
@@ -88,10 +77,26 @@ function init() {
 		LinkbackFromMyself::class,
 		LinkbackPostTitleIsBlogName::class,
 		ValidGravatar::class,
-	);
+	];
+
+	$disallow_ajax = apply_filters( 'antispam_bee_disallow_ajax_calls', true );
+
+	$is_ajax_call = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
 	// Initialize all modules.
 	foreach ( $modules as $module ) {
+		if ( is_callable( [ $module, 'always_init' ] ) ) {
+			call_user_func( [ $module, 'always_init' ] );
+		}
+
+		if ( $is_ajax_call && $disallow_ajax ) {
+			continue;
+		}
+
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			continue;
+		}
+
 		if ( is_callable( [ $module, 'init' ] ) ) {
 			call_user_func( [ $module, 'init' ] );
 		}

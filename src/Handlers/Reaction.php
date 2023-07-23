@@ -18,13 +18,15 @@ abstract class Reaction {
 			1
 		);
 
-		add_action( 'transition_comment_status', [ __CLASS__, 'handle_comment_status_changes' ], 10, 3 );
-
 		// Add our manual spam reason to the list of reasons.
 		add_filter( 'antispam_bee_additional_spam_reasons', function ( $reasons ) {
 			$reasons['asb-marked-manually'] = __( 'Manually', 'antispam-bee' );
 			return $reasons;
 		} );
+	}
+
+	public static function always_init() {
+		add_action( 'transition_comment_status', [ __CLASS__, 'handle_comment_status_changes' ], 10, 3 );
 	}
 
 	public static function process( $reaction ) {

@@ -97,7 +97,7 @@ class PluginUpdate {
 			'<'
 		) ) {
 			// Update options (we migrate to a new option name `antispam_bee_options` in this release).
-			$options = get_option( 'antispam_bee' );
+			$options = get_option( 'antispam_bee', [] );
 
 			$allowed_languages = self::convert_multiselect_values( $options['translate_lang'] ?? [] );
 
