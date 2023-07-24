@@ -1093,11 +1093,19 @@ class Antispam_Bee {
 	 *
 	 * @return void
 	 */
-	public static function upgrade_notice( $data, $response ) {
+	public static function upgrade_notice( $data ) {
 		if ( isset( $data['upgrade_notice'] ) ) {
 			printf(
 				'<div class="update-message">%s</div>',
-				wpautop( esc_html( $data['upgrade_notice '] ) )
+				wp_kses(
+					wpautop( $data['upgrade_notice '] ),
+					array(
+						'p'     => array(),
+						'a'     => array( 'href', 'title' ),
+						'strong' => array(),
+						'em' => array(),
+					)
+				)
 			);
 		}
 	}
@@ -3062,7 +3070,5 @@ add_action(
 	array(
 		'Antispam_Bee',
 		'upgrade_notice',
-	),
-	10,
-	2
+	)
 );
