@@ -1086,9 +1086,9 @@ class Antispam_Bee {
 	 *
 	 * @since  2.12.0
 	 *
-	 * @param array  $data     An array of plugin metadata. See get_plugin_data()
-	 *                         and the {@see 'plugin_row_meta'} filter for the list
-	 *                         of possible values.
+	 * @param array $data An array of plugin metadata. See get_plugin_data()
+	 *                    and the {@see 'plugin_row_meta'} filter for the list
+	 *                    of possible values.
 	 *
 	 * @return void
 	 */
