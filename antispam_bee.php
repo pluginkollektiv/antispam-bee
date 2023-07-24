@@ -1082,7 +1082,7 @@ class Antispam_Bee {
 	}
 
 	/**
-	 * Shows plugin update no
+	 * Shows plugin update notice
 	 *
 	 * @since  2.12.0
 	 *
