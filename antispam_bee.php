@@ -1089,7 +1089,6 @@ class Antispam_Bee {
 	 * @param array  $data     An array of plugin metadata. See get_plugin_data()
 	 *                         and the {@see 'plugin_row_meta'} filter for the list
 	 *                         of possible values.
-	 * @param object $response An object of metadata about the available plugin update.
 	 *
 	 * @return void
 	 */
