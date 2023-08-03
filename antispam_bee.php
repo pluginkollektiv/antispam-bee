@@ -2423,26 +2423,17 @@ class Antispam_Bee {
 	 *
 	 * @since   2.6.1
 	 *
-	 * @hook    array  antispam_bee_trusted_ip_headers  List of trusted headers for client IP detection
+	 * @hook    string  antispam_bee_trusted_ip  The Client IP
 	 *
 	 * @return  string  $ip  Client IP
 	 */
 	public static function get_client_ip() {
-		// Determine trusted headers for the client IP.
-		$trusted_headers = apply_filters( 'antispam_bee_trusted_ip_headers', array( 'REMOTE_ADDR' ) );
-
-		// Loop through headers and try to determine a valid IP address.
-		foreach ( $trusted_headers as $header ) {
-			if ( is_string( $header ) && isset( $_SERVER[ $header ] ) ) {
-                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				$ip = self::_sanitize_ip( wp_unslash( $_SERVER[ $header ] ) );
-				if ( ! empty( $ip ) ) {
-					return $ip;
-				}
-			}
-		}
-
-		return '';
+		/**
+		 * Hook for allowing to modify the client IP used by Antispam Bee. Default value is the `REMOTE_ADDR`.
+		 *
+		 * @return string
+		 */
+		return self::_sanitize_ip( (string) apply_filters( 'antispam_bee_trusted_ip', $_SERVER[ 'REMOTE_ADDR' ] ) );
 	}
 
 	/**

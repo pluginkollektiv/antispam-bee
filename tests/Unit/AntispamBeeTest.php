@@ -74,10 +74,10 @@ class FactoryTest extends TestCase {
 		$result = Testee::handle_incoming_request( $comment );
 		$this->assertSame( '192.0.2.1', $result['comment_author_IP'], 'Unexpected IP with default detection' );
 
-		Filters::expectApplied( 'antispam_bee_trusted_ip_headers' )
+		Filters::expectApplied( 'antispam_bee_trusted_ip' )
 				->once()
-				->with( array( 'REMOTE_ADDR' ) )
-				->andReturn( array( 'HTTP_X_REAL_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR' ) );
+				->with( '192.0.2.1' )
+				->andReturn( '192.0.2.2' );
 
         $result = Testee::handle_incoming_request( $comment );
         $this->assertSame( '192.0.2.2', $result['comment_author_IP'], 'Unexpected IP with custom hook' );
