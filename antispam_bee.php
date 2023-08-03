@@ -2433,7 +2433,7 @@ class Antispam_Bee {
 		 *
 		 * @return string
 		 */
-		return self::_sanitize_ip( (string) apply_filters( 'antispam_bee_trusted_ip', wp_unslash( $_SERVER[ 'REMOTE_ADDR' ] ) ) );
+		return self::_sanitize_ip( (string) apply_filters( 'antispam_bee_trusted_ip', wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) );
 	}
 
 	/**
