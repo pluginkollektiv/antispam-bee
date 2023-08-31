@@ -2429,8 +2429,10 @@ class Antispam_Bee {
 	 */
 	public static function get_client_ip() {
 		/**
-		 * Hook for allowing to modify the client IP used by Antispam Bee. Default value is the `REMOTE_ADDR`.
+		 * WordPress hook for allowing to modify the client IP used by Antispam Bee. Default value is the `REMOTE_ADDR`.
 		 *
+   		 * @link https://developer.wordpress.org/reference/hooks/pre_comment_user_ip/
+      		 *
 		 * @return string
 		 */
 		return self::_sanitize_ip( (string) apply_filters( 'pre_comment_user_ip', wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) );
