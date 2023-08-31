@@ -2435,10 +2435,13 @@ class Antispam_Bee {
 		 *
 		 * @return string
 		 */
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		return self::_sanitize_ip( (string) apply_filters( 'pre_comment_user_ip', wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) );
+		// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
 	/**
