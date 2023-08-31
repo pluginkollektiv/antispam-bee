@@ -2596,6 +2596,7 @@ class Antispam_Bee {
 		}
 
 		self::load_plugin_lang();
+		self::add_reasons_to_defaults();
 
 		$subject = sprintf(
 			'[%s] %s',
