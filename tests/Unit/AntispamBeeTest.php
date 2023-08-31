@@ -74,7 +74,7 @@ class FactoryTest extends TestCase {
 		$result = Testee::handle_incoming_request( $comment );
 		$this->assertSame( '192.0.2.1', $result['comment_author_IP'], 'Unexpected IP with default detection' );
 
-		Filters::expectApplied( 'antispam_bee_trusted_ip' )
+		Filters::expectApplied( 'pre_comment_user_ip' )
 				->once()
 				->with( '192.0.2.1' )
 				->andReturn( '192.0.2.2' );
