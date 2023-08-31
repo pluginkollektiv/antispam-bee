@@ -2423,7 +2423,7 @@ class Antispam_Bee {
 	 *
 	 * @since   2.6.1
 	 *
-	 * @hook    string  antispam_bee_trusted_ip  The Client IP
+	 * @hook    string  pre_comment_user_ip  The Client IP
 	 *
 	 * @return  string  $ip  Client IP
 	 */
@@ -2433,7 +2433,7 @@ class Antispam_Bee {
 		 *
 		 * @return string
 		 */
-		return self::_sanitize_ip( (string) apply_filters( 'antispam_bee_trusted_ip', wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) );
+		return self::_sanitize_ip( (string) apply_filters( 'pre_comment_user_ip', wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) );
 	}
 
 	/**
