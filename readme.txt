@@ -98,9 +98,9 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 ### 2.11.4 ###
 IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `pre_comment_user_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.
   * Fix: Read client IP for country check from `REMOTE_ADDR` only (filterable via `pre_comment_user_ip`)
-  * Fix: Show upgrade notice on plugin overview page
   * Fix: No spam reason in spam notification email, and related PHP warning
   * Fix: Remove outdated info from readme
+  * Enhancement: Show upgrade notice on plugin overview page
   * Maintenance: Tested up to WordPress 6.3
 
 ### 2.11.3 ###
