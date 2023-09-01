@@ -1,5 +1,22 @@
 ## Changelog ##
 
+### 2.11.4 ###
+IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `pre_comment_user_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.  
+WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter einem Proxy oder ähnlich bist, musst du den `pre_comment_user_ip`-Filter verwenden, um die richtige Adresse des Users von einem Header wie `HTTP_X_FORWARDED` zu bekommen.
+* **English**
+  * Fix: Read client IP for country check from `REMOTE_ADDR` only (filterable via `pre_comment_user_ip`)
+  * Fix: Show upgrade notice on plugin overview page
+  * Fix: No spam reason in spam notification email, and related PHP warning
+  * Fix: Remove outdated info from readme
+  * Maintenance: Tested up to WordPress 6.3
+
+* **Deutsch**
+  * Fix: Client-IP wird nur noch aus `REMOTE_ADDR` ermittelt (filterbar über `pre_comment_user_ip`)
+  * Fix: Upgrade-Hinweis wird auch in der Plugin-Übersicht angezeigt
+  * Fix: Der Spam-Grund wird wieder korrekt in der Benachrichtigungs-E-Mail zu Spam angezeigt und die damit zusammenhängende PHP-Warning behoben
+  * Fix: Veraltete Infos aus der Readme wurden entfernt
+  * Wartung: Getestet mit WordPress 6.3
+
 ### 2.11.3 ###
 * **English**
   * Fix: Multiselect for "Delete comments by spam reasons" was not saving values
