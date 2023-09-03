@@ -9,7 +9,7 @@
  * Domain Path: /lang
  * License:     GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
- * Version:     2.11.3
+ * Version:     2.11.4
  *
  * @package Antispam Bee
  **/
@@ -1084,7 +1084,7 @@ class Antispam_Bee {
 	/**
 	 * Shows plugin update notice
 	 *
-	 * @since  2.12.0
+	 * @since  2.11.4
 	 *
 	 * @param array $data An array of plugin metadata. See get_plugin_data()
 	 *                    and the {@see 'plugin_row_meta'} filter for the list
@@ -2449,6 +2449,7 @@ class Antispam_Bee {
 	 * Return real client IP
 	 *
 	 * @since   2.6.1
+	 * @since   2.11.4 Only use `REMOTE_ADDR` to get the IP, make it filterable with `pre_comment_user_ip`
 	 *
 	 * @hook    string  pre_comment_user_ip  The Client IP
 	 *

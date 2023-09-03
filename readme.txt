@@ -3,9 +3,9 @@
 * Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.5
-* Tested up to:      6.2
+* Tested up to:      6.3
 * Requires PHP:      5.2
-* Stable tag:        2.11.3
+* Stable tag:        2.11.4
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,14 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 A complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ## Changelog ##
+
+### 2.11.4 ###
+IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `pre_comment_user_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.
+  * Fix: Read client IP for country check from `REMOTE_ADDR` only (filterable via `pre_comment_user_ip`)
+  * Fix: No spam reason in spam notification email, and related PHP warning
+  * Fix: Remove outdated info from readme
+  * Enhancement: Show upgrade notice on plugin overview page
+  * Maintenance: Tested up to WordPress 6.3
 
 ### 2.11.3 ###
   * Fix: Multiselect for "Delete comments by spam reasons" was not saving values
