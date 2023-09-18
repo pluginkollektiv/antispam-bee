@@ -41,7 +41,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Maintainers: [pluginkollektiv](https://pluginkollektiv.org)
 
 ## Installation ##
-* If you don’t know how to install a plugin for WordPress, [here’s how](https://wordpress.org/documentation/article/manage-plugins/).
+* If you don’t know how to install a plugin for WordPress, [here’s how](https://wordpress.org/documentation/article/manage-plugins/#automatic-plugin-installation-1).
 
 ### Requirements ###
 * PHP 5.2.4 or greater
