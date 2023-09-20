@@ -1,5 +1,14 @@
 ## Changelog ##
 
+### 2.11.5 ###
+IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `antispam_bee_trusted_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.
+WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter einem Proxy oder ähnlich bist, musst du den `antispam_bee_trusted_ip`-Filter verwenden, um die richtige Adresse des Users von einem Header wie `HTTP_X_FORWARDED` zu bekommen.
+* **English**
+  * Fix: Usage of core filter `pre_comment_user_ip` breaks ASB if the IP address is removed for GDPR compliance
+
+* **Deutsch**
+  * Fix: Die Verwendung des Core-Filters `pre_comment_user_ip` sorgt für Fehler, wenn die IP-Adresse für die Einhaltung der DSGVO entfernt wird
+
 ### 2.11.4 ###
 IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `pre_comment_user_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.  
 WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter einem Proxy oder ähnlich bist, musst du den `pre_comment_user_ip`-Filter verwenden, um die richtige Adresse des Users von einem Header wie `HTTP_X_FORWARDED` zu bekommen.

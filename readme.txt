@@ -5,7 +5,7 @@
 * Requires at least: 4.5
 * Tested up to:      6.3
 * Requires PHP:      5.2
-* Stable tag:        2.11.4
+* Stable tag:        2.11.5
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,10 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 A complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ## Changelog ##
+
+### 2.11.5 ###
+IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `antispam_bee_trusted_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.
+  * Fix: Usage of core filter `pre_comment_user_ip` breaks ASB if the IP address is removed for GDPR compliance
 
 ### 2.11.4 ###
 IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `pre_comment_user_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.
@@ -279,6 +283,9 @@ IMPORTANT: If you use the country check and are behind a proxy or similar, you n
 For the complete changelog, check out our [GitHub repository](https://github.com/pluginkollektiv/antispam-bee).
 
 == Upgrade Notice ==
+
+= 2.11.5 =
+Instead of pre_comment_user_ip you need to use our new filter antispam_bee_trusted_ip to send the correct IP address
 
 = 2.11.3 =
 The multiselect field for "Delete comments by spam reasons" did not store any values in the last version - please check the setting after the update!
