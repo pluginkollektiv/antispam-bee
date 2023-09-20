@@ -2450,6 +2450,7 @@ class Antispam_Bee {
 	 *
 	 * @since   2.6.1
 	 * @since   2.11.4 Only use `REMOTE_ADDR` to get the IP, make it filterable with `pre_comment_user_ip`
+	 * @since   2.11.5 Switch to own filter `antispam_bee_trusted_ip`
 	 *
 	 * @hook    string  pre_comment_user_ip  The Client IP
 	 *
@@ -2457,7 +2458,7 @@ class Antispam_Bee {
 	 */
 	public static function get_client_ip() {
 		/**
-		 * WordPress hook for allowing to modify the client IP used by Antispam Bee. Default value is the `REMOTE_ADDR`.
+		 * Hook for allowing to modify the client IP used by Antispam Bee. Default value is the `REMOTE_ADDR`.
 		 *
 		 * @link https://developer.wordpress.org/reference/hooks/pre_comment_user_ip/
 		 *
@@ -2466,7 +2467,7 @@ class Antispam_Bee {
 		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		return self::_sanitize_ip( (string) apply_filters( 'pre_comment_user_ip', wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) );
+		return self::_sanitize_ip( (string) apply_filters( 'antispam_bee_trusted_ip', wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) );
 		// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
