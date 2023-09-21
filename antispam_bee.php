@@ -2459,7 +2459,7 @@ class Antispam_Bee {
 	public static function get_client_ip() {
 		/**
 		 * Hook for allowing to modify the client IP used by Antispam Bee. Default value is the `REMOTE_ADDR`.
-   		 * IMPORTANT: Don’t return an empty string here, otherwise all comments are marked as spam.
+		 * IMPORTANT: Don’t return an empty string here, otherwise all comments are marked as spam.
 		 *
 		 * @link https://developer.wordpress.org/reference/hooks/pre_comment_user_ip/
 		 *
