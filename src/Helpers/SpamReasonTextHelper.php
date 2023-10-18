@@ -45,7 +45,18 @@ class SpamReasonTextHelper {
 				continue;
 			}
 
-			// @todo: don’t mark our old rules as »unknown« but »legacy«
+			$legacy_rules = [
+				'server' => esc_html_x( 'Fake IP', 'legacy spam reason label', 'antispam-bee' )
+			];
+			if ( array_key_exists( $slug, $legacy_rules ) ) {
+				$texts[] = esc_html_x(
+					/* translators: s=slug of unknown spam reason */
+						sprintf( 'Legacy rule: %s', $legacy_rules[ $slug ] ),
+						'spam-reason-legacy-text',
+						'antispam-bee'
+					);
+				continue;
+			}
 			$texts[] = esc_html_x(
 			/* translators: s=slug of unknown spam reason */
 				sprintf( 'Unknown rule: %s', $slug ),
