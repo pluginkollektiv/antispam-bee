@@ -51,9 +51,13 @@ class PluginUpdate {
 		// Prevent further update triggers during the same request that run before the DB version is updated.
 		self::$db_update_triggered = true;
 
-		$version_from_db = get_option( 'antispambee_db_version', 0 );
+		$version_from_db = get_option( 'antispambee_db_version', null );
 
 		update_option( 'antispambee_db_version', self::get_plugin_version() );
+
+		if ( $version_from_db === null ) {
+			return;
+		}
 
 		if ( $version_from_db < 1.01 ) {
 			global $wpdb;
