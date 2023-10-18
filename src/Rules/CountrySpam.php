@@ -19,7 +19,6 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		}
 		$ip = $item['comment_author_IP'];
 
-		// Todo: Migrate ab_country_allowed, ab_country_denied
 		$country_allowed = Settings::get_option( static::get_option_name( 'allowed' ), $item['reaction_type'] );
 		$country_allowed = $country_allowed ? $country_allowed : '';
 		$country_denied  = Settings::get_option( static::get_option_name( 'denied' ), $item['reaction_type'] );

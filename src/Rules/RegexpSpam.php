@@ -77,7 +77,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 				'body' => '\<\!.+?mfunc.+?\>',
 			],
 			[
-				'author' => 'moncler|north face|vuitton|handbag|burberry|outlet|prada|cialis|viagra|maillot|oakley|ralph lauren|ray ban|iphone|プラダ',
+				'author' => 'moncler|north face|vuitton|handbag|burberry|outlet|prada|cialis|viagra|maillot|oakley|ralph lauren|ray ban|iphone|プラダ|[^\w]?porn[o]?[s]?[^\w]?|[^\w]?pornstar[^\w]?|^20bet$',
 			],
 			[
 				'host' => '^(www\.)?fkbook\.co\.uk$|^(www\.)?nsru\.net$|^(www\.)?goo\.gl$|^(www\.)?bit\.ly$',
@@ -92,6 +92,9 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 				'body'  => 'dating|sex|lotto|pharmacy',
 				'email' => '@mail\.ru|@yandex\.',
 			],
+			[
+				'rawurl' => '^http[s]?:\/\/(accounts\.)?binance\.com\/[a-zA-Z-]+\/register(-person)?\?ref=[\w]+'
+			]
 		];
 
 		$quoted_author = preg_quote( $subject['author'], '/' );
