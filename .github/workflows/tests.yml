@@ -44,7 +44,7 @@ jobs:
             wordpress: '6.2'
           - php: '8.0'
             wordpress: '6.0'
-          - php: '8.0'
+          - php: '7.3'
             wordpress: '5.0'
           - php: '7.2'
             wordpress: '4.6'
