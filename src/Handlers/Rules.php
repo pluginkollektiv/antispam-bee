@@ -20,6 +20,9 @@ class Rules {
 		$item['reaction_type'] = $this->type;
 		$rules                = self::get( $this->type, true );
 
+		$no_spam_threshold = (float) apply_filters( 'antispam_bee_no_spam_threshold', 0.0 );
+		$spam_threshold    = (float) apply_filters( 'antispam_bee_spam_threshold', 0.0 );
+
 		$score = 0.0;
 		foreach ( $rules as $rule ) {
 			$rule_score = $rule::verify( $item ) * $rule::get_weight();
@@ -31,17 +34,14 @@ class Rules {
 			}
 
 			$score += $rule_score;
+		}
 
-			$no_spam_threshold = (float) apply_filters( 'antispam_bee_no_spam_threshold', 0.0 );
-			$spam_threshold    = (float) apply_filters( 'antispam_bee_spam_threshold', 0.0 );
+		if ( $no_spam_threshold < 0.0 && $score <= $no_spam_threshold ) {
+			return false;
+		}
 
-			if ( $no_spam_threshold < 0.0 && $score <= $no_spam_threshold ) {
-				return false;
-			}
-
-			if ( $spam_threshold > 0.0 && $score >= $spam_threshold ) {
-				return true;
-			}
+		if ( $spam_threshold > 0.0 && $score >= $spam_threshold ) {
+			return true;
 		}
 
 		return $score > 0.0;
