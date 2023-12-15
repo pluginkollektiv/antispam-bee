@@ -5,6 +5,7 @@ namespace AntispamBee\Rules;
 use AntispamBee\Helpers\Honeypot as HoneypotField;
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\DataHelper;
+use AntispamBee\Helpers\DebugMode;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\SpamReason;
 
@@ -49,14 +50,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 		if ( is_feed() || is_trackback() || empty( $_POST ) ) {
 			return;
 		}
-
-		/**
-		 * @todo errors from my error log (Flo).
-		 * [13-Jun-2023 11:36:50 UTC] PHP Warning:  Undefined array key "hidden_field" in /html/wp-content/plugins/antispam-bee/src/Rules/Honeypot.php on line 69
-		[13-Jun-2023 11:36:50 UTC] PHP Warning:  Undefined array key "hidden_field" in /html/wp-content/plugins/antispam-bee/src/Rules/Honeypot.php on line 73
-		[13-Jun-2023 11:36:50 UTC] PHP Warning:  Undefined array key "plugin_field" in /html/wp-content/plugins/antispam-bee/src/Rules/Honeypot.php on line 73
-		[13-Jun-2023 11:36:50 UTC] PHP Warning:  Undefined array key "" in /html/wp-content/plugins/antispam-bee/src/Rules/Honeypot.php on line 73
-		 */
+		
 		$request_uri  = Settings::get_key( $_SERVER, 'REQUEST_URI' );
 		$request_path = DataHelper::parse_url( $request_uri, 'path' );
 
@@ -65,14 +59,19 @@ class Honeypot extends ControllableBase implements SpamReason {
 		}
 		$fields = [];
 		foreach ( $_POST as $key => $value ) {
+			if ( $key === HoneypotField::get_secret_name_for_post() ) {
+				$fields['plugin_field'] = $key;
+			}
 			if ( isset( $fields['plugin_field'] ) ) {
 				$fields['hidden_field'] = $key;
 				break;
 			}
-			if ( $key === HoneypotField::get_secret_name_for_post() ) {
-				$fields['plugin_field'] = $key;
-			}
 		}
+
+		if ( ! isset( $fields['plugin_field'] ) ) {
+			DebugMode::log( 'Missing `plugin_field` key in HoneyPot precheck method for the following $_POST data: ' . print_r( $_POST, true ) );
+		}
+
 		if ( ! empty( $_POST[ $fields['hidden_field'] ] ) ) {
 			$_POST['ab_spam__hidden_field'] = 1;
 		} else {

@@ -3,6 +3,7 @@
 namespace AntispamBee\Handlers;
 
 use AntispamBee\Helpers\ComponentsHelper;
+use AntispamBee\Helpers\DebugMode;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\SpamReason;
 use AntispamBee\Interfaces\Verifiable;
@@ -24,8 +25,15 @@ class Rules {
 		$spam_threshold    = (float) apply_filters( 'antispam_bee_spam_threshold', 0.0 );
 
 		$score = 0.0;
+
+		DebugMode::log( 'Looping through spam rules for reaction with the following data: ' . print_r( $item, true ) );
+
 		foreach ( $rules as $rule ) {
+			DebugMode::log( "Checking »{$rule::get_name()}« rule" );
+
 			$rule_score = $rule::verify( $item ) * $rule::get_weight();
+			
+			DebugMode::log( "Score: {$rule_score}" );
 
 			if ( $rule_score > 0.0 ) {
 				$this->spam_reasons[] = $rule::get_slug();
@@ -34,7 +42,11 @@ class Rules {
 			}
 
 			$score += $rule_score;
+			
+			DebugMode::log( "Overall score after checking the rule: {$score}" );
 		}
+
+		DebugMode::log( "Overall score after checking all rules: {$score}" );
 
 		if ( $no_spam_threshold < 0.0 && $score <= $no_spam_threshold ) {
 			return false;
