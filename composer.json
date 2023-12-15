@@ -32,7 +32,6 @@
     "dmore/behat-chrome-extension": "^1.3",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
     "friends-of-behat/mink-extension": "^2.5",
-    "matthiasmullie/minify": "^1.3",
     "paulgibbs/behat-wordpress-extension": "^3.3",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "phpunit/phpunit": "^4",
@@ -54,30 +53,11 @@
     }
   },
   "scripts": {
-    "post-install-cmd": [
-      "@build"
-    ],
-    "post-update-cmd": [
-      "@build"
-    ],
-    "build": [
-      "npx wp-scripts build"
-    ],
     "cs": [
       "@lint-php"
     ],
     "csfix": [
       "phpcbf --standard=phpcs.xml"
-    ],
-    "lint-all": [
-      "@lint-js",
-      "@lint-css"
-    ],
-    "lint-css": [
-      "npx stylelint assets/src/css/dashboard.css assets/src/css/styles.css"
-    ],
-    "lint-js": [
-      "npx eslint assets/src/js/dashboard.js assets/src/js/raphael.helper.js assets/src/js/scripts.js"
     ],
     "lint-php": [
       "phpcs --standard=phpcs.xml -s"
