@@ -69,6 +69,8 @@ class Honeypot extends ControllableBase implements SpamReason {
 		}
 
 		if ( ! isset( $fields['plugin_field'] ) ) {
+			$log_data = $_POST;
+			unset( $log_data[ 'email' ] );
 			DebugMode::log( 'Missing `plugin_field` key in HoneyPot precheck method for the following $_POST data: ' . print_r( $_POST, true ) );
 		}
 
