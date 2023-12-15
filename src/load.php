@@ -83,6 +83,8 @@ function init() {
 
 	$is_ajax_call = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
+	$is_doing_autosave = defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE;
+
 	// Initialize all modules.
 	foreach ( $modules as $module ) {
 		if ( is_callable( [ $module, 'always_init' ] ) ) {
@@ -93,7 +95,7 @@ function init() {
 			continue;
 		}
 
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		if ( $is_doing_autosave ) {
 			continue;
 		}
 
