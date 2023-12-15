@@ -26,7 +26,12 @@ class Rules {
 
 		$score = 0.0;
 
-		DebugMode::log( 'Looping through spam rules for reaction with the following data: ' . print_r( $item, true ) );
+		$log_item = $item;
+		unset( $log_item['comment_author_email'] );
+		unset( $log_item['comment_author_IP'] );
+		unset( $log_item['user_id'] );
+		unset( $log_item['user_ID'] );
+		DebugMode::log( 'Looping through spam rules for reaction with the following data: ' . print_r( $log_item, true ) );
 
 		foreach ( $rules as $rule ) {
 			DebugMode::log( "Checking »{$rule::get_name()}« rule" );
@@ -42,7 +47,7 @@ class Rules {
 			}
 
 			$score += $rule_score;
-			
+
 			DebugMode::log( "Overall score after checking the rule: {$score}" );
 		}
 
