@@ -69,18 +69,19 @@ class Honeypot extends ControllableBase implements SpamReason {
 		}
 
 		if ( ! isset( $fields['plugin_field'] ) ) {
-			$log_data = $_POST;
-			unset( $log_data[ 'email' ] );
-			DebugMode::log( 'Missing `plugin_field` key in HoneyPot precheck method for the following $_POST data: ' . print_r( $_POST, true ) );
+			// Honeypot field was not present in $_POST data.
+			$_POST['ab_spam__hidden_field'] = 1;
+			return;
 		}
 
 		if ( ! empty( $_POST[ $fields['hidden_field'] ] ) ) {
 			$_POST['ab_spam__hidden_field'] = 1;
-		} else {
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-			$_POST[ $fields['hidden_field'] ] = $_POST[ $fields['plugin_field'] ];
-			unset( $_POST[ HoneypotField::get_secret_name_for_post() ] );
+			return;
 		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$_POST[ $fields['hidden_field'] ] = $_POST[ $fields['plugin_field'] ];
+		unset( $_POST[ HoneypotField::get_secret_name_for_post() ] );
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
