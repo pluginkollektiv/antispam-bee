@@ -32,6 +32,7 @@ use AntispamBee\Rules\CountrySpam;
 use AntispamBee\Rules\DbSpam;
 use AntispamBee\Rules\EmptyData;
 use AntispamBee\Rules\Honeypot as HoneypotRule;
+use AntispamBee\Rules\InvalidRequest;
 use AntispamBee\Rules\LangSpam;
 use AntispamBee\Rules\RegexpSpam;
 use AntispamBee\Rules\TooFastSubmit;
@@ -73,6 +74,7 @@ function init() {
 		DbSpam::class,
 		HoneypotRule::class,
 		EmptyData::class,
+		InvalidRequest::class,
 		LangSpam::class,
 		RegexpSpam::class,
 		TooFastSubmit::class,
