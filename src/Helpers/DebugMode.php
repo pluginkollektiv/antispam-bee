@@ -19,7 +19,8 @@ class DebugMode {
         }
 
         $date = date( 'Y-m-d' );
+        $time = date( 'H-i-s' );
         $content_dir = \WP_CONTENT_DIR;
-        error_log( "Antispam Bee – $message\n", 3, "{$content_dir}/asb-debug.{$date}.log" );
+        error_log( "[{$date} {$time}] {$message}\n", 3, "{$content_dir}/asb-debug.{$date}.log" );
     }
 }
