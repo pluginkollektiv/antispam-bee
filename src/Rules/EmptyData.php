@@ -6,7 +6,7 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
- * Checks comment content for BBCode URLs.
+ * Checks for empty data.
  */
 class EmptyData extends Base implements SpamReason {
 	protected static $slug = 'asb-empty';
