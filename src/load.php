@@ -30,6 +30,7 @@ use AntispamBee\Rules\ApprovedEmail;
 use AntispamBee\Rules\BBCode;
 use AntispamBee\Rules\CountrySpam;
 use AntispamBee\Rules\DbSpam;
+use AntispamBee\Rules\EmptyData;
 use AntispamBee\Rules\Honeypot as HoneypotRule;
 use AntispamBee\Rules\LangSpam;
 use AntispamBee\Rules\RegexpSpam;
@@ -71,6 +72,7 @@ function init() {
 		CountrySpam::class,
 		DbSpam::class,
 		HoneypotRule::class,
+		EmptyData::class,
 		LangSpam::class,
 		RegexpSpam::class,
 		TooFastSubmit::class,

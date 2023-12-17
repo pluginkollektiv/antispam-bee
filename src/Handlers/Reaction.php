@@ -2,8 +2,6 @@
 
 namespace AntispamBee\Handlers;
 
-use AntispamBee\GeneralOptions\IgnoreLinkbacks;
-use AntispamBee\Helpers\ContentTypeHelper;
 use WP_Comment;
 
 abstract class Reaction {

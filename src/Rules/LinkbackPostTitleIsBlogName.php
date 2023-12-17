@@ -17,10 +17,10 @@ class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
 		$blog_name = isset( $item['comment_author'] ) ? $item['comment_author'] : null;
 		preg_match( '/<strong>(.*)<\/strong>\\n\\n/', $body, $matches );
 		if ( ! isset( $matches[1] ) ) {
-			return - 1;
+			return 0;
 		}
 
-		return trim( $matches[1] ) === trim( $blog_name ) ? 1 : - 1;
+		return trim( $matches[1] ) === trim( $blog_name ) ? 999 : 0;
 	}
 
 	public static function get_name() {
