@@ -15,12 +15,13 @@ class DbSpam extends ControllableBase implements SpamReason {
 	public static function verify( $item ) {
 		$params = [];
 		$filter = [];
-		$url    = DataHelper::get_values_where_key_contains( [ 'url' ], $item );
+		$url    = wp_unslash( array_shift( DataHelper::get_values_where_key_contains( [ 'url' ], $item ) ) );
 
 		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';
-			$params[] = wp_unslash( array_shift( $url ) );
+			$params[] =  $url;
 		}
+		
 		$ip = DataHelper::get_values_by_keys( [ 'comment_author_IP' ], $item );
 
 		if ( ! empty( $ip ) ) {

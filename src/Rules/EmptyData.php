@@ -23,7 +23,7 @@ class EmptyData extends Base implements SpamReason {
 		}
 
 		if ( $item[ 'reaction_type'] === ContentTypeHelper::COMMENT_TYPE ) {
-			if ( get_option( 'require_name_email' ) && ( empty( $comment['comment_author_email'] ) || empty( $comment['comment_author'] ) ) ) {
+			if ( get_option( 'require_name_email' ) && ( empty( $item['comment_author_email'] ) || empty( $item['comment_author'] ) ) ) {
 				return 999;
 			}
 		}

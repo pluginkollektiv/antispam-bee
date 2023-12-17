@@ -10,7 +10,7 @@ class Linkback extends Reaction {
 	protected static $type = 'linkback';
 
 	public static function process( $linkback ) {
-		if ( ! ContentTypeHelper::reaction_is_one_of( $linkback, [ ContentTypeHelper::LINKBACK_TYPE ], 'linkback' ) ) {
+		if ( ! ContentTypeHelper::reaction_is_one_of( $linkback, [ 'pingback', 'trackback', 'pings' ], 'linkback' ) ) {
 			return $linkback;
 		}
 

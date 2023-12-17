@@ -59,12 +59,12 @@ class Honeypot extends ControllableBase implements SpamReason {
 		}
 		$fields = [];
 		foreach ( $_POST as $key => $value ) {
-			if ( $key === HoneypotField::get_secret_name_for_post() ) {
-				$fields['plugin_field'] = $key;
-			}
 			if ( isset( $fields['plugin_field'] ) ) {
 				$fields['hidden_field'] = $key;
 				break;
+			}
+			if ( $key === HoneypotField::get_secret_name_for_post() ) {
+				$fields['plugin_field'] = $key;
 			}
 		}
 

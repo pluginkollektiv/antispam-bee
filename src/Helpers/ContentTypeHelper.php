@@ -31,7 +31,8 @@ class ContentTypeHelper {
 	 * @return bool
 	 */
 	public static function reaction_is_one_of( $reaction, $reaction_types, $context = '' ) {
-		$reaction_type = $reaction['reaction_type'] ?? '';
+		// This `comment_type` is set from WordPress.
+		$reaction_type = $reaction['comment_type'] ?? '';
 
 		$is_one_of = in_array( $reaction_type, $reaction_types );
 
