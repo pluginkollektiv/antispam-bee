@@ -33,7 +33,7 @@ class Comment extends Reaction {
 		$request_path = DataHelper::parse_url( $request_uri, 'path' );
 
 		if ( empty( $request_path ) ) {
-			return self::handle_spam( $comment, [ 'asb-empty' ] );
+			$comment['ab_spam__invalid_request'] = 1;
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing

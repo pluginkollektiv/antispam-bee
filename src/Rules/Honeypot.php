@@ -70,7 +70,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 
 		if ( ! isset( $fields['plugin_field'] ) ) {
 			// Honeypot field was not present in $_POST data.
-			$_POST['ab_spam__hidden_field'] = 1;
+			$_POST['ab_spam__invalid_request'] = 1;
 			return;
 		}
 
