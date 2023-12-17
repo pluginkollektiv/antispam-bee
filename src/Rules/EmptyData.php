@@ -37,10 +37,10 @@ class EmptyData extends Base implements SpamReason {
 	}
 
 	public static function get_name() {
-		return _x( 'BBCode', 'spam-reason-form-name', 'antispam-bee' );
+		return _x( 'Empty Data', 'spam-reason-form-name', 'antispam-bee' );
 	}
 
 	public static function get_reason_text() {
-		return _x( 'BBCode', 'spam-reason-text', 'antispam-bee' );
+		return _x( 'Empty Data', 'spam-reason-text', 'antispam-bee' );
 	}
 }
