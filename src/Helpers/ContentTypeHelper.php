@@ -24,16 +24,16 @@ class ContentTypeHelper {
 	/**
 	 * Checks if a given reaction type matches the types provided in the second parameter.
 	 *
-	 * @param array  $reaction       Reaction data array, reaction type needs to be provided as `comment_type`.
+	 * @param array  $reaction       Reaction data array, reaction type needs to be provided as `reaction_type`.
 	 * @param array  $reaction_types Array of reaction types to check for.
 	 * @param string $context        Optional context.
 	 *
 	 * @return bool
 	 */
 	public static function reaction_is_one_of( $reaction, $reaction_types, $context = '' ) {
-		$comment_type = $reaction['comment_type'] ?? '';
+		$reaction_type = $reaction['reaction_type'] ?? '';
 
-		$is_one_of = in_array( $comment_type, $reaction_types );
+		$is_one_of = in_array( $reaction_type, $reaction_types );
 
 		/**
 		 * Filters if a reaction is from a provided list of reaction types.

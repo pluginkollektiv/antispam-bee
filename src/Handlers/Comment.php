@@ -23,7 +23,7 @@ class Comment extends Reaction {
 	}
 
 	public static function process( $comment ) {
-		if ( ! ContentTypeHelper::reaction_is_one_of( $comment, [ 'comment', '' ], 'comment' ) ) {
+		if ( ! ContentTypeHelper::reaction_is_one_of( $comment, [ ContentTypeHelper::COMMENT_TYPE ], 'comment' ) ) {
 			return $comment;
 		}
 
