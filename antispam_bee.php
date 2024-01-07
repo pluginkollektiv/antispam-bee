@@ -330,7 +330,7 @@ class Antispam_Bee {
 					'precheck_incoming_request',
 				)
 			);
-			add_action(
+			add_filter(
 				'preprocess_comment',
 				array(
 					__CLASS__,
