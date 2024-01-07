@@ -402,6 +402,7 @@ class Antispam_Bee {
 		global $wpdb;
 
 		delete_option( 'antispam_bee' );
+		delete_option( 'antispambee_db_version' );
 		$wpdb->query( 'OPTIMIZE TABLE `' . $wpdb->options . '`' );
 
 		//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
