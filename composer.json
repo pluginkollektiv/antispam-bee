@@ -81,5 +81,11 @@
       "minifyjs js/raphael.helper.js > js/raphael.helper.min.js",
       "minifyjs js/scripts.js > js/scripts.min.js"
     ]
+  },
+  "config": {
+    "allow-plugins": {
+      "cweagans/composer-patches": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
