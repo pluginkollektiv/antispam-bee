@@ -2246,27 +2246,6 @@ class Antispam_Bee {
 
 
 	/**
-	 * Rotates the IP address
-	 *
-	 * @since   2.4.5
-	 *
-	 * @param   string $ip  IP address.
-	 * @return  string      Turned IP address.
-	 */
-	private static function _reverse_ip( $ip ) {
-		return implode(
-			'.',
-			array_reverse(
-				explode(
-					'.',
-					$ip
-				)
-			)
-		);
-	}
-
-
-	/**
 	 * Check for an IPv4 address
 	 *
 	 * @since  2.4
@@ -2280,24 +2259,6 @@ class Antispam_Bee {
 			return filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) !== false;
 		} else {
 			return preg_match( '/^\d{1,3}(\.\d{1,3}){3}$/', $ip );
-		}
-	}
-
-
-	/**
-	 * Check for an IPv6 address
-	 *
-	 * @since  2.6.2
-	 * @since  2.6.4
-	 *
-	 * @param   string $ip  IP to validate.
-	 * @return  boolean       TRUE if IPv6.
-	 */
-	private static function _is_ipv6( $ip ) {
-		if ( function_exists( 'filter_var' ) ) {
-			return filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) !== false;
-		} else {
-			return ! self::_is_ipv4( $ip );
 		}
 	}
 
