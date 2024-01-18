@@ -4,7 +4,7 @@
     "@wordpress/eslint-plugin": "^13.4.0",
     "@wordpress/stylelint-config": "^21.3.0",
     "eslint": "^8.4.1",
-    "prettier": "^2.3.0",
+    "prettier": "^3.2.4",
     "stylelint": "^14.2.0"
   }
 }
