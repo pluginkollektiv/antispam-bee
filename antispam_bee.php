@@ -165,7 +165,7 @@ class Antispam_Bee {
 				)
 			);
 
-		} elseif ( is_admin() ) {
+		} elseif ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
 			add_action(
 				'admin_menu',
 				array(
