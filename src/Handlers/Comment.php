@@ -23,7 +23,14 @@ class Comment extends Reaction {
 	}
 
 	public static function process( $comment ) {
-		if ( ! ContentTypeHelper::reaction_is_one_of( $comment, [ 'comment', '' ], 'comment' ) ) {
+		/**
+		 * Filter processable comment types.
+		 *
+		 * @param	array	$types List of comment types
+		 */
+		$comment_types = (array) apply_filters( 'antispam_bee_comment_types', [ '', 'comment', 'review' ] );
+
+		if ( ! ContentTypeHelper::reaction_is_one_of( $comment, $comment_types, 'comment' ) ) {
 			return $comment;
 		}
 
