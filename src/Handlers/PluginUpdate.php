@@ -97,7 +97,7 @@ class PluginUpdate {
 		// DB version was raised in ASB 3.0.0 to 1.03.
 		if ( version_compare(
 			$version_from_db,
-			'3.0.0',
+			'3.0.0.alpha.1',
 			'<'
 		) ) {
 			// Update options (we migrate to a new option name `antispam_bee_options` in this release).
