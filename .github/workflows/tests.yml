@@ -90,7 +90,7 @@ jobs:
         node-version: '20'
     - name: Run code style checks for CSS, JavaScript and PHP
       run: |
-        composer install
+        composer install --ignore-platform-req=php
         npm install
         composer lint-all
         composer cs

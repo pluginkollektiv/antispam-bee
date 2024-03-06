@@ -26,6 +26,9 @@
     <rule ref="WordPress">
         <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
         <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+
+        <!-- This raises errors, because __DIR__ is not used, but we still support PHP 5.2 -->
+        <exclude name="Modernize.FunctionCalls.Dirname.FileConstant"/>
     </rule>
     <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
         <properties>
