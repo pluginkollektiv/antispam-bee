@@ -81,13 +81,13 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '7.2'
+        php-version: '8.2'
         extensions: mbstring, intl
         ini-values: post_max_size=256M, short_open_tag=On
         tools: phpunit, composer
     - uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '20'
     - name: Run code style checks for CSS, JavaScript and PHP
       run: |
         composer install
