@@ -875,7 +875,7 @@ class Antispam_Bee {
 		$items = (array) self::get_option( 'daily_stats' );
 
 		if ( empty( $items ) ) {
-			echo sprintf(
+			printf(
 				'<div id="ab_chart"><p>%s</p></div>',
 				esc_html__( 'No data available.', 'antispam-bee' )
 			);
@@ -2736,7 +2736,7 @@ class Antispam_Bee {
 
 		// Count up.
 		if ( array_key_exists( $today, $stats ) ) {
-			$stats[ $today ] ++;
+			$stats[ $today ]++;
 		} else {
 			$stats[ $today ] = 1;
 		}
@@ -2778,7 +2778,6 @@ class Antispam_Bee {
 			(int) $post_id,
 			(bool) self::get_option( 'always_allowed' )
 		);
-
 	}
 
 	/**
@@ -2915,10 +2914,9 @@ class Antispam_Bee {
 	 * @return bool
 	 */
 	private static function db_version_is_current() {
-
 		$current_version = floatval( get_option( 'antispambee_db_version', 0 ) );
-		return $current_version === self::$db_version;
 
+		return $current_version === self::$db_version;
 	}
 
 	/**

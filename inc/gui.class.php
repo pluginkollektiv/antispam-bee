@@ -168,7 +168,8 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 	 * @since  2.7.0
 	 * @since  2.10.0 Change documentation links, change country option name, and add option to parse complete markup for comment forms
 	 */
-	public static function options_page() { ?>
+	public static function options_page() {
+		?>
 		<div class="wrap" id="ab_main">
 			<h2>
 				Antispam Bee
@@ -403,7 +404,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_cronjob_enable" id="ab_cronjob_enable" value="1" <?php checked( $options['cronjob_enable'], 1 ); ?> />
 								<label for="ab_cronjob_enable">
 									<?php
-									echo sprintf(
+									printf(
 										// translators: $s is an input field containing the number of days.
 										esc_html__( 'Delete existing spam after %s days', 'antispam-bee' ),
 										'<input type="number" min="0" name="ab_cronjob_interval" value="' . esc_attr( $options['cronjob_interval'] ) . '" class="ab-mini-field" />'
@@ -417,7 +418,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_ignore_filter" id="ab_ignore_filter" value="1" <?php checked( $options['ignore_filter'], 1 ); ?> />
 								<label for="ab_ignore_filter">
 									<?php
-									echo sprintf(
+									printf(
 										// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 										// Output gets escaped in _build_select()
 										// translators: %s is the select field.
