@@ -8,7 +8,7 @@
   * Tweak: Updated dependencies
 
 * **Deutsch**
-  * Fix: Bei Desinstallation wurde eine Option nicht korrekt gelöscht (Danke @okvee!)
+  * Fix: Bei Deinstallation wurde eine Option nicht korrekt gelöscht (Danke @okvee!)
   * Tweak: Kleinere i18n-Verbesserungen (Danke Pedro!)
   * Tweak: Kleinere Code-Änderungen und Aufräumarbeiten
   * Tweak: Aktualisierte Abhängigkeiten
