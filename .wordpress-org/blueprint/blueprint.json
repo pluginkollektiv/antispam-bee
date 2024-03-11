@@ -1,0 +1,16 @@
+{
+	"landingPage": "\/wp-admin\/options-general.php?page=antispam_bee",
+	"steps": [
+		{
+			"step": "login",
+			"username": "admin",
+			"password": "password"
+		},
+		{
+			"step": "defineWpConfigConsts",
+			"consts": {
+			  "IS_PLAYGROUND_PREVIEW": true
+			}
+		}
+	]
+}
