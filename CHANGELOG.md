@@ -3,7 +3,7 @@
 ### 2.11.6 ###
 * **English**
   * Fix: Delete missed out option on uninstall (Thanks @okvee!)
-  * Tweak: Minor i18n improvments (Thanks Pedro!)
+  * Tweak: Minor i18n improvements (Thanks Pedro!)
   * Tweak: Minor code changes and housekeeping
   * Tweak: Updated dependencies
 
