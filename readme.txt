@@ -97,7 +97,7 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 
 ### 2.11.6 ###
   * Fix: Delete missed out option on uninstall (Thanks @okvee!)
-  * Tweak: Minor i18n improvments (Thanks Pedro!)
+  * Tweak: Minor i18n improvements (Thanks Pedro!)
   * Tweak: Minor code changes and housekeeping
   * Tweak: Updated dependencies
 
