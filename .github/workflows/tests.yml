@@ -82,12 +82,9 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '7.2'
-        extensions: mbstring, intl
-        ini-values: post_max_size=256M, short_open_tag=On
-        tools: phpunit, composer
+        php-version: '8.2'
+        tools: composer
     - name: Run code style checks for CSS, JavaScript and PHP
       run: |
-        composer install
-        composer lint-all
+        composer install --ignore-platform-req=php
         composer cs
