@@ -14,7 +14,8 @@ class SaveReason extends ControllableBase {
 		}
 
 		if ( ! isset( $item['asb_reasons'] ) ) {
-			return $item['asb_post_processors_failed'][] = self::get_slug();
+			$item['asb_post_processors_failed'][] = self::get_slug();
+			return $item;
 		}
 
 		add_action(
