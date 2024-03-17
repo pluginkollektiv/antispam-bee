@@ -67,11 +67,11 @@ class Sanitize {
 	public static function sanitize_options( $options ) {
 		$current_options = Settings::get_options();
 
-		if ( ! isset( $_GET['tab'] ) || empty( $_GET['tab'] ) ) {
-			return $_GET['tab'] = 'general';
+		if ( empty( $_GET['tab'] ) ) {
+			$tab = 'general';
+		} else {
+			$tab = sanitize_key( wp_unslash( $_GET['tab'] ) );
 		}
-
-		$tab = $_GET['tab'];
 
 		$options = ! empty( $options ) ? $options : [ $tab => [] ];
 
