@@ -34,6 +34,8 @@ class EmptyData extends Base implements SpamReason {
 				return 999;
 			}
 		}
+
+		return 0;
 	}
 
 	public static function get_name() {
