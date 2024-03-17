@@ -1,4 +1,9 @@
 <?php
+/**
+ * Country Spam Rule.
+ *
+ * @package AntispamBee\Rules
+ */
 
 namespace AntispamBee\Rules;
 
@@ -11,8 +16,22 @@ use AntispamBee\Interfaces\SpamReason;
  * Checks comments for spam based on the country of the IP address.
  */
 class CountrySpam extends ControllableBase implements SpamReason {
+
+	/**
+	 * Rule slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-country-spam';
 
+	/**
+	 * Verify an item.
+	 *
+	 * Check whether a reaction originates from an allowed country.
+	 *
+	 * @param array $item Item to verify.
+	 * @return int Numeric result.
+	 */
 	public static function verify( $item ) {
 		if ( ! isset( $item['comment_author_IP'] ) || empty( $item['comment_author_IP'] ) ) {
 			return 0;
@@ -113,14 +132,29 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		return in_array( $country, $allowed, true ) ? 0 : 1;
 	}
 
+	/**
+	 * Get rule name.
+	 *
+	 * @return string
+	 */
 	public static function get_name() {
 		return __( 'Country Check', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule label.
+	 *
+	 * @return string|null
+	 */
 	public static function get_label() {
 		return __( 'Block or allow comments from specific countries', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule description.
+	 *
+	 * @return string|null
+	 */
 	public static function get_description() {
 		$link1 = sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
@@ -144,6 +178,13 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		);
 	}
 
+	/**
+	 * Get options.
+	 *
+	 * {@inheritDoc}
+	 *
+	 * @return array
+	 */
 	public static function get_options() {
 		$iso_codes_link = 'https://www.iso.org/obp/ui/#search/code/';
 		return [
@@ -188,6 +229,12 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		];
 	}
 
+	/**
+	 * Sanitize ISO code strings.
+	 *
+	 * @param string $value Comma-separated list of potential ISO country codes.
+	 * @return string Comma-separated list if sanitized ISO country codes.
+	 */
 	private static function sanitize_iso_codes_string( $value ) {
 		$value  = strtoupper( $value );
 		$values = explode( ',', $value );
@@ -196,6 +243,11 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		return implode( ',', $values );
 	}
 
+	/**
+	 * Get human-readable spam reason.
+	 *
+	 * @return string
+	 */
 	public static function get_reason_text() {
 		return __( 'Country', 'antispam-bee' );
 	}

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Comment handler.
+ *
+ * @package AntispamBee\Handlers
+ */
 
 namespace AntispamBee\Handlers;
 
@@ -7,7 +12,16 @@ use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\IpHelper;
 use AntispamBee\Rules\Honeypot;
 
+/**
+ * Comment handler.
+ */
 class Comment extends Reaction {
+
+	/**
+	 * Initialize.
+	 *
+	 * @return void
+	 */
 	public static function init() {
 		add_action(
 			'init',
@@ -22,6 +36,12 @@ class Comment extends Reaction {
 		parent::init();
 	}
 
+	/**
+	 * Process a comment.
+	 *
+	 * @param array $comment Comment to process.
+	 * @return array Processed comment.
+	 */
 	public static function process( $comment ) {
 		/**
 		 * Filter processable comment types.

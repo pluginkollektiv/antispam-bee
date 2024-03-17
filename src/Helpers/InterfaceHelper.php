@@ -1,18 +1,28 @@
 <?php
+/**
+ * Interface helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 
 namespace AntispamBee\Helpers;
 
+/**
+ * Interface helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 class InterfaceHelper {
 	/**
 	 * Checks if a class implements an interface.
 	 *
-	 * @param string $class_name Fully-qualified class name.
-	 * @param string $interface Fully-qualified interface name.
+	 * @param string $class_name     Fully-qualified class name.
+	 * @param string $interface_name Fully-qualified interface name.
 	 *
 	 * @return bool
 	 */
-	public static function class_implements_interface( $class_name, $interface ) {
-		return self::class_implements_interfaces( $class_name, [ $interface ] );
+	public static function class_implements_interface( $class_name, $interface_name ) {
+		return self::class_implements_interfaces( $class_name, [ $interface_name ] );
 	}
 
 	/**

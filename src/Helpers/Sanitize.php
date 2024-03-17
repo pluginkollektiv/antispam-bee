@@ -1,4 +1,9 @@
 <?php
+/**
+ * Sanitization helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 
 namespace AntispamBee\Helpers;
 
@@ -6,6 +11,7 @@ use AntispamBee\Admin\Fields\Field;
 use AntispamBee\Handlers\GeneralOptions;
 use AntispamBee\Handlers\PostProcessors;
 use AntispamBee\Handlers\Rules;
+use AntispamBee\Interfaces\Controllable;
 
 /**
  * Helps by providing reusable sanitizing functions
@@ -15,8 +21,8 @@ class Sanitize {
 	/**
 	 * Sanitizes a checkbox group based on the given values and the valid ones.
 	 *
-	 * @param array $values
-	 * @param array $valid_options
+	 * @param mixed $values        Values to sanitize.
+	 * @param array $valid_options List of allowed keys.
 	 *
 	 * @return array Intersection of values and valid options.
 	 * @since 3.0.0
@@ -32,9 +38,9 @@ class Sanitize {
 	/**
 	 * Sanitizes an array of strings to match ISO format.
 	 *
-	 * @param array $codes
+	 * @param array $codes List of potential ISO codes to sanitize.
 	 *
-	 * @return array
+	 * @return array Sanitized ISO codes.
 	 * @since 3.0.0
 	 */
 	public static function iso_codes( $codes ) {
@@ -56,6 +62,13 @@ class Sanitize {
 		return $codes;
 	}
 
+	/**
+	 * Sanitize a checkbox value.
+	 * Valid values are "on" or null.
+
+	 * @param mixed $value Raw checkbox value.
+	 * @return string|null Sanitized value.
+	 */
 	public static function checkbox( $value ) {
 		if ( 'on' === $value ) {
 			return $value;
@@ -64,6 +77,12 @@ class Sanitize {
 		return null;
 	}
 
+	/**
+	 * Sanitize options.
+	 *
+	 * @param array $options Options to sanitize.
+	 * @return array|string Sanitized options.
+	 */
 	public static function sanitize_options( $options ) {
 		$current_options = Settings::get_options();
 
@@ -81,6 +100,13 @@ class Sanitize {
 		return $current_options;
 	}
 
+	/**
+	 * Sanitize controllable elements.
+	 *
+	 * @param array  $options Options.
+	 * @param string $tab     Settings tab.
+	 * @return array Sanitized options.
+	 */
 	private static function sanitize_controllables( $options, $tab ) {
 		$controllables = array_merge(
 			GeneralOptions::get_controllables( $tab ),
@@ -120,6 +146,15 @@ class Sanitize {
 		return $options;
 	}
 
+	/**
+	 * Call a sanitization callback.
+	 *
+	 * @param array        $controllable_option Controllable options.
+	 * @param array        $options             Options.
+	 * @param string       $tab                 Settings tab.
+	 * @param Controllable $controllable        Controllable element.
+	 * @return void
+	 */
 	private static function call_sanitize_callback( $controllable_option, &$options, $tab, $controllable ) {
 		if ( ! isset( $controllable_option['sanitize'] ) ) {
 			return;

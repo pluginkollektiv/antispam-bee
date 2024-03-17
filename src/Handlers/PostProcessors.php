@@ -1,4 +1,9 @@
 <?php
+/**
+ * Post processors.
+ *
+ * @package AntispamBee\Handlers
+ */
 
 namespace AntispamBee\Handlers;
 
@@ -6,11 +11,16 @@ use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
 
+/**
+ * Post processors.
+ */
 class PostProcessors {
 	/**
-	 * @param string  $reaction_type one of the supported content types.
-	 * @param $item
-	 * @param $reasons
+	 * Apply post processors.
+	 *
+	 * @param string $reaction_type One of the supported content types.
+	 * @param array  $item          Item to process.
+	 * @param array  $reasons       List of reasons.
 	 *
 	 * @return mixed
 	 */
@@ -22,7 +32,8 @@ class PostProcessors {
 
 		// Move the post processors that mark an item as to delete to front,
 		// so that following processors know if they handle an item that will be deleted.
-		for ( $i = 0; $i < count( $post_processors ); $i++ ) {
+		$pp_count = count( $post_processors );
+		for ( $i = 0; $i < $pp_count; $i++ ) {
 			if ( $post_processors[ $i ]::marks_as_delete() ) {
 				$post_processor = $post_processors[ $i ];
 				unset( $post_processors[ $i ] );
@@ -37,6 +48,13 @@ class PostProcessors {
 		return $item;
 	}
 
+	/**
+	 * Get a post processor.
+	 *
+	 * @param string|null $reaction_type Reaction type.
+	 * @param bool        $only_active   Get only active post processors.
+	 * @return array List of suitable post processors.
+	 */
 	public static function get( $reaction_type = null, $only_active = false ) {
 		return self::filter(
 			[
@@ -47,6 +65,13 @@ class PostProcessors {
 		);
 	}
 
+	/**
+	 * Get controllable items.
+	 *
+	 * @param string $reaction_type Reaction type.
+	 * @param bool   $only_active   Get only active items.
+	 * @return array List of suitable controllables.
+	 */
 	public static function get_controllables( $reaction_type = null, $only_active = false ) {
 		return self::filter(
 			[
@@ -57,6 +82,12 @@ class PostProcessors {
 		);
 	}
 
+	/**
+	 * Filter items.
+	 *
+	 * @param array $options Filter options.
+	 * @return array List of filtered elements.
+	 */
 	private static function filter( $options ) {
 		return ComponentsHelper::filter( apply_filters( 'antispam_bee_post_processors', [] ), $options );
 	}

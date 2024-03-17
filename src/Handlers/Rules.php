@@ -1,4 +1,9 @@
 <?php
+/**
+ * Rules.
+ *
+ * @package AntispamBee\Handlers
+ */
 
 namespace AntispamBee\Handlers;
 
@@ -8,15 +13,47 @@ use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\SpamReason;
 use AntispamBee\Interfaces\Verifiable;
 
+/**
+ * Rules.
+ */
 class Rules {
+
+	/**
+	 * Rule type.
+	 *
+	 * @var string
+	 */
 	protected $type;
-	protected $spam_reasons    = [];
+
+	/**
+	 * List of spam reasons.
+	 *
+	 * @var array
+	 */
+	protected $spam_reasons = [];
+
+	/**
+	 * List of no-spam reasons.
+	 *
+	 * @var array
+	 */
 	protected $no_spam_reasons = [];
 
+	/**
+	 * Ruleset constructor.
+	 *
+	 * @param string $type Item type.
+	 */
 	public function __construct( $type ) {
 		$this->type = $type;
 	}
 
+	/**
+	 * Apply rules.
+	 *
+	 * @param array $item Item to apply rules to.
+	 * @return bool Item identified as spam.
+	 */
 	public function apply( $item ) {
 		$item['reaction_type'] = $this->type;
 		$rules                 = self::get( $this->type, true );
@@ -64,6 +101,13 @@ class Rules {
 		return $score > 0.0;
 	}
 
+	/**
+	 * Get applicable rules.
+	 *
+	 * @param string $type        Reaction type.
+	 * @param bool   $only_active Get only active rules.
+	 * @return array List of applicable rules.
+	 */
 	public static function get( $type = null, $only_active = false ) {
 		return self::filter(
 			[
@@ -74,6 +118,13 @@ class Rules {
 		);
 	}
 
+	/**
+	 * Get controllable items.
+	 *
+	 * @param string $type        Reaction type.
+	 * @param bool   $only_active Get only active items.
+	 * @return array List of suitable controllables.
+	 */
 	public static function get_controllables( $type = null, $only_active = false ) {
 		return self::filter(
 			[
@@ -84,7 +135,13 @@ class Rules {
 		);
 	}
 
-	// Todo: Try to find a better suited method name.
+	/**
+	 * Todo: Try to find a better suited method name.
+	 *
+	 * @param string|null $type        Reaction type.
+	 * @param bool        $only_active Get only active rules.
+	 * @return array List of applicable rules.
+	 */
 	public static function get_spam_rules( $type = null, $only_active = false ) {
 		return self::filter(
 			[
@@ -95,15 +152,31 @@ class Rules {
 		);
 	}
 
+	/**
+	 * Filter items.
+	 *
+	 * @param array $options Filter options.
+	 * @return array List of filtered elements.
+	 */
 	private static function filter( $options ) {
 		// Todo: discuss if our rules should be filterable or not.
 		return ComponentsHelper::filter( apply_filters( 'antispam_bee_rules', [] ), $options );
 	}
 
+	/**
+	 * Get spam reasons.
+	 *
+	 * @return array
+	 */
 	public function get_spam_reasons() {
 		return $this->spam_reasons;
 	}
 
+	/**
+	 * Get no-spam reasons.
+	 *
+	 * @return array
+	 */
 	public function get_no_spam_reasons() {
 		return $this->no_spam_reasons;
 	}

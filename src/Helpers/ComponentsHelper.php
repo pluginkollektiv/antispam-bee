@@ -1,4 +1,9 @@
 <?php
+/**
+ * Component helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 
 namespace AntispamBee\Helpers;
 
@@ -6,16 +11,23 @@ use AntispamBee\Interfaces\Controllable;
 use ReflectionClass;
 use const AntispamBee\PLUGIN_PATH;
 
+/**
+ * Components Helper.
+ */
 class ComponentsHelper {
 
 	/**
-	 * @param $components Controllable[]
-	 * @param $options
-	 * $options = array(
-	 *   'reaction_type'   => 'comment',
-	 *   'only_active'     => true,
-	 *   'is_controllable' => false,
-	 * );
+	 * Filter a list of components.
+	 *
+	 * @param array $components Components to filter.
+	 * @param array $options {
+	 *     Filter options.
+	 *
+	 *     @type string $reaction_type   Reaction type (e.g. "comment").
+	 *     @type bool   $only_active     Only active components.
+	 *     @type bool   $is_controllable Is controllable type.
+	 * }
+	 * @return array Filtered list.
 	 */
 	public static function filter( $components, $options ) {
 		$reaction_type = isset( $options['reaction_type'] ) ? $options['reaction_type'] : null;
@@ -39,16 +51,16 @@ class ComponentsHelper {
 				}
 			}
 
-			// Filter by supported types like Comment, Linkback
+			// Filter by supported types like Comment, Linkback.
 			$supported_types = $component::get_supported_types();
 			if ( ! is_null( $reaction_type ) && ! in_array( $reaction_type, $supported_types ) ) {
 				continue;
 			}
 
-			// Filters if the component implements the Controllable interface
+			// Filters if the component implements the Controllable interface.
 			$conforms_to_controllable = InterfaceHelper::class_implements_interface( $component, Controllable::class );
 
-			// Filters out components that are not active
+			// Filters out components that are not active.
 			if ( $only_active ) {
 				if ( $conforms_to_controllable && ! $component::is_active( $reaction_type ) ) {
 					continue;

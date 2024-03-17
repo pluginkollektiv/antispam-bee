@@ -1,4 +1,9 @@
 <?php
+/**
+ * Linkback Post Title is Blog Name Rule.
+ *
+ * @package AntispamBee\Rules
+ */
 
 namespace AntispamBee\Rules;
 
@@ -9,9 +14,29 @@ use AntispamBee\Interfaces\SpamReason;
  * Rule that is responsible for checking if the linkback post title is a blog name.
  */
 class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
-	protected static $slug            = 'asb-linkback-post-title-is-blogname';
+
+	/**
+	 * Rule slug.
+	 *
+	 * @var string
+	 */
+	protected static $slug = 'asb-linkback-post-title-is-blogname';
+
+	/**
+	 * Only linkbacks are supported.
+	 *
+	 * @var array
+	 */
 	protected static $supported_types = [ ContentTypeHelper::LINKBACK_TYPE ];
 
+	/**
+	 * Verify an item.
+	 *
+	 * Test if a linkback title is blog name.
+	 *
+	 * @param array $item Item to verify.
+	 * @return int Numeric result.
+	 */
 	public static function verify( $item ) {
 		$body      = isset( $item['comment_content'] ) ? $item['comment_content'] : null;
 		$blog_name = isset( $item['comment_author'] ) ? $item['comment_author'] : null;
@@ -23,10 +48,20 @@ class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
 		return trim( $matches[1] ) === trim( $blog_name ) ? 999 : 0;
 	}
 
+	/**
+	 * Get rule name.
+	 *
+	 * @return string
+	 */
 	public static function get_name() {
 		return __( 'Linkback post title is blog name', 'antispam-bee' );
 	}
 
+	/**
+	 * Get human-readable spam reason.
+	 *
+	 * @return string
+	 */
 	public static function get_reason_text() {
 		return _x( 'Linkback Post Title', 'spam-reason-text', 'antispam-bee' );
 	}

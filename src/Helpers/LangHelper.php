@@ -1,7 +1,17 @@
 <?php
+/**
+ * Language helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 
 namespace AntispamBee\Helpers;
 
+/**
+ * Language helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 class LangHelper {
 
 	/**

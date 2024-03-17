@@ -14,8 +14,18 @@ use AntispamBee\Admin\RenderElement;
  */
 class Text extends Field implements RenderElement {
 
+	/**
+	 * Placeholder string.
+	 *
+	 * @var string
+	 */
 	protected $placeholder;
 
+	/**
+	 * Get placeholder.
+	 *
+	 * @return string
+	 */
 	public function get_placeholder() {
 		return $this->placeholder;
 	}
@@ -24,6 +34,8 @@ class Text extends Field implements RenderElement {
 	 * Get HTML.
 	 */
 	public function render() {
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+
 		printf(
 			'<p><label for="%s">%s</label></p><p>%s</p>',
 			esc_attr( $this->get_name() ),
@@ -33,6 +45,11 @@ class Text extends Field implements RenderElement {
 		$this->maybe_show_description();
 	}
 
+	/**
+	 * Get HTML markup for the actual input field.
+	 *
+	 * @return string
+	 */
 	public function get_injectable_markup() {
 		return sprintf(
 			'<input type="%1$s" id="%2$s" name="%2$s" value="%3$s" class="%4$s" placeholder="%5$s">',
@@ -44,6 +61,11 @@ class Text extends Field implements RenderElement {
 		);
 	}
 
+	/**
+	 * Get element class(es).
+	 *
+	 * @return string
+	 */
 	protected function get_class() {
 		$classes    = [
 			'small'   => 'small-text',
@@ -58,6 +80,11 @@ class Text extends Field implements RenderElement {
 		return 'regular-text';
 	}
 
+	/**
+	 * Get type of input field.
+	 *
+	 * @return string
+	 */
 	protected function get_type() {
 		return isset( $this->option['input_type'] ) ? $this->option['input_type'] : 'text';
 	}

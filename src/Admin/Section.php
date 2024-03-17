@@ -55,11 +55,6 @@ class Section {
 	 */
 	private $type;
 
-	/**
-	 *
-	 * @var Controllable[]
-	 */
-	private $controllables;
 
 	/**
 	 * Initializing Tab.
@@ -76,12 +71,24 @@ class Section {
 		$this->type        = $type;
 	}
 
+	/**
+	 * Add controllable items to section.
+	 *
+	 * @param array|null $controllables List of controllable items to add.
+	 * @return void
+	 */
 	public function add_controllables( $controllables ) {
 		if ( ! empty( $controllables ) ) {
 			$this->generate_fields( $controllables );
 		}
 	}
 
+	/**
+	 * Generate settings fields for a list of controllable items.
+	 *
+	 * @param Controllable[] $controllables List of controllable items to add.
+	 * @return void
+	 */
 	private function generate_fields( $controllables ) {
 		foreach ( $controllables as $controllable ) {
 			$label       = $controllable::get_label();
@@ -103,7 +110,7 @@ class Section {
 			if ( ! empty( $options ) ) {
 				foreach ( $options as $option ) {
 					$valid_for = isset( $option['valid_for'] ) ? $option['valid_for'] : null;
-					if ( $valid_for !== null && $this->type !== $valid_for ) {
+					if ( null !== $valid_for && $this->type !== $valid_for ) {
 						continue;
 					}
 					$fields[] = $this->generate_field( $option, $controllable );
@@ -117,6 +124,13 @@ class Section {
 		}
 	}
 
+	/**
+	 * Generate field for a controllable item's option.
+	 *
+	 * @param array        $option       Option name.
+	 * @param Controllable $controllable Controllable item.
+	 * @return Checkbox|CheckboxGroup|Inline|Select|Text|Textarea|null
+	 */
 	private function generate_field( $option, $controllable ) {
 		switch ( $option['type'] ) {
 			case 'input':
@@ -215,14 +229,14 @@ class Section {
 	/**
 	 * Renders the fields for a row.
 	 *
-	 * @param array $row
+	 * @param array $row Row of fields.
 	 */
 	protected function render_row_fields( $row ) {
 		foreach ( $row['fields'] as $key => $field ) {
 			$field->render();
 
 			// Add linebreak after field if not (last and not checkbox without label).
-			if ( $key !== count( $row['fields'] ) - 1 ) {
+			if ( ( count( $row['fields'] ) - 1 ) !== $key ) {
 				if ( $field instanceof Checkbox && empty( $field->get_label() ) ) {
 					continue;
 				}

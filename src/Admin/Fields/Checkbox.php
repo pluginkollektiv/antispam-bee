@@ -17,6 +17,8 @@ class Checkbox extends Field implements RenderElement {
 	 * Get HTML.
 	 */
 	public function render() {
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+
 		$label = ! empty( $this->get_label() ) ? sprintf(
 			'<label for="%s">%s</label>',
 			esc_attr( $this->get_name() ),

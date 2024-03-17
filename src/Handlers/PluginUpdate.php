@@ -1,4 +1,9 @@
 <?php
+/**
+ * Plugin Update handler.
+ *
+ * @package AntispamBee\Handlers
+ */
 
 namespace AntispamBee\Handlers;
 
@@ -29,8 +34,18 @@ class PluginUpdate {
 		'manually'      => 'asb-marked-manually',
 	];
 
+	/**
+	 * Was DB update triggered?
+	 *
+	 * @var bool
+	 */
 	private static $db_update_triggered = false;
 
+	/**
+	 * Is DB at current version?
+	 *
+	 * @var bool|null
+	 */
 	private static $db_version_is_current = null;
 
 	/**
@@ -55,7 +70,7 @@ class PluginUpdate {
 
 		update_option( 'antispambee_db_version', self::get_plugin_version() );
 
-		if ( $version_from_db === null ) {
+		if ( null === $version_from_db ) {
 			return;
 		}
 
@@ -165,6 +180,16 @@ class PluginUpdate {
 		}
 	}
 
+	/**
+	 * Convert multiselect values.
+	 * Takes an array of selected keys, applies optional mapping and generated a new array using
+	 * these values as keys and "on" as value.
+	 *
+	 * @param array $values  Selected values.
+	 * @param array $mapping Key mapping (optional).
+	 *
+	 * @return array Converted array of selected options.
+	 */
 	private static function convert_multiselect_values( $values, $mapping = [] ) {
 		if ( ! is_array( $values ) || empty( $values ) ) {
 			return $values;
@@ -182,6 +207,11 @@ class PluginUpdate {
 		return $new_array;
 	}
 
+	/**
+	 * Get plugin version.
+	 *
+	 * @return string
+	 */
 	private static function get_plugin_version() {
 		$meta = get_file_data( MAIN_PLUGIN_FILE, [ 'Version' => 'Version' ] );
 

@@ -1,4 +1,9 @@
 <?php
+/**
+ * DB Spam Rule.
+ *
+ * @package AntispamBee\Rules
+ */
 
 namespace AntispamBee\Rules;
 
@@ -10,8 +15,21 @@ use AntispamBee\Interfaces\SpamReason;
  */
 class DbSpam extends ControllableBase implements SpamReason {
 
+	/**
+	 * Rule slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-db-spam';
 
+	/**
+	 * Verify an item.
+	 *
+	 * Test item for spam patterns from database.
+	 *
+	 * @param array $item Item to verify.
+	 * @return int Numeric result.
+	 */
 	public static function verify( $item ) {
 		$params = [];
 		$filter = [];
@@ -60,18 +78,38 @@ class DbSpam extends ControllableBase implements SpamReason {
 		return (int) ! empty( $result );
 	}
 
+	/**
+	 * Get rule name.
+	 *
+	 * @return string
+	 */
 	public static function get_name() {
 		return __( 'Local DB Spam', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule label.
+	 *
+	 * @return string|null
+	 */
 	public static function get_label() {
 		return __( 'Look in the local spam database', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule description.
+	 *
+	 * @return string|null
+	 */
 	public static function get_description() {
 		return __( 'Check for spam data on your own blog', 'antispam-bee' );
 	}
 
+	/**
+	 * Get human-readable spam reason.
+	 *
+	 * @return string
+	 */
 	public static function get_reason_text() {
 		return __( 'Local DB', 'antispam-bee' );
 	}

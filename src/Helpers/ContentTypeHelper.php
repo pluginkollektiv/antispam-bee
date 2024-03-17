@@ -1,13 +1,27 @@
 <?php
+/**
+ * Content type helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 
 namespace AntispamBee\Helpers;
 
+/**
+ * Content Type Helper.
+ */
 class ContentTypeHelper {
 
 	const GENERAL_TYPE  = 'general';
 	const COMMENT_TYPE  = 'comment';
 	const LINKBACK_TYPE = 'linkback';
 
+	/**
+	 * Get huam-readable item type name.
+	 *
+	 * @param string $item_type Type name.
+	 * @return string Readable type name.
+	 */
 	public static function get_type_name( $item_type ) {
 		$type_names = [
 			self::GENERAL_TYPE  => __( 'General', 'antispam-bee' ),

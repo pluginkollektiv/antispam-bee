@@ -1,4 +1,9 @@
 <?php
+/**
+ * Too Fast Submit Rule.
+ *
+ * @package AntispamBee\Rules
+ */
 
 namespace AntispamBee\Rules;
 
@@ -9,8 +14,19 @@ use AntispamBee\Interfaces\SpamReason;
  * Rule that is responsible for checking that at least a certain timespan has passed so that the comment won‘t be marked as invalid.
  */
 class TooFastSubmit extends ControllableBase implements SpamReason {
+
+	/**
+	 * Rule slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-too-fast-submit';
 
+	/**
+	 * Only comments are supported.
+	 *
+	 * @var array
+	 */
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
 	/**
@@ -51,6 +67,14 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 		);
 	}
 
+	/**
+	 * Verify an item.
+	 *
+	 * Test for time between page initialization and reaction.
+	 *
+	 * @param array $item Item to verify.
+	 * @return int Numeric result.
+	 */
 	public static function verify( $item ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Everybody can Post.
@@ -71,18 +95,38 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 		return 0;
 	}
 
+	/**
+	 * Get rule name.
+	 *
+	 * @return string
+	 */
 	public static function get_name() {
 		return __( 'Comment time', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule label.
+	 *
+	 * @return string|null
+	 */
 	public static function get_label() {
 		return __( 'Consider the comment time', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule description.
+	 *
+	 * @return string|null
+	 */
 	public static function get_description() {
 		return __( 'Not recommended when using page caching', 'antispam-bee' );
 	}
 
+	/**
+	 * Get human-readable spam reason.
+	 *
+	 * @return string
+	 */
 	public static function get_reason_text() {
 		return _x( 'Created too quickly', 'spam-reason-text', 'antispam-bee' );
 	}

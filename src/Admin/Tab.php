@@ -1,4 +1,9 @@
 <?php
+/**
+ * Settings tab model.
+ *
+ * @package AntispamBee\Admin
+ */
 
 namespace AntispamBee\Admin;
 
@@ -30,8 +35,8 @@ class Tab {
 	/**
 	 * Initialize the tab.
 	 *
-	 * @param string    $slug Title for tab
-	 * @param string    $title Title for tab
+	 * @param string    $slug Title for tab.
+	 * @param string    $title Title for tab.
 	 * @param Section[] $sections Sections object array.
 	 */
 	public function __construct( $slug, $title, $sections = [] ) {
@@ -67,6 +72,12 @@ class Tab {
 		return $this->sections;
 	}
 
+	/**
+	 * Add a section to the settings tab.
+	 *
+	 * @param Section $section Section to add.
+	 * @return void
+	 */
 	public function add_section( Section $section ) {
 		$this->sections[] = $section;
 	}

@@ -1,17 +1,41 @@
 <?php
+/**
+ * Spam Reason Text helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 
 namespace AntispamBee\Helpers;
 
 use AntispamBee\Handlers\PluginUpdate;
 use AntispamBee\Handlers\Rules;
 
+/**
+ * Spam Reason Text helper.
+ */
 class SpamReasonTextHelper {
+
+	/**
+	 * List of spam reasons by rule slug.
+	 *
+	 * @var array
+	 */
 	protected static $slug_text_array;
 
+	/**
+	 * Initialize.
+	 *
+	 * @return void
+	 */
 	public static function init() {
 		add_action( 'init', [ __CLASS__, 'populate' ] );
 	}
 
+	/**
+	 * Populate spam reasons.
+	 *
+	 * @return void
+	 */
 	public static function populate() {
 		$rules                 = Rules::get_spam_rules();
 		self::$slug_text_array = [];
@@ -31,9 +55,9 @@ class SpamReasonTextHelper {
 	/**
 	 * Gets the spam reason texts by an array of slugs
 	 *
-	 * @param array $slugs
+	 * @param array $slugs List of rule slugs.
 	 *
-	 * @return array
+	 * @return array Texts for given slugs.
 	 */
 	public static function get_texts_by_slugs( array $slugs ) {
 		$texts = [];

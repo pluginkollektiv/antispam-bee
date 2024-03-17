@@ -2,7 +2,7 @@
 /**
  * Class registering columns for the "spam comments view".
  *
- * @package AntispamBee\Helpers
+ * @package AntispamBee\Admin
  */
 
 namespace AntispamBee\Admin;
@@ -93,6 +93,7 @@ class CommentsColumns {
 		$reasons      = explode( ',', $spam_reason );
 		$reason_texts = SpamReasonTextHelper::get_texts_by_slugs( $reasons );
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- reason texts pre-sanitized.
 		echo implode( ',<br>', $reason_texts );
 	}
 

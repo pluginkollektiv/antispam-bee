@@ -1,4 +1,9 @@
 <?php
+/**
+ * Save Reasons Post Processor.
+ *
+ * @package AntispamBee\PostProcessors
+ */
 
 namespace AntispamBee\PostProcessors;
 
@@ -6,10 +11,23 @@ namespace AntispamBee\PostProcessors;
  * Post processor that is responsible for persisting the reason why something was marked as spam.
  */
 class SaveReason extends ControllableBase {
+
+	/**
+	 * Post processor slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-save-reason';
 
+	/**
+	 * Process an item.
+	 * Save spam reasons.
+	 *
+	 * @param array $item Item to process.
+	 * @return array Processed item.
+	 */
 	public static function process( $item ) {
-		if ( isset( $item['asb_marked_as_delete'] ) && $item['asb_marked_as_delete'] === true ) {
+		if ( isset( $item['asb_marked_as_delete'] ) && true === $item['asb_marked_as_delete'] ) {
 			return $item;
 		}
 
@@ -32,14 +50,29 @@ class SaveReason extends ControllableBase {
 		return $item;
 	}
 
+	/**
+	 * Get element name.
+	 *
+	 * @return string
+	 */
 	public static function get_name() {
 		return __( 'Save reasons', 'antispam-bee' );
 	}
 
+	/**
+	 * Get element label (optional).
+	 *
+	 * @return string|null
+	 */
 	public static function get_label() {
 		return __( 'Save the spam reasons as comment meta', 'antispam-bee' );
 	}
 
+	/**
+	 * Get element description (optional).
+	 *
+	 * @return string|null
+	 */
 	public static function get_description() {
 		return __( 'The reasons are displayed in the spam comments list.', 'antispam-bee' );
 	}

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Send Email Post Processor.
+ *
+ * @package AntispamBee\PostProcessors
+ */
 
 namespace AntispamBee\PostProcessors;
 
@@ -10,10 +15,22 @@ use AntispamBee\Helpers\SpamReasonTextHelper;
  */
 class SendEmail extends ControllableBase {
 
+	/**
+	 * Post processor slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-send-email';
 
+	/**
+	 * Process an item.
+	 * Generate an email and send it.
+	 *
+	 * @param array $item Item to process.
+	 * @return array Processed item.
+	 */
 	public static function process( $item ) {
-		if ( isset( $item['asb_marked_as_delete'] ) && $item['asb_marked_as_delete'] === true ) {
+		if ( isset( $item['asb_marked_as_delete'] ) && true === $item['asb_marked_as_delete'] ) {
 			return $item;
 		}
 
@@ -63,18 +80,38 @@ class SendEmail extends ControllableBase {
 		return $item;
 	}
 
+	/**
+	 * Get element name.
+	 *
+	 * @return string
+	 */
 	public static function get_name() {
 		return __( 'Send email', 'antispam-bee' );
 	}
 
+	/**
+	 * Get element label (optional).
+	 *
+	 * @return string|null
+	 */
 	public static function get_label() {
 		return __( 'Spam-Notification by email', 'antispam-bee' );
 	}
 
+	/**
+	 * Get element description (optional).
+	 *
+	 * @return string|null
+	 */
 	public static function get_description() {
 		return __( 'Notify admins by e-mail about incoming spam', 'antispam-bee' );
 	}
 
+	/**
+	 * Generate email subject.
+	 *
+	 * @return string
+	 */
 	private static function get_subject() {
 		return sprintf(
 			'[%s] %s',
@@ -89,6 +126,12 @@ class SendEmail extends ControllableBase {
 		);
 	}
 
+	/**
+	 * Extract content from comment.
+	 *
+	 * @param array $comment The comment.
+	 * @return string
+	 */
 	private static function get_content( $comment ) {
 		$content = strip_tags( stripslashes( $comment['comment_content'] ) );
 
@@ -99,6 +142,11 @@ class SendEmail extends ControllableBase {
 		return sprintf( '-- %s --', esc_html__( 'Content removed by Antispam Bee', 'antispam-bee' ) );
 	}
 
+	/**
+	 * Get template for email body.
+	 *
+	 * @return string
+	 */
 	private static function get_body_template() {
 		$new_spam_comment = sprintf( /* translators: s=post title. */
 			esc_html__( 'New spam comment on your post “%s”,', 'antispam-bee' ),
@@ -150,6 +198,14 @@ EOF;
 		return str_replace( PHP_EOL, "\r\n", $body );
 	}
 
+	/**
+	 * Generate email body.
+	 *
+	 * @param \WP_Post $post    The post.
+	 * @param array    $comment The comment.
+	 * @param array    $item    Processed item.
+	 * @return string
+	 */
 	protected static function get_body( $post, $comment, $item ) {
 		$template_content = self::get_body_template();
 

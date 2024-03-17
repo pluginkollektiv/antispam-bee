@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Checkbox Field group for the admin UI.
+ *
+ * @package AntispamBee\Admin\Fields
+ */
 
 namespace AntispamBee\Admin\Fields;
 
@@ -6,13 +11,15 @@ use AntispamBee\Admin\RenderElement;
 use AntispamBee\Helpers\Settings;
 
 /**
- * Checkbox field.
+ * Checkbox group.
  */
 class CheckboxGroup extends Field implements RenderElement {
 	/**
 	 * Render HTML.
 	 */
 	public function render() {
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+
 		$options = isset( $this->option['options'] ) ? $this->option['options'] : [];
 		if ( ! is_array( $options ) ) {
 			return;
@@ -37,6 +44,8 @@ class CheckboxGroup extends Field implements RenderElement {
 
 	/**
 	 * Get Value.
+	 *
+	 * @param string $key Option key.
 	 *
 	 * @return mixed Value stored in database.
 	 */

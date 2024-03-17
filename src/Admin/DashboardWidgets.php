@@ -74,6 +74,12 @@ class DashboardWidgets {
 		return self::format_number( $count );
 	}
 
+	/**
+	 * Format a number.
+	 *
+	 * @param float $number Number to format.
+	 * @return string
+	 */
 	private static function format_number( $number ) {
 		return ( get_locale() === 'de_DE' ? number_format( $number, 0, '', '.' ) : number_format_i18n( $number ) );
 	}

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Valid Gravator Rule.
+ *
+ * @package AntispamBee\Rules
+ */
 
 namespace AntispamBee\Rules;
 
@@ -9,10 +14,29 @@ use AntispamBee\Helpers\DataHelper;
  * Rule that is responsible for checking if the commenter has a valid gravatar.
  */
 class ValidGravatar extends ControllableBase {
+
+	/**
+	 * Rule slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-valid-gravatar';
 
+	/**
+	 * Only comments are supported.
+	 *
+	 * @var array
+	 */
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
+	/**
+	 * Verify an item.
+	 *
+	 * Test if author's email points to a valid Gravatar.
+	 *
+	 * @param array $item Item to verify.
+	 * @return int Numeric result.
+	 */
 	public static function verify( $item ) {
 		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $item );
 		if ( empty( $email ) ) {
@@ -38,14 +62,29 @@ class ValidGravatar extends ControllableBase {
 		return 0;
 	}
 
+	/**
+	 * Get rule name.
+	 *
+	 * @return string
+	 */
 	public static function get_name() {
 		return __( 'Valid Gravatar', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule label.
+	 *
+	 * @return string|null
+	 */
 	public static function get_label() {
 		return __( 'Trust commenters with a Gravatar', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule description.
+	 *
+	 * @return string|null
+	 */
 	public static function get_description() {
 		$link1 = sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',

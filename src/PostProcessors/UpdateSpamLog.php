@@ -1,4 +1,9 @@
 <?php
+/**
+ * Update Spam Log Post Processor.
+ *
+ * @package AntispamBee\PostProcessors
+ */
 
 namespace AntispamBee\PostProcessors;
 
@@ -7,8 +12,20 @@ namespace AntispamBee\PostProcessors;
  */
 class UpdateSpamLog extends Base {
 
+	/**
+	 * Post processor slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-update-spam-log';
 
+	/**
+	 * Process an item.
+	 * Append a line to the spam log file.
+	 *
+	 * @param array $item Item to process.
+	 * @return array Processed item.
+	 */
 	public static function process( $item ) {
 		if ( ! isset( $item['comment_post_ID'] ) || ! isset( $item['comment_author_IP'] ) ) {
 			$item['asb_post_processors_failed'][] = self::get_slug();

@@ -30,6 +30,8 @@ abstract class Field {
 
 	/**
 	 * Type of controllable.
+	 *
+	 * @var string
 	 */
 	protected $controllable_option_name;
 
@@ -123,7 +125,7 @@ abstract class Field {
 	/**
 	 * Get HTML for field.
 	 *
-	 * @return string Elment HTML.
+	 * @return string Element HTML.
 	 */
 	abstract public function render();
 }

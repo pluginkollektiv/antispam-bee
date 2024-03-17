@@ -35,11 +35,15 @@ class SettingsPage {
 	private $tabs = [];
 
 	/**
+	 * List of controllable rules.
+	 *
 	 * @var Rules[]
 	 */
 	private $rules = [];
 
 	/**
+	 * List of controllable post processors
+	 *
 	 * @var PostProcessors[]
 	 */
 	private $post_processors = [];
@@ -59,7 +63,7 @@ class SettingsPage {
 		add_action( 'admin_init', [ $this, 'setup_settings' ] );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$this->active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
+		$this->active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'general';
 	}
 
 	/**
@@ -79,14 +83,16 @@ class SettingsPage {
 	 * Setup tabs content.
 	 */
 	public function setup_settings() {
-		// Todo: Add a way to build rows and fields with a fluent interface? (Nice-to-have)
+		// Todo: Add a way to build rows and fields with a fluent interface? (Nice-to-have).
+
 		/*
 		 * Todo: Instead of using an array to pass options to a function, one could introduce a class that contains
 		 *   these options as class attributes. You instantiate an object of this class and pass it to the
 		 *   Components::filter() method. For frequently used options, one could also use blueprints for options.
 		 *   This would make refactoring easier, but would slightly increase the complexity. (nice-to-have).
 		 */
-		// Todo: Fix the confusing naming. We have a lot of type e.g. (Nice-to-have)
+
+		// Todo: Fix the confusing naming. We have a lot of type e.g. (Nice-to-have).
 
 		$tabs['general'] = new Tab(
 			'general',
@@ -114,7 +120,7 @@ class SettingsPage {
 
 		$this->populate_tabs();
 
-		// Register option setting
+		// Register option setting.
 		foreach ( $this->tabs as $tab ) {
 			foreach ( $tab->get_sections() as $section ) {
 				if ( $tab->get_slug() !== $this->active_tab ) {
@@ -134,6 +140,11 @@ class SettingsPage {
 		);
 	}
 
+	/**
+	 * Populate settings tabs.
+	 *
+	 * @return void
+	 */
 	protected function populate_tabs() {
 		$type = $this->active_tab;
 

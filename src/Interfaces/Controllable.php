@@ -1,12 +1,37 @@
 <?php
+/**
+ * Controllables interface.
+ *
+ * @package AntispamBee\Interfaces
+ */
 
 namespace AntispamBee\Interfaces;
 
+/**
+ * Common interface for controllable elements.
+ * This can be options, processors or rules.
+ */
 interface Controllable {
+
+	/**
+	 * Get element name.
+	 *
+	 * @return string
+	 */
 	public static function get_name();
 
+	/**
+	 * Get element label (optional).
+	 *
+	 * @return string|null
+	 */
 	public static function get_label();
 
+	/**
+	 * Get element description (optional).
+	 *
+	 * @return string|null
+	 */
 	public static function get_description();
 
 	/**
@@ -33,18 +58,51 @@ interface Controllable {
 	 */
 	public static function get_options();
 
+
+	/**
+	 * Returns activation state for this element.
+	 *
+	 * @param string $type One of the types defined in AntispamBee\Helpers\ItemTypeHelper::get_types().
+	 *
+	 * @return mixed|null
+	 */
 	public static function is_active( $type );
 
+	/**
+	 * Only print custom options?
+	 * If enabled, the default options will not be generated.
+	 *
+	 * @return bool
+	 */
 	public static function only_print_custom_options();
 
+	/**
+	 * Get a list of supported types.
+	 *
+	 * @return string[]
+	 */
 	public static function get_supported_types();
 
 	/**
-	 * @return string Type of the controllable;
+	 * Get type of the controllable.
+	 *
+	 * @return string
 	 */
 	public static function get_type();
 
+	/**
+	 * Get controllable slug.
+	 *
+	 * @return string
+	 */
 	public static function get_slug();
 
+	/**
+	 * Get option name.
+	 * This will typically add type and slug prefixes to the short name.
+	 *
+	 * @param string $name Name suffix.
+	 * @return string Corresponding option name
+	 */
 	public static function get_option_name( $name );
 }
