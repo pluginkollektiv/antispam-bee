@@ -86,12 +86,8 @@ jobs:
         extensions: mbstring, intl
         ini-values: post_max_size=256M, short_open_tag=On
         tools: phpunit, composer
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '14'
     - name: Run code style checks for CSS, JavaScript and PHP
       run: |
         composer install
-        npm install
         composer lint-all
         composer cs
