@@ -19,9 +19,9 @@ class DbSpam extends ControllableBase implements SpamReason {
 
 		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';
-			$params[] =  $url;
+			$params[] = $url;
 		}
-		
+
 		$ip = DataHelper::get_values_by_keys( [ 'comment_author_IP' ], $item );
 
 		if ( ! empty( $ip ) ) {

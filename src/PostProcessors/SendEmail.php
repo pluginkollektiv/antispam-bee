@@ -153,7 +153,7 @@ EOF;
 	protected static function get_body( $post, $comment, $item ) {
 		$template_content = self::get_body_template();
 
-		$content      = self::get_content( $comment );
+		$content       = self::get_content( $comment );
 		$reaction_type = ContentTypeHelper::get_type_name( $item['reaction_type'] );
 
 		$spam_reasons = SpamReasonTextHelper::get_texts_by_slugs( $item['asb_reasons'] );
@@ -183,4 +183,3 @@ EOF;
 		);
 	}
 }
-

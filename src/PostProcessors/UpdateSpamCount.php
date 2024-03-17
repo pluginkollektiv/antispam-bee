@@ -25,4 +25,3 @@ class UpdateSpamCount extends Base {
 		return $item;
 	}
 }
-

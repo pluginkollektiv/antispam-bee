@@ -10,10 +10,10 @@ use AntispamBee\Interfaces\SpamReason;
  */
 class EmptyData extends Base implements SpamReason {
 	protected static $slug = 'asb-empty';
-	
+
 	public static function verify( $item ) {
 		$allow_empty_reaction = apply_filters( 'allow_empty_comment', false, $item );
-		$content = $item['comment_content'] ?? '';
+		$content              = $item['comment_content'] ?? '';
 		if ( ! $allow_empty_reaction && empty( $content ) ) {
 			return 999;
 		}
@@ -22,14 +22,14 @@ class EmptyData extends Base implements SpamReason {
 			return 999;
 		}
 
-		if ( $item[ 'reaction_type'] === ContentTypeHelper::COMMENT_TYPE ) {
+		if ( $item['reaction_type'] === ContentTypeHelper::COMMENT_TYPE ) {
 			if ( get_option( 'require_name_email' ) && ( empty( $item['comment_author_email'] ) || empty( $item['comment_author'] ) ) ) {
 				return 999;
 			}
 		}
 
-		if ( $item[ 'reaction_type'] === ContentTypeHelper::LINKBACK_TYPE ) {
-			$url  = $linkback['comment_author_url'] ?? '';
+		if ( $item['reaction_type'] === ContentTypeHelper::LINKBACK_TYPE ) {
+			$url = $linkback['comment_author_url'] ?? '';
 			if ( empty( $url ) ) {
 				return 999;
 			}

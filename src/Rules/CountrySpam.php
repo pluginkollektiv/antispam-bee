@@ -156,7 +156,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 				),
 				'label_kses'  => [
 					'a' => [
-						'href' => true,
+						'href'   => true,
 						'target' => true,
 					],
 				],
@@ -175,7 +175,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 				),
 				'label_kses'  => [
 					'a' => [
-						'href' => true,
+						'href'   => true,
 						'target' => true,
 					],
 				],

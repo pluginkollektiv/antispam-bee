@@ -7,8 +7,8 @@ use AntispamBee\Interfaces\Verifiable;
 
 abstract class Base implements Verifiable {
 	protected static $slug;
-	protected static $weight = 1;
-	protected static $is_final = false;
+	protected static $weight          = 1;
+	protected static $is_final        = false;
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE, ContentTypeHelper::LINKBACK_TYPE ];
 
 	// Set to `true`, if the rule should not be displayed anywhere,

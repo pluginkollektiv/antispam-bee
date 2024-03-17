@@ -42,22 +42,22 @@ class DashboardWidgets {
 		echo '<style>#dashboard_right_now .ab-count::before {content: "\f117"} #dashboard_right_now .ab-current-spam::before {content: "\f17e"}</style>';
 
 		$items[] = '<span class="ab-count">' . esc_html(
-				sprintf(
+			sprintf(
 				// translators: The number of spam comments Antispam Bee blocked so far.
-					__( '%s comments blocked', 'antispam-bee' ),
-					self::get_spam_count()
-				)
-			) . '</span>';
+				__( '%s comments blocked', 'antispam-bee' ),
+				self::get_spam_count()
+			)
+		) . '</span>';
 
-		$link = add_query_arg( 'comment_status', 'spam', admin_url( 'edit-comments.php' ) );
+		$link            = add_query_arg( 'comment_status', 'spam', admin_url( 'edit-comments.php' ) );
 		$comments_number = wp_count_comments();
-		$items[] = '<a href="' . $link . '" class="ab-current-spam">' . esc_html(
-				sprintf(
+		$items[]         = '<a href="' . $link . '" class="ab-current-spam">' . esc_html(
+			sprintf(
 				// translators: The number of spam comments in the local spam database.
-					__( '%s comments in local spam db', 'antispam-bee' ),
-					self::format_number( $comments_number->spam )
-				)
-			) . '</a>';
+				__( '%s comments in local spam db', 'antispam-bee' ),
+				self::format_number( $comments_number->spam )
+			)
+		) . '</a>';
 
 		return $items;
 	}

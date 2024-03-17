@@ -25,8 +25,8 @@ class Honeypot {
 	 * Inject the honeypot field.
 	 *
 	 * @param string $markup The field markup.
-	 * @param array $options {
-	 *      The field options.
+	 * @param array  $options {
+	 *       The field options.
 	 *
 	 * @type string $form_id The form id.
 	 * @type string $form_name The form name.

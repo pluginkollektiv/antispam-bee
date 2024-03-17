@@ -8,7 +8,7 @@ use AntispamBee\Interfaces\PostProcessor;
 
 class PostProcessors {
 	/**
-	 * @param string $reaction_type one of the supported content types.
+	 * @param string  $reaction_type one of the supported content types.
 	 * @param $item
 	 * @param $reasons
 	 *
@@ -17,12 +17,12 @@ class PostProcessors {
 	public static function apply( $reaction_type, $item, $reasons = [] ) {
 		$post_processors = self::get( $reaction_type, true );
 
-		$item['asb_reasons']  = $reasons;
+		$item['asb_reasons']   = $reasons;
 		$item['reaction_type'] = $reaction_type;
 
 		// Move the post processors that mark an item as to delete to front,
 		// so that following processors know if they handle an item that will be deleted.
-		for ( $i = 0; $i < count( $post_processors ); $i ++ ) {
+		for ( $i = 0; $i < count( $post_processors ); $i++ ) {
 			if ( $post_processors[ $i ]::marks_as_delete() ) {
 				$post_processor = $post_processors[ $i ];
 				unset( $post_processors[ $i ] );

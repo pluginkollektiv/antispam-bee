@@ -17,10 +17,13 @@ abstract class Reaction {
 		);
 
 		// Add our manual spam reason to the list of reasons.
-		add_filter( 'antispam_bee_additional_spam_reasons', function ( $reasons ) {
-			$reasons['asb-marked-manually'] = __( 'Manually', 'antispam-bee' );
-			return $reasons;
-		} );
+		add_filter(
+			'antispam_bee_additional_spam_reasons',
+			function ( $reasons ) {
+				$reasons['asb-marked-manually'] = __( 'Manually', 'antispam-bee' );
+				return $reasons;
+			}
+		);
 	}
 
 	public static function always_init() {

@@ -19,7 +19,7 @@ class InterfaceHelper {
 	 * Check if a class implements one or more interfaces.
 	 *
 	 * @param string $class_name Fully-qualified class name.
-	 * @param array $interfaces Array of fully-qualified interface names.
+	 * @param array  $interfaces Array of fully-qualified interface names.
 	 *
 	 * @return bool
 	 */

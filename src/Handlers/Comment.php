@@ -26,7 +26,7 @@ class Comment extends Reaction {
 		/**
 		 * Filter processable comment types.
 		 *
-		 * @param	array	$types List of comment types
+		 * @param   array   $types List of comment types
 		 */
 		$comment_types = (array) apply_filters( 'antispam_bee_comment_types', [ '', 'comment', 'review' ] );
 

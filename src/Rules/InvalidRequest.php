@@ -11,7 +11,7 @@ class InvalidRequest extends Base implements SpamReason {
 	protected static $slug = 'asb-invalid-request';
 
 	public static function verify( $item ) {
-		if ( isset( $_POST[ 'ab_spam__invalid_request'] ) && $_POST[ 'ab_spam__invalid_request'] ) {
+		if ( isset( $_POST['ab_spam__invalid_request'] ) && $_POST['ab_spam__invalid_request'] ) {
 			return 999;
 		}
 

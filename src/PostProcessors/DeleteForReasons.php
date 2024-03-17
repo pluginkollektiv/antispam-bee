@@ -10,7 +10,7 @@ use AntispamBee\Helpers\Settings;
  * Marks spam comments for deletion if they have a specific reason.
  */
 class DeleteForReasons extends ControllableBase {
-	protected static $slug = 'asb-delete-for-reasons';
+	protected static $slug            = 'asb-delete-for-reasons';
 	protected static $marks_as_delete = true;
 
 	public static function process( $item ) {

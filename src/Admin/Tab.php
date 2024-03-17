@@ -30,8 +30,8 @@ class Tab {
 	/**
 	 * Initialize the tab.
 	 *
-	 * @param string $slug Title for tab
-	 * @param string $title Title for tab
+	 * @param string    $slug Title for tab
+	 * @param string    $title Title for tab
 	 * @param Section[] $sections Sections object array.
 	 */
 	public function __construct( $slug, $title, $sections = [] ) {

@@ -11,9 +11,9 @@ use AntispamBee\Interfaces\SpamReason;
  * @todo: check on remote server.
  */
 class LinkbackFromMyself extends Base implements SpamReason {
-	protected static $slug = 'asb-linkback-from-myself';
+	protected static $slug            = 'asb-linkback-from-myself';
 	protected static $supported_types = [ ContentTypeHelper::LINKBACK_TYPE ];
-	protected static $is_invisible = true;
+	protected static $is_invisible    = true;
 
 	public static function verify( $item ) {
 		$url            = isset( $item['comment_author_url'] ) ? $item['comment_author_url'] : null;

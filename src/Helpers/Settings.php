@@ -6,21 +6,21 @@ use AntispamBee\Handlers\PluginUpdate;
 
 class Settings {
 	protected static $defaults = [
-		'comment'   => [
-			'rule_asb_regexp_active'   => 'on',
-			'rule_asb_honeypot_active' => 'on',
-			'rule_asb_db_spam_active'  => 'on',
-			'rule_asb_bbcode_active'   => 'on',
+		'comment'  => [
+			'rule_asb_regexp_active'                => 'on',
+			'rule_asb_honeypot_active'              => 'on',
+			'rule_asb_db_spam_active'               => 'on',
+			'rule_asb_bbcode_active'                => 'on',
 			'post_processor_asb_save_reason_active' => 'on',
-			'rule_asb_approved_email_active' => 'on',
+			'rule_asb_approved_email_active'        => 'on',
 		],
 		'linkback' => [
-			'rule_asb_regexp_active'  => 'on',
-			'rule_asb_db_spam_active' => 'on',
-			'rule_asb_bbcode_active'  => 'on',
+			'rule_asb_regexp_active'                => 'on',
+			'rule_asb_db_spam_active'               => 'on',
+			'rule_asb_bbcode_active'                => 'on',
 			'post_processor_asb_save_reason_active' => 'on',
 		],
-		'general'   => [
+		'general'  => [
 			'general_delete_data_on_uninstall_active' => 'on',
 		],
 	];
@@ -86,7 +86,7 @@ class Settings {
 	 * Get value from array by path.
 	 *
 	 * @param string $path Dot-separated path to the wanted value.
-	 * @param array $array
+	 * @param array  $array
 	 *
 	 * @return null|mixed
 	 */
@@ -141,7 +141,7 @@ class Settings {
 	 * Update single option field
 	 *
 	 * @param string $field Field name.
-	 * @param mixed $value The Field value.
+	 * @param mixed  $value The Field value.
 	 *
 	 * @since  0.1
 	 * @since  2.4
@@ -157,7 +157,7 @@ class Settings {
 	/**
 	 * Check and return an array key
 	 *
-	 * @param array $array Array with values.
+	 * @param array  $array Array with values.
 	 * @param string $key Name of the key.
 	 *
 	 * @return  mixed         Value of the requested key.

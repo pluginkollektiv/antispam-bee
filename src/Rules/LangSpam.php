@@ -51,10 +51,10 @@ class LangSpam extends ControllableBase implements SpamReason {
 			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			_x( 'words', 'Word count type. Do not translate!' ),
 			'characters'
-			) === 0 && preg_match(
-				'/^utf\-?8$/i',
-				get_option( 'blog_charset' )
-			) ) { // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+		) === 0 && preg_match(
+			'/^utf\-?8$/i',
+			get_option( 'blog_charset' )
+		) ) { // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			preg_match_all( '/./u', $text, $words_array );
 			$word_count = 0;
 			if ( isset( $words_array[0] ) ) {
@@ -75,7 +75,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 		);
 
 		if ( is_wp_error( $response )
-		     || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+			|| wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			return 0;
 		}
 

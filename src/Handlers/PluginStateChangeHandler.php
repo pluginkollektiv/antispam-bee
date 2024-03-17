@@ -59,7 +59,6 @@ class PluginStateChangeHandler {
 			self::maybe_remove_antispam_bee_data();
 			restore_current_blog();
 		}
-
 	}
 
 	private static function maybe_remove_antispam_bee_data() {

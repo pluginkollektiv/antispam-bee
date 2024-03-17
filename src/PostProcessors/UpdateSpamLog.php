@@ -40,4 +40,3 @@ class UpdateSpamLog extends Base {
 		return $item;
 	}
 }
-

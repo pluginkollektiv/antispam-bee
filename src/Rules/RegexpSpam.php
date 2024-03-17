@@ -93,8 +93,8 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 				'email' => '@mail\.ru|@yandex\.',
 			],
 			[
-				'rawurl' => '^http[s]?:\/\/(accounts\.)?binance\.com\/[a-zA-Z-]+\/register(-person)?\?ref=[\w]+'
-			]
+				'rawurl' => '^http[s]?:\/\/(accounts\.)?binance\.com\/[a-zA-Z-]+\/register(-person)?\?ref=[\w]+',
+			],
 		];
 
 		$quoted_author = preg_quote( $subject['author'], '/' );

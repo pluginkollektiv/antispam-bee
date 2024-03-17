@@ -193,10 +193,10 @@ class SettingsPage {
 				<li>
 					<?php if ( $tab->get_slug() === $this->active_tab ) : ?>
 						<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
-						   class="nav-tab nav-tab-active"><?php echo esc_html( $tab->get_title() ); ?></a>
+							class="nav-tab nav-tab-active"><?php echo esc_html( $tab->get_title() ); ?></a>
 					<?php else : ?>
 						<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
-						   class="nav-tab"><?php echo esc_html( $tab->get_title() ); ?></a>
+							class="nav-tab"><?php echo esc_html( $tab->get_title() ); ?></a>
 					<?php endif; ?>
 				</li>
 				<?php endforeach; ?>

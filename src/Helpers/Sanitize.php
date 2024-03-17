@@ -20,7 +20,6 @@ class Sanitize {
 	 *
 	 * @return array Intersection of values and valid options.
 	 * @since 3.0.0
-	 *
 	 */
 	public static function checkbox_group( $values, array $valid_options ) {
 		if ( ! is_array( $values ) ) {
@@ -37,7 +36,6 @@ class Sanitize {
 	 *
 	 * @return array
 	 * @since 3.0.0
-	 *
 	 */
 	public static function iso_codes( $codes ) {
 		if ( ! is_array( $codes ) ) {
@@ -93,7 +91,7 @@ class Sanitize {
 		foreach ( $controllables as $controllable ) {
 			$option_path  = str_replace( '-', '_', $tab . '.' . $controllable::get_option_name( 'active' ) );
 			$active_state = Settings::get_array_value_by_path( $option_path, $options );
-			$sanitized    = Sanitize::checkbox( $active_state );
+			$sanitized    = self::checkbox( $active_state );
 			if ( ! $sanitized ) {
 				Settings::remove_array_key_by_path( $option_path, $options );
 			}

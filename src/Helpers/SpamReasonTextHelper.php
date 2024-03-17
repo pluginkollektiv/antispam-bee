@@ -24,7 +24,7 @@ class SpamReasonTextHelper {
 		 *
 		 * @param $additional_reasons array Array of additional reasons. Key is the reason slug, value the label users see in the backend.
 		 */
-		$additional_reasons = (array) apply_filters( 'antispam_bee_additional_spam_reasons', [] );
+		$additional_reasons    = (array) apply_filters( 'antispam_bee_additional_spam_reasons', [] );
 		self::$slug_text_array = array_merge( $additional_reasons, self::$slug_text_array );
 	}
 
@@ -46,16 +46,16 @@ class SpamReasonTextHelper {
 			}
 
 			$legacy_rules = [
-				'server' => esc_html_x( 'Fake IP', 'legacy spam reason label', 'antispam-bee' )
+				'server' => esc_html_x( 'Fake IP', 'legacy spam reason label', 'antispam-bee' ),
 			];
-			
+
 			if ( array_key_exists( $slug, $legacy_rules ) ) {
 				$texts[] = esc_html_x(
 					/* translators: s=slug of unknown spam reason */
-						sprintf( 'Legacy rule: %s', $legacy_rules[ $slug ] ),
-						'spam-reason-legacy-text',
-						'antispam-bee'
-					);
+					sprintf( 'Legacy rule: %s', $legacy_rules[ $slug ] ),
+					'spam-reason-legacy-text',
+					'antispam-bee'
+				);
 				continue;
 			}
 			$texts[] = esc_html_x(

@@ -19,7 +19,7 @@ class ComponentsHelper {
 	 */
 	public static function filter( $components, $options ) {
 		$reaction_type = isset( $options['reaction_type'] ) ? $options['reaction_type'] : null;
-		$only_active  = isset( $options['only_active'] ) ? $options['only_active'] : false;
+		$only_active   = isset( $options['only_active'] ) ? $options['only_active'] : false;
 
 		$filtered_components = [];
 		foreach ( $components as $component ) {

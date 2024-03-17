@@ -10,7 +10,7 @@ use AntispamBee\Interfaces\Verifiable;
 
 class Rules {
 	protected $type;
-	protected $spam_reasons = [];
+	protected $spam_reasons    = [];
 	protected $no_spam_reasons = [];
 
 	public function __construct( $type ) {
@@ -19,7 +19,7 @@ class Rules {
 
 	public function apply( $item ) {
 		$item['reaction_type'] = $this->type;
-		$rules                = self::get( $this->type, true );
+		$rules                 = self::get( $this->type, true );
 
 		$no_spam_threshold = (float) apply_filters( 'antispam_bee_no_spam_threshold', 0.0 );
 		$spam_threshold    = (float) apply_filters( 'antispam_bee_spam_threshold', 0.0 );
@@ -37,7 +37,7 @@ class Rules {
 			DebugMode::log( "Checking »{$rule::get_name()}« rule" );
 
 			$rule_score = $rule::verify( $item ) * $rule::get_weight();
-			
+
 			DebugMode::log( "Score: {$rule_score}" );
 
 			if ( $rule_score > 0.0 ) {
