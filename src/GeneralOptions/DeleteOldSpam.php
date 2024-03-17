@@ -38,8 +38,8 @@ class DeleteOldSpam extends Base {
 					static::class
 				),
 				'option_name' => 'active',
-				'label'       => esc_html( 'Delete existing spam after %s days', 'antispam-bee' ),
-				'description' => esc_html( 'Cleaning up the database from old entries', 'antispam-bee' ),
+				'label'       => esc_html__( 'Delete existing spam after %s days', 'antispam-bee' ),
+				'description' => esc_html__( 'Cleaning up the database from old entries', 'antispam-bee' ),
 				'sanitize'    => function ( $value ) {
 					return Sanitize::checkbox( $value );
 				},
