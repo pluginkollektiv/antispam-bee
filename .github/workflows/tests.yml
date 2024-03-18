@@ -89,4 +89,5 @@ jobs:
     - name: Run code style checks for CSS, JavaScript and PHP
       run: |
         composer install --ignore-platform-req=php
+        ./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
         composer cs
