@@ -32,7 +32,7 @@ class Delete extends ControllableBase {
 	 * @param array $item Item to process.
 	 * @return array Processed item.
 	 */
-	public static function process( $item ) {
+	public static function process( array $item ): array {
 		$item['asb_marked_as_delete'] = true;
 
 		return $item;
@@ -43,7 +43,7 @@ class Delete extends ControllableBase {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Delete spam', 'antispam-bee' );
 	}
 
@@ -52,7 +52,7 @@ class Delete extends ControllableBase {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'Delete detected spam instead of marking.', 'antispam-bee' );
 	}
 
@@ -61,7 +61,7 @@ class Delete extends ControllableBase {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		return null;
 	}
 }

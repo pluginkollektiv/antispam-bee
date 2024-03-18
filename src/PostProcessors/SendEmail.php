@@ -9,6 +9,7 @@ namespace AntispamBee\PostProcessors;
 
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\SpamReasonTextHelper;
+use WP_Post;
 
 /**
  * Post processor that is responsible for sending emails to the user.
@@ -29,7 +30,7 @@ class SendEmail extends ControllableBase {
 	 * @param array $item Item to process.
 	 * @return array Processed item.
 	 */
-	public static function process( $item ) {
+	public static function process( array $item ): array {
 		if ( isset( $item['asb_marked_as_delete'] ) && true === $item['asb_marked_as_delete'] ) {
 			return $item;
 		}
@@ -85,7 +86,7 @@ class SendEmail extends ControllableBase {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Send email', 'antispam-bee' );
 	}
 
@@ -94,7 +95,7 @@ class SendEmail extends ControllableBase {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'Spam-Notification by email', 'antispam-bee' );
 	}
 
@@ -103,7 +104,7 @@ class SendEmail extends ControllableBase {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		return __( 'Notify admins by e-mail about incoming spam', 'antispam-bee' );
 	}
 
@@ -112,7 +113,7 @@ class SendEmail extends ControllableBase {
 	 *
 	 * @return string
 	 */
-	private static function get_subject() {
+	private static function get_subject(): string {
 		return sprintf(
 			'[%s] %s',
 			stripslashes(
@@ -132,7 +133,7 @@ class SendEmail extends ControllableBase {
 	 * @param array $comment The comment.
 	 * @return string
 	 */
-	private static function get_content( $comment ) {
+	private static function get_content( array $comment ): string {
 		$content = strip_tags( stripslashes( $comment['comment_content'] ) );
 
 		if ( $content ) {
@@ -147,7 +148,7 @@ class SendEmail extends ControllableBase {
 	 *
 	 * @return string
 	 */
-	private static function get_body_template() {
+	private static function get_body_template(): string {
 		$new_spam_comment = sprintf( /* translators: s=post title. */
 			esc_html__( 'New spam comment on your post “%s”,', 'antispam-bee' ),
 			'{{post_title}}'
@@ -201,12 +202,12 @@ EOF;
 	/**
 	 * Generate email body.
 	 *
-	 * @param \WP_Post $post    The post.
-	 * @param array    $comment The comment.
-	 * @param array    $item    Processed item.
+	 * @param WP_Post $post    The post.
+	 * @param array   $comment The comment.
+	 * @param array   $item    Processed item.
 	 * @return string
 	 */
-	protected static function get_body( $post, $comment, $item ) {
+	protected static function get_body( WP_Post $post, array $comment, array $item ): string {
 		$template_content = self::get_body_template();
 
 		$content       = self::get_content( $comment );

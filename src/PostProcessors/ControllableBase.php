@@ -35,7 +35,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	 *
 	 * @return mixed|null
 	 */
-	public static function is_active( $type ) {
+	public static function is_active( string $type ) {
 		return Settings::get_option( static::get_option_name( 'active' ), $type );
 	}
 
@@ -46,7 +46,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	 *
 	 * @return mixed
 	 */
-	public static function get_options() {
+	public static function get_options(): ?array {
 		return null;
 	}
 
@@ -56,7 +56,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	 *
 	 * @return bool
 	 */
-	public static function only_print_custom_options() {
+	public static function only_print_custom_options(): bool {
 		return static::$only_print_custom_options;
 	}
 
@@ -65,7 +65,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	 *
 	 * @return string
 	 */
-	public static function get_type() {
+	public static function get_type(): string {
 		return static::$type;
 	}
 
@@ -76,7 +76,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	 * @param string $name Name suffix.
 	 * @return string Corresponding option name
 	 */
-	public static function get_option_name( $name ) {
+	public static function get_option_name( string $name ): string {
 		$type        = static::get_type();
 		$slug        = static::get_slug();
 		$option_name = "{$type}_{$slug}_{$name}";

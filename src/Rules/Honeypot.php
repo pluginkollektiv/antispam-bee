@@ -38,7 +38,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public static function init(): void {
 		add_filter( 'antispam_bee_rules', [ __CLASS__, 'add_rule' ] );
 
 		add_filter(
@@ -61,7 +61,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */
-	public static function verify( $item ) {
+	public static function verify( array $item ): int {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['ab_spam__hidden_field'] ) && 1 === $_POST['ab_spam__hidden_field'] ) {
 			return 999;
@@ -75,7 +75,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	 *
 	 * @return void
 	 */
-	public static function precheck() {
+	public static function precheck(): void {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( is_feed() || is_trackback() || empty( $_POST ) ) {
 			return;
@@ -120,7 +120,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return _x( 'Honeypot', 'spam-reason-form-name', 'antispam-bee' );
 	}
 
@@ -129,7 +129,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'Inject hidden field', 'antispam-bee' );
 	}
 
@@ -138,7 +138,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		return __( 'No review of already commented users', 'antispam-bee' );
 	}
 
@@ -147,7 +147,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_reason_text() {
+	public static function get_reason_text(): string {
 		return _x( 'Honeypot', 'spam-reason-text', 'antispam-bee' );
 	}
 }

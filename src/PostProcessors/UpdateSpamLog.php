@@ -26,7 +26,7 @@ class UpdateSpamLog extends Base {
 	 * @param array $item Item to process.
 	 * @return array Processed item.
 	 */
-	public static function process( $item ) {
+	public static function process( array $item ): array {
 		if ( ! isset( $item['comment_post_ID'] ) || ! isset( $item['comment_author_IP'] ) ) {
 			$item['asb_post_processors_failed'][] = self::get_slug();
 			return $item;

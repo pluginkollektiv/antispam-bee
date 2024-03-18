@@ -42,7 +42,7 @@ abstract class Base implements Controllable {
 	 *
 	 * @return string
 	 */
-	public static function get_slug() {
+	public static function get_slug(): string {
 		return static::$slug;
 	}
 
@@ -51,9 +51,9 @@ abstract class Base implements Controllable {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return mixed
+	 * @return array|null
 	 */
-	public static function get_options() {
+	public static function get_options(): ?array {
 		return null;
 	}
 
@@ -63,7 +63,7 @@ abstract class Base implements Controllable {
 	 * @return void
 	 * @since 3.0.0
 	 */
-	public static function init() {
+	public static function init(): void {
 		add_filter( 'antispam_bee_general_options', [ static::class, 'add_general_option' ] );
 	}
 
@@ -75,7 +75,7 @@ abstract class Base implements Controllable {
 	 * @return array Updated options.
 	 * @since 3.0.0
 	 */
-	public static function add_general_option( $options ) {
+	public static function add_general_option( array $options ): array {
 		$options[] = static::class;
 
 		return $options;
@@ -88,7 +88,7 @@ abstract class Base implements Controllable {
 	 *
 	 * @return mixed|null
 	 */
-	public static function is_active( $type = 'general' ) {
+	public static function is_active( string $type = 'general' ) {
 		return Settings::get_option( static::get_option_name( 'active' ), $type );
 	}
 
@@ -98,7 +98,7 @@ abstract class Base implements Controllable {
 	 *
 	 * @return bool
 	 */
-	public static function only_print_custom_options() {
+	public static function only_print_custom_options(): bool {
 		return static::$only_custom_options;
 	}
 
@@ -107,7 +107,7 @@ abstract class Base implements Controllable {
 	 *
 	 * @return string[]
 	 */
-	public static function get_supported_types() {
+	public static function get_supported_types(): array {
 		return [ 'general' ];
 	}
 
@@ -116,7 +116,7 @@ abstract class Base implements Controllable {
 	 *
 	 * @return string
 	 */
-	public static function get_type() {
+	public static function get_type(): string {
 		return static::$type;
 	}
 
@@ -127,7 +127,7 @@ abstract class Base implements Controllable {
 	 * @param string $name Name suffix.
 	 * @return string Corresponding option name
 	 */
-	public static function get_option_name( $name ) {
+	public static function get_option_name( string $name ): string {
 		$type        = static::get_type();
 		$slug        = static::get_slug();
 		$option_name = "{$type}_{$slug}_{$name}";

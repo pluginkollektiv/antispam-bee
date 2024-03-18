@@ -41,7 +41,7 @@ abstract class Base implements PostProcessor {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public static function init(): void {
 		add_filter( 'antispam_bee_post_processors', [ static::class, 'add_post_processor' ] );
 	}
 
@@ -52,7 +52,7 @@ abstract class Base implements PostProcessor {
 	 *
 	 * @return PostProcessor[] Updated list of post processors.
 	 */
-	public static function add_post_processor( $post_processors ) {
+	public static function add_post_processor( array $post_processors ): array {
 		$post_processors[] = static::class;
 
 		return $post_processors;
@@ -63,7 +63,7 @@ abstract class Base implements PostProcessor {
 	 *
 	 * @return string The slug.
 	 */
-	public static function get_slug() {
+	public static function get_slug(): string {
 		return static::$slug;
 	}
 
@@ -72,7 +72,7 @@ abstract class Base implements PostProcessor {
 	 *
 	 * @return string[]
 	 */
-	public static function get_supported_types() {
+	public static function get_supported_types(): array {
 		// @todo: add filter
 		return static::$supported_types;
 	}
@@ -82,7 +82,7 @@ abstract class Base implements PostProcessor {
 	 *
 	 * @return bool
 	 */
-	public static function marks_as_delete() {
+	public static function marks_as_delete(): bool {
 		return static::$marks_as_delete;
 	}
 }

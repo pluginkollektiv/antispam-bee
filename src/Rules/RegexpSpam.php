@@ -32,7 +32,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */
-	public static function verify( $item ) {
+	public static function verify( array $item ): int {
 		$fields = [
 			'ip',
 			'host',
@@ -178,7 +178,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Regular Expression', 'antispam-bee' );
 	}
 
@@ -187,7 +187,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'Use regular expressions', 'antispam-bee' );
 	}
 
@@ -196,7 +196,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		return __( 'Predefined and custom patterns by plugin hook', 'antispam-bee' );
 	}
 
@@ -205,7 +205,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_reason_text() {
+	public static function get_reason_text(): string {
 		return _x( 'RegExp match', 'spam-reason-text', 'antispam-bee' );
 	}
 }

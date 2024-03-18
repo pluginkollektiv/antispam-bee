@@ -37,7 +37,7 @@ class ApprovedEmail extends ControllableBase {
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */
-	public static function verify( $item ) {
+	public static function verify( array $item ): int {
 		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $item );
 		if ( empty( $email ) ) {
 			return 0;
@@ -65,7 +65,7 @@ class ApprovedEmail extends ControllableBase {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Approved Email', 'antispam-bee' );
 	}
 
@@ -74,7 +74,7 @@ class ApprovedEmail extends ControllableBase {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'Trust approved commenters', 'antispam-bee' );
 	}
 
@@ -83,7 +83,7 @@ class ApprovedEmail extends ControllableBase {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		return __( 'No review of already commented users', 'antispam-bee' );
 	}
 }

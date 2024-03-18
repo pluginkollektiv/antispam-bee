@@ -29,7 +29,7 @@ class InvalidRequest extends Base implements SpamReason {
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */
-	public static function verify( $item ) {
+	public static function verify( array $item ): int {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput
 		if ( isset( $_POST['ab_spam__invalid_request'] ) && $_POST['ab_spam__invalid_request'] ) {
 			return 999;
@@ -43,7 +43,7 @@ class InvalidRequest extends Base implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return _x( 'Invalid Request', 'spam-reason-form-name', 'antispam-bee' );
 	}
 
@@ -52,7 +52,7 @@ class InvalidRequest extends Base implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_reason_text() {
+	public static function get_reason_text(): string {
 		return _x( 'Invalid Request', 'spam-reason-text', 'antispam-bee' );
 	}
 }

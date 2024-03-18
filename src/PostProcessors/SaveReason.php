@@ -26,7 +26,7 @@ class SaveReason extends ControllableBase {
 	 * @param array $item Item to process.
 	 * @return array Processed item.
 	 */
-	public static function process( $item ) {
+	public static function process( array $item ): array {
 		if ( isset( $item['asb_marked_as_delete'] ) && true === $item['asb_marked_as_delete'] ) {
 			return $item;
 		}
@@ -55,7 +55,7 @@ class SaveReason extends ControllableBase {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Save reasons', 'antispam-bee' );
 	}
 
@@ -64,7 +64,7 @@ class SaveReason extends ControllableBase {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'Save the spam reasons as comment meta', 'antispam-bee' );
 	}
 
@@ -73,7 +73,7 @@ class SaveReason extends ControllableBase {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		return __( 'The reasons are displayed in the spam comments list.', 'antispam-bee' );
 	}
 }

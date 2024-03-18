@@ -33,7 +33,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */
-	public static function verify( $item ) {
+	public static function verify( array $item ): int {
 		$allowed_languages = array_keys( (array) Settings::get_option( static::get_option_name( 'allowed' ), $item['reaction_type'] ) );
 
 		$comment_content = DataHelper::get_values_where_key_contains( [ 'content' ], $item );
@@ -118,7 +118,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Language', 'antispam-bee' );
 	}
 
@@ -127,7 +127,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'Allow reactions only in certain language', 'antispam-bee' );
 	}
 
@@ -136,7 +136,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		$link1 = sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
 			esc_url(
@@ -160,7 +160,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return array
 	 */
-	public static function get_options() {
+	public static function get_options(): array {
 		// @todo: we should enable the user to select all 82 languages we can detect. we use presets: the site language, the site language + english, if more than two langs are installed, use those; and: custom. We could check the preferred languages UI for the custom option. And also for the ISO codes.
 		$languages = [
 			'de' => __( 'German', 'antispam-bee' ),
@@ -199,7 +199,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_reason_text() {
+	public static function get_reason_text(): string {
 		return __( 'Language', 'antispam-bee' );
 	}
 }

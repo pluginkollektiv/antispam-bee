@@ -46,7 +46,7 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */
-	public static function verify( $item ) {
+	public static function verify( array $item ): int {
 		$url            = isset( $item['comment_author_url'] ) ? $item['comment_author_url'] : null;
 		$target_post_id = isset( $item['comment_post_ID'] ) ? $item['comment_post_ID'] : null;
 		if ( empty( $url ) || empty( $target_post_id ) ) {
@@ -88,7 +88,7 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Linkback from myself', 'antispam-bee' );
 	}
 
@@ -97,7 +97,7 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_reason_text() {
+	public static function get_reason_text(): string {
 		return _x( 'Linkback from myself', 'spam-reason-text', 'antispam-bee' );
 	}
 }
