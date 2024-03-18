@@ -29,7 +29,7 @@ class EmptyData extends Base implements SpamReason {
 		}
 
 		if ( $item['reaction_type'] === ContentTypeHelper::LINKBACK_TYPE ) {
-			$url = $linkback['comment_author_url'] ?? '';
+			$url = $item['comment_author_url'] ?? '';
 			if ( empty( $url ) ) {
 				return 999;
 			}
