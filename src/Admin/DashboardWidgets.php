@@ -18,7 +18,7 @@ class DashboardWidgets {
 	/**
 	 * Initialize the dashboard widgets.
 	 */
-	public static function init() {
+	public static function init(): void {
 		if ( DashboardHelper::is_dashboard_page() ) {
 			add_action( 'antispam_bee_count', [ __CLASS__, 'the_spam_count' ] );
 			add_filter( 'dashboard_glance_items', [ __CLASS__, 'add_dashboard_count' ] );
@@ -34,7 +34,7 @@ class DashboardWidgets {
 	 * @since  0.1
 	 * @since  2.6.5
 	 */
-	public static function add_dashboard_count( $items = array() ) {
+	public static function add_dashboard_count( array $items = array() ): array {
 		if ( ! current_user_can( 'manage_options' ) || ! Statistics::is_active() ) {
 			return $items;
 		}
@@ -68,7 +68,7 @@ class DashboardWidgets {
 	 * @since  0.1
 	 * @since  2.4
 	 */
-	private static function get_spam_count() {
+	private static function get_spam_count(): string {
 		$count = intval( Settings::get_option( 'spam_count', '' ) );
 
 		return self::format_number( $count );
@@ -77,10 +77,10 @@ class DashboardWidgets {
 	/**
 	 * Format a number.
 	 *
-	 * @param float $number Number to format.
+	 * @param float|int $number Number to format.
 	 * @return string
 	 */
-	private static function format_number( $number ) {
+	private static function format_number( $number ): string {
 		return ( get_locale() === 'de_DE' ? number_format( $number, 0, '', '.' ) : number_format_i18n( $number ) );
 	}
 
@@ -90,7 +90,7 @@ class DashboardWidgets {
 	 * @since  0.1
 	 * @since  2.4
 	 */
-	public static function the_spam_count() {
+	public static function the_spam_count(): void {
 		echo esc_html( self::get_spam_count() );
 	}
 }

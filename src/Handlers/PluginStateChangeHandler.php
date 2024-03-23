@@ -19,7 +19,7 @@ class PluginStateChangeHandler {
 	/**
 	 * Activate callback.
 	 */
-	public static function activate() {
+	public static function activate(): void {
 		if ( ! is_blog_installed() ) {
 			return;
 		}
@@ -31,7 +31,7 @@ class PluginStateChangeHandler {
 	/**
 	 * Deactivate callback.
 	 */
-	public static function deactivate() {
+	public static function deactivate(): void {
 		DeleteSpamCron::unregister();
 		flush_rewrite_rules();
 	}
@@ -39,7 +39,7 @@ class PluginStateChangeHandler {
 	/**
 	 * Uninstall callback.
 	 */
-	public static function uninstall() {
+	public static function uninstall(): void {
 		if ( ! is_multisite() ) {
 			self::maybe_remove_antispam_bee_data();
 			return;
@@ -66,7 +66,7 @@ class PluginStateChangeHandler {
 	 *
 	 * @return void
 	 */
-	private static function maybe_remove_antispam_bee_data() {
+	private static function maybe_remove_antispam_bee_data(): void {
 		if ( ! Uninstall::is_active() ) {
 			return;
 		}
@@ -84,7 +84,7 @@ class PluginStateChangeHandler {
 	/**
 	 * Initialization of the cronjobs.
 	 */
-	public static function init_scheduled_hook() {
+	public static function init_scheduled_hook(): void {
 		DeleteSpamCron::maybe_change_cron_state();
 	}
 }

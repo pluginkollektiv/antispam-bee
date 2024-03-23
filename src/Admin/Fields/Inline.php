@@ -17,9 +17,9 @@ class Inline extends Field implements RenderElement {
 	/**
 	 * Get HTML for field.
 	 *
-	 * @return string Element HTML.
+	 * @return void
 	 */
-	public function render() {
+	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( ! $this->option['input'] instanceof Field ) {

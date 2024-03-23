@@ -38,11 +38,11 @@ abstract class Field {
 	/**
 	 * Initializing field
 	 *
-	 * @param string                     $type Item type.
-	 * @param array                      $option Field options.
-	 * @param class-string<Controllable> $controllable The related controllable.
+	 * @param string $type         Item type.
+	 * @param array  $option       Field options.
+	 * @param string $controllable The related controllable (class name).
 	 */
-	public function __construct( $type, $option, $controllable ) {
+	public function __construct( string $type, array $option, string $controllable ) {
 		$this->type                     = $type;
 		$this->option                   = $option;
 		$this->controllable_option_name = $controllable::get_option_name( $this->option['option_name'] );
@@ -79,7 +79,7 @@ abstract class Field {
 	 *
 	 * @return string
 	 */
-	public function get_placeholder() {
+	public function get_placeholder(): string {
 		return isset( $this->option['placeholder'] ) ? $this->option['placeholder'] : '';
 	}
 
@@ -88,7 +88,7 @@ abstract class Field {
 	 *
 	 * @return string Description of the field.
 	 */
-	public function get_description() {
+	public function get_description(): string {
 		return isset( $this->option['description'] ) ? $this->option['description'] : '';
 	}
 
@@ -106,14 +106,14 @@ abstract class Field {
 	 *
 	 * @return array
 	 */
-	public function get_option() {
+	public function get_option(): array {
 		return $this->option;
 	}
 
 	/**
 	 * Show description if not empty.
 	 */
-	protected function maybe_show_description() {
+	protected function maybe_show_description(): void {
 		if ( ! empty( $this->get_description() ) ) {
 			printf(
 				'<p class="description">%s</p>',
@@ -125,7 +125,7 @@ abstract class Field {
 	/**
 	 * Get HTML for field.
 	 *
-	 * @return string Element HTML.
+	 * @return void
 	 */
-	abstract public function render();
+	abstract public function render(): void;
 }

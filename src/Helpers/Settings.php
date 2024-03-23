@@ -47,7 +47,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public static function init(): void {
 		add_action(
 			'update_option_' . self::OPTION_NAME,
 			[ __CLASS__, 'update_cache' ],
@@ -63,16 +63,16 @@ class Settings {
 	 * @param mixed $value     The new option value.
 	 * @return void
 	 */
-	public static function update_cache( $old_value, $value ) {
+	public static function update_cache( $old_value, $value ): void {
 		wp_cache_set( self::OPTION_NAME, $value );
 	}
 
 	/**
 	 * Get all plugin options
 	 *
-	 * @return  array $options Array with option fields.
+	 * @return array $options Array with option fields.
 	 */
-	public static function get_options() {
+	public static function get_options(): array {
 		PluginUpdate::maybe_run_plugin_updated_logic();
 		$options = wp_cache_get( self::OPTION_NAME );
 		if ( $options ) {
@@ -91,9 +91,9 @@ class Settings {
 	 * @param string $option_name Option name.
 	 * @param string $type The type.
 	 *
-	 * @return  mixed Field value.
+	 * @return mixed Field value.
 	 */
-	public static function get_option( $option_name, $type = 'general' ) {
+	public static function get_option( string $option_name, string $type = 'general' ) {
 		$options = self::get_options();
 
 		$value_path = "$option_name";
@@ -113,7 +113,7 @@ class Settings {
 	 *
 	 * @return null|mixed Value at given path, if present.
 	 */
-	public static function get_array_value_by_path( $path, $array ) {
+	public static function get_array_value_by_path( string $path, array $array ) {
 		if ( ! is_array( $array ) ) {
 			return null;
 		}
@@ -145,7 +145,7 @@ class Settings {
 	 *
 	 * @since  0.1
 	 */
-	public static function update_options( $data ) {
+	public static function update_options( array $data ): void {
 		$options = get_option( self::OPTION_NAME );
 
 		if ( is_array( $options ) ) {
@@ -169,7 +169,7 @@ class Settings {
 	 * @since  0.1
 	 * @since  2.4
 	 */
-	public static function update_option( $field, $value ) {
+	public static function update_option( string $field, $value ): void {
 		self::update_options(
 			[
 				$field => $value,
@@ -188,7 +188,7 @@ class Settings {
 	 *
 	 * @since   2.4.2
 	 */
-	public static function get_key( $array, $key ) {
+	public static function get_key( array $array, string $key ) {
 		if ( empty( $array ) || empty( $key ) || ! isset( $array[ $key ] ) ) {
 			return null;
 		}
@@ -203,7 +203,7 @@ class Settings {
 	 * @param array  $array Array to filter.
 	 * @return void
 	 */
-	public static function remove_array_key_by_path( $path, &$array ) {
+	public static function remove_array_key_by_path( string $path, array &$array ): void {
 		if ( ! is_array( $array ) ) {
 			return;
 		}
@@ -233,7 +233,7 @@ class Settings {
 	 * @param mixed $path Dot-separated path to the wanted value.
 	 * @return string[] Path parts.
 	 */
-	private static function get_path_parts( $path ) {
+	private static function get_path_parts( $path ): array {
 		if ( ! is_string( $path ) ) {
 			return [];
 		}
@@ -254,7 +254,7 @@ class Settings {
 	 * @param array  $options   Options array to process.
 	 * @return void
 	 */
-	public static function set_array_value_by_path( $path, $sanitized, &$options ) {
+	public static function set_array_value_by_path( string $path, $sanitized, array &$options ): void {
 		if ( ! is_array( $options ) ) {
 			return;
 		}

@@ -9,12 +9,12 @@ namespace AntispamBee\Admin;
 
 use AntispamBee\Admin\Fields\Checkbox;
 use AntispamBee\Admin\Fields\CheckboxGroup;
+use AntispamBee\Admin\Fields\Field;
 use AntispamBee\Admin\Fields\Inline;
 use AntispamBee\Admin\Fields\Select;
 use AntispamBee\Admin\Fields\Text;
 use AntispamBee\Admin\Fields\Textarea;
 use AntispamBee\Interfaces\Controllable;
-use Exception;
 
 /**
  * Sections for admin.
@@ -64,7 +64,7 @@ class Section {
 	 * @param string      $description Description of the tab.
 	 * @param string|null $type Item type (e.g. comment, trackback).
 	 */
-	public function __construct( $slug, $title, $description = '', $type = null ) {
+	public function __construct( string $slug, string $title, string $description = '', string $type = null ) {
 		$this->slug        = $slug;
 		$this->title       = $title;
 		$this->description = $description;
@@ -77,7 +77,7 @@ class Section {
 	 * @param array|null $controllables List of controllable items to add.
 	 * @return void
 	 */
-	public function add_controllables( $controllables ) {
+	public function add_controllables( ?array $controllables ): void {
 		if ( ! empty( $controllables ) ) {
 			$this->generate_fields( $controllables );
 		}
@@ -89,7 +89,7 @@ class Section {
 	 * @param Controllable[] $controllables List of controllable items to add.
 	 * @return void
 	 */
-	private function generate_fields( $controllables ) {
+	private function generate_fields( array $controllables ): void {
 		foreach ( $controllables as $controllable ) {
 			$label       = $controllable::get_label();
 			$description = $controllable::get_description();
@@ -127,11 +127,11 @@ class Section {
 	/**
 	 * Generate field for a controllable item's option.
 	 *
-	 * @param array        $option       Option name.
-	 * @param Controllable $controllable Controllable item.
+	 * @param array  $option       Option name.
+	 * @param string $controllable Controllable item (class name).
 	 * @return Checkbox|CheckboxGroup|Inline|Select|Text|Textarea|null
 	 */
-	private function generate_field( $option, $controllable ) {
+	private function generate_field( array $option, string $controllable ): ?Field {
 		switch ( $option['type'] ) {
 			case 'input':
 				return new Text( $this->type, $option, $controllable );
@@ -156,7 +156,7 @@ class Section {
 	 *
 	 * @return string Name of the field.
 	 */
-	public function get_slug() {
+	public function get_slug(): string {
 		return $this->slug;
 	}
 
@@ -165,7 +165,7 @@ class Section {
 	 *
 	 * @return string Title of the field.
 	 */
-	public function get_title() {
+	public function get_title(): string {
 		return $this->title;
 	}
 
@@ -174,7 +174,7 @@ class Section {
 	 *
 	 * @return string Title of the field.
 	 */
-	public function get_description() {
+	public function get_description(): string {
 		return $this->description;
 	}
 
@@ -183,7 +183,7 @@ class Section {
 	 *
 	 * @return array
 	 */
-	public function get_rows() {
+	public function get_rows(): array {
 		return $this->rows;
 	}
 
@@ -202,7 +202,7 @@ class Section {
 	/**
 	 * Renders the settings section.
 	 */
-	public function render() {
+	public function render(): void {
 		add_settings_section(
 			$this->get_slug(),
 			$this->get_title(),
@@ -231,7 +231,7 @@ class Section {
 	 *
 	 * @param array $row Row of fields.
 	 */
-	protected function render_row_fields( $row ) {
+	protected function render_row_fields( array $row ): void {
 		foreach ( $row['fields'] as $key => $field ) {
 			$field->render();
 

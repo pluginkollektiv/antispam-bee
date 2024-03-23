@@ -22,7 +22,7 @@ class ContentTypeHelper {
 	 * @param string $item_type Type name.
 	 * @return string Readable type name.
 	 */
-	public static function get_type_name( $item_type ) {
+	public static function get_type_name( string $item_type ): string {
 		$type_names = [
 			self::GENERAL_TYPE  => __( 'General', 'antispam-bee' ),
 			self::COMMENT_TYPE  => __( 'Comment', 'antispam-bee' ),
@@ -44,7 +44,7 @@ class ContentTypeHelper {
 	 *
 	 * @return bool
 	 */
-	public static function reaction_is_one_of( $reaction, $reaction_types, $context = '' ) {
+	public static function reaction_is_one_of( array $reaction, array $reaction_types, string $context = '' ): bool {
 		// This `comment_type` is set from WordPress.
 		$reaction_type = $reaction['comment_type'] ?? '';
 

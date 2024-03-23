@@ -23,7 +23,7 @@ class DebugMode {
 	 *
 	 * @return bool
 	 */
-	public static function enabled() {
+	public static function enabled(): bool {
 		if ( null === static::$debug_mode_enabled ) {
 			static::$debug_mode_enabled = defined( 'ANTISPAM_BEE_DEBUG_MODE_ENABLED' ) ? \ANTISPAM_BEE_DEBUG_MODE_ENABLED : false;
 		}
@@ -37,7 +37,7 @@ class DebugMode {
 	 * @param string $message Log message.
 	 * @return void
 	 */
-	public static function log( string $message ) {
+	public static function log( string $message ): void {
 		if ( ! static::enabled() ) {
 			return;
 		}

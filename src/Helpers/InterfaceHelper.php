@@ -21,7 +21,7 @@ class InterfaceHelper {
 	 *
 	 * @return bool
 	 */
-	public static function class_implements_interface( $class_name, $interface_name ) {
+	public static function class_implements_interface( string $class_name, string $interface_name ): bool {
 		return self::class_implements_interfaces( $class_name, [ $interface_name ] );
 	}
 
@@ -33,7 +33,7 @@ class InterfaceHelper {
 	 *
 	 * @return bool
 	 */
-	public static function class_implements_interfaces( $class_name, $interfaces ) {
+	public static function class_implements_interfaces( string $class_name, array $interfaces ): bool {
 		if ( ! is_string( $class_name ) || ! class_exists( $class_name ) ) {
 			return false;
 		}

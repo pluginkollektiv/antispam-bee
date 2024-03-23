@@ -26,7 +26,7 @@ abstract class Reaction {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public static function init(): void {
 		add_filter(
 			'preprocess_comment',
 			[ static::class, 'process' ],
@@ -48,7 +48,7 @@ abstract class Reaction {
 	 *
 	 * @return void
 	 */
-	public static function always_init() {
+	public static function always_init(): void {
 		add_action( 'transition_comment_status', [ __CLASS__, 'handle_comment_status_changes' ], 10, 3 );
 	}
 
@@ -58,7 +58,7 @@ abstract class Reaction {
 	 * @param array $reaction Reaction to process.
 	 * @return array Processed reaction.
 	 */
-	public static function process( $reaction ) {
+	public static function process( array $reaction ): array {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		$rules   = new Rules( static::$type );
 		$is_spam = $rules->apply( $reaction );
@@ -77,7 +77,7 @@ abstract class Reaction {
 	 * @param Rules $rules    Ruleset to apply.
 	 * @return array|never-return Handled reaction (or die, if item was deleted)
 	 */
-	protected static function handle_spam( $reaction, $rules ) {
+	protected static function handle_spam( array $reaction, Rules $rules ) {
 		$item = PostProcessors::apply( static::$type, $reaction, $rules->get_spam_reasons() );
 		if ( ! isset( $item['asb_marked_as_delete'] ) ) {
 			add_filter(
@@ -101,7 +101,7 @@ abstract class Reaction {
 	 * @param int|string $old_status The old comment status.
 	 * @param WP_Comment $comment    Comment object.
 	 */
-	public static function handle_comment_status_changes( $new_status, $old_status, $comment ) {
+	public static function handle_comment_status_changes( $new_status, $old_status, WP_Comment $comment ): void {
 		if ( 'spam' === $new_status && 'spam' !== $old_status ) {
 			update_comment_meta( $comment->comment_ID, 'antispam_bee_reason', 'asb-marked-manually' );
 			return;

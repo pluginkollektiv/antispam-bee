@@ -44,7 +44,7 @@ class Rules {
 	 *
 	 * @param string $type Item type.
 	 */
-	public function __construct( $type ) {
+	public function __construct( string $type ) {
 		$this->type = $type;
 	}
 
@@ -54,7 +54,7 @@ class Rules {
 	 * @param array $item Item to apply rules to.
 	 * @return bool Item identified as spam.
 	 */
-	public function apply( $item ) {
+	public function apply( array $item ): bool {
 		$item['reaction_type'] = $this->type;
 		$rules                 = self::get( $this->type, true );
 
@@ -104,11 +104,11 @@ class Rules {
 	/**
 	 * Get applicable rules.
 	 *
-	 * @param string $type        Reaction type.
-	 * @param bool   $only_active Get only active rules.
+	 * @param string|null $type        Reaction type.
+	 * @param bool        $only_active Get only active rules.
 	 * @return array List of applicable rules.
 	 */
-	public static function get( $type = null, $only_active = false ) {
+	public static function get( ?string $type = null, bool $only_active = false ): array {
 		return self::filter(
 			[
 				'reaction_type' => $type,
@@ -121,11 +121,11 @@ class Rules {
 	/**
 	 * Get controllable items.
 	 *
-	 * @param string $type        Reaction type.
-	 * @param bool   $only_active Get only active items.
+	 * @param string|null $type        Reaction type.
+	 * @param bool        $only_active Get only active items.
 	 * @return array List of suitable controllables.
 	 */
-	public static function get_controllables( $type = null, $only_active = false ) {
+	public static function get_controllables( ?string $type = null, bool $only_active = false ): array {
 		return self::filter(
 			[
 				'reaction_type' => $type,
@@ -142,7 +142,7 @@ class Rules {
 	 * @param bool        $only_active Get only active rules.
 	 * @return array List of applicable rules.
 	 */
-	public static function get_spam_rules( $type = null, $only_active = false ) {
+	public static function get_spam_rules( ?string $type = null, bool $only_active = false ): array {
 		return self::filter(
 			[
 				'reaction_type' => $type,
@@ -158,7 +158,7 @@ class Rules {
 	 * @param array $options Filter options.
 	 * @return array List of filtered elements.
 	 */
-	private static function filter( $options ) {
+	private static function filter( array $options ): array {
 		// Todo: discuss if our rules should be filterable or not.
 		return ComponentsHelper::filter( apply_filters( 'antispam_bee_rules', [] ), $options );
 	}
@@ -168,7 +168,7 @@ class Rules {
 	 *
 	 * @return array
 	 */
-	public function get_spam_reasons() {
+	public function get_spam_reasons(): array {
 		return $this->spam_reasons;
 	}
 
@@ -177,7 +177,7 @@ class Rules {
 	 *
 	 * @return array
 	 */
-	public function get_no_spam_reasons() {
+	public function get_no_spam_reasons(): array {
 		return $this->no_spam_reasons;
 	}
 }

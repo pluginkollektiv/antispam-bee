@@ -24,7 +24,7 @@ class CommentsColumns {
 	/**
 	 * Registers the module hooks.
 	 */
-	public static function init() {
+	public static function init(): void {
 		if ( ! DashboardHelper::is_edit_spam_comments_page() ) {
 			return;
 		}
@@ -59,7 +59,7 @@ class CommentsColumns {
 	 * @since   2.6.0
 	 * @change  2.6.0
 	 */
-	public static function register_plugin_columns( $columns ) {
+	public static function register_plugin_columns( array $columns ): array {
 		return array_merge(
 			$columns,
 			[
@@ -77,7 +77,7 @@ class CommentsColumns {
 	 * @since   2.6.0
 	 * @change  2.6.0
 	 */
-	public static function print_plugin_column( $column, $comment_id ) {
+	public static function print_plugin_column( string $column, int $comment_id ): void {
 		if ( 'antispam_bee_reason' !== $column ) {
 			return;
 		}
@@ -106,7 +106,7 @@ class CommentsColumns {
 	 * @since   2.6.3
 	 * @change  2.6.3
 	 */
-	public static function register_sortable_columns( $columns ) {
+	public static function register_sortable_columns( array $columns ): array {
 		$columns['antispam_bee_reason'] = 'antispam_bee_reason';
 
 		return $columns;
@@ -120,7 +120,7 @@ class CommentsColumns {
 	 * @since   2.6.3
 	 * @change  2.6.3
 	 */
-	public static function set_orderby_query( $query ) {
+	public static function set_orderby_query( WP_Comment_Query $query ): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : '';
 
@@ -138,7 +138,7 @@ class CommentsColumns {
 	 *
 	 * @global wpdb $wpdb
 	 */
-	public static function filter_columns() {
+	public static function filter_columns(): void {
 		global $wpdb;
 		?>
 		<label class="screen-reader-text"
@@ -182,7 +182,7 @@ class CommentsColumns {
 	 *
 	 * @param WP_Comment_Query $query Current WordPress query.
 	 */
-	public static function filter_by_spam_reason( $query ) {
+	public static function filter_by_spam_reason( WP_Comment_Query $query ): void {
 		$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
 		if ( empty( $spam_reason ) ) {
 			return;
@@ -221,7 +221,7 @@ class CommentsColumns {
 	 * @since   2.6.1
 	 * @change  2.6.1
 	 */
-	public static function print_column_styles() {
+	public static function print_column_styles(): void {
 		?>
 		<style>
 			.column-antispam_bee_reason {

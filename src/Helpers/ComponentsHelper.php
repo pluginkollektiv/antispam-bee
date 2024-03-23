@@ -29,7 +29,7 @@ class ComponentsHelper {
 	 * }
 	 * @return array Filtered list.
 	 */
-	public static function filter( $components, $options ) {
+	public static function filter( array $components, array $options ): array {
 		$reaction_type = isset( $options['reaction_type'] ) ? $options['reaction_type'] : null;
 		$only_active   = isset( $options['only_active'] ) ? $options['only_active'] : false;
 

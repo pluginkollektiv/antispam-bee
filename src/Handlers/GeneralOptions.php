@@ -20,11 +20,11 @@ class GeneralOptions {
 	protected $type;
 
 	/**
-	 * Constuctor.
+	 * Constructor.
 	 *
 	 * @param string $type Option type.
 	 */
-	public function __construct( $type ) {
+	public function __construct( string $type ) {
 		$this->type = $type;
 	}
 
@@ -34,7 +34,7 @@ class GeneralOptions {
 	 * @param string $type Option type.
 	 * @return array List of controllable items.
 	 */
-	public static function get_controllables( $type = 'general' ) {
+	public static function get_controllables( string $type = 'general' ): array {
 		if ( 'general' !== $type ) {
 			return [];
 		}

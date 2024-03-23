@@ -37,7 +37,7 @@ class Honeypot {
 	 *
 	 * @return string
 	 */
-	public static function inject( $markup, $options ) {
+	public static function inject( string $markup, array $options ): string {
 		$dom = new DOMDocument();
 		$dom->loadHTML( $markup, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 		$xpath = new DOMXPath( $dom );
@@ -131,7 +131,7 @@ class Honeypot {
 	 * @return string
 	 * @since 2.10.0 Modify secret generation because `always_allowed` option no longer exists
 	 */
-	public static function get_secret_id_for_post() {
+	public static function get_secret_id_for_post(): string {
 		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
 
 		return self::ensure_secret_starts_with_letter( $secret );
@@ -143,7 +143,7 @@ class Honeypot {
 	 * @return string
 	 * @since 2.10.0 Modify secret generation because `always_allowed` option no longer exists
 	 */
-	public static function get_secret_name_for_post() {
+	public static function get_secret_name_for_post(): string {
 		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
 
 		return self::ensure_secret_starts_with_letter( $secret );
@@ -156,7 +156,7 @@ class Honeypot {
 	 *
 	 * @return string
 	 */
-	public static function ensure_secret_starts_with_letter( $secret ) {
+	public static function ensure_secret_starts_with_letter( string $secret ): string {
 		$first_char = substr( $secret, 0, 1 );
 		if ( is_numeric( $first_char ) ) {
 			return chr( $first_char + 97 ) . substr( $secret, 1 );
@@ -173,7 +173,7 @@ class Honeypot {
 	 *
 	 * @return bool
 	 */
-	private static function is_amp() {
+	private static function is_amp(): bool {
 		return ( function_exists( 'amp_is_request' ) && amp_is_request() ) || ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() );
 	}
 
@@ -182,7 +182,7 @@ class Honeypot {
 	 *
 	 * @return string
 	 */
-	private static function get_salt() {
+	private static function get_salt(): string {
 		$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
 
 		return substr( sha1( $salt ), 0, 10 );
