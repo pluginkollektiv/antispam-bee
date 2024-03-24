@@ -47,8 +47,8 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
-		$url            = isset( $item['comment_author_url'] ) ? $item['comment_author_url'] : null;
-		$target_post_id = isset( $item['comment_post_ID'] ) ? $item['comment_post_ID'] : null;
+		$url            = $item['comment_author_url'] ?? null;
+		$target_post_id = $item['comment_post_ID'] ?? null;
 		if ( empty( $url ) || empty( $target_post_id ) ) {
 			return 0;
 		}

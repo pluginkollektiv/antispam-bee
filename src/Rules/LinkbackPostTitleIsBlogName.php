@@ -38,8 +38,8 @@ class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
-		$body      = isset( $item['comment_content'] ) ? $item['comment_content'] : null;
-		$blog_name = isset( $item['comment_author'] ) ? $item['comment_author'] : null;
+		$body      = $item['comment_content'] ?? null;
+		$blog_name = $item['comment_author'] ?? null;
 		preg_match( '/<strong>(.*)<\/strong>\\n\\n/', $body, $matches );
 		if ( ! isset( $matches[1] ) ) {
 			return 0;

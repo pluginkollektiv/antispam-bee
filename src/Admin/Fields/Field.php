@@ -66,8 +66,8 @@ abstract class Field {
 	 * @return string Label of the field.
 	 */
 	public function get_label() {
-		$kses  = isset( $this->option['label_kses'] ) ? $this->option['label_kses'] : [];
-		$label = isset( $this->option['label'] ) ? $this->option['label'] : '';
+		$kses  = $this->option['label_kses'] ?? [];
+		$label = $this->option['label'] ?? '';
 		if ( ! $kses ) {
 			return esc_html( $label );
 		}
@@ -80,7 +80,7 @@ abstract class Field {
 	 * @return string
 	 */
 	public function get_placeholder(): string {
-		return isset( $this->option['placeholder'] ) ? $this->option['placeholder'] : '';
+		return $this->option['placeholder'] ?? '';
 	}
 
 	/**
@@ -89,7 +89,7 @@ abstract class Field {
 	 * @return string Description of the field.
 	 */
 	public function get_description(): string {
-		return isset( $this->option['description'] ) ? $this->option['description'] : '';
+		return $this->option['description'] ?? '';
 	}
 
 	/**

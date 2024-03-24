@@ -71,7 +71,7 @@ class Text extends Field implements RenderElement {
 			'small'   => 'small-text',
 			'regular' => 'regular-text',
 		];
-		$field_size = isset( $this->option['input_size'] ) ? $this->option['input_size'] : '';
+		$field_size = $this->option['input_size'] ?? '';
 
 		if ( isset( $classes[ $field_size ] ) ) {
 			return $classes[ $field_size ];
@@ -86,6 +86,6 @@ class Text extends Field implements RenderElement {
 	 * @return string
 	 */
 	protected function get_type(): string {
-		return isset( $this->option['input_type'] ) ? $this->option['input_type'] : 'text';
+		return $this->option['input_type'] ?? 'text';
 	}
 }

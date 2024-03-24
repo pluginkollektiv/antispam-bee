@@ -109,7 +109,7 @@ class Section {
 			$options = $controllable::get_options();
 			if ( ! empty( $options ) ) {
 				foreach ( $options as $option ) {
-					$valid_for = isset( $option['valid_for'] ) ? $option['valid_for'] : null;
+					$valid_for = $option['valid_for'] ?? null;
 					if ( null !== $valid_for && $this->type !== $valid_for ) {
 						continue;
 					}
