@@ -40,6 +40,6 @@ class Linkback extends Reaction {
 
 		$linkback['comment_author_IP'] = IpHelper::get_client_ip();
 
-		parent::process( $linkback );
+		return parent::process( $linkback );
 	}
 }
