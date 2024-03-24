@@ -34,7 +34,7 @@ class InterfaceHelper {
 	 * @return bool
 	 */
 	public static function class_implements_interfaces( string $class_name, array $interfaces ): bool {
-		if ( ! is_string( $class_name ) || ! class_exists( $class_name ) ) {
+		if ( ! class_exists( $class_name ) ) {
 			return false;
 		}
 

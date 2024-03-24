@@ -114,10 +114,6 @@ class Settings {
 	 * @return null|mixed Value at given path, if present.
 	 */
 	public static function get_array_value_by_path( string $path, array $array ) {
-		if ( ! is_array( $array ) ) {
-			return null;
-		}
-
 		$path_array = self::get_path_parts( $path );
 		if ( empty( $path_array ) ) {
 			return null;
