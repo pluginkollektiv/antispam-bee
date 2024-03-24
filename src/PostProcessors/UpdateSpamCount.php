@@ -29,7 +29,7 @@ class UpdateSpamCount extends Base {
 	 * @param array $item Item to process.
 	 * @return array Processed item.
 	 */
-	public static function process( $item ) {
+	public static function process( array $item ): array {
 		if ( ! Statistics::is_active() ) {
 			return $item;
 		}

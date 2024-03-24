@@ -30,7 +30,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */
-	public static function verify( $item ) {
+	public static function verify( array $item ): int {
 		$params = [];
 		$filter = [];
 		$url    = wp_unslash( array_shift( DataHelper::get_values_where_key_contains( [ 'url' ], $item ) ) );
@@ -83,7 +83,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Local DB Spam', 'antispam-bee' );
 	}
 
@@ -92,7 +92,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'Look in the local spam database', 'antispam-bee' );
 	}
 
@@ -101,7 +101,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		return __( 'Check for spam data on your own blog', 'antispam-bee' );
 	}
 
@@ -110,7 +110,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_reason_text() {
+	public static function get_reason_text(): string {
 		return __( 'Local DB', 'antispam-bee' );
 	}
 }

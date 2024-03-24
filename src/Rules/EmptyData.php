@@ -30,7 +30,7 @@ class EmptyData extends Base implements SpamReason {
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */
-	public static function verify( $item ) {
+	public static function verify( array $item ): int {
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$allow_empty_reaction = apply_filters( 'allow_empty_comment', false, $item );
 		$content              = $item['comment_content'] ?? '';
@@ -63,7 +63,7 @@ class EmptyData extends Base implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return _x( 'Empty Data', 'spam-reason-form-name', 'antispam-bee' );
 	}
 
@@ -72,7 +72,7 @@ class EmptyData extends Base implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_reason_text() {
+	public static function get_reason_text(): string {
 		return _x( 'Empty Data', 'spam-reason-text', 'antispam-bee' );
 	}
 }

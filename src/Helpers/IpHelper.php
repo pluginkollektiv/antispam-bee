@@ -17,7 +17,7 @@ class IpHelper {
 	 *
 	 * @return string Client IP
 	 */
-	public static function get_client_ip() {
+	public static function get_client_ip(): string {
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		// Sanitization of $ip takes place further down.
 		$ip = '';
@@ -54,7 +54,7 @@ class IpHelper {
 	 *
 	 * @return string The sanitized IP or an empty string.
 	 */
-	private static function sanitize_ip( $raw_ip ) {
+	private static function sanitize_ip( string $raw_ip ): string {
 		if ( strpos( $raw_ip, ',' ) !== false ) {
 			$ips    = explode( ',', $raw_ip );
 			$raw_ip = trim( $ips[0] );
@@ -81,7 +81,7 @@ class IpHelper {
 	 * @return  string     Anonymous IP.
 	 * @since   2.5.1
 	 */
-	public static function anonymize_ip( $ip ) {
+	public static function anonymize_ip( string $ip ): string {
 		preg_match( '/\w+([\.:])\w+/', $ip, $matches );
 		$ip_start = $matches[0];
 		if ( '.' === $matches[1] ) {

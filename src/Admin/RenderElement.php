@@ -14,7 +14,7 @@ interface RenderElement {
 	/**
 	 * Render function.
 	 *
-	 * @return string Rendered Element.
+	 * @return void
 	 */
-	public function render();
+	public function render(): void;
 }

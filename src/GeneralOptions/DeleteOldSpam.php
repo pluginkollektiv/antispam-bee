@@ -27,7 +27,7 @@ class DeleteOldSpam extends Base {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Delete old spam', 'antispam-bee' );
 	}
 
@@ -36,7 +36,7 @@ class DeleteOldSpam extends Base {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return null;
 	}
 
@@ -45,7 +45,7 @@ class DeleteOldSpam extends Base {
 	 *
 	 * @return null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		return null;
 	}
 
@@ -54,9 +54,9 @@ class DeleteOldSpam extends Base {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array
+	 * @return array|null
 	 */
-	public static function get_options() {
+	public static function get_options(): array {
 		return [
 			[
 				'type'        => 'inline',

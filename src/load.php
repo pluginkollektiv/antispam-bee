@@ -43,7 +43,7 @@ use AntispamBee\Rules\ValidGravatar;
 /**
  * Init function of the plugin
  */
-function init() {
+function init(): void {
 	// Construct all modules to initialize.
 	$modules = [
 		DashboardWidgets::class,

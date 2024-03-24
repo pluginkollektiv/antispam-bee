@@ -18,21 +18,21 @@ interface Controllable {
 	 *
 	 * @return string
 	 */
-	public static function get_name();
+	public static function get_name(): string;
 
 	/**
 	 * Get element label (optional).
 	 *
 	 * @return string|null
 	 */
-	public static function get_label();
+	public static function get_label(): ?string;
 
 	/**
 	 * Get element description (optional).
 	 *
 	 * @return string|null
 	 */
-	public static function get_description();
+	public static function get_description(): ?string;
 
 	/**
 	 * First thoughts on how a rule can specify what kind of advanced option it is. If `type` is no callable,
@@ -54,9 +54,9 @@ interface Controllable {
 	 *   ]
 	 * ]
 	 *
-	 * @return mixed
+	 * @return array|null
 	 */
-	public static function get_options();
+	public static function get_options(): ?array;
 
 
 	/**
@@ -66,7 +66,7 @@ interface Controllable {
 	 *
 	 * @return mixed|null
 	 */
-	public static function is_active( $type );
+	public static function is_active( string $type );
 
 	/**
 	 * Only print custom options?
@@ -74,28 +74,28 @@ interface Controllable {
 	 *
 	 * @return bool
 	 */
-	public static function only_print_custom_options();
+	public static function only_print_custom_options(): bool;
 
 	/**
 	 * Get a list of supported types.
 	 *
 	 * @return string[]
 	 */
-	public static function get_supported_types();
+	public static function get_supported_types(): array;
 
 	/**
 	 * Get type of the controllable.
 	 *
 	 * @return string
 	 */
-	public static function get_type();
+	public static function get_type(): string;
 
 	/**
 	 * Get controllable slug.
 	 *
 	 * @return string
 	 */
-	public static function get_slug();
+	public static function get_slug(): string;
 
 	/**
 	 * Get option name.
@@ -104,5 +104,5 @@ interface Controllable {
 	 * @param string $name Name suffix.
 	 * @return string Corresponding option name
 	 */
-	public static function get_option_name( $name );
+	public static function get_option_name( string $name ): string;
 }

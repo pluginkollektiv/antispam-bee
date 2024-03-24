@@ -22,7 +22,7 @@
   "type": "wordpress-plugin",
   "license": "GPL-v2",
   "require": {
-    "php": ">=7.0"
+    "php": ">=7.2"
   },
   "require-dev": {
     "behat/mink": "^v1.11.0",

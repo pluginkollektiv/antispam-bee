@@ -19,7 +19,7 @@ class DataHelper {
 	 * @param array $data Data to filter.
 	 * @return array Data elements with matching keys.
 	 */
-	public static function get_values_by_keys( $keys, $data ) {
+	public static function get_values_by_keys( array $keys, array $data ): array {
 		$results = [];
 		foreach ( $keys as $key ) {
 			if ( isset( $data[ $key ] ) ) {
@@ -37,7 +37,7 @@ class DataHelper {
 	 * @param array    $data    Data to filter.
 	 * @return array Data elements with matching keys.
 	 */
-	public static function get_values_where_key_contains( $substrs, $data ) {
+	public static function get_values_where_key_contains( array $substrs, array $data ): array {
 		$results = [];
 		foreach ( $data as $key => $value ) {
 			foreach ( $substrs as $substr ) {
@@ -57,7 +57,7 @@ class DataHelper {
 	 * @param string $component URL component (default: "host").
 	 * @return string URL component.
 	 */
-	public static function parse_url( $url, $component = 'host' ) {
+	public static function parse_url( string $url, string $component = 'host' ): string {
 		$parts = wp_parse_url( $url );
 
 		return ( is_array( $parts ) && isset( $parts[ $component ] ) ) ? $parts[ $component ] : '';

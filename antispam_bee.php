@@ -30,7 +30,7 @@ pre_init();
 /**
  * Pre init function to check the plugins compatibility.
  */
-function pre_init() {
+function pre_init(): void {
 	// Load the translation, as they might be needed in pre_init.
 	add_action( 'plugins_loaded', __NAMESPACE__ . '\load_textdomain', 5 );
 
@@ -72,14 +72,14 @@ function pre_init() {
  *
  * @since 1.0.0
  */
-function load_textdomain() {
+function load_textdomain(): void {
 	load_plugin_textdomain( 'antispam-bee' );
 }
 
 /**
  * Show a admin notice error message, if the PHP version is too low
  */
-function min_php_version_error() {
+function min_php_version_error(): void {
 	echo '<div class="error"><p>';
 	esc_html_e( 'Antispam Bee requires PHP version 7.2 or higher to function properly. Please upgrade PHP or deactivate Antispam Bee.', 'antispam-bee' );
 	echo '</p></div>';
@@ -88,7 +88,7 @@ function min_php_version_error() {
 /**
  * Show a admin notice error message, if the PHP version is too low
  */
-function domdocument_class_error() {
+function domdocument_class_error(): void {
 	echo '<div class="error"><p>';
 	esc_html_e( 'Antispam Bee requires the DOMDocument PHP class. Please install the PHP DOM/XML extension.', 'antispam-bee' );
 	echo '</p></div>';
@@ -97,7 +97,7 @@ function domdocument_class_error() {
 /**
  * Show a admin notice error message, if the PHP version is too low
  */
-function autoloader_missing() {
+function autoloader_missing(): void {
 	echo '<div class="error"><p>';
 	esc_html_e( 'Antispam Bee is missing the Composer autoloader file. Please run `composer install --no-dev -o` in the root folder of the plugin or use a release version including the `vendor` folder.', 'antispam-bee' );
 	echo '</p></div>';

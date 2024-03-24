@@ -34,7 +34,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public static function init(): void {
 		add_filter( 'antispam_bee_rules', [ __CLASS__, 'add_rule' ] );
 
 		add_filter(
@@ -75,7 +75,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */
-	public static function verify( $item ) {
+	public static function verify( array $item ): int {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Everybody can Post.
 		if ( ! isset( $_POST['ab_init_time'] ) ) {
@@ -100,7 +100,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Comment time', 'antispam-bee' );
 	}
 
@@ -109,7 +109,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'Consider the comment time', 'antispam-bee' );
 	}
 
@@ -118,7 +118,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		return __( 'Not recommended when using page caching', 'antispam-bee' );
 	}
 
@@ -127,7 +127,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_reason_text() {
+	public static function get_reason_text(): string {
 		return _x( 'Created too quickly', 'spam-reason-text', 'antispam-bee' );
 	}
 }

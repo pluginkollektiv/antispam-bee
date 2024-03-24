@@ -39,7 +39,7 @@ class Tab {
 	 * @param string    $title Title for tab.
 	 * @param Section[] $sections Sections object array.
 	 */
-	public function __construct( $slug, $title, $sections = [] ) {
+	public function __construct( string $slug, string $title, array $sections = [] ) {
 		$this->slug     = $slug;
 		$this->title    = $title;
 		$this->sections = $sections;
@@ -50,7 +50,7 @@ class Tab {
 	 *
 	 * @return string Name of the field.
 	 */
-	public function get_slug() {
+	public function get_slug(): string {
 		return $this->slug;
 	}
 
@@ -59,7 +59,7 @@ class Tab {
 	 *
 	 * @return string Title of the field.
 	 */
-	public function get_title() {
+	public function get_title(): string {
 		return $this->title;
 	}
 
@@ -68,7 +68,7 @@ class Tab {
 	 *
 	 * @return Section[]
 	 */
-	public function get_sections() {
+	public function get_sections(): array {
 		return $this->sections;
 	}
 
@@ -78,7 +78,7 @@ class Tab {
 	 * @param Section $section Section to add.
 	 * @return void
 	 */
-	public function add_section( Section $section ) {
+	public function add_section( Section $section ): void {
 		$this->sections[] = $section;
 	}
 }

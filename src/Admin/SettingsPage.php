@@ -58,7 +58,7 @@ class SettingsPage {
 	/**
 	 * Add Hooks.
 	 */
-	public function init() {
+	public function init(): void {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'admin_init', [ $this, 'setup_settings' ] );
 
@@ -69,7 +69,7 @@ class SettingsPage {
 	/**
 	 * Add settings page.
 	 */
-	public function add_menu() {
+	public function add_menu(): void {
 		add_options_page(
 			__( 'Antispam Bee', 'antispam-bee' ),
 			__( 'Antispam Bee', 'antispam-bee' ),
@@ -82,7 +82,7 @@ class SettingsPage {
 	/**
 	 * Setup tabs content.
 	 */
-	public function setup_settings() {
+	public function setup_settings(): void {
 		// Todo: Add a way to build rows and fields with a fluent interface? (Nice-to-have).
 
 		/*
@@ -145,7 +145,7 @@ class SettingsPage {
 	 *
 	 * @return void
 	 */
-	protected function populate_tabs() {
+	protected function populate_tabs(): void {
 		$type = $this->active_tab;
 
 		$data = [];
@@ -193,7 +193,7 @@ class SettingsPage {
 	/**
 	 * Settings page content.
 	 */
-	public function options_page() {
+	public function options_page(): void {
 		?>
 		<div class="wrap" id="ab_main">
 			<h1><?php esc_html_e( 'Antispam Bee', 'antispam-bee' ); ?></h1>

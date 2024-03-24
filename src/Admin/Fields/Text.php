@@ -33,7 +33,7 @@ class Text extends Field implements RenderElement {
 	/**
 	 * Get HTML.
 	 */
-	public function render() {
+	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		printf(
@@ -50,7 +50,7 @@ class Text extends Field implements RenderElement {
 	 *
 	 * @return string
 	 */
-	public function get_injectable_markup() {
+	public function get_injectable_markup(): string {
 		return sprintf(
 			'<input type="%1$s" id="%2$s" name="%2$s" value="%3$s" class="%4$s" placeholder="%5$s">',
 			esc_attr( $this->get_type() ),
@@ -66,12 +66,12 @@ class Text extends Field implements RenderElement {
 	 *
 	 * @return string
 	 */
-	protected function get_class() {
+	protected function get_class(): string {
 		$classes    = [
 			'small'   => 'small-text',
 			'regular' => 'regular-text',
 		];
-		$field_size = isset( $this->option['input_size'] ) ? $this->option['input_size'] : '';
+		$field_size = $this->option['input_size'] ?? '';
 
 		if ( isset( $classes[ $field_size ] ) ) {
 			return $classes[ $field_size ];
@@ -85,7 +85,7 @@ class Text extends Field implements RenderElement {
 	 *
 	 * @return string
 	 */
-	protected function get_type() {
-		return isset( $this->option['input_type'] ) ? $this->option['input_type'] : 'text';
+	protected function get_type(): string {
+		return $this->option['input_type'] ?? 'text';
 	}
 }

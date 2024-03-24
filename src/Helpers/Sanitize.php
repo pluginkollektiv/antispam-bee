@@ -27,7 +27,7 @@ class Sanitize {
 	 * @return array Intersection of values and valid options.
 	 * @since 3.0.0
 	 */
-	public static function checkbox_group( $values, array $valid_options ) {
+	public static function checkbox_group( $values, array $valid_options ): array {
 		if ( ! is_array( $values ) ) {
 			return [];
 		}
@@ -38,12 +38,12 @@ class Sanitize {
 	/**
 	 * Sanitizes an array of strings to match ISO format.
 	 *
-	 * @param array $codes List of potential ISO codes to sanitize.
+	 * @param mixed $codes List of potential ISO codes to sanitize.
 	 *
 	 * @return array Sanitized ISO codes.
 	 * @since 3.0.0
 	 */
-	public static function iso_codes( $codes ) {
+	public static function iso_codes( $codes ): array {
 		if ( ! is_array( $codes ) ) {
 			return [];
 		}
@@ -69,7 +69,7 @@ class Sanitize {
 	 * @param mixed $value Raw checkbox value.
 	 * @return string|null Sanitized value.
 	 */
-	public static function checkbox( $value ) {
+	public static function checkbox( $value ): ?string {
 		if ( 'on' === $value ) {
 			return $value;
 		}
@@ -81,9 +81,9 @@ class Sanitize {
 	 * Sanitize options.
 	 *
 	 * @param array $options Options to sanitize.
-	 * @return array|string Sanitized options.
+	 * @return array Sanitized options.
 	 */
-	public static function sanitize_options( $options ) {
+	public static function sanitize_options( array $options ): array {
 		$current_options = Settings::get_options();
 
 		if ( empty( $_GET['tab'] ) ) {
@@ -107,7 +107,7 @@ class Sanitize {
 	 * @param string $tab     Settings tab.
 	 * @return array Sanitized options.
 	 */
-	private static function sanitize_controllables( $options, $tab ) {
+	private static function sanitize_controllables( array $options, string $tab ): array {
 		$controllables = array_merge(
 			GeneralOptions::get_controllables( $tab ),
 			Rules::get_controllables( $tab ),
@@ -149,13 +149,13 @@ class Sanitize {
 	/**
 	 * Call a sanitization callback.
 	 *
-	 * @param array        $controllable_option Controllable options.
-	 * @param array        $options             Options.
-	 * @param string       $tab                 Settings tab.
-	 * @param Controllable $controllable        Controllable element.
+	 * @param array  $controllable_option Controllable options.
+	 * @param array  $options             Options.
+	 * @param string $tab                 Settings tab.
+	 * @param string $controllable        Controllable element (class name).
 	 * @return void
 	 */
-	private static function call_sanitize_callback( $controllable_option, &$options, $tab, $controllable ) {
+	private static function call_sanitize_callback( array $controllable_option, array &$options, string $tab, string $controllable ): void {
 		if ( ! isset( $controllable_option['sanitize'] ) ) {
 			return;
 		}

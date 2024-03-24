@@ -16,7 +16,7 @@ class Textarea extends Field implements RenderElement {
 	/**
 	 * Render HTML.
 	 */
-	public function render() {
+	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		printf(

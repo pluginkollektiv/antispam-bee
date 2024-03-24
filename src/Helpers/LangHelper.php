@@ -22,7 +22,7 @@ class LangHelper {
 	 * @return string             Mapped ISO code
 	 * @since   2.9.0
 	 */
-	public static function map( $franc_code ) {
+	public static function map( string $franc_code ): string {
 		$codes = [
 			'zha' => 'za',
 			'zho' => 'zh',

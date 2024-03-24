@@ -32,7 +32,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */
-	public static function verify( $item ) {
+	public static function verify( array $item ): int {
 		if ( ! isset( $item['comment_author_IP'] ) || empty( $item['comment_author_IP'] ) ) {
 			return 0;
 		}
@@ -137,7 +137,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Country Check', 'antispam-bee' );
 	}
 
@@ -146,7 +146,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'Block or allow comments from specific countries', 'antispam-bee' );
 	}
 
@@ -155,7 +155,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		$link1 = sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
 			esc_url(
@@ -185,7 +185,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return array
 	 */
-	public static function get_options() {
+	public static function get_options(): array {
 		$iso_codes_link = 'https://www.iso.org/obp/ui/#search/code/';
 		return [
 			[
@@ -235,7 +235,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 * @param string $value Comma-separated list of potential ISO country codes.
 	 * @return string Comma-separated list if sanitized ISO country codes.
 	 */
-	private static function sanitize_iso_codes_string( $value ) {
+	private static function sanitize_iso_codes_string( string $value ): string {
 		$value  = strtoupper( $value );
 		$values = explode( ',', $value );
 		$values = Sanitize::iso_codes( $values );
@@ -248,7 +248,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_reason_text() {
+	public static function get_reason_text(): string {
 		return __( 'Country', 'antispam-bee' );
 	}
 }

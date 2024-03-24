@@ -29,7 +29,7 @@ class BBCode extends ControllableBase implements SpamReason {
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */
-	public static function verify( $item ) {
+	public static function verify( array $item ): int {
 		foreach ( $item as $value ) {
 			if ( true === (bool) preg_match( '/\[url[=\]].*\[\/url\]/is', $value ) ) {
 				return 1;
@@ -44,7 +44,7 @@ class BBCode extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return _x( 'BBCode', 'spam-reason-form-name', 'antispam-bee' );
 	}
 
@@ -53,7 +53,7 @@ class BBCode extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'BBCode links are spam', 'antispam-bee' );
 	}
 
@@ -62,7 +62,7 @@ class BBCode extends ControllableBase implements SpamReason {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		return __( 'Review the comment contents for BBCode links', 'antispam-bee' );
 	}
 
@@ -71,7 +71,7 @@ class BBCode extends ControllableBase implements SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_reason_text() {
+	public static function get_reason_text(): string {
 		return _x( 'BBCode', 'spam-reason-text', 'antispam-bee' );
 	}
 }

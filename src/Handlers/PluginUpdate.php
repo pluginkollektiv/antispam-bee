@@ -51,7 +51,7 @@ class PluginUpdate {
 	/**
 	 * Runs after Antispam Bee was upgraded.
 	 */
-	public static function maybe_run_plugin_updated_logic() {
+	public static function maybe_run_plugin_updated_logic(): void {
 		if ( self::db_version_is_current() || self::$db_update_triggered ) {
 			return;
 		}
@@ -62,7 +62,7 @@ class PluginUpdate {
 	/**
 	 * Makes database changes, if needed.
 	 */
-	private static function maybe_update_database() {
+	private static function maybe_update_database(): void {
 		// Prevent further update triggers during the same request that run before the DB version is updated.
 		self::$db_update_triggered = true;
 
@@ -190,7 +190,7 @@ class PluginUpdate {
 	 *
 	 * @return array Converted array of selected options.
 	 */
-	private static function convert_multiselect_values( $values, $mapping = [] ) {
+	private static function convert_multiselect_values( array $values, array $mapping = [] ): array {
 		if ( ! is_array( $values ) || empty( $values ) ) {
 			return $values;
 		}
@@ -212,7 +212,7 @@ class PluginUpdate {
 	 *
 	 * @return string
 	 */
-	private static function get_plugin_version() {
+	private static function get_plugin_version(): string {
 		$meta = get_file_data( MAIN_PLUGIN_FILE, [ 'Version' => 'Version' ] );
 
 		return $meta['Version'];
@@ -223,7 +223,7 @@ class PluginUpdate {
 	 *
 	 * @return bool
 	 */
-	private static function db_version_is_current() {
+	private static function db_version_is_current(): bool {
 		if ( ! is_null( self::$db_version_is_current ) ) {
 			return self::$db_version_is_current;
 		}

@@ -22,7 +22,7 @@ class DeleteSpamCron {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public static function init(): void {
 		add_action(
 			'update_option_' . Settings::OPTION_NAME,
 			[ __CLASS__, 'maybe_change_cron_state' ]
@@ -39,7 +39,7 @@ class DeleteSpamCron {
 	 *
 	 * @return void
 	 */
-	public static function maybe_change_cron_state() {
+	public static function maybe_change_cron_state(): void {
 		if ( ! Settings::get_option( 'delete_spam_cronjob_enabled' ) ) {
 			self::unregister();
 
@@ -54,7 +54,7 @@ class DeleteSpamCron {
 	 *
 	 * @return void
 	 */
-	public static function register() {
+	public static function register(): void {
 		if ( ! wp_next_scheduled( self::CRONJOB_NAME ) ) {
 			wp_schedule_event(
 				time(),
@@ -69,7 +69,7 @@ class DeleteSpamCron {
 	 *
 	 * @return void
 	 */
-	public static function unregister() {
+	public static function unregister(): void {
 		if ( wp_next_scheduled( self::CRONJOB_NAME ) ) {
 			wp_clear_scheduled_hook( self::CRONJOB_NAME );
 		}
@@ -81,7 +81,7 @@ class DeleteSpamCron {
 	 *
 	 * @return void
 	 */
-	public static function run() {
+	public static function run(): void {
 		if ( ! defined( 'DOING_CRON' ) ) {
 			return;
 		}

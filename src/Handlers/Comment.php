@@ -22,7 +22,7 @@ class Comment extends Reaction {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public static function init(): void {
 		add_action(
 			'init',
 			function () {
@@ -42,7 +42,7 @@ class Comment extends Reaction {
 	 * @param array $comment Comment to process.
 	 * @return array Processed comment.
 	 */
-	public static function process( $comment ) {
+	public static function process( array $comment ): array {
 		/**
 		 * Filter processable comment types.
 		 *

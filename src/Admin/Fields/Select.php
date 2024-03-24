@@ -17,7 +17,7 @@ class Select extends Field implements RenderElement {
 	/**
 	 * Get HTML.
 	 */
-	public function render() {
+	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		$name     = $this->get_name();

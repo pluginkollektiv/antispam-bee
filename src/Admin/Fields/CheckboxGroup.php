@@ -17,10 +17,10 @@ class CheckboxGroup extends Field implements RenderElement {
 	/**
 	 * Render HTML.
 	 */
-	public function render() {
+	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 
-		$options = isset( $this->option['options'] ) ? $this->option['options'] : [];
+		$options = $this->option['options'] ?? [];
 		if ( ! is_array( $options ) ) {
 			return;
 		}
@@ -49,9 +49,9 @@ class CheckboxGroup extends Field implements RenderElement {
 	 *
 	 * @return mixed Value stored in database.
 	 */
-	protected function get_custom_value( $key ) {
+	protected function get_custom_value( string $key ) {
 		$options = Settings::get_option( "{$this->controllable_option_name}", $this->type );
 
-		return isset( $options[ $key ] ) ? $options[ $key ] : null;
+		return $options[ $key ] ?? null;
 	}
 }

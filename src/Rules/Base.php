@@ -57,7 +57,7 @@ abstract class Base implements Verifiable {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public static function init(): void {
 		add_filter( 'antispam_bee_rules', [ static::class, 'add_rule' ] );
 	}
 
@@ -68,7 +68,7 @@ abstract class Base implements Verifiable {
 	 *
 	 * @return array
 	 */
-	public static function add_rule( $rules ) {
+	public static function add_rule( array $rules ): array {
 		$rules[] = static::class;
 
 		return $rules;
@@ -79,7 +79,7 @@ abstract class Base implements Verifiable {
 	 *
 	 * @return array
 	 */
-	public static function get_supported_types() {
+	public static function get_supported_types(): array {
 		/**
 		 * Filter the reaction types that are supported by the rule.
 		 *
@@ -97,7 +97,7 @@ abstract class Base implements Verifiable {
 	 *
 	 * @return int Weight factor.
 	 */
-	public static function get_weight() {
+	public static function get_weight(): int {
 		return static::$weight;
 	}
 
@@ -106,7 +106,7 @@ abstract class Base implements Verifiable {
 	 *
 	 * @return string The slug.
 	 */
-	public static function get_slug() {
+	public static function get_slug(): string {
 		return static::$slug;
 	}
 
@@ -115,7 +115,7 @@ abstract class Base implements Verifiable {
 	 *
 	 * @return bool
 	 */
-	public static function is_final() {
+	public static function is_final(): bool {
 		return static::$is_final;
 	}
 
@@ -124,7 +124,7 @@ abstract class Base implements Verifiable {
 	 *
 	 * @return bool
 	 */
-	public static function is_invisible() {
+	public static function is_invisible(): bool {
 		return static::$is_invisible;
 	}
 }

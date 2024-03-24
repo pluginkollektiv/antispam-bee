@@ -23,15 +23,16 @@ class ComponentsHelper {
 	 * @param array $options {
 	 *     Filter options.
 	 *
-	 *     @type string $reaction_type   Reaction type (e.g. "comment").
-	 *     @type bool   $only_active     Only active components.
-	 *     @type bool   $is_controllable Is controllable type.
+	 *     @type string       $reaction_type   Reaction type (e.g. "comment").
+	 *     @type bool         $only_active     Only active components.
+	 *     @type bool         $is_controllable Is controllable type.
+	 *     @type string|array $implements      Interface(s) that should be implemented.
 	 * }
 	 * @return array Filtered list.
 	 */
-	public static function filter( $components, $options ) {
-		$reaction_type = isset( $options['reaction_type'] ) ? $options['reaction_type'] : null;
-		$only_active   = isset( $options['only_active'] ) ? $options['only_active'] : false;
+	public static function filter( array $components, array $options ): array {
+		$reaction_type = $options['reaction_type'] ?? null;
+		$only_active   = $options['only_active'] ?? false;
 
 		$filtered_components = [];
 		foreach ( $components as $component ) {
@@ -40,10 +41,10 @@ class ComponentsHelper {
 
 				if ( is_string( $implements ) ) {
 					$implements_interfaces = InterfaceHelper::class_implements_interface( $component, $implements );
-				}
-
-				if ( is_array( $implements ) ) {
+				} elseif ( is_array( $implements ) ) {
 					$implements_interfaces = InterfaceHelper::class_implements_interfaces( $component, $implements );
+				} else {
+					$implements_interfaces = false;
 				}
 
 				if ( ! $implements_interfaces ) {

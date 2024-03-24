@@ -36,7 +36,7 @@ class DeleteForReasons extends ControllableBase {
 	 * @param array $item Item to process.
 	 * @return array Processed item.
 	 */
-	public static function process( $item ) {
+	public static function process( array $item ): array {
 		if ( isset( $item['asb_marked_as_delete'] ) && true === $item['asb_marked_as_delete'] ) {
 			return $item;
 		}
@@ -58,7 +58,7 @@ class DeleteForReasons extends ControllableBase {
 	 *
 	 * @return string
 	 */
-	public static function get_name() {
+	public static function get_name(): string {
 		return __( 'Delete by reasons', 'antispam-bee' );
 	}
 
@@ -67,7 +67,7 @@ class DeleteForReasons extends ControllableBase {
 	 *
 	 * @return string|null
 	 */
-	public static function get_label() {
+	public static function get_label(): ?string {
 		return __( 'Delete comments by spam reasons', 'antispam-bee' );
 	}
 
@@ -76,7 +76,7 @@ class DeleteForReasons extends ControllableBase {
 	 *
 	 * @return string|null
 	 */
-	public static function get_description() {
+	public static function get_description(): ?string {
 		return null;
 	}
 
@@ -88,7 +88,7 @@ class DeleteForReasons extends ControllableBase {
 	 *
 	 * @return array
 	 */
-	public static function get_options() {
+	public static function get_options(): array {
 		$options = [];
 		foreach ( self::get_supported_types() as $type ) {
 			// @todo: disable the reasons checkboxes if the rule is not active.

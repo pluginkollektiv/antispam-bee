@@ -22,9 +22,9 @@ class PostProcessors {
 	 * @param array  $item          Item to process.
 	 * @param array  $reasons       List of reasons.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	public static function apply( $reaction_type, $item, $reasons = [] ) {
+	public static function apply( string $reaction_type, array $item, array $reasons = [] ): array {
 		$post_processors = self::get( $reaction_type, true );
 
 		$item['asb_reasons']   = $reasons;
@@ -55,7 +55,7 @@ class PostProcessors {
 	 * @param bool        $only_active   Get only active post processors.
 	 * @return array List of suitable post processors.
 	 */
-	public static function get( $reaction_type = null, $only_active = false ) {
+	public static function get( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
 			[
 				'reaction_type' => $reaction_type,
@@ -68,11 +68,11 @@ class PostProcessors {
 	/**
 	 * Get controllable items.
 	 *
-	 * @param string $reaction_type Reaction type.
-	 * @param bool   $only_active   Get only active items.
+	 * @param string|null $reaction_type Reaction type.
+	 * @param bool        $only_active   Get only active items.
 	 * @return array List of suitable controllables.
 	 */
-	public static function get_controllables( $reaction_type = null, $only_active = false ) {
+	public static function get_controllables( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
 			[
 				'reaction_type' => $reaction_type,
@@ -88,7 +88,7 @@ class PostProcessors {
 	 * @param array $options Filter options.
 	 * @return array List of filtered elements.
 	 */
-	private static function filter( $options ) {
+	private static function filter( array $options ): array {
 		return ComponentsHelper::filter( apply_filters( 'antispam_bee_post_processors', [] ), $options );
 	}
 }

@@ -17,5 +17,5 @@ interface SpamReason {
 	 *
 	 * @return string
 	 */
-	public static function get_reason_text();
+	public static function get_reason_text(): string;
 }

@@ -27,7 +27,7 @@ class SpamReasonTextHelper {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public static function init(): void {
 		add_action( 'init', [ __CLASS__, 'populate' ] );
 	}
 
@@ -36,7 +36,7 @@ class SpamReasonTextHelper {
 	 *
 	 * @return void
 	 */
-	public static function populate() {
+	public static function populate(): void {
 		$rules                 = Rules::get_spam_rules();
 		self::$slug_text_array = [];
 		foreach ( $rules as $rule ) {
@@ -59,7 +59,7 @@ class SpamReasonTextHelper {
 	 *
 	 * @return array Texts for given slugs.
 	 */
-	public static function get_texts_by_slugs( array $slugs ) {
+	public static function get_texts_by_slugs( array $slugs ): array {
 		$texts = [];
 		foreach ( $slugs as $slug ) {
 			$text = self::$slug_text_array[ $slug ] ?? null;
