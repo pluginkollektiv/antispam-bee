@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['7.2', '5.4']
+        php-versions: ['7.4']
     steps:
     - uses: actions/checkout@master
     - name: Setup PHP
@@ -19,12 +19,9 @@ jobs:
         extensions: mbstring, intl
         ini-values: post_max_size=256M, short_open_tag=On
         tools: phpunit, composer
-    - name: Set COMPOSER environment variable for 5.4
-      if: matrix.php-versions == '5.4'
-      run: echo "COMPOSER=composer-php-5-4.json" >> $GITHUB_ENV
     - name: Run tests
       run: |
-        composer install
+        composer install --ignore-platform-req php
         ./vendor/bin/phpunit -c ./phpunit.xml.dist
   behat:
     runs-on: ubuntu-latest
@@ -48,9 +45,9 @@ jobs:
             wordpress: '6.2'
           - php: '8.0'
             wordpress: '6.0'
-          - php: '7.3'
+          - php: '7.4'
             wordpress: '5.0'
-          - php: '7.2'
+          - php: '7.4'
             wordpress: '4.6'
     steps:
     - uses: actions/checkout@master
