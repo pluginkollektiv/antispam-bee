@@ -19,7 +19,7 @@ class FactoryTest extends TestCase {
 	 *
 	 * @since 2.7.0
 	 */
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		Functions::when( 'get_bloginfo' )->justReturn( 'https://domain.com/' );
