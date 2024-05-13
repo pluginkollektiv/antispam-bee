@@ -4,7 +4,6 @@ namespace AntispamBee\Tests;
 
 use Brain\Monkey;
 use Mockery;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Abstract base class for all test case implementations.
@@ -14,7 +13,7 @@ use PHPUnit_Framework_TestCase;
  *
  * @since   2.7.0
  */
-abstract class TestCase extends PHPUnit_Framework_TestCase {
+abstract class TestCase extends \PHPUnit\Framework\TestCase {
 
 	/**
 	 * Prepares the test environment before each test.
