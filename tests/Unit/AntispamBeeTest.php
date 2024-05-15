@@ -68,7 +68,7 @@ class FactoryTest extends TestCase {
 		$_SERVER['REMOTE_ADDR']          = '192.0.2.1';
 		$_SERVER['HTTP_X_FORWARDED_FOR'] = '192.0.2.2, 10.0.0.10';
 		$_SERVER['HTTP_X_REAL_IP']       = 'bogus';
-		$_SERVER['REQUEST_URI']          = 'https://domain.com/wp-comments-post.php';
+		$_SERVER['SCRIPT_NAME']          = '/wp-comments-post.php';
 		$_POST['comment']                = $comment;
 
 		$result = Testee::handle_incoming_request( $comment );
@@ -99,7 +99,7 @@ class FactoryTest extends TestCase {
 		$comment = array_merge( $this->get_base_comment(), $comment );
 
 		$_SERVER['REMOTE_ADDR'] = '12.23.34.45';
-		$_SERVER['REQUEST_URI'] = 'https://domain.com/wp-comments-post.php';
+		$_SERVER['SCRIPT_NAME'] = '/wp-comments-post.php';
 		$_POST['comment']       = $comment;
 
 		// This is where we check for the spam reason that was detected.

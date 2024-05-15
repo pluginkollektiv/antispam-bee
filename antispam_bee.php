@@ -1134,7 +1134,7 @@ class Antispam_Bee {
 			return;
 		}
 
-		$request_uri  = self::get_key( $_SERVER, 'REQUEST_URI' );
+		$request_uri  = self::get_key( $_SERVER, 'SCRIPT_NAME' );
 		$request_path = self::parse_url( $request_uri, 'path' );
 
 		if ( strpos( $request_path, 'wp-comments-post.php' ) === false ) {
@@ -1168,7 +1168,7 @@ class Antispam_Bee {
 	public static function handle_incoming_request( $comment ) {
 		$comment['comment_author_IP'] = self::get_client_ip();
 
-		$request_uri  = self::get_key( $_SERVER, 'REQUEST_URI' );
+		$request_uri  = self::get_key( $_SERVER, 'SCRIPT_NAME' );
 		$request_path = self::parse_url( $request_uri, 'path' );
 
 		if ( empty( $request_path ) ) {
