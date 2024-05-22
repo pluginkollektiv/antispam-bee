@@ -73,6 +73,68 @@ class DebugModeTest extends TestCase {
 		);
 	}
 
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_log_respects_a_configured_log_directory(): void {
+		$custom_dir = sys_get_temp_dir() . '/asb-debug-mode-test-custom';
+		if ( ! is_dir( $custom_dir ) ) {
+			mkdir( $custom_dir, 0777, true );
+		}
+		define( 'ANTISPAM_BEE_DEBUG_MODE_LOG_DIR', $custom_dir );
+
+		when( 'wp_salt' )->alias(
+			function () {
+				return $this->salt;
+			}
+		);
+		self::force_debug_mode( true );
+
+		DebugMode::log( 'a message for the configured directory' );
+
+		$files = glob( $custom_dir . '/asb-debug.*.log' ) ?: [];
+		self::assertCount( 1, $files, 'The configured directory should receive the log file' );
+		self::assertSame(
+			[],
+			self::log_files(),
+			'WP_CONTENT_DIR must not receive the log file once a directory is configured'
+		);
+
+		foreach ( $files as $file ) {
+			unlink( $file );
+		}
+		rmdir( $custom_dir );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_log_writes_nothing_when_the_configured_directory_does_not_exist(): void {
+		define( 'ANTISPAM_BEE_DEBUG_MODE_LOG_DIR', sys_get_temp_dir() . '/asb-debug-mode-test-missing' );
+
+		// Routed to a real file, isolated to this process, so the diagnostic
+		// error_log() call does not write to stderr, which
+		// `beStrictAboutOutputDuringTests` would otherwise flag as unexpected
+		// output.
+		ini_set( 'error_log', sys_get_temp_dir() . '/asb-debug-mode-test-error-log' );
+		when( 'wp_salt' )->alias(
+			function () {
+				return $this->salt;
+			}
+		);
+		self::force_debug_mode( true );
+
+		DebugMode::log( 'should not be written' );
+
+		self::assertSame(
+			[],
+			self::log_files(),
+			'A misconfigured directory must fail closed rather than fall back to WP_CONTENT_DIR'
+		);
+	}
+
 	public function test_log_file_name_is_derived_from_the_salt(): void {
 		self::force_debug_mode( true );
 
