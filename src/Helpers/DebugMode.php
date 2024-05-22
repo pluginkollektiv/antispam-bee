@@ -42,8 +42,8 @@ class DebugMode {
 			return;
 		}
 
-		$date = date( 'Y-m-d' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-		$time = date( 'H-i-s' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+		$date    = date( 'Y-m-d' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+		$time    = date( 'H-i-s' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$log_dir = defined( 'ANTISPAM_BEE_DEBUG_MODE_LOG_DIR' ) ? \ANTISPAM_BEE_DEBUG_MODE_LOG_DIR : \WP_CONTENT_DIR;
 
 		if ( ! is_dir( $log_dir ) ) {
