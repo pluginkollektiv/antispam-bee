@@ -20,7 +20,10 @@ class DebugMode {
 
         $date = date( 'Y-m-d' );
         $time = date( 'H-i-s' );
-        $content_dir = \WP_CONTENT_DIR;
-        error_log( "[{$date} {$time}] {$message}\n", 3, "{$content_dir}/asb-debug.{$date}.log" );
+        $log_dir = defined( 'ANTISPAM_BEE_DEBUG_MODE_LOG_DIR' ) ? \ANTISPAM_BEE_DEBUG_MODE_LOG_DIR : \WP_CONTENT_DIR;
+        if ( ! is_dir( $log_dir ) ) {
+            error_log( "The directory set for Antispam Bee debug logging does not exist: {$log_dir}" );
+        }
+        error_log( "[{$date} {$time}] {$message}\n", 3, "{$log_dir}/asb-debug.{$date}.log" );
     }
 }
