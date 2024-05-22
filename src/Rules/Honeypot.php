@@ -81,7 +81,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 			return;
 		}
 
-		$request_uri  = Settings::get_key( $_SERVER, 'REQUEST_URI' );
+		$request_uri  = Settings::get_key( $_SERVER, 'SCRIPT_NAME' );
 		$request_path = DataHelper::parse_url( $request_uri, 'path' );
 
 		if ( strpos( $request_path, 'wp-comments-post.php' ) === false ) {
