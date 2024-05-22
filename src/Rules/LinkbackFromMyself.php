@@ -1,4 +1,9 @@
 <?php
+/**
+ * Linkback from Myself Rule.
+ *
+ * @package AntispamBee\Rules
+ */
 
 namespace AntispamBee\Rules;
 
@@ -11,10 +16,36 @@ use AntispamBee\Interfaces\SpamReason;
  * @todo: check on remote server.
  */
 class LinkbackFromMyself extends Base implements SpamReason {
+
+	/**
+	 * Rule slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-linkback-from-myself';
+
+	/**
+	 * Only linkbacks are supported.
+	 *
+	 * @var array
+	 */
 	protected static $supported_types = [ ContentTypeHelper::LINKBACK_TYPE ];
+
+	/**
+	 * This rule is invisible.
+	 *
+	 * @var bool
+	 */
 	protected static $is_invisible = true;
 
+	/**
+	 * Verify an item.
+	 *
+	 * Test if a linkback originales from it's own target.
+	 *
+	 * @param array $item Item to verify.
+	 * @return int Numeric result.
+	 */
 	public static function verify( $item ) {
 		$url            = isset( $item['comment_author_url'] ) ? $item['comment_author_url'] : null;
 		$target_post_id = isset( $item['comment_post_ID'] ) ? $item['comment_post_ID'] : null;
@@ -52,10 +83,20 @@ class LinkbackFromMyself extends Base implements SpamReason {
 		return 0;
 	}
 
+	/**
+	 * Get rule name.
+	 *
+	 * @return string
+	 */
 	public static function get_name() {
 		return __( 'Linkback from myself', 'antispam-bee' );
 	}
 
+	/**
+	 * Get human-readable spam reason.
+	 *
+	 * @return string
+	 */
 	public static function get_reason_text() {
 		return _x( 'Linkback from myself', 'spam-reason-text', 'antispam-bee' );
 	}

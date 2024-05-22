@@ -1,12 +1,21 @@
 <?php
+/**
+ * IP helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 
 namespace AntispamBee\Helpers;
 
+/**
+ * IP address helper.
+ */
 class IpHelper {
+
 	/**
 	 * Return real client IP
 	 *
-	 * @return  mixed  $ip  Client IP
+	 * @return string Client IP
 	 */
 	public static function get_client_ip() {
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
@@ -71,7 +80,6 @@ class IpHelper {
 	 *
 	 * @return  string     Anonymous IP.
 	 * @since   2.5.1
-	 *
 	 */
 	public static function anonymize_ip( $ip ) {
 		preg_match( '/\w+([\.:])\w+/', $ip, $matches );

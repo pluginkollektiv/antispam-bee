@@ -1,4 +1,9 @@
 <?php
+/**
+ * RegExp Rule.
+ *
+ * @package AntispamBee\Rules
+ */
 
 namespace AntispamBee\Rules;
 
@@ -11,10 +16,21 @@ use AntispamBee\Interfaces\SpamReason;
  */
 class RegexpSpam extends ControllableBase implements SpamReason {
 
+
+	/**
+	 * Rule slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-regexp';
 
 	/**
-	 * Usage of regexp, also custom
+	 * Verify an item.
+	 *
+	 * Content fields using pre-defined and custom regular expressions
+	 *
+	 * @param array $item Item to verify.
+	 * @return int Numeric result.
 	 */
 	public static function verify( $item ) {
 		$fields = [
@@ -93,8 +109,8 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 				'email' => '@mail\.ru|@yandex\.',
 			],
 			[
-				'rawurl' => '^http[s]?:\/\/(accounts\.)?binance\.com\/[a-zA-Z-]+\/register(-person)?\?ref=[\w]+'
-			]
+				'rawurl' => '^http[s]?:\/\/(accounts\.)?binance\.com\/[a-zA-Z-]+\/register(-person)?\?ref=[\w]+',
+			],
 		];
 
 		$quoted_author = preg_quote( $subject['author'], '/' );
@@ -157,18 +173,38 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		return 0;
 	}
 
+	/**
+	 * Get rule name.
+	 *
+	 * @return string
+	 */
 	public static function get_name() {
 		return __( 'Regular Expression', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule label.
+	 *
+	 * @return string|null
+	 */
 	public static function get_label() {
 		return __( 'Use regular expressions', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule description.
+	 *
+	 * @return string|null
+	 */
 	public static function get_description() {
 		return __( 'Predefined and custom patterns by plugin hook', 'antispam-bee' );
 	}
 
+	/**
+	 * Get human-readable spam reason.
+	 *
+	 * @return string
+	 */
 	public static function get_reason_text() {
 		return _x( 'RegExp match', 'spam-reason-text', 'antispam-bee' );
 	}

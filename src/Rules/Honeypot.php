@@ -1,4 +1,9 @@
 <?php
+/**
+ * Honeypot Rule.
+ *
+ * @package AntispamBee\Rules
+ */
 
 namespace AntispamBee\Rules;
 
@@ -13,7 +18,19 @@ use AntispamBee\Interfaces\SpamReason;
  * Adds honeypot to comment form and checks if it is filled.
  */
 class Honeypot extends ControllableBase implements SpamReason {
+
+	/**
+	 * Rule slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-honeypot';
+
+	/**
+	 * Only comments are supported.
+	 *
+	 * @var array
+	 */
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
 	/**
@@ -36,6 +53,14 @@ class Honeypot extends ControllableBase implements SpamReason {
 		);
 	}
 
+	/**
+	 * Verify an item.
+	 *
+	 * Check if request contains data from the honeypot field.
+	 *
+	 * @param array $item Item to verify.
+	 * @return int Numeric result.
+	 */
 	public static function verify( $item ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['ab_spam__hidden_field'] ) && 1 === $_POST['ab_spam__hidden_field'] ) {
@@ -45,12 +70,17 @@ class Honeypot extends ControllableBase implements SpamReason {
 		return 0;
 	}
 
+	/**
+	 * Apply pre-checks during initialization.
+	 *
+	 * @return void
+	 */
 	public static function precheck() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( is_feed() || is_trackback() || empty( $_POST ) ) {
 			return;
 		}
-		
+
 		$request_uri  = Settings::get_key( $_SERVER, 'REQUEST_URI' );
 		$request_path = DataHelper::parse_url( $request_uri, 'path' );
 
@@ -63,7 +93,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 				$fields['hidden_field'] = $key;
 				break;
 			}
-			if ( $key === HoneypotField::get_secret_name_for_post() ) {
+			if ( HoneypotField::get_secret_name_for_post() === $key ) {
 				$fields['plugin_field'] = $key;
 			}
 		}
@@ -85,18 +115,38 @@ class Honeypot extends ControllableBase implements SpamReason {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
+	/**
+	 * Get rule name.
+	 *
+	 * @return string
+	 */
 	public static function get_name() {
 		return _x( 'Honeypot', 'spam-reason-form-name', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule label.
+	 *
+	 * @return string|null
+	 */
 	public static function get_label() {
 		return __( 'Inject hidden field', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule description.
+	 *
+	 * @return string|null
+	 */
 	public static function get_description() {
 		return __( 'No review of already commented users', 'antispam-bee' );
 	}
 
+	/**
+	 * Get human-readable spam reason.
+	 *
+	 * @return string
+	 */
 	public static function get_reason_text() {
 		return _x( 'Honeypot', 'spam-reason-text', 'antispam-bee' );
 	}

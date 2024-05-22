@@ -1,4 +1,9 @@
 <?php
+/**
+ * Language Spam Rule.
+ *
+ * @package AntispamBee\Rules
+ */
 
 namespace AntispamBee\Rules;
 
@@ -8,10 +13,26 @@ use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\SpamReason;
 
+/**
+ * This rule checks for allowed languages in a comment's content.
+ */
 class LangSpam extends ControllableBase implements SpamReason {
 
+	/**
+	 * Rule slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-lang-spam';
 
+	/**
+	 * Verify an item.
+	 *
+	 * Check for allowed languages.
+	 *
+	 * @param array $item Item to verify.
+	 * @return int Numeric result.
+	 */
 	public static function verify( $item ) {
 		$allowed_languages = array_keys( (array) Settings::get_option( static::get_option_name( 'allowed' ), $item['reaction_type'] ) );
 
@@ -51,10 +72,10 @@ class LangSpam extends ControllableBase implements SpamReason {
 			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			_x( 'words', 'Word count type. Do not translate!' ),
 			'characters'
-			) === 0 && preg_match(
-				'/^utf\-?8$/i',
-				get_option( 'blog_charset' )
-			) ) { // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+		) === 0 && preg_match(
+			'/^utf\-?8$/i',
+			get_option( 'blog_charset' )
+		) ) { // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			preg_match_all( '/./u', $text, $words_array );
 			$word_count = 0;
 			if ( isset( $words_array[0] ) ) {
@@ -75,7 +96,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 		);
 
 		if ( is_wp_error( $response )
-		     || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+			|| wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			return 0;
 		}
 
@@ -92,14 +113,29 @@ class LangSpam extends ControllableBase implements SpamReason {
 		return (int) ! in_array( LangHelper::map( $detected_language->code ), $allowed_languages, true );
 	}
 
+	/**
+	 * Get rule name.
+	 *
+	 * @return string
+	 */
 	public static function get_name() {
 		return __( 'Language', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule label.
+	 *
+	 * @return string|null
+	 */
 	public static function get_label() {
 		return __( 'Allow reactions only in certain language', 'antispam-bee' );
 	}
 
+	/**
+	 * Get rule description.
+	 *
+	 * @return string|null
+	 */
 	public static function get_description() {
 		$link1 = sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
@@ -117,6 +153,13 @@ class LangSpam extends ControllableBase implements SpamReason {
 		);
 	}
 
+	/**
+	 * Get options.
+	 *
+	 * {@inheritDoc}
+	 *
+	 * @return array
+	 */
 	public static function get_options() {
 		// @todo: we should enable the user to select all 82 languages we can detect. we use presets: the site language, the site language + english, if more than two langs are installed, use those; and: custom. We could check the preferred languages UI for the custom option. And also for the ISO codes.
 		$languages = [
@@ -127,7 +170,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 			'es' => __( 'Spanish', 'antispam-bee' ),
 		];
 
-		// Todo: Deprecate old filters
+		// Todo: Deprecate old filters.
 		/**
 		 * Filter the possible languages for the language spam test
 		 *
@@ -151,6 +194,11 @@ class LangSpam extends ControllableBase implements SpamReason {
 		];
 	}
 
+	/**
+	 * Get human-readable spam reason.
+	 *
+	 * @return string
+	 */
 	public static function get_reason_text() {
 		return __( 'Language', 'antispam-bee' );
 	}

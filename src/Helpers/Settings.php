@@ -1,26 +1,40 @@
 <?php
+/**
+ * Settings helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 
 namespace AntispamBee\Helpers;
 
 use AntispamBee\Handlers\PluginUpdate;
 
+/**
+ * Settings helper.
+ */
 class Settings {
+
+	/**
+	 * Default options.
+	 *
+	 * @var array[]
+	 */
 	protected static $defaults = [
-		'comment'   => [
-			'rule_asb_regexp_active'   => 'on',
-			'rule_asb_honeypot_active' => 'on',
-			'rule_asb_db_spam_active'  => 'on',
-			'rule_asb_bbcode_active'   => 'on',
+		'comment'  => [
+			'rule_asb_regexp_active'                => 'on',
+			'rule_asb_honeypot_active'              => 'on',
+			'rule_asb_db_spam_active'               => 'on',
+			'rule_asb_bbcode_active'                => 'on',
 			'post_processor_asb_save_reason_active' => 'on',
-			'rule_asb_approved_email_active' => 'on',
+			'rule_asb_approved_email_active'        => 'on',
 		],
 		'linkback' => [
-			'rule_asb_regexp_active'  => 'on',
-			'rule_asb_db_spam_active' => 'on',
-			'rule_asb_bbcode_active'  => 'on',
+			'rule_asb_regexp_active'                => 'on',
+			'rule_asb_db_spam_active'               => 'on',
+			'rule_asb_bbcode_active'                => 'on',
 			'post_processor_asb_save_reason_active' => 'on',
 		],
-		'general'   => [
+		'general'  => [
 			'general_delete_data_on_uninstall_active' => 'on',
 		],
 	];
@@ -28,6 +42,11 @@ class Settings {
 	// @todo: check if code is PHP 7 compatible
 	const OPTION_NAME = 'antispam_bee_options';
 
+	/**
+	 * Initialize.
+	 *
+	 * @return void
+	 */
 	public static function init() {
 		add_action(
 			'update_option_' . self::OPTION_NAME,
@@ -37,11 +56,15 @@ class Settings {
 		);
 	}
 
+	/**
+	 * Update cache.
+	 *
+	 * @param mixed $old_value The old option value.
+	 * @param mixed $value     The new option value.
+	 * @return void
+	 */
 	public static function update_cache( $old_value, $value ) {
-		wp_cache_set(
-			self::OPTION_NAME,
-			$value
-		);
+		wp_cache_set( self::OPTION_NAME, $value );
 	}
 
 	/**
@@ -85,10 +108,10 @@ class Settings {
 	/**
 	 * Get value from array by path.
 	 *
-	 * @param string $path Dot-separated path to the wanted value.
-	 * @param array $array
+	 * @param string $path  Dot-separated path to the wanted value.
+	 * @param array  $array Options array.
 	 *
-	 * @return null|mixed
+	 * @return null|mixed Value at given path, if present.
 	 */
 	public static function get_array_value_by_path( $path, $array ) {
 		if ( ! is_array( $array ) ) {
@@ -141,7 +164,7 @@ class Settings {
 	 * Update single option field
 	 *
 	 * @param string $field Field name.
-	 * @param mixed $value The Field value.
+	 * @param mixed  $value The Field value.
 	 *
 	 * @since  0.1
 	 * @since  2.4
@@ -157,8 +180,8 @@ class Settings {
 	/**
 	 * Check and return an array key
 	 *
-	 * @param array $array Array with values.
-	 * @param string $key Name of the key.
+	 * @param array  $array Array with values.
+	 * @param string $key   Name of the key.
 	 *
 	 * @return  mixed         Value of the requested key.
 	 * @since   2.10.0 Only return `null` if option does not exist.
@@ -173,6 +196,13 @@ class Settings {
 		return $array[ $key ];
 	}
 
+	/**
+	 * Remove array item(s) by key.
+	 *
+	 * @param string $path  Dot-separated path to the wanted value.
+	 * @param array  $array Array to filter.
+	 * @return void
+	 */
 	public static function remove_array_key_by_path( $path, &$array ) {
 		if ( ! is_array( $array ) ) {
 			return;
@@ -197,6 +227,12 @@ class Settings {
 		}
 	}
 
+	/**
+	 * Get path parts from dot-separated notation.
+	 *
+	 * @param mixed $path Dot-separated path to the wanted value.
+	 * @return string[] Path parts.
+	 */
 	private static function get_path_parts( $path ) {
 		if ( ! is_string( $path ) ) {
 			return [];
@@ -210,6 +246,14 @@ class Settings {
 		return $path_parts;
 	}
 
+	/**
+	 * Set an array item at given path.
+	 *
+	 * @param string $path      Dot-separated path to the wanted value.
+	 * @param mixed  $sanitized Sanitized value.
+	 * @param array  $options   Options array to process.
+	 * @return void
+	 */
 	public static function set_array_value_by_path( $path, $sanitized, &$options ) {
 		if ( ! is_array( $options ) ) {
 			return;

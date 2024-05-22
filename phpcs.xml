@@ -52,7 +52,7 @@
 
 	<rule ref="WordPress">
 		<!-- As we use PHP 5.4+ now, we can use the short array syntax -->
-		<exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax.Found" />
 		<!-- Uncomment if you develop a theme with templates for CPTs having a prefix -->
 		<exclude name="WordPress.Files.FileName" />
 		<!-- Uncomment for projects using the metabox toolbox -->

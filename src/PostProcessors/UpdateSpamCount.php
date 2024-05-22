@@ -1,4 +1,9 @@
 <?php
+/**
+ * Update Spam Count Post Processor.
+ *
+ * @package AntispamBee\PostProcessors
+ */
 
 namespace AntispamBee\PostProcessors;
 
@@ -10,8 +15,20 @@ use AntispamBee\Helpers\Settings;
  */
 class UpdateSpamCount extends Base {
 
+	/**
+	 * Post processor slug.
+	 *
+	 * @var string
+	 */
 	protected static $slug = 'asb-update-spam-count';
 
+	/**
+	 * Process an item.
+	 * Increment the spam counter by 1.
+	 *
+	 * @param array $item Item to process.
+	 * @return array Processed item.
+	 */
 	public static function process( $item ) {
 		if ( ! Statistics::is_active() ) {
 			return $item;
@@ -25,4 +42,3 @@ class UpdateSpamCount extends Base {
 		return $item;
 	}
 }
-

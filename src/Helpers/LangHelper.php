@@ -1,7 +1,17 @@
 <?php
+/**
+ * Language helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 
 namespace AntispamBee\Helpers;
 
+/**
+ * Language helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 class LangHelper {
 
 	/**
@@ -11,7 +21,6 @@ class LangHelper {
 	 *
 	 * @return string             Mapped ISO code
 	 * @since   2.9.0
-	 *
 	 */
 	public static function map( $franc_code ) {
 		$codes = [
@@ -208,5 +217,4 @@ class LangHelper {
 
 		return $franc_code;
 	}
-
 }

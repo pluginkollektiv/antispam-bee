@@ -1,12 +1,27 @@
 <?php
+/**
+ * The inline input field for the admin UI.
+ *
+ * @package AntispamBee\Admin\Fields
+ */
 
 namespace AntispamBee\Admin\Fields;
 
 use AntispamBee\Admin\RenderElement;
 
+/**
+ * Inline input field.
+ */
 class Inline extends Field implements RenderElement {
 
+	/**
+	 * Get HTML for field.
+	 *
+	 * @return string Element HTML.
+	 */
 	public function render() {
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+
 		if ( ! $this->option['input'] instanceof Field ) {
 			echo '';
 

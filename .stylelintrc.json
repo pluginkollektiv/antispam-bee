@@ -1,5 +1,0 @@
-{
-  "extends": "@wordpress/stylelint-config",
-  "rules": {
-  }
-}

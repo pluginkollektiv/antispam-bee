@@ -1,17 +1,41 @@
 <?php
+/**
+ * Spam Reason Text helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 
 namespace AntispamBee\Helpers;
 
 use AntispamBee\Handlers\PluginUpdate;
 use AntispamBee\Handlers\Rules;
 
+/**
+ * Spam Reason Text helper.
+ */
 class SpamReasonTextHelper {
+
+	/**
+	 * List of spam reasons by rule slug.
+	 *
+	 * @var array
+	 */
 	protected static $slug_text_array;
 
+	/**
+	 * Initialize.
+	 *
+	 * @return void
+	 */
 	public static function init() {
 		add_action( 'init', [ __CLASS__, 'populate' ] );
 	}
 
+	/**
+	 * Populate spam reasons.
+	 *
+	 * @return void
+	 */
 	public static function populate() {
 		$rules                 = Rules::get_spam_rules();
 		self::$slug_text_array = [];
@@ -24,16 +48,16 @@ class SpamReasonTextHelper {
 		 *
 		 * @param $additional_reasons array Array of additional reasons. Key is the reason slug, value the label users see in the backend.
 		 */
-		$additional_reasons = (array) apply_filters( 'antispam_bee_additional_spam_reasons', [] );
+		$additional_reasons    = (array) apply_filters( 'antispam_bee_additional_spam_reasons', [] );
 		self::$slug_text_array = array_merge( $additional_reasons, self::$slug_text_array );
 	}
 
 	/**
 	 * Gets the spam reason texts by an array of slugs
 	 *
-	 * @param array $slugs
+	 * @param array $slugs List of rule slugs.
 	 *
-	 * @return array
+	 * @return array Texts for given slugs.
 	 */
 	public static function get_texts_by_slugs( array $slugs ) {
 		$texts = [];
@@ -46,23 +70,21 @@ class SpamReasonTextHelper {
 			}
 
 			$legacy_rules = [
-				'server' => esc_html_x( 'Fake IP', 'legacy spam reason label', 'antispam-bee' )
+				'server' => esc_html_x( 'Fake IP', 'legacy spam reason label', 'antispam-bee' ),
 			];
-			
+
 			if ( array_key_exists( $slug, $legacy_rules ) ) {
-				$texts[] = esc_html_x(
+				$texts[] = sprintf(
 					/* translators: s=slug of unknown spam reason */
-						sprintf( 'Legacy rule: %s', $legacy_rules[ $slug ] ),
-						'spam-reason-legacy-text',
-						'antispam-bee'
-					);
+					esc_html_x( 'Legacy rule: %s', 'spam-reason-legacy-text', 'antispam-bee' ),
+					$legacy_rules[ $slug ]
+				);
 				continue;
 			}
-			$texts[] = esc_html_x(
-			/* translators: s=slug of unknown spam reason */
-				sprintf( 'Unknown rule: %s', $slug ),
-				'spam-reason-unknown-text',
-				'antispam-bee'
+			$texts[] = sprintf(
+				/* translators: s=slug of unknown spam reason */
+				esc_html_x( 'Unknown rule: %s', 'spam-reason-unknown-text', 'antispam-bee' ),
+				$slug
 			);
 		}
 

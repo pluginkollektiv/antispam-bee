@@ -51,12 +51,12 @@ function init() {
 		CommentsColumns::class,
 		DeleteSpamCron::class,
 		Settings::class,
-		// Handlers
+		// Handlers.
 		Comment::class,
 		Linkback::class,
-		// Helpers
+		// Helpers.
 		SpamReasonTextHelper::class,
-		// Post Processors
+		// Post Processors.
 		DeleteOldSpam::class,
 		Statistics::class,
 		IgnoreLinkbacks::class,
@@ -67,7 +67,7 @@ function init() {
 		SendEmail::class,
 		UpdateSpamCount::class,
 		UpdateSpamLog::class,
-		// Rules
+		// Rules.
 		ApprovedEmail::class,
 		BBCode::class,
 		CountrySpam::class,

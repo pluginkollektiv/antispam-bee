@@ -1,32 +1,63 @@
 <?php
+/**
+ * Reaction handler.
+ *
+ * @package AntispamBee\Handlers
+ */
 
 namespace AntispamBee\Handlers;
 
 use WP_Comment;
 
+/**
+ * Abstract reaction handler.
+ */
 abstract class Reaction {
+
+	/**
+	 * Reaction type (default: "comment").
+	 *
+	 * @var string
+	 */
 	protected static $type = 'comment';
+
+	/**
+	 * Initialize the handler.
+	 *
+	 * @return void
+	 */
 	public static function init() {
 		add_filter(
 			'preprocess_comment',
-			[
-				static::class,
-				'process',
-			],
+			[ static::class, 'process' ],
 			1
 		);
 
 		// Add our manual spam reason to the list of reasons.
-		add_filter( 'antispam_bee_additional_spam_reasons', function ( $reasons ) {
-			$reasons['asb-marked-manually'] = __( 'Manually', 'antispam-bee' );
-			return $reasons;
-		} );
+		add_filter(
+			'antispam_bee_additional_spam_reasons',
+			function ( $reasons ) {
+				$reasons['asb-marked-manually'] = __( 'Manually', 'antispam-bee' );
+				return $reasons;
+			}
+		);
 	}
 
+	/**
+	 * Always init.
+	 *
+	 * @return void
+	 */
 	public static function always_init() {
 		add_action( 'transition_comment_status', [ __CLASS__, 'handle_comment_status_changes' ], 10, 3 );
 	}
 
+	/**
+	 * Process a reaction.
+	 *
+	 * @param array $reaction Reaction to process.
+	 * @return array Processed reaction.
+	 */
 	public static function process( $reaction ) {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		$rules   = new Rules( static::$type );
@@ -39,6 +70,13 @@ abstract class Reaction {
 		return $reaction;
 	}
 
+	/**
+	 * Handle spam.
+	 *
+	 * @param array $reaction Reaction to handle.
+	 * @param Rules $rules    Ruleset to apply.
+	 * @return array|never-return Handled reaction (or die, if item was deleted)
+	 */
 	protected static function handle_spam( $reaction, $rules ) {
 		$item = PostProcessors::apply( static::$type, $reaction, $rules->get_spam_reasons() );
 		if ( ! isset( $item['asb_marked_as_delete'] ) ) {

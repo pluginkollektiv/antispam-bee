@@ -1,9 +1,24 @@
 <?php
+/**
+ * Data helper.
+ *
+ * @package AntispamBee\Helpers
+ */
 
 namespace AntispamBee\Helpers;
 
+/**
+ * Data helper.
+ */
 class DataHelper {
 
+	/**
+	 * Get values by keys.
+	 *
+	 * @param array $keys List of keys.
+	 * @param array $data Data to filter.
+	 * @return array Data elements with matching keys.
+	 */
 	public static function get_values_by_keys( $keys, $data ) {
 		$results = [];
 		foreach ( $keys as $key ) {
@@ -15,6 +30,13 @@ class DataHelper {
 		return $results;
 	}
 
+	/**
+	 * Get values with key containing given values.
+	 *
+	 * @param string[] $substrs Key substrings to filters.
+	 * @param array    $data    Data to filter.
+	 * @return array Data elements with matching keys.
+	 */
 	public static function get_values_where_key_contains( $substrs, $data ) {
 		$results = [];
 		foreach ( $data as $key => $value ) {
@@ -28,6 +50,13 @@ class DataHelper {
 		return $results;
 	}
 
+	/**
+	 * Parse URL wrapper.
+	 *
+	 * @param string $url       URL to parse.
+	 * @param string $component URL component (default: "host").
+	 * @return string URL component.
+	 */
 	public static function parse_url( $url, $component = 'host' ) {
 		$parts = wp_parse_url( $url );
 

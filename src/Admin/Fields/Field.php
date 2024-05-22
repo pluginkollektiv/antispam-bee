@@ -30,14 +30,16 @@ abstract class Field {
 
 	/**
 	 * Type of controllable.
+	 *
+	 * @var string
 	 */
 	protected $controllable_option_name;
 
 	/**
 	 * Initializing field
 	 *
-	 * @param string $type Item type.
-	 * @param array $option Field options.
+	 * @param string                     $type Item type.
+	 * @param array                      $option Field options.
 	 * @param class-string<Controllable> $controllable The related controllable.
 	 */
 	public function __construct( $type, $option, $controllable ) {
@@ -64,7 +66,7 @@ abstract class Field {
 	 * @return string Label of the field.
 	 */
 	public function get_label() {
-		$kses = isset( $this->option['label_kses'] ) ? $this->option['label_kses'] : [];
+		$kses  = isset( $this->option['label_kses'] ) ? $this->option['label_kses'] : [];
 		$label = isset( $this->option['label'] ) ? $this->option['label'] : '';
 		if ( ! $kses ) {
 			return esc_html( $label );
@@ -123,7 +125,7 @@ abstract class Field {
 	/**
 	 * Get HTML for field.
 	 *
-	 * @return string Elment HTML.
+	 * @return string Element HTML.
 	 */
 	abstract public function render();
 }

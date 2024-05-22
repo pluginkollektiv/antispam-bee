@@ -17,6 +17,8 @@ class Textarea extends Field implements RenderElement {
 	 * Render HTML.
 	 */
 	public function render() {
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+
 		printf(
 			'<p><label for="%1$s">%2$s</label></p><p><textarea name="%1$s" id="%1$s" placeholder="%4$s">%3$s</textarea></p>',
 			esc_attr( $this->get_name() ),

@@ -3,11 +3,15 @@
 namespace AntispamBee\Tests\Unit\Core;
 
 use Antispam_Bee as Testee;
-use AntispamBee\Tests\TestCase;
-use Brain\Monkey\Functions;
+use Yoast\WPTestUtils\BrainMonkey\TestCase;
+
+use function Brain\Monkey\Functions\expect;
+use function Brain\Monkey\Functions\when;
 
 /**
  * Test case for the factory class.
+ *
+ * TODO: This is a legacy test from 2.x. Update or remove.
  *
  * @since   2.7.0
  */
@@ -18,20 +22,20 @@ class FactoryTest extends TestCase {
 	 *
 	 * @since 2.7.0
 	 */
-	protected function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
-		Functions::when( 'get_bloginfo' )->justReturn( 'https://domain.com/' );
-		Functions::when( 'wp_parse_url' )->alias('parse_url');
-		Functions::when( 'is_admin' )->justReturn( false );
-		Functions::expect( 'wp_unslash' )
+		when( 'get_bloginfo' )->justReturn( 'https://domain.com/' );
+		when( 'wp_parse_url' )->alias('parse_url');
+		when( 'is_admin' )->justReturn( false );
+		expect( 'wp_unslash' )
 			->andReturnUsing(
 				function( $data ) {
 					return $data;
 				}
 			);
 
-		Functions::when( 'get_option' )->justReturn( $this->get_options() );
+		when( 'get_option' )->justReturn( $this->get_options() );
 
 		Testee::init();
 	}
@@ -81,18 +85,16 @@ class FactoryTest extends TestCase {
 	 *
 	 * @covers       Testee::handle_incoming_request()
 	 *
-	 * @param array  $comment Comment overrides to use.
-	 * @param string $reason  Expected spam reason to catch.
 	 */
-	public function test_spam_reasons( $comment, $reason ) {
-		$comment = array_merge( $this->get_base_comment(), $comment );
+	public function test_spam_reasons($comment, $reason) {
+		$comment = array_merge($this->get_base_comment(), $comment);
 
 		$_SERVER['HTTP_CLIENT_IP'] = '12.23.34.45';
 		$_SERVER['REQUEST_URI']    = 'https://domain.com/wp-comments-post.php';
 		$_POST['comment']          = $comment;
 
 		// This is where we check for the spam reason that was detected.
-		Functions::expect( 'add_comment_meta' )->once()
+		expect( 'add_comment_meta' )->once()
 		         ->with(
 			         1,
 			         'antispam_bee_reason',
@@ -133,7 +135,7 @@ class FactoryTest extends TestCase {
 			// @ToDo: static $_reason
 			array(
 				array(
-					'comment_content' => "this is a pharmacy, why does it work now?.",
+					'comment_content'      => "this is a pharmacy, why does it work now?.",
 					'comment_author_email' => 'test@yandex.ru',
 				),
 				'regexp',

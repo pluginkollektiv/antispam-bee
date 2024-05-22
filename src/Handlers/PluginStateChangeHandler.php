@@ -12,7 +12,7 @@ use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Helpers\Settings;
 
 /**
- * Class Installer
+ * Class PluginStateChangeHandler
  */
 class PluginStateChangeHandler {
 
@@ -59,9 +59,13 @@ class PluginStateChangeHandler {
 			self::maybe_remove_antispam_bee_data();
 			restore_current_blog();
 		}
-
 	}
 
+	/**
+	 * Remove AntispamBee data, if deletion is configured.
+	 *
+	 * @return void
+	 */
 	private static function maybe_remove_antispam_bee_data() {
 		if ( ! Uninstall::is_active() ) {
 			return;
