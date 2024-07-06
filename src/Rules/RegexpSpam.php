@@ -113,7 +113,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			],
 			[
 				'useragent' => 'scrape',
-			]
+			],
 		];
 
 		$quoted_author = preg_quote( $subject['author'], '/' );
