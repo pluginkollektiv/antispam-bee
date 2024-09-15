@@ -1127,6 +1127,7 @@ class Antispam_Bee {
 	 *
 	 * @since  0.1
 	 * @since  2.6.3
+	 * @since  2.11.7 Switching from REQUEST_URI to SCRIPT_NAME for the check
 	 */
 	public static function precheck_incoming_request() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -1161,6 +1162,7 @@ class Antispam_Bee {
 	 * @since  0.1
 	 * @since  2.6.3
 	 * @since  2.10.0 Refactoring of code if pings are allowed and if is ping
+	 * @since  2.11.7 Switching from REQUEST_URI to SCRIPT_NAME for the check
 	 *
 	 * @param   array $comment  Untreated comment.
 	 * @return  array $comment  Treated comment.
