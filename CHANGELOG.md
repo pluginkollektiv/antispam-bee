@@ -1,5 +1,13 @@
 ## Changelog ##
 
+### 2.11.7 ###
+
+* **English**
+  * Tweak: Use SCRIPT_NAME instead of REQUEST_URI to check path
+
+* **Deutsch**
+  * Tweak: Verwende SCRIPT_NAME anstelle von REQUEST_URI, um den Pfad zu prüfen
+
 ### 2.11.6 ###
 * **English**
   * Fix: Delete missed out option on uninstall (Thanks @okvee!)
