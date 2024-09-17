@@ -23,9 +23,8 @@ wait_for_port() {
     sleep $NAP_LENGTH
   done
 }
+
 export DISPLAY=:99.0
-sh -e /etc/init.d/xvfb start
-sleep 1
 
 #wget -c -nc --retry-connrefused --tries=0 https://bit.ly/2TlkRyu -O selenium-server-standalone.jar
 wget -c -nc --retry-connrefused --tries=0 https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip -O driver.zip
@@ -39,7 +38,7 @@ export PATH=$PATH:$PWD
 ls -la
 
 echo "Run selenium server - background process"
-nohup bash -c "google-chrome-stable --headless --disable-gpu --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222 &" && sleep 1; cat nohup.out
+nohup bash -c "google-chrome-stable --headless --disable-gpu --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222 &" > nohup.out && sleep 1; cat nohup.out
 
 wait_for_port
 sleep 5
