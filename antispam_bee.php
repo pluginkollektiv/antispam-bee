@@ -151,6 +151,13 @@ class Antispam_Bee {
 
 		self::_init_internal_vars();
 
+		add_action(
+			'init', array(
+				__CLASS__,
+				'add_reasons_to_defaults'
+			)
+		);
+
 		if ( defined( 'DOING_CRON' ) ) {
 			add_action(
 				'antispam_bee_daily_cronjob',
@@ -473,7 +480,7 @@ class Antispam_Bee {
 	 *
 	 * @since 2.11.2
 	 */
-	private static function add_reasons_to_defaults() {
+	public static function add_reasons_to_defaults() {
 		self::$defaults['reasons'] = array(
 			'css'           => esc_attr__( 'Honeypot', 'antispam-bee' ),
 			'time'          => esc_attr__( 'Comment time', 'antispam-bee' ),
@@ -2534,8 +2541,6 @@ class Antispam_Bee {
 		if ( ! $post ) {
 			return $id;
 		}
-
-		self::add_reasons_to_defaults();
 
 		$subject = sprintf(
 			'[%s] %s',
