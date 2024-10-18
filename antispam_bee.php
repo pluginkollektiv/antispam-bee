@@ -561,19 +561,6 @@ class Antispam_Bee {
 
 
 	/**
-	 * Integration of the localization file
-	 *
-	 * @since  0.1
-	 * @since  2.4
-	 */
-	public static function load_plugin_lang() {
-		load_plugin_textdomain(
-			'antispam-bee'
-		);
-	}
-
-
-	/**
 	 * Add the link to the settings
 	 *
 	 * @since  1.1
@@ -2548,7 +2535,6 @@ class Antispam_Bee {
 			return $id;
 		}
 
-		self::load_plugin_lang();
 		self::add_reasons_to_defaults();
 
 		$subject = sprintf(
