@@ -151,11 +151,6 @@ class Antispam_Bee {
 
 		self::_init_internal_vars();
 
-		if ( self::_current_page( 'dashboard' ) || self::_current_page( 'plugins' ) || self::_current_page( 'options' ) || self::_current_page( 'edit-comments' ) || self::_current_page( 'admin-post' ) ) {
-			self::load_plugin_lang();
-			self::add_reasons_to_defaults();
-		}
-
 		if ( defined( 'DOING_CRON' ) ) {
 			add_action(
 				'antispam_bee_daily_cronjob',
