@@ -26,8 +26,8 @@ class Text extends Field implements RenderElement {
 	 *
 	 * @return string
 	 */
-	public function get_placeholder() {
-		return $this->placeholder;
+	public function get_placeholder(): string {
+		return $this->placeholder ?? '';
 	}
 
 	/**
