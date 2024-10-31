@@ -103,10 +103,12 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 
 ### 2.11.5 ###
 IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `antispam_bee_trusted_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED` (don’t return an empty value here, otherwise all comments are marked as spam).
+
   * Fix: Usage of core filter `pre_comment_user_ip` breaks ASB if the IP address is removed for GDPR compliance
 
 ### 2.11.4 ###
 IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `pre_comment_user_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.
+
   * Fix: Read client IP for country check from `REMOTE_ADDR` only (filterable via `pre_comment_user_ip`)
   * Fix: No spam reason in spam notification email, and related PHP warning
   * Fix: Remove outdated info from readme
