@@ -97,6 +97,8 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 
 ### 2.11.7 ###
   * Tweak: Use SCRIPT_NAME instead of REQUEST_URI to check path
+  * Fix: Remove `add_reasons_to_defaults()` from general initialization for better WordPress 6.7 compatibility
+  * Maintenance: Tested up to WordPress 6.7
 
 ### 2.11.6 ###
   * Fix: Delete missed out option on uninstall (Thanks @okvee!)

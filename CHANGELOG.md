@@ -4,9 +4,13 @@
 
 * **English**
   * Tweak: Use SCRIPT_NAME instead of REQUEST_URI to check path
+  * Fix: Remove `add_reasons_to_defaults()` from general initialization for better WordPress 6.7 compatibility
+  * Maintenance: Tested up to WordPress 6.7
 
 * **Deutsch**
   * Tweak: Verwende SCRIPT_NAME anstelle von REQUEST_URI, um den Pfad zu prüfen
+  * Fix: Entfernen von `add_reasons_to_defaults()` von der allgemeinen Initialisierung für bessere WordPress 6.7 Kompatibilität
+  * Wartung: Getestet mit WordPress 6.7
 
 ### 2.11.6 ###
 * **English**
