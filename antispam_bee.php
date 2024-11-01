@@ -152,9 +152,10 @@ class Antispam_Bee {
 		self::_init_internal_vars();
 
 		add_action(
-			'init', array(
+			'init',
+			array(
 				__CLASS__,
-				'add_reasons_to_defaults'
+				'add_reasons_to_defaults',
 			)
 		);
 
