@@ -151,10 +151,13 @@ class Antispam_Bee {
 
 		self::_init_internal_vars();
 
-		if ( self::_current_page( 'dashboard' ) || self::_current_page( 'plugins' ) || self::_current_page( 'options' ) || self::_current_page( 'edit-comments' ) || self::_current_page( 'admin-post' ) ) {
-			self::load_plugin_lang();
-			self::add_reasons_to_defaults();
-		}
+		add_action(
+			'init',
+			array(
+				__CLASS__,
+				'add_reasons_to_defaults',
+			)
+		);
 
 		if ( defined( 'DOING_CRON' ) ) {
 			add_action(
@@ -478,7 +481,7 @@ class Antispam_Bee {
 	 *
 	 * @since 2.11.2
 	 */
-	private static function add_reasons_to_defaults() {
+	public static function add_reasons_to_defaults() {
 		self::$defaults['reasons'] = array(
 			'css'           => esc_attr__( 'Honeypot', 'antispam-bee' ),
 			'time'          => esc_attr__( 'Comment time', 'antispam-bee' ),
@@ -562,19 +565,6 @@ class Antispam_Bee {
 				return false;
 		}
 		// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
-	}
-
-
-	/**
-	 * Integration of the localization file
-	 *
-	 * @since  0.1
-	 * @since  2.4
-	 */
-	public static function load_plugin_lang() {
-		load_plugin_textdomain(
-			'antispam-bee'
-		);
 	}
 
 
@@ -2552,9 +2542,6 @@ class Antispam_Bee {
 		if ( ! $post ) {
 			return $id;
 		}
-
-		self::load_plugin_lang();
-		self::add_reasons_to_defaults();
 
 		$subject = sprintf(
 			'[%s] %s',
