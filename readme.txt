@@ -1,6 +1,7 @@
 # Antispam Bee #
 * Contributors:      pluginkollektiv, websupporter, schlessera, zodiac1978, swissspidy, krafit, kau-boy, florianbrinkmann, pfefferle
-* Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
+* Tags:              anti-spam, antispam, comments, spam filter, spam protection
+4
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.6
 * Tested up to:      6.5
@@ -9,7 +10,7 @@
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Antispam plugin with a sophisticated tool set for effective day to day comment and trackback spam-fighting. Build with data protection and privacy in mind.
+Sophisticated antispam plugin for effective daily comment and trackback spam-fighting. Built with data protection and privacy in mind.
 
 ## Description ##
 Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively, without captchas and without sending personal information to third party services. It is free of charge, ad-free and 100% GDPR compliant.
