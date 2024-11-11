@@ -1,15 +1,16 @@
 # Antispam Bee #
 * Contributors:      pluginkollektiv, websupporter, schlessera, zodiac1978, swissspidy, krafit, kau-boy, florianbrinkmann, pfefferle
-* Tags:              anti-spam, antispam, block spam, comment, comments, comment spam, pingback, spam, spam filter, trackback, GDPR
+* Tags:              anti-spam, antispam, comments, spam filter, spam protection
+4
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
-* Requires at least: 4.5
+* Requires at least: 4.6
 * Tested up to:      6.7
 * Requires PHP:      5.2
 * Stable tag:        2.11.7
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Antispam plugin with a sophisticated tool set for effective day to day comment and trackback spam-fighting. Build with data protection and privacy in mind.
+Sophisticated antispam plugin for effective daily comment and trackback spam-fighting. Built with data protection and privacy in mind.
 
 ## Description ##
 Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively, without captchas and without sending personal information to third party services. It is free of charge, ad-free and 100% GDPR compliant.
@@ -108,10 +109,12 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 
 ### 2.11.5 ###
 IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `antispam_bee_trusted_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED` (don’t return an empty value here, otherwise all comments are marked as spam).
+
   * Fix: Usage of core filter `pre_comment_user_ip` breaks ASB if the IP address is removed for GDPR compliance
 
 ### 2.11.4 ###
 IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `pre_comment_user_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.
+
   * Fix: Read client IP for country check from `REMOTE_ADDR` only (filterable via `pre_comment_user_ip`)
   * Fix: No spam reason in spam notification email, and related PHP warning
   * Fix: Remove outdated info from readme

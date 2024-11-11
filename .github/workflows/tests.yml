@@ -68,7 +68,7 @@ jobs:
     - name: Run tests
       run: |
         composer install --ignore-platform-req=php
-        ./bin/behat.sh
+        xvfb-run -n 99 ./bin/behat.sh
       env:
         WORDPRESS_VERSION: ${{ matrix.wordpress }}
         NAP_LENGTH: 10
