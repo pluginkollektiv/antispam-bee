@@ -4,9 +4,9 @@
 4
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.6
-* Tested up to:      6.5
+* Tested up to:      6.7
 * Requires PHP:      5.2
-* Stable tag:        2.11.6
+* Stable tag:        2.11.7
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,11 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 A complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ## Changelog ##
+
+### 2.11.7 ###
+  * Tweak: Use SCRIPT_NAME instead of REQUEST_URI to check path
+  * Fix: Remove `add_reasons_to_defaults()` from general initialization for better WordPress 6.7 compatibility
+  * Maintenance: Tested up to WordPress 6.7
 
 ### 2.11.6 ###
   * Fix: Delete missed out option on uninstall (Thanks @okvee!)
