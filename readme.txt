@@ -1,7 +1,6 @@
 # Antispam Bee #
 * Contributors:      pluginkollektiv, websupporter, schlessera, zodiac1978, swissspidy, krafit, kau-boy, florianbrinkmann, pfefferle
 * Tags:              anti-spam, antispam, comments, spam filter, spam protection
-4
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.6
 * Tested up to:      6.7
