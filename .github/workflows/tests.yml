@@ -87,7 +87,7 @@ jobs:
         tools: phpunit, composer
     - uses: actions/setup-node@v2
       with:
-        node-version: '20'
+        node-version: '22'
     - name: Run code style checks for CSS, JavaScript and PHP
       run: |
         composer install --ignore-platform-req=php
