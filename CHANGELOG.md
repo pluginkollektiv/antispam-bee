@@ -1,7 +1,15 @@
 ## Changelog ##
 
-### 2.11.7 ###
+### 2.11.8 ###
+* **English**
+  * Tweak: Minor code changes and housekeeping
+  * Maintenance: Tested up to WordPress 6.8
 
+* **Deutsch**
+  * Tweak: Kleinere Code-Änderungen und Aufräumarbeiten
+  * Wartung: Getestet mit WordPress 6.8
+
+### 2.11.7 ###
 * **English**
   * Tweak: Use SCRIPT_NAME instead of REQUEST_URI to check path
   * Fix: Remove `add_reasons_to_defaults()` from general initialization for better WordPress 6.7 compatibility
