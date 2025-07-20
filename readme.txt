@@ -93,10 +93,14 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 
 A complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
+### How can I report security bugs? ###
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/445425e4-f5dd-4404-80a7-690999f5bcb3)
+
 ## Changelog ##
 
 ### 2.11.8 ###
   * Tweak: Minor code changes and housekeeping
+  * Tweak: Add link to Patchstack in readme
   * Maintenance: Tested up to WordPress 6.8
 
 ### 2.11.7 ###
