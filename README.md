@@ -53,14 +53,13 @@ After you have activated *Antispam Bee* the plugin will block spam comments out 
 ### Privacy Notice ###
 On sites operating from within the EU the option *Use a public antispam database* should not be activated for privacy reasons. When that option has been activated, *Antispam Bee* will match full IP addresses from comments against a public spam database. Technically it is not possible to encrypt those IPs, because spam databases only store and operate with complete, unencrypted IP addresses.
 
-## Frequently Asked Questions ##
 ## Responsible Disclosure ##
 
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/445425e4-f5dd-4404-80a7-690999f5bcb3)
 
-Please have a look [in the FAQ pages](https://github.com/pluginkollektiv/antispam-bee/wiki/en-FAQ).
+## Frequently Asked Questions ##
 
-A complete documentation is available in the [GitHub repository Wiki](https://github.com/pluginkollektiv/antispam-bee/wiki).
+A complete documentation is available on [antispambee.pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ## Changelog ##
 
