@@ -34,7 +34,7 @@
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "phpunit/phpunit": "^4",
     "wp-cli/wp-cli-bundle": "@stable",
-    "wp-coding-standards/wpcs": "^3.0"
+    "wp-coding-standards/wpcs": "^3.1"
   },
   "autoload-dev": {
     "classmap": [
