@@ -33,7 +33,8 @@ class DbSpam extends ControllableBase implements SpamReason {
 	public static function verify( array $item ): int {
 		$params = [];
 		$filter = [];
-		$url    = wp_unslash( array_shift( DataHelper::get_values_where_key_contains( [ 'url' ], $item ) ) );
+		$values = DataHelper::get_values_where_key_contains( [ 'url' ], $item );
+		$url    = wp_unslash( array_shift( $values ) );
 
 		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';
