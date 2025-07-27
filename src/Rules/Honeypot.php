@@ -87,32 +87,18 @@ class Honeypot extends ControllableBase implements SpamReason {
 		if ( strpos( $request_path, 'wp-comments-post.php' ) === false ) {
 			return;
 		}
-		$fields = [];
-		foreach ( $_POST as $key => $value ) {
-			if ( isset( $fields['plugin_field'] ) ) {
-				$fields['hidden_field'] = $key;
-				break;
-			}
-			if ( HoneypotField::get_secret_name_for_post() === $key ) {
-				$fields['plugin_field'] = $key;
-			}
-		}
 
-		if ( ! isset( $fields['plugin_field'] ) ) {
-			// Honeypot field was not present in $_POST data.
-			$_POST['ab_spam__invalid_request'] = 1;
-			return;
-		}
+		$plugin_field_name = HoneypotField::get_secret_name_for_post();
 
-		if ( ! empty( $_POST[ $fields['hidden_field'] ] ) ) {
+		$hidden_field = Settings::get_key( $_POST, 'comment' );
+		$plugin_field = Settings::get_key( $_POST, $plugin_field_name );
+
+		if ( ! empty( $hidden_field ) ) {
 			$_POST['ab_spam__hidden_field'] = 1;
-			return;
+		} else {
+			$_POST['comment'] = $plugin_field;
+			unset( $_POST[ $plugin_field_name ] );
 		}
-
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$_POST[ $fields['hidden_field'] ] = $_POST[ $fields['plugin_field'] ];
-		unset( $_POST[ HoneypotField::get_secret_name_for_post() ] );
-		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 	/**
