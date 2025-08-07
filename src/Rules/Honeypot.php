@@ -93,12 +93,20 @@ class Honeypot extends ControllableBase implements SpamReason {
 		$hidden_field = Settings::get_key( $_POST, 'comment' );
 		$plugin_field = Settings::get_key( $_POST, $plugin_field_name );
 
-		if ( ! empty( $hidden_field ) ) {
-			$_POST['ab_spam__hidden_field'] = 1;
-		} else {
-			$_POST['comment'] = $plugin_field;
-			unset( $_POST[ $plugin_field_name ] );
+		// The secret comment field was not present in $_POST data.
+		if ( is_null( $plugin_field ) ) {
+			$_POST['ab_spam__invalid_request'] = 1;
+			return;
 		}
+
+		// The honeypot field was not present in $_POST data or was filled out.
+		if ( is_null( $hidden_field ) || ! empty( $hidden_field ) ) {
+			$_POST['ab_spam__hidden_field'] = 1;
+			return;
+		}
+
+		$_POST['comment'] = $plugin_field;
+		unset( $_POST[ $plugin_field_name ] );
 	}
 
 	/**
