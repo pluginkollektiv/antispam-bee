@@ -74,6 +74,9 @@ class HoneypotTest extends AbstractRuleTestCase {
 		// Send all following requests to the correct URL.
 		$_SERVER = [ 'SCRIPT_NAME' => '/wp-comments-post.php' ];
 
+		Honeypot::precheck();
+		self::assertSame( 1, $_POST[ 'ab_spam__invalid_request' ], 'request without missing fields not detected' );
+
 		$_POST = [
 			'd7dcf95a06' => 'S3cr3t',
 			'comment' => 'H1dd3n',
