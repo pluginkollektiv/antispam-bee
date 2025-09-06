@@ -1,112 +1,91 @@
 ( function() {
+	var labels = [];
+	var data = [];
+	var dataTable = jQuery( '#ab_chart_data' );
+	var maxValue;
+	var chartWidth;
+	var fullWidth = true;
+	var pointRadius = 4;
+	var chart;
+
+	// Abort if no data is present.
+	if ( ! dataTable.length ) {
+		return;
+	}
+
 	// Grab the data
-	var labels = [],
-		data = [];
-	jQuery( '#ab_chart_data tfoot th' ).each( function() {
+	jQuery( 'tfoot th', dataTable ).each( function() {
 		labels.push( jQuery( this ).text() );
 	} );
-	jQuery( '#ab_chart_data tbody td' ).each( function() {
+	jQuery( 'tbody td', dataTable ).each( function() {
 		data.push( jQuery( this ).text() );
 	} );
 
-	// Draw
-	var width = jQuery( '#ab_chart' ).parent().width() + 8,
-		height = 140,
-		leftgutter = 0,
-		bottomgutter = 22,
-		topgutter = 22,
-		color = '#135e96',
-		r = Raphael( 'ab_chart', width, height ),
-		txt = { font: 'bold 12px "Open Sans", sans-serif', fill: '#1d2327' },
-		X = ( width - leftgutter * 2 ) / labels.length,
-		max = Math.max.apply( Math, data ),
-		Y = ( height - bottomgutter - topgutter ) / max;
+	// Determine maximum value for scaling.
+	maxValue = Math.max.apply( Math, data );
 
-	// Max value
-	r
-		.text( 16, 16, max )
-		.attr(
-			{
-				font: 'normal 10px "Open Sans", sans-serif',
-				fill: '#a7aaad',
-			}
-		);
-
-	var path = r.path().attr( { stroke: color, 'stroke-width': 2, 'stroke-linejoin': 'round' } ),
-		bgp = r.path().attr( { stroke: 'none', opacity: .3, fill: color } ),
-		label = r.set(),
-		lx = 0,
-		ly = 0,
-		is_label_visible = false,
-		leave_timer,
-		blanket = r.set();
-	label.push( r.text( 60, 12, '' ).attr( txt ) );
-	label.push( r.text( 60, 27, '' ).attr( txt ).attr( { fill: color } ) );
-	label.hide();
-	var frame = r.popup( 100, 100, label, 'right' ).attr( { fill: '#fff', stroke: '#444', 'stroke-width': 1 } ).hide();
-
-	var p, bgpp;
-	for ( var i = 0, ii = labels.length; i < ii; i++ ) {
-		var y = Math.round( height - bottomgutter - Y * data[i] ),
-			x = Math.round( leftgutter + X * ( i + .5 ) );
-		if ( ! i ) {
-			p = [ 'M', x, y, 'C', x, y ];
-			bgpp = [ 'M', leftgutter + X * .5, height - bottomgutter, 'L', x, y, 'C', x, y ];
-		}
-		if ( i && i < ii - 1 ) {
-			var Y0 = Math.round( height - bottomgutter - Y * data[i - 1] ),
-				X0 = Math.round( leftgutter + X * ( i - .5 ) ),
-				Y2 = Math.round( height - bottomgutter - Y * data[i + 1] ),
-				X2 = Math.round( leftgutter + X * ( i + 1.5 ) );
-			var a = getAnchors( X0, Y0, x, y, X2, Y2 );
-			p = p.concat( [ a.x1, a.y1, x, y, a.x2, a.y2 ] );
-			bgpp = bgpp.concat( [ a.x1, a.y1, x, y, a.x2, a.y2 ] );
-		}
-		var dot = r.circle( x, y, 4 ).attr( { fill: '#fff', stroke: color, 'stroke-width': 1 } );
-		blanket.push( r.rect( leftgutter + X * i, 0, X, height - bottomgutter ).attr( { stroke: 'none', fill: '#fff', opacity: .2 } ) );
-		var rect = blanket[blanket.length - 1];
-		( function( x, y, data, date, dot ) {
-			var timer,
-				i = 0;
-			rect.hover( function() {
-				clearTimeout( leave_timer );
-				var side = 'right';
-				if ( x + frame.getBBox().width > width ) {
-					side = 'left';
-				}
-				// set label content to determine correct dimensions
-				label[0].attr( { text: date } );
-				label[1].attr( { text: data + '× Spam' } );
-				var ppp = r.popup( x, y, label, side, 1 ),
-					anim = Raphael.animation( {
-						path: ppp.path,
-						transform: [ 't', ppp.dx, ppp.dy ],
-					}, 200 * is_label_visible );
-				lx = label[0].transform()[0][1] + ppp.dx;
-				ly = label[0].transform()[0][2] + ppp.dy;
-				frame.show().stop().animate( anim );
-
-				label[0].show().stop().animateWith( frame, anim, { transform: [ 't', lx, ly ] }, 200 * is_label_visible );
-				label[1].show().stop().animateWith( frame, anim, { transform: [ 't', lx, ly ] }, 200 * is_label_visible );
-				dot.attr( 'r', 6 );
-				is_label_visible = true;
-			}, function() {
-				dot.attr( 'r', 4 );
-				leave_timer = setTimeout( function() {
-					frame.hide();
-					label[0].hide();
-					label[1].hide();
-					is_label_visible = false;
-				}, 1 );
-			} );
-		}( x, y, data[i], labels[i], dot ) );
+	// Adjust display according if there are too many values to display readable.
+	chartWidth = jQuery( '#statify_chart' ).width();
+	if ( chartWidth < data.length * 4 ) {
+		// Make chart scrollable, if 2px points are overlapping.
+		fullWidth = false;
+		pointRadius = 3;
+	} else if ( chartWidth < data.length * 8 ) {
+		// Shrink datapoints if 4px is overlapping, but 2 is not.
+		pointRadius = 2;
 	}
-	p = p.concat( [ x, y, x, y ] );
-	bgpp = bgpp.concat( [ x, y, x, y, 'L', x, height - bottomgutter, 'z' ] );
-	path.attr( { path: p } );
-	bgp.attr( { path: bgpp } );
-	frame.toFront();
-	label[0].toFront();
-	label[1].toFront();
-	blanket.toFront();
+
+	// Draw chart.
+	chart = new Chartist.LineChart( '#ab_chart', {
+		labels: labels,
+		series: [
+			data,
+		],
+	}, {
+		low: 0,
+		showArea: true,
+		fullWidth: fullWidth,
+		width: ( fullWidth ? undefined : 5 * data.length ),
+		axisX: {
+			showGrid: false,
+			showLabel: false,
+			offset: 0,
+		},
+		axisY: {
+			showGrid: true,
+			showLabel: true,
+			type: Chartist.FixedScaleAxis,
+			low: 0,
+			high: maxValue + 1,
+			ticks: [
+				0,
+				Math.round( maxValue * 1 / 4 ),
+				Math.round( maxValue * 2 / 4 ),
+				Math.round( maxValue * 3 / 4 ),
+				maxValue,
+			],
+			offset: 30,
+		},
+		plugins: [
+			Chartist.plugins.tooltip( {
+				appendToBody: true,
+				class: 'ab-chartist-tooltip',
+			} ),
+		],
+	} );
+
+	// Replace default points with hollow circles, add "× Spam" to value and append date (label) as meta data.
+	chart.on( 'draw', function( d ) {
+		var circle;
+		if ( 'point' === d.type ) {
+			circle = new Chartist.Svg( 'circle', {
+				cx: [ d.x ],
+				cy: [ d.y ],
+				r: [ pointRadius ],
+				'ct:value': d.value.y + '× Spam',
+				'ct:meta': labels[d.index],
+			}, 'ct-point' );
+			d.element.replace( circle );
+		}
+	} );
 }() );
