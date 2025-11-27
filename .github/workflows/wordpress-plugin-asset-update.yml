@@ -8,8 +8,8 @@ jobs:
     name: Push to master
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - uses: php-actions/composer@v5
+    - uses: actions/checkout@v6
+    - uses: php-actions/composer@v6
       with:
         args: --ignore-platform-reqs
     - name: WordPress.org plugin asset/readme update
