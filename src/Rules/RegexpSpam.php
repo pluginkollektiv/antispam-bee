@@ -111,6 +111,9 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			[
 				'rawurl' => '^http[s]?:\/\/(accounts\.)?binance\.com\/[a-zA-Z-]+\/register(-person)?\?ref=[\w]+',
 			],
+			[
+				'useragent' => 'scrape',
+			],
 		];
 
 		$quoted_author = preg_quote( $subject['author'], '/' );
@@ -151,6 +154,10 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 
 			foreach ( $pattern as $field => $regexp ) {
 				if ( empty( $field ) || ! in_array( $field, $fields, true ) || empty( $regexp ) ) {
+					continue;
+				}
+
+				if ( ! isset( $subject[ $field ] ) ) {
 					continue;
 				}
 
