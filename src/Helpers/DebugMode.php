@@ -42,11 +42,16 @@ class DebugMode {
 			return;
 		}
 
-		$date        = date( 'Y-m-d' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-		$time        = date( 'H-i-s' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-		$content_dir = \WP_CONTENT_DIR;
+		$date    = date( 'Y-m-d' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+		$time    = date( 'H-i-s' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+		$log_dir = defined( 'ANTISPAM_BEE_DEBUG_MODE_LOG_DIR' ) ? \ANTISPAM_BEE_DEBUG_MODE_LOG_DIR : \WP_CONTENT_DIR;
+
+		if ( ! is_dir( $log_dir ) ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug use.
+			error_log( "The directory set for Antispam Bee debug logging does not exist: {$log_dir}" );
+		}
 
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug use.
-		error_log( "[{$date} {$time}] {$message}\n", 3, "{$content_dir}/asb-debug.{$date}.log" );
+		error_log( "[{$date} {$time}] {$message}\n", 3, "{$log_dir}/asb-debug.{$date}.log" );
 	}
 }
