@@ -568,4 +568,112 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 		 */
 		return apply_filters( 'ab_get_allowed_translate_languages', $lang );
 	}
+
+	/**
+	 * Add comment action button to report spam to ASB
+	 *
+	 * @since 2.11.0
+	 * @param array   $actions Array of actions.
+	 * @param WP_Comment $comment Comment object.
+	 */
+	public static function report_comment_action_link( $actions, $comment ) {
+		$actions['report_spam'] = sprintf(
+			'<button
+				type="button"
+				class="report-comment-to-asb-button"
+				data-author="%s"
+				data-email="%s"
+				data-ip="%s"
+				data-host="%s"
+				data-url="%s"
+				data-content="%s"
+				data-agent="%s"
+				data-id="%s"
+				data-a11y-dialog-show="report-spam-dialog"
+			>%s</button>',
+			rawurlencode( $comment->comment_author ),
+			rawurlencode( $comment->comment_author_email ),
+			rawurlencode( $comment->comment_author_IP ),
+			rawurlencode( gethostbyaddr( $comment->comment_author_IP ) ),
+			rawurlencode( $comment->comment_author_url ),
+			rawurlencode( $comment->comment_content ),
+			rawurlencode( $comment->comment_agent ),
+            absint( $comment->comment_ID ),
+			__( 'Report to Antispam Bee', 'antispam-bee' )
+		);
+
+		return $actions;
+	}
+
+	/**
+	 * Enqueue script for report spam button.
+	 * 
+	 * @since 2.11.0
+	 */
+	public static function enqueue_report_comment_action_link_script() {
+		wp_enqueue_script(
+			'a11y-dialog',
+			plugins_url( '../js/a11y-dialog.min.js', __FILE__ ),
+			array(),
+			filemtime( plugin_dir_path( __FILE__ ) . '../js/a11y-dialog.min.js' ),
+			true
+		);
+
+		// Print dialog markup.
+		printf(
+			'<div
+				class="a11y-dialog-container"
+				data-a11y-dialog="report-spam-dialog"
+				aria-labelledby="report-spam-dialog-title"
+				aria-hidden="true"
+			>
+				<div data-a11y-dialog-hide></div>
+				<div role="document">
+					<button type="button" data-a11y-dialog-hide aria-label="Close dialog">
+						&times;
+					</button>
+					<div class="dialog-content">
+						<h1 id="report-spam-dialog-title">%s</h1>
+						<p>%s</p>
+						<p>%s</p>
+						<ul class="comment-data-list"></ul>
+						<p>%s</p>
+						<p>%s</p>
+						<button class="asb-report-spam-button button-primary" data-comment-ids="">%s</button>
+						<button data-a11y-dialog-hide="report-spam-dialog"  class="button-secondary">%s</button>
+						<p class="report-spam-dialog-message"></p>
+					</div>
+				</div>
+			</div>
+<style>
+</style>',
+			__( 'Report comment as unrecognized spam', 'antispam-bee' ),
+			__( 'Thank you for helping us to improve Antispam Bee.', 'antispam-bee' ),
+			__( 'You are about to report the comment by [commenter name] with the content [content of the comment] to us, because you believe it is unrecognized spam. We also found the following data in the comment, which we will exploit for Antispam Bee’s evaluation and heuristics:.', 'antispam-bee' ),
+			__( 'We evaluate this data [automated|manually] to improve the spam detection of Antispam Bee. If we receive multiple identical messages about a spammer, we also use this data to improve Blacklist Updater. The data will be processed by us in the next x [hours|days] and then automatically deleted. For the period of processing, the data is stored exclusively on servers located in Germany. Access to this data is only granted to our developer team. To keep the process lean, you will not receive any further feedback from us about the processing, storage or deletion, but pls receive our thanks for your help.', 'antispam-bee' ),
+			__( 'If you agree to submit this data, you can send it using the button below.', 'antispam-bee' ),
+            __( 'Report spam', 'antispam-bee' ),
+            __( 'Close', 'antispam-bee' )
+		);
+
+		wp_enqueue_script(
+			'asb-report-spam',
+			plugins_url( '../js/report-spam.min.js', __FILE__ ),
+			array( 'a11y-dialog', 'wp-api-fetch' ),
+			filemtime( plugin_dir_path( __FILE__ ) . '../js/report-spam.min.js' ),
+			true
+		);
+
+        wp_localize_script( 'asb-report-spam', 'asbReportSpam', array(
+            'reportSuccessful' => __( 'Spam was reported, thank you!', 'antispam-bee' ),
+            'reportFailed' => __( 'Wasn’t able to report spam, sorry, please try again later!', 'antispam-bee' ),
+        ) );
+
+        wp_enqueue_style(
+            'asb-report-spam',
+			plugins_url( '../css/report-spam.min.css', __FILE__ ),
+            array(),
+            filemtime( plugin_dir_path( __FILE__ ) . '../css/report-spam.min.css' )
+        );
+	}
 }
