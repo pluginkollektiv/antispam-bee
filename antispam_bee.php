@@ -1297,11 +1297,25 @@ class Antispam_Bee {
 			}
 		}
 
+		/**
+		 * Filter to change the inline styles of the honeypot field.
+		 *
+		 * This filter can also be used to use an empty value and load the styles from an external file, if a strict
+		 * CSP is used for the site.
+		 *
+		 * @see: https://wordpress.org/support/topic/honeypot-textarea-visible-with-strict-csp-header/
+		 *
+		 * @param string $honeypot_styles The inline styles for the honeypot.
+		 *
+		 * @return string The inline styles for the honeypot.
+		 */
+		$honeypot_styles = apply_filters( 'antispam_bee_honeypot_styles', 'padding:0 !important;clip:rect(1px, 1px, 1px, 1px) !important;position:absolute !important;white-space:nowrap !important;height:1px !important;width:1px !important;overflow:hidden !important;' );
+
 		$output .= ' name="' . esc_attr( self::get_secret_name_for_post( self::$_current_post_id ) ) . '" ';
 		$output .= $matches['between1'] . $matches['between2'] . $matches['between3'];
 		$output .= $matches['after'] . '>';
 		$output .= $matches['content'];
-		$output .= '</textarea><textarea id="comment" aria-label="hp-comment" aria-hidden="true" name="comment" autocomplete="new-password" style="padding:0 !important;clip:rect(1px, 1px, 1px, 1px) !important;position:absolute !important;white-space:nowrap !important;height:1px !important;width:1px !important;overflow:hidden !important;" tabindex="-1"></textarea>';
+		$output .= '</textarea><textarea id="comment" aria-label="hp-comment" aria-hidden="true" name="comment" autocomplete="new-password" style="' . esc_attr( $honeypot_styles ) . '" tabindex="-1"></textarea>';
 
 		$output .= $id_script;
 		$output .= $init_time_field;
