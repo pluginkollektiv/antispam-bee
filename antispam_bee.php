@@ -1232,7 +1232,7 @@ class Antispam_Bee {
 			return $data;
 		}
 
-		if ( ! preg_match( '#<textarea.+?name=["\']comment["\']#s', $data ) ) {
+		if ( ! preg_match( '#<textarea.+?name=["\']?comment["\']?#s', $data ) ) {
 			return $data;
 		}
 
@@ -1243,15 +1243,15 @@ class Antispam_Bee {
 					(?P<before1>[^>]*)
 					(?P<id1>id=["\'](?P<id_value1>[^>"\']*)["\'])
 					(?P<between1>[^>]*)
-					name=["\']comment["\']
+					name=["\']?comment["\']?
 					|                                                               (?# match same as before, but with the name attribute before the id attribute )
 					(?P<before2>[^>]*)
-					name=["\']comment["\']
+					name=["\']?comment["\']?
 					(?P<between2>[^>]*)
 					(?P<id2>id=["\'](?P<id_value2>[^>"\']*)["\'])
 					|                                                               (?# match same as before, but with no id attribute )
 					(?P<before3>[^>]*)
-					name=["\']comment["\']
+					name=["\']?comment["\']?
 					(?P<between3>[^>]*)
 				)
 				(?P<after>[^>]*)                                                    (?# match any additional optional attributes )
