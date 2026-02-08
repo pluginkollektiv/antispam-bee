@@ -116,6 +116,37 @@ class FactoryTest extends TestCase {
 		Testee::add_spam_reason_to_comment( 1 );
 	}
 
+	public function test_prepare_comment_field() {
+        Functions::when( 'esc_js' )->returnArg();
+        Functions::when( 'esc_attr' )->returnArg();
+
+        // Empty data.
+        self::assertSame( '', Testee::prepare_comment_field( '' ) );
+
+        // Non-matching textarea.
+        $raw = '<p>Text before</p>' .
+               '<textarea id="my-textarea" name="text" class="some-class">My Content</textarea>' .
+               '<p>Text after</p>';
+        self::assertSame( $raw, Testee::prepare_comment_field( $raw ) );
+
+        // Matching textarea.
+        $raw = '<p>Text before</p>' .
+               '<textarea id="my-textarea" name="comment" class="some-class">My Content</textarea>' .
+               '<p>Text after</p>';
+        $expected_regex = '#^<p>Text before</p>' .
+                          '<textarea autocomplete="new-password"  id="[a-f0-9]{10}"  name="[a-f0-9]{10}"   class="some-class">My Content</textarea>' .
+                          '<textarea id="comment" aria-label="hp-comment" aria-hidden="true" name="comment" autocomplete="new-password" style=".+" tabindex="-1"></textarea>' .
+                          '<script data-noptimize>.+document.getElementById\("[a-f0-9]{10}"\).setAttribute\( "id", "comment" \);</script>' .
+                          '<p>Text after</p>$#';
+        self::assertRegExp( $expected_regex, Testee::prepare_comment_field( $raw ) );
+
+        // Unquoted name.
+        $raw = '<p>Text before</p>' .
+               '<textarea id="my-textarea" name=comment class="some-class">My Content</textarea>' .
+               '<p>Text after</p>';
+        self::assertRegExp( $expected_regex, Testee::prepare_comment_field( $raw ) );
+	}
+
 	/**
 	 * Provide test data to test_spam_reasons method.
 	 *
