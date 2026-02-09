@@ -3,7 +3,7 @@
   "devDependencies": {
     "@wordpress/eslint-plugin": "^24.1.0",
     "@wordpress/stylelint-config": "^23.18.0",
-    "eslint": "^8.57.1",
+    "eslint": "^10.0.0",
     "prettier": "^3.6.2",
     "stylelint": "^16.22.0"
   }
