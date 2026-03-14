@@ -1,5 +1,14 @@
 ## Changelog ##
 
+### 2.11.9 ###
+* **English**
+  * Tweak: Improved compatibility with unquoted HTML attributes in comment forms
+  * Maintenance: Tested up to WordPress 7.0
+
+* **Deutsch**
+  * Tweak: Kompatibilität mit nicht in Anführungszeichen gesetzten HTML-Attributen in Kommentarformularen verbessert
+  * Wartung: Getestet mit WordPress 7.0
+
 ### 2.11.8 ###
 * **English**
   * Tweak: Minor code changes and housekeeping
