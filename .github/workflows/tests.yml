@@ -39,9 +39,13 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       matrix:
-        php: ['8.3']
-        wordpress: ['nightly', 'latest']
         include:
+          - php: '8.5'
+            wordpress: 'nightly'
+          - php: '8.4'
+            wordpress: '6.8'
+          - php: '8.3'
+            wordpress: '6.7'
           - php: '8.2'
             wordpress: '6.3'
           - php: '8.1'
