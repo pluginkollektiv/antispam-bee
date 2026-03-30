@@ -1,5 +1,12 @@
 ## Changelog ##
 
+### 2.11.10 ###
+* **English**
+  * Fix: remove build-tool warnings from minified Javascript and CSS resources
+
+* **Deutsch**
+  * Fix: Build-Tool-Warnungen aus minifizierten Javascript und CSS Ressourcen entfernt
+
 ### 2.11.9 ###
 * **English**
   * Tweak: Improved compatibility with unquoted HTML attributes in comment forms
