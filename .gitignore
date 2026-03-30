@@ -5,6 +5,7 @@ node_modules/
 tmp/
 vendor/
 chromedriver
+DOCKER_ENV
 driver.tar.gz
 driver.zip
 geckodrier

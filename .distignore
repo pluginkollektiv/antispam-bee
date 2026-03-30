@@ -18,6 +18,7 @@
 /composer.lock
 /composer-php-5-4.json
 /docker-compose.yml
+/DOCKER_ENV
 /package.json
 /package-lock.json
 /composer.lock
