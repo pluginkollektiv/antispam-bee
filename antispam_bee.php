@@ -1657,6 +1657,8 @@ class Antispam_Bee {
 			),
 			array(
 				'body' => '^https?:\/\/shorturl\.fm\/[a-zA-Z0-9]{5}$',
+				'email' => '@gmail\.com',
+				'author' => '^[A-Z][a-z]+\d{3,4}$',
 			),
 		);
 
