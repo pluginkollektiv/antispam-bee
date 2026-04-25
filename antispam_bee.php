@@ -1655,6 +1655,11 @@ class Antispam_Bee {
 				'body'  => 'dating|sex|lotto|pharmacy',
 				'email' => '@mail\.ru|@yandex\.',
 			),
+			array(
+				'body' => '^https?:\/\/shorturl\.fm\/[a-zA-Z0-9]{5}$',
+				'email' => '@gmail\.com',
+				'author' => '^[A-Z][a-z]+\d{3,4}$',
+			),
 		);
 
 		$quoted_author = preg_quote( $comment['author'], '/' );
