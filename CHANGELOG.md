@@ -1,5 +1,12 @@
 ## Changelog ##
 
+### 2.11.11 ###
+* **English**
+  * Enhancement: Add shorturl.fm spam pattern
+
+* **Deutsch**
+  * Verbesserung: Hinzufügen eines Musters für shorturl.fm Spam
+
 ### 2.11.10 ###
 * **English**
   * Fix: remove build-tool warnings from minified Javascript and CSS resources

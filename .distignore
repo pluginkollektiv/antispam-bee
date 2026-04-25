@@ -21,7 +21,6 @@
 /DOCKER_ENV
 /package.json
 /package-lock.json
-/composer.lock
 /phpcs.xml
 /phpunit.xml.dist
 /README.md
