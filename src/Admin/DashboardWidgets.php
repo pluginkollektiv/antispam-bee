@@ -41,23 +41,41 @@ class DashboardWidgets {
 
 		echo '<style>#dashboard_right_now .ab-count::before {content: "\f117"} #dashboard_right_now .ab-current-spam::before {content: "\f17e"}</style>';
 
-		$items[] = '<span class="ab-count">' . esc_html(
-			sprintf(
-				// translators: The number of spam comments Antispam Bee blocked so far.
-				__( '%s comments blocked', 'antispam-bee' ),
-				self::get_spam_count()
-			)
-		) . '</span>';
+		$comments_blocked = self::get_spam_count();
+		$comments_number  = wp_count_comments();
 
-		$link            = add_query_arg( 'comment_status', 'spam', admin_url( 'edit-comments.php' ) );
-		$comments_number = wp_count_comments();
-		$items[]         = '<a href="' . $link . '" class="ab-current-spam">' . esc_html(
-			sprintf(
-				// translators: The number of spam comments in the local spam database.
-				__( '%s comments in local spam db', 'antispam-bee' ),
-				self::format_number( $comments_number->spam )
+		$items[] = sprintf(
+			'<span class="ab-count">%s</span>',
+			esc_html(
+				sprintf(
+				// translators: The number of spam comments Antispam Bee blocked so far.
+					_n(
+						'%s blocked',
+						'%s blocked',
+						$comments_blocked,
+						'antispam-bee'
+					),
+					number_format_i18n( $comments_blocked )
+				)
 			)
-		) . '</a>';
+		);
+
+		$items[] = sprintf(
+			'<a href="%s" class="ab-current-spam">%s</a>',
+			esc_url( add_query_arg( 'comment_status', 'spam', admin_url( 'edit-comments.php' ) ) ),
+			esc_html(
+				sprintf(
+				// translators: The number of spam comments in the local spam database.
+					_n(
+						'%s comment in the local spam db',
+						'%s comments in the local spam db',
+						$comments_number->spam,
+						'antispam-bee'
+					),
+					number_format_i18n( $comments_number->spam )
+				)
+			)
+		);
 
 		return $items;
 	}
@@ -69,19 +87,7 @@ class DashboardWidgets {
 	 * @since  2.4
 	 */
 	private static function get_spam_count(): string {
-		$count = intval( Settings::get_option( 'spam_count', '' ) );
-
-		return self::format_number( $count );
-	}
-
-	/**
-	 * Format a number.
-	 *
-	 * @param float|int $number Number to format.
-	 * @return string
-	 */
-	private static function format_number( $number ): string {
-		return ( get_locale() === 'de_DE' ? number_format( $number, 0, '', '.' ) : number_format_i18n( $number ) );
+		return intval( Settings::get_option( 'spam_count', 0 ) );
 	}
 
 	/**
@@ -91,6 +97,6 @@ class DashboardWidgets {
 	 * @since  2.4
 	 */
 	public static function the_spam_count(): void {
-		echo esc_html( self::get_spam_count() );
+		echo esc_html( number_format_i18n( self::get_spam_count() ) );
 	}
 }
