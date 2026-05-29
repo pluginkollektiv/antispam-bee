@@ -752,13 +752,15 @@ class Antispam_Bee {
 
 		echo '<style>#dashboard_right_now .ab-count:before {content: "\f117"}</style>';
 
+		$spam_count = intval( self::get_option( 'spam_count' ) );
+
 		$items[] = '<span class="ab-count">' . esc_html(
 			sprintf(
 				// translators: The number of spam comments Antispam Bee blocked so far.
 				_n(
 					'%s Blocked',
 					'%s Blocked',
-					self::_get_spam_count(),
+					$spam_count,
 					'antispam-bee'
 				),
 				self::_get_spam_count()
