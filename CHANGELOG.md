@@ -1,5 +1,12 @@
 ## Changelog ##
 
+### 2.11.12 ###
+* **English**
+  * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)
+
+* **Deutsch**
+  * Fix: Fatal Error im Dashboard Spam-Counter (Danke @robertstaddon!)
+
 ### 2.11.11 ###
 * **English**
   * Enhancement: Add shorturl.fm spam pattern
