@@ -51,10 +51,26 @@ class Honeypot {
 		$honeypot_id   = $input->attributes->getNamedItem( 'id' )->textContent;
 		$honeypot_name = $input->attributes->getNamedItem( 'name' )->textContent;
 		// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
+		/**
+		 * Filter to change the inline styles of the honeypot field.
+		 *
+		 * This filter can also be used to use an empty value and load the
+		 * styles from an external file if a strict CSP is used for the site.
+		 *
+		 * @see: https://wordpress.org/support/topic/honeypot-textarea-visible-with-strict-csp-header/
+		 *
+		 * @param string $honeypot_styles The inline styles for the honeypot.
+		 *
+		 * @return string The inline styles for the honeypot.
+		 */
+		$honeypot_styles = apply_filters( 'antispam_bee_honeypot_styles', 'padding:0 !important;clip:rect(1px, 1px, 1px, 1px) !important;position:absolute !important;white-space:nowrap !important;height:1px !important;width:1px !important;overflow:hidden !important;' );
+
 		$attributes_string = sprintf(
-			'id="%s" name="%s" aria-hidden="true" aria-label="hp-comment" autocomplete="new-password" tabindex="-1" style="padding:0 !important;clip:rect(1px, 1px, 1px, 1px) !important;position:absolute !important;white-space:nowrap !important;height:1px !important;width:1px !important;overflow:hidden !important;"',
+			'id="%s" name="%s" aria-hidden="true" aria-label="hp-comment" autocomplete="new-password" tabindex="-1" style="%s"',
 			$honeypot_id,
-			$honeypot_name
+			$honeypot_name,
+			$honeypot_styles
 		);
 		switch ( $input_type ) {
 			case 'textarea':
