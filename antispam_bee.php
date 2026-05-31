@@ -2271,7 +2271,7 @@ class Antispam_Bee {
 	 * @return  boolean  TRUE if "wptouch" is active
 	 */
 	private static function _is_mobile() {
-		return strpos( get_template_directory(), 'wptouch' );
+		return false !== strpos( get_template_directory(), 'wptouch' );
 	}
 
 	/**
