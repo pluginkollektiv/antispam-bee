@@ -9,8 +9,13 @@ function wpCli( args: string ): string {
 }
 
 export default async function globalSetup() {
-	// The plugin directory name inside wp-env is "antispam-bee".
 	wpCli( 'plugin activate antispam-bee' );
+
+	// Use plain (query-string) permalinks so `wp-trackback.php?p=1` resolves
+	// correctly. Pretty permalinks embed the post date which varies per
+	// environment and breaks the `?p=1` resolution in `wp-trackback.php`.
+	wpCli( 'option update permalink_structure ""' );
+	wpCli( 'rewrite flush' );
 
 	// Ensure post ID 1 exists with comments open.
 	try {
