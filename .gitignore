@@ -1,10 +1,13 @@
-assets/dist
+# Directories
 .idea/
+assets/dist
 build/
 node_modules/
-.wp-env.override.json
 tmp/
 vendor/
+
+# Files
+.wp-env.override.json
 chromedriver
 composer.lock
 DOCKER_ENV

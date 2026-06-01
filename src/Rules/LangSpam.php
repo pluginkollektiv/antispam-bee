@@ -90,8 +90,23 @@ class LangSpam extends ControllableBase implements SpamReason {
 			return 0;
 		}
 
+		/**
+		 * Filters the language detection API endpoint URL.
+		 *
+		 * Must resolve to a publicly reachable URL because the request is sent
+		 * via wp_safe_remote_post(), which rejects private/internal addresses.
+		 * To use a local service for testing, hook antispam_bee_detected_lang
+		 * instead and make the HTTP call with wp_remote_post() directly.
+		 *
+		 * @param string $api_url The language API URL.
+		 *
+		 * @return string
+		 * @since 3.0.0
+		 */
+		$api_url = apply_filters( 'antispam_bee_lang_api_url', 'https://api.pluginkollektiv.org/language/v1/' );
+
 		$response = wp_safe_remote_post(
-			'https://api.pluginkollektiv.org/language/v1/',
+			$api_url,
 			array( 'body' => wp_json_encode( [ 'body' => $comment_text ] ) )
 		);
 

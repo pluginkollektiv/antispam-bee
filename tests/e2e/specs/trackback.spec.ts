@@ -137,14 +137,9 @@ test.describe( 'Trackback spam filtering', () => {
 		page,
 		cli,
 	} ) => {
-		test.fixme(
-			true,
-			'Language rule calls an external translation API; may be flaky in CI.'
-		);
-
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.linkback.rule_asb_lang_spam_active = 'on';
-		opts.linkback.rule_asb_lang_spam_allowed = [ 'de' ];
+		opts.linkback.rule_asb_lang_spam_allowed = { de: 'on' };
 		opts.linkback.rule_asb_regexp_active = '';
 		opts.linkback.rule_asb_db_spam_active = '';
 		opts.linkback.rule_asb_bbcode_active = '';
@@ -152,8 +147,9 @@ test.describe( 'Trackback spam filtering', () => {
 
 		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'English Trackback',
+			// Long English excerpt so franc has enough trigrams for reliable detection.
 			excerpt:
-				'This is an English trackback that should be blocked when only German is allowed.',
+				'This is an English trackback excerpt that should be blocked because only the German language is allowed on this site and this text is clearly written in English.',
 			url: 'http://english-blog.com',
 			blog_name: 'English Blog',
 		} );

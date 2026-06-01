@@ -289,14 +289,9 @@ test.describe( 'Spam filter mechanisms', () => {
 		page,
 		cli,
 	} ) => {
-		test.fixme(
-			true,
-			'Language rule calls an external translation API; may be flaky in CI.'
-		);
-
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_lang_spam_active = 'on';
-		opts.comment.rule_asb_lang_spam_allowed = [ 'de' ];
+		opts.comment.rule_asb_lang_spam_allowed = { de: 'on' };
 		// Disable other rules so only language rule fires.
 		opts.comment.rule_asb_regexp_active = '';
 		opts.comment.rule_asb_db_spam_active = '';
@@ -306,8 +301,9 @@ test.describe( 'Spam filter mechanisms', () => {
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
 		await fillComment( page, {
+			// Long English sentence so franc has enough trigrams for reliable detection.
 			comment:
-				'This is an English comment that should be blocked when only German is allowed.',
+				'This is a comment written entirely in English and it should be blocked because the site only allows comments written in the German language.',
 			author: 'Mr. Burns',
 			email: 'burns@nuclear.com',
 		} );
@@ -321,14 +317,9 @@ test.describe( 'Spam filter mechanisms', () => {
 		page,
 		cli,
 	} ) => {
-		test.fixme(
-			true,
-			'Language rule calls an external translation API; may be flaky in CI.'
-		);
-
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_lang_spam_active = 'on';
-		opts.comment.rule_asb_lang_spam_allowed = [ 'de' ];
+		opts.comment.rule_asb_lang_spam_allowed = { de: 'on' };
 		opts.comment.rule_asb_regexp_active = '';
 		opts.comment.rule_asb_db_spam_active = '';
 		opts.comment.rule_asb_honeypot_active = '';
@@ -352,14 +343,9 @@ test.describe( 'Spam filter mechanisms', () => {
 		page,
 		cli,
 	} ) => {
-		test.fixme(
-			true,
-			'Language rule calls an external translation API; may be flaky in CI.'
-		);
-
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_lang_spam_active = 'on';
-		opts.comment.rule_asb_lang_spam_allowed = [ 'en' ];
+		opts.comment.rule_asb_lang_spam_allowed = { en: 'on' };
 		opts.comment.rule_asb_regexp_active = '';
 		opts.comment.rule_asb_db_spam_active = '';
 		opts.comment.rule_asb_honeypot_active = '';
@@ -369,7 +355,7 @@ test.describe( 'Spam filter mechanisms', () => {
 
 		await fillComment( page, {
 			comment:
-				'This is a perfectly legitimate English comment that should be allowed.',
+				'This is a perfectly legitimate comment written in English and it should be allowed through because English is the configured allowed language.',
 			author: 'Mr. Burns',
 			email: 'burns@nuclear.com',
 		} );
@@ -383,14 +369,9 @@ test.describe( 'Spam filter mechanisms', () => {
 		page,
 		cli,
 	} ) => {
-		test.fixme(
-			true,
-			'Language rule calls an external translation API; may be flaky in CI.'
-		);
-
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_lang_spam_active = 'on';
-		opts.comment.rule_asb_lang_spam_allowed = [ 'de', 'it' ];
+		opts.comment.rule_asb_lang_spam_allowed = { de: 'on', it: 'on' };
 		opts.comment.rule_asb_regexp_active = '';
 		opts.comment.rule_asb_db_spam_active = '';
 		opts.comment.rule_asb_honeypot_active = '';
@@ -400,7 +381,7 @@ test.describe( 'Spam filter mechanisms', () => {
 
 		await fillComment( page, {
 			comment:
-				'This is an English comment that should be blocked when only German and Italian are allowed.',
+				'This is an English comment that should be blocked because only German and Italian are on the allowed language list for this site.',
 			author: 'Mr. Burns',
 			email: 'burns@nuclear.com',
 		} );
@@ -414,14 +395,9 @@ test.describe( 'Spam filter mechanisms', () => {
 		page,
 		cli,
 	} ) => {
-		test.fixme(
-			true,
-			'Language rule calls an external translation API; may be flaky in CI.'
-		);
-
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_lang_spam_active = 'on';
-		opts.comment.rule_asb_lang_spam_allowed = [ 'it', 'en' ];
+		opts.comment.rule_asb_lang_spam_allowed = { it: 'on', en: 'on' };
 		opts.comment.rule_asb_regexp_active = '';
 		opts.comment.rule_asb_db_spam_active = '';
 		opts.comment.rule_asb_honeypot_active = '';
@@ -431,7 +407,7 @@ test.describe( 'Spam filter mechanisms', () => {
 
 		await fillComment( page, {
 			comment:
-				'This is a legitimate English comment that should pass with the allowed list of it,en.',
+				'This is a perfectly legitimate comment written in English and it should pass because English is included in the allowed language list alongside Italian.',
 			author: 'Mr. Burns',
 			email: 'burns@nuclear.com',
 		} );
