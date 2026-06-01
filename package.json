@@ -3,5 +3,20 @@
 	"version": "3.0.0",
 	"description": "Antispam Bee blocks spam comments and trackbacks effectively and without captchas.",
 	"author": "pluginkollektiv",
-	"license": "GPL-2.0-or-later"
+	"license": "GPL-2.0-or-later",
+	"scripts": {
+		"env:start": "wp-env start",
+		"env:stop": "wp-env stop",
+		"env:clean": "wp-env clean tests",
+		"env:destroy": "wp-env destroy",
+		"test:e2e": "wp-scripts test-playwright",
+		"test:e2e:ui": "wp-scripts test-playwright --ui",
+		"test:e2e:debug": "wp-scripts test-playwright --debug"
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.44.0",
+		"@wordpress/e2e-test-utils-playwright": "^0.20.0",
+		"@wordpress/env": "^10.0.0",
+		"@wordpress/scripts": "^28.0.0"
+	}
 }

@@ -77,6 +77,39 @@ jobs:
 #        NAP_LENGTH: 10
 #    - name: Cleanup xvfb
 #      uses: bcomnes/cleanup-xvfb@v1
+  test-e2e:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    - name: Install npm dependencies
+      run: npm install
+    - name: Install Playwright browsers
+      run: npx playwright install chromium --with-deps
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        tools: composer
+    - name: Install Composer dependencies
+      run: composer install --no-dev --optimize-autoloader
+    - name: Start wp-env
+      run: npm run env:start
+    - name: Run E2E tests
+      run: npm run test:e2e
+    - name: Upload test report on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: tests/e2e/report/
+        retention-days: 7
+    - name: Stop wp-env
+      if: always()
+      run: npm run env:stop
   quality:
     runs-on: ubuntu-latest
     steps:
