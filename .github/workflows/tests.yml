@@ -109,7 +109,7 @@ jobs:
             core: 'https://wordpress.org/wordpress-6.0.zip'
           - php: '7.4'
             wordpress: '5.6'
-            core: 'https://wordpress.org/wordpress-5.0.zip'
+            core: 'https://wordpress.org/wordpress-5.6.zip'
     steps:
     - uses: actions/checkout@v4
     - name: Setup Node.js
