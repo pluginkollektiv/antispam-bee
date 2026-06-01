@@ -2,6 +2,7 @@ assets/dist
 .idea/
 build/
 node_modules/
+.wp-env.override.json
 tmp/
 vendor/
 chromedriver

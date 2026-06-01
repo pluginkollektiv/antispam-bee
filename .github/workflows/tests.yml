@@ -79,6 +79,40 @@ jobs:
 #      uses: bcomnes/cleanup-xvfb@v1
   test-e2e:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '8.5'
+            wordpress: 'nightly'
+            core: 'WordPress/WordPress'
+          - php: '8.5'
+            wordpress: 'latest'
+            core: 'https://wordpress.org/latest.zip'
+          - php: '8.5'
+            wordpress: '7.0'
+            core: 'https://wordpress.org/wordpress-7.0.zip'
+          - php: '8.5'
+            wordpress: '6.9'
+            core: 'https://wordpress.org/wordpress-6.9.zip'
+          - php: '8.4'
+            wordpress: '6.8'
+            core: 'https://wordpress.org/wordpress-6.8.zip'
+          - php: '8.3'
+            wordpress: '6.7'
+            core: 'https://wordpress.org/wordpress-6.7.zip'
+          - php: '8.1'
+            wordpress: '6.6'
+            core: 'https://wordpress.org/wordpress-6.6.zip'
+          - php: '7.4'
+            wordpress: '6.0'
+            core: 'https://wordpress.org/wordpress-6.0.zip'
+          - php: '7.3'
+            wordpress: '5.0'
+            core: 'https://wordpress.org/wordpress-5.0.zip'
+          - php: '7.2'
+            wordpress: '4.6'
+            core: 'https://wordpress.org/wordpress-4.6.zip'
     steps:
     - uses: actions/checkout@v4
     - name: Setup Node.js
@@ -92,10 +126,13 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: ${{ matrix.php }}
         tools: composer
     - name: Install Composer dependencies
       run: composer install --no-dev --optimize-autoloader
+    - name: Configure wp-env for matrix
+      run: |
+        echo '{"core":"${{ matrix.core }}","phpVersion":"${{ matrix.php }}"}' > .wp-env.override.json
     - name: Start wp-env
       run: npm run env:start
     - name: Run E2E tests
@@ -104,7 +141,7 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: playwright-report
+        name: playwright-report-php${{ matrix.php }}-wp${{ matrix.wordpress }}
         path: tests/e2e/report/
         retention-days: 7
     - name: Stop wp-env

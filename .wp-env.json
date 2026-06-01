@@ -2,7 +2,7 @@
 	"core": "WordPress/WordPress",
 	"phpVersion": "8.2",
 	"plugins": [ "." ],
-"config": {
+	"config": {
 		"WP_DEBUG": true,
 		"WP_DEBUG_LOG": true,
 		"WP_DEBUG_DISPLAY": true
