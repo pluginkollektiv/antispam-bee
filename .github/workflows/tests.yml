@@ -119,8 +119,9 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+        cache: 'npm'
     - name: Install npm dependencies
-      run: npm install
+      run: npm ci
     - name: Install Playwright browsers
       run: npx playwright install chromium --with-deps
     - name: Setup PHP
