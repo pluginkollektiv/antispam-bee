@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { WP_BASE_URL } from './tests/e2e/config';
 
 export default defineConfig( {
 	testDir: './tests/e2e/specs',
@@ -12,7 +13,7 @@ export default defineConfig( {
 		[ 'html', { outputFolder: 'tests/e2e/report', open: 'never' } ],
 	],
 	use: {
-		baseURL: 'http://localhost:8889',
+		baseURL: WP_BASE_URL,
 		trace: 'on-first-retry',
 		screenshot: 'only-on-failure',
 	},

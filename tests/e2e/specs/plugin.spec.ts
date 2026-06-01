@@ -11,7 +11,7 @@ test.describe( 'Plugin basics', () => {
 		cli.pluginDeactivate( 'antispam-bee' );
 		await adminLogin( page );
 		await page.goto( '/wp-admin/plugins.php' );
-		await page.click( "[data-slug='antispam-bee'] .activate a" );  // data-slug = sanitized plugin name
+		await page.click( "[data-slug='antispam-bee'] .activate a" );
 		await expect( page.getByText( 'Plugin activated.' ) ).toBeVisible();
 	} );
 

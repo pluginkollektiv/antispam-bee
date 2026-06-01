@@ -6,15 +6,14 @@
  */
 import { test, expect, adminLogin } from '../fixtures/base';
 import { sendTrackback } from '../utils/trackback';
-
-const BASE_URL = 'http://localhost:8889';
+import { WP_BASE_URL } from '../config';
 
 test.describe( 'Trackback spam filtering', () => {
 	test( 'BBCode in trackback excerpt is detected as spam', async ( {
 		page,
 		cli,
 	} ) => {
-		await sendTrackback( BASE_URL, 1, {
+		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Nuclear Power Plants',
 			excerpt: "Use [url='http://example.com']bbCode[/url] for cheap energy!",
 			url: 'http://nuclear-power.rocks',
@@ -47,7 +46,7 @@ test.describe( 'Trackback spam filtering', () => {
 			comment_post_ID: 2,
 		} );
 
-		await sendTrackback( BASE_URL, 1, {
+		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Spam Trackback',
 			excerpt: 'A trackback from a known spam URL.',
 			url: 'http://spam-trackback-url.com',
@@ -79,7 +78,7 @@ test.describe( 'Trackback spam filtering', () => {
 		// Wait for the local spam DB to persist the entry.
 		await page.waitForTimeout( 15_000 );
 
-		await sendTrackback( BASE_URL, 1, {
+		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Trackback From Spam IP',
 			excerpt: 'A perfectly normal trackback.',
 			url: 'http://different-url-for-trackback.com',
@@ -98,7 +97,7 @@ test.describe( 'Trackback spam filtering', () => {
 		page,
 		cli,
 	} ) => {
-		await sendTrackback( BASE_URL, 1, {
+		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Buy Viagra Online',
 			excerpt: 'Cheap Viagra available now!',
 			url: 'http://pharma-spam.com',
@@ -120,7 +119,7 @@ test.describe( 'Trackback spam filtering', () => {
 		// Get the title of post ID 1.
 		const postTitle = 'Hello world!';
 
-		await sendTrackback( BASE_URL, 1, {
+		await sendTrackback( WP_BASE_URL, 1, {
 			title: postTitle,
 			excerpt: 'A trackback where blog name matches the post title.',
 			url: 'http://some-blog.com',
@@ -151,7 +150,7 @@ test.describe( 'Trackback spam filtering', () => {
 		opts.linkback.rule_asb_bbcode_active = '';
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
-		await sendTrackback( BASE_URL, 1, {
+		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'English Trackback',
 			excerpt:
 				'This is an English trackback that should be blocked when only German is allowed.',

@@ -9,8 +9,6 @@
  */
 import { test, expect, adminLogin } from '../fixtures/base';
 
-const BASE_URL = 'http://localhost:8888';
-
 async function fillComment(
 	page: import( '@playwright/test' ).Page,
 	opts: {
