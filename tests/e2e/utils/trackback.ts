@@ -1,6 +1,5 @@
 import * as http from 'http';
 import * as https from 'https';
-import * as querystring from 'querystring';
 
 export interface TrackbackParams {
 	title: string;
@@ -31,7 +30,7 @@ function sendTrackbackOnce(
 	postId: number,
 	params: TrackbackParams
 ): Promise< void > {
-	const body = querystring.stringify( params );
+	const body = new URLSearchParams( Object.entries( params ) ).toString();
 	const endpoint = new URL( `/wp-trackback.php?p=${ postId }`, baseUrl );
 	const client = endpoint.protocol === 'https:' ? https : http;
 
