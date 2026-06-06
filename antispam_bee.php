@@ -1095,7 +1095,7 @@ class Antispam_Bee {
 			printf(
 				'<div class="update-message">%s</div>',
 				wp_kses(
-					wpautop( $data['upgrade_notice '] ),
+					wpautop( $data['upgrade_notice'] ),
 					array(
 						'p'     => array(),
 						'a'     => array( 'href', 'title' ),
@@ -3032,7 +3032,7 @@ register_uninstall_hook(
 
 // Upgrade notice.
 add_action(
-	'in_plugin_update_message-' . __FILE__,
+	'in_plugin_update_message-' . plugin_basename( __FILE__ ),
 	array(
 		'Antispam_Bee',
 		'upgrade_notice',
