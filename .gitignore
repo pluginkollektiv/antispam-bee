@@ -3,6 +3,8 @@
 assets/dist
 build/
 node_modules/
+test-results/
+tests/e2e/report/
 tmp/
 vendor/
 
