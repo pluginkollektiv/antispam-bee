@@ -10,6 +10,7 @@ namespace AntispamBee;
 use AntispamBee\Admin\CommentsColumns;
 use AntispamBee\Admin\DashboardWidgets;
 use AntispamBee\Admin\SettingsPage;
+use AntispamBee\Admin\UpgradeNotice;
 use AntispamBee\Crons\DeleteSpamCron;
 use AntispamBee\GeneralOptions\DeleteOldSpam;
 use AntispamBee\GeneralOptions\IgnoreLinkbacks;
@@ -110,6 +111,12 @@ function init(): void {
 }
 
 add_action( 'plugins_loaded', __NAMESPACE__ . '\init' );
+
+// Display the upgrade notice inline on the plugins list page.
+add_action(
+	'in_plugin_update_message-' . plugin_basename( MAIN_PLUGIN_FILE ),
+	[ UpgradeNotice::class, 'render' ]
+);
 
 // Register the activation, deactivation and uninstall hooks.
 register_activation_hook( MAIN_PLUGIN_FILE, [ PluginStateChangeHandler::class, 'activate' ] );
