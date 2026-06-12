@@ -35,8 +35,8 @@ class UpdateSpamLog extends Base {
 		if (
 			! defined( 'ANTISPAM_BEE_LOG_FILE' )
 			|| ! ANTISPAM_BEE_LOG_FILE
+			|| validate_file( ANTISPAM_BEE_LOG_FILE ) !== 0
 			|| ! is_writable( ANTISPAM_BEE_LOG_FILE )
-			|| validate_file( ANTISPAM_BEE_LOG_FILE ) === 1
 		) {
 			return $item;
 		}
