@@ -9,10 +9,15 @@ jobs:
     name: New tag
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
-    - uses: php-actions/composer@v6
+    - name: Checkout
+      uses: actions/checkout@v6
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
       with:
-        args: --ignore-platform-reqs
+        php-version: '8.3'
+        tools: composer
+    - name: Build
+      run: composer install --ignore-platform-reqs
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@stable
       env:

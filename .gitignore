@@ -6,6 +6,7 @@ tmp/
 vendor/
 chromedriver
 composer.lock
+DOCKER_ENV
 driver.tar.gz
 driver.zip
 geckodrier

@@ -32,7 +32,7 @@
     "friends-of-behat/mink-extension": "^v2.7.5",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "wp-cli/wp-cli-bundle": "@stable",
-    "wp-coding-standards/wpcs": "^3.0.1",
+    "wp-coding-standards/wpcs": "^3.1",
     "yoast/wp-test-utils": "^1.2.0"
   },
   "autoload": {

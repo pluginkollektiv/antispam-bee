@@ -12,7 +12,6 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Trust commenters with a Gravatar.
 * Consider the comment time.
 * Treat BBCode links as spam.
-* Validate the IP address of commenters.
 * Use regular expressions.
 * Search local spam database for commenters previously marked as spammers.
 * Notify admins by e-mail about incoming spam.
@@ -42,7 +41,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Maintainers: [pluginkollektiv](https://pluginkollektiv.org)
 
 ## Installation ##
-* If you don’t know how to install a plugin for WordPress, [here’s how](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
+* If you don’t know how to install a plugin for WordPress, [here’s how](https://wordpress.org/documentation/article/manage-plugins/#automatic-plugin-installation-1).
 
 ### Requirements ###
 * PHP 7.0 or greater
@@ -54,11 +53,13 @@ After you have activated *Antispam Bee* the plugin will block spam comments out 
 ### Privacy Notice ###
 On sites operating from within the EU the option *Use a public antispam database* should not be activated for privacy reasons. When that option has been activated, *Antispam Bee* will match full IP addresses from comments against a public spam database. Technically it is not possible to encrypt those IPs, because spam databases only store and operate with complete, unencrypted IP addresses.
 
+## Responsible Disclosure ##
+
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/445425e4-f5dd-4404-80a7-690999f5bcb3)
+
 ## Frequently Asked Questions ##
 
-Please have a look [in the FAQ pages](https://github.com/pluginkollektiv/antispam-bee/wiki/en-FAQ).
-
-A complete documentation is available in the [GitHub repository Wiki](https://github.com/pluginkollektiv/antispam-bee/wiki).
+A complete documentation is available on [antispambee.pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ## Changelog ##
 

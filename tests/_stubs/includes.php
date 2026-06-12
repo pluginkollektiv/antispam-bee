@@ -38,3 +38,4 @@ function esc_html__( $text, $domain ) { return $text; }
 function _e( $text, $domain ) { echo $text; }
 function esc_attr_e( $text, $domain ) { echo $text; }
 function esc_html_e( $text, $domain ) { echo $text; }
+function load_plugin_textdomain( $domain, $deprecated = false, $plugin_rel_path = false ) { return true; }

@@ -11,44 +11,135 @@
     * Möglichkeit der Erweiterung von Antispam Bee um eigene Spam-Regeln
     * Erlaubt die Nutzung von Antispam Bee für andere Reaktionen als Kommentare, beispielsweise Formulare
 
+### 2.11.12 ###
+* **English**
+  * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)
+
+* **Deutsch**
+  * Fix: Fatal Error im Dashboard Spam-Counter (Danke @robertstaddon!)
+
+### 2.11.11 ###
+* **English**
+  * Enhancement: Add shorturl.fm spam pattern
+
+* **Deutsch**
+  * Verbesserung: Hinzufügen eines Musters für shorturl.fm Spam
+
+### 2.11.10 ###
+* **English**
+  * Fix: remove build-tool warnings from minified Javascript and CSS resources
+
+* **Deutsch**
+  * Fix: Build-Tool-Warnungen aus minifizierten Javascript und CSS Ressourcen entfernt
+
+### 2.11.9 ###
+* **English**
+  * Tweak: Improved compatibility with unquoted HTML attributes in comment forms
+  * Maintenance: Tested up to WordPress 7.0
+
+* **Deutsch**
+  * Tweak: Kompatibilität mit nicht in Anführungszeichen gesetzten HTML-Attributen in Kommentarformularen verbessert
+  * Wartung: Getestet mit WordPress 7.0
+
+### 2.11.8 ###
+* **English**
+  * Tweak: Minor code changes and housekeeping
+  * Tweak: Add link to Patchstack in readme
+  * Maintenance: Tested up to WordPress 6.8
+
+* **Deutsch**
+  * Tweak: Kleinere Code-Änderungen und Aufräumarbeiten
+  * Tweak: Link zu Patchstack in readme hinzugefügt
+  * Wartung: Getestet mit WordPress 6.8
+
+### 2.11.7 ###
+* **English**
+  * Tweak: Use SCRIPT_NAME instead of REQUEST_URI to check path
+  * Fix: Remove `add_reasons_to_defaults()` from general initialization for better WordPress 6.7 compatibility
+  * Maintenance: Tested up to WordPress 6.7
+
+* **Deutsch**
+  * Tweak: Verwende SCRIPT_NAME anstelle von REQUEST_URI, um den Pfad zu prüfen
+  * Fix: Entfernen von `add_reasons_to_defaults()` von der allgemeinen Initialisierung für bessere WordPress 6.7 Kompatibilität
+  * Wartung: Getestet mit WordPress 6.7
+
+### 2.11.6 ###
+* **English**
+  * Fix: Delete missed out option on uninstall (Thanks @okvee!)
+  * Tweak: Minor i18n improvements (Thanks Pedro!)
+  * Tweak: Minor code changes and housekeeping
+  * Tweak: Updated dependencies
+
+* **Deutsch**
+  * Fix: Bei Deinstallation wurde eine Option nicht korrekt gelöscht (Danke @okvee!)
+  * Tweak: Kleinere i18n-Verbesserungen (Danke Pedro!)
+  * Tweak: Kleinere Code-Änderungen und Aufräumarbeiten
+  * Tweak: Aktualisierte Abhängigkeiten
+
+### 2.11.5 ###
+IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `antispam_bee_trusted_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`  (don’t return an empty value here, otherwise all comments are marked as spam).
+WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter einem Proxy oder ähnlich bist, musst du den `antispam_bee_trusted_ip`-Filter verwenden, um die richtige Adresse des Users von einem Header wie `HTTP_X_FORWARDED` zu bekommen (hier darfst du keinen leeren String zurückgeben, sonst werden alle Kommentare als Spam markiert).
+* **English**
+  * Fix: Usage of core filter `pre_comment_user_ip` breaks ASB if the IP address is removed for GDPR compliance
+
+* **Deutsch**
+  * Fix: Die Verwendung des Core-Filters `pre_comment_user_ip` sorgt für Fehler, wenn die IP-Adresse für die Einhaltung der DSGVO entfernt wird
+
+### 2.11.4 ###
+IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `pre_comment_user_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.  
+WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter einem Proxy oder ähnlich bist, musst du den `pre_comment_user_ip`-Filter verwenden, um die richtige Adresse des Users von einem Header wie `HTTP_X_FORWARDED` zu bekommen.
+* **English**
+  * Fix: Read client IP for country check from `REMOTE_ADDR` only (filterable via `pre_comment_user_ip`)
+  * Fix: No spam reason in spam notification email, and related PHP warning
+  * Fix: Remove outdated info from readme
+  * Enhancement: Show upgrade notice on plugin overview page
+  * Maintenance: Tested up to WordPress 6.3
+
+* **Deutsch**
+  * Fix: Client-IP wird nur noch aus `REMOTE_ADDR` ermittelt (filterbar über `pre_comment_user_ip`)
+  * Fix: Der Spam-Grund wird wieder korrekt in der Benachrichtigungs-E-Mail zu Spam angezeigt und die damit zusammenhängende PHP-Warning behoben
+  * Fix: Veraltete Infos aus der Readme wurden entfernt
+  * Verbesserung: Upgrade-Hinweis wird auch in der Plugin-Übersicht angezeigt
+  * Wartung: Getestet mit WordPress 6.3
+
 ### 2.11.3 ###
 * **English**
-	* Fix: Multiselect for "Delete comments by spam reasons" was not saving values
-	* Fix: Fix broken link for ISO country codes
-	* Maintenance: Added test for PHP 8.2
-	* Maintenance: Tested up to WordPress 6.2
+  * Fix: Multiselect for "Delete comments by spam reasons" was not saving values
+  * Fix: Fix broken link for ISO country codes
+  * Maintenance: Added test for PHP 8.2
+  * Maintenance: Tested up to WordPress 6.2
 
 * **Deutsch**
-	* Behoben: Multiselect für "Kommentare aus Spamgründen löschen" speicherte keine Werte
-	* Fix: Fehlerhafter Link für ISO-Ländercodes behoben
-	* Wartung: Test für PHP 8.2 hinzugefügt
-	* Wartung: Getestet mit WordPress 6.2
-
+  * Behoben: Multiselect für "Kommentare aus Spamgründen löschen" speicherte keine Werte
+  * Fix: Fehlerhafter Link für ISO-Ländercodes behoben
+  * Wartung: Test für PHP 8.2 hinzugefügt
+  * Wartung: Getestet mit WordPress 6.2
+  
 ### 2.11.2 ###
 * **English**
-	* Tweak: remove superfluous translations
-	* Tweak: make FAQ link an anchor link
-	* Fix: spam counter no longer raises a warning with PHP 8.1 if no spam is present yet
-	* Fix: spam reasons are now localized correctly
-	* Fix: Translations were loaded twice on some admin pages
-	* Maintenance: Tested up to WordPress 6.1
+  * Tweak: remove superfluous translations
+  * Tweak: make FAQ link an anchor link
+  * Fix: spam counter no longer raises a warning with PHP 8.1 if no spam is present yet
+  * Fix: spam reasons are now localized correctly
+  * Fix: Translations were loaded twice on some admin pages
+  * Maintenance: Tested up to WordPress 6.1
 
 * **Deutsch**
-	* Tweak: Überflüssige Übersetzungen entfernt
-	* Tweak: Link zu den FAQ ist jetzt ein Anker-Link
-	* Fix: Der Spam-Zähler erzeugt mit PHP 8.1 keine Warnung mehr, wenn noch kein Spam vorhanden ist
-	* Fix: Spam-Gründe werden nun korrekt übersetzt
-	* Fix: Übersetzungen wurden auf einzelnen Adminseiten doppelt geladen
-	* Wartung: Getestet mit WordPress 6.1
+  * Tweak: Überflüssige Übersetzungen entfernt
+  * Tweak: Link zu den FAQ ist jetzt ein Anker-Link
+  * Fix: Der Spam-Zähler erzeugt mit PHP 8.1 keine Warnung mehr, wenn noch kein Spam vorhanden ist
+  * Fix: Spam-Gründe werden nun korrekt übersetzt
+  * Fix: Übersetzungen wurden auf einzelnen Adminseiten doppelt geladen
+  * Wartung: Getestet mit WordPress 6.1
 
 ### 2.11.1 ###
 * **English**
-	* Tweak: remove superfluous type attribute from inline script tag
-	* Maintenance: Tested up to WordPress 6.0
+  * Tweak: remove superfluous type attribute from inline script tag
+  * Maintenance: Tested up to WordPress 6.0
 
 * **Deutsch**
-	* Tweak: Überflüssiges type-Attribut von script-Tag entfernt
-	* Wartung: Getestet mit WordPress 6.0
+  * Tweak: Überflüssiges type-Attribut von script-Tag entfernt
+  * Wartung: Getestet mit WordPress 6.0
 
 ### 2.11.0 ###
 * **English**

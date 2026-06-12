@@ -18,9 +18,9 @@
 /composer.lock
 /composer-php-5-4.json
 /docker-compose.yml
+/DOCKER_ENV
 /package.json
 /package-lock.json
-/composer.lock
 /phpcs.xml
 /phpunit.xml.dist
 /README.md
