@@ -13,6 +13,16 @@ namespace AntispamBee\Admin;
 class UpgradeNotice {
 
 	/**
+	 * Register the upgrade notice hook.
+	 */
+	public static function init(): void {
+		add_action(
+			'in_plugin_update_message-' . plugin_basename( \AntispamBee\MAIN_PLUGIN_FILE ),
+			[ __CLASS__, 'render' ]
+		);
+	}
+
+	/**
 	 * Render the upgrade notice below the plugin row on the plugins list.
 	 *
 	 * Called via the `in_plugin_update_message-{file}` action when WordPress
