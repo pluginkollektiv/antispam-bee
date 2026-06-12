@@ -1,5 +1,10 @@
 <?php
 
+use PHPUnit\Framework\TestSuite;
+
+use PHPUnit\Framework\TestListener as PHPUnitTestListener;
+use PHPUnit\Framework\TestListenerDefaultImplementation;
+
 /**
  * Test listener implementation taking care of loading stubs for unit tests.
  *
@@ -8,7 +13,8 @@
  *
  * @since 2.7.0
  */
-class TestListener extends PHPUnit_Framework_BaseTestListener {
+class TestListener implements PHPUnitTestListener {
+	use TestListenerDefaultImplementation;
 
 	/**
 	 * Performs individual test-suite-specific actions.
@@ -17,9 +23,9 @@ class TestListener extends PHPUnit_Framework_BaseTestListener {
 	 *
 	 * @since 2.7.0
 	 *
-	 * @param PHPUnit_Framework_TestSuite $suite Test suite object.
+	 * @param TestSuite $suite Test suite object.
 	 */
-	public function startTestSuite( PHPUnit_Framework_TestSuite $suite ) {
+	public function startTestSuite( TestSuite $suite ): void {
 		switch ( strtolower( $suite->getName() ) ) {
 			case 'unit':
 				$this->stub_functions();

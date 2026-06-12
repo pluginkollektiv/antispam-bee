@@ -4,7 +4,7 @@
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.6
 * Tested up to:      7.0
-* Requires PHP:      5.2
+* Requires PHP:      7.2
 * Stable tag:        2.11.12
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -97,6 +97,11 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/445425e4-f5dd-4404-80a7-690999f5bcb3)
 
 ## Changelog ##
+
+### 3.0.0 – WIP ###
+	* Complete code rewrite and backend UI overhaul
+    * Allows to extend Antispam Bee with own rules
+    * Allows to use Antispam Bee rules for other reactions than comments, for example, forms
 
 ### 2.11.12 ###
   * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)

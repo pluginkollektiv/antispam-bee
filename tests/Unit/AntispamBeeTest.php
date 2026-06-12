@@ -3,12 +3,15 @@
 namespace AntispamBee\Tests\Unit\Core;
 
 use Antispam_Bee as Testee;
-use AntispamBee\Tests\TestCase;
-use Brain\Monkey\Functions;
-use Brain\Monkey\WP\Filters;
+use Yoast\WPTestUtils\BrainMonkey\TestCase;
+
+use function Brain\Monkey\Functions\expect;
+use function Brain\Monkey\Functions\when;
 
 /**
  * Test case for the factory class.
+ *
+ * TODO: This is a legacy test from 2.x. Update or remove.
  *
  * @since   2.7.0
  */
@@ -19,20 +22,20 @@ class FactoryTest extends TestCase {
 	 *
 	 * @since 2.7.0
 	 */
-	protected function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
-		Functions::when( 'get_bloginfo' )->justReturn( 'https://domain.com/' );
-		Functions::when( 'wp_parse_url' )->alias('parse_url');
-		Functions::when( 'is_admin' )->justReturn( false );
-		Functions::expect( 'wp_unslash' )
+		when( 'get_bloginfo' )->justReturn( 'https://domain.com/' );
+		when( 'wp_parse_url' )->alias('parse_url');
+		when( 'is_admin' )->justReturn( false );
+		expect( 'wp_unslash' )
 			->andReturnUsing(
 				function( $data ) {
 					return $data;
 				}
 			);
 
-		Functions::when( 'get_option' )->justReturn( $this->get_options() );
+		when( 'get_option' )->justReturn( $this->get_options() );
 
 		Testee::init();
 	}
@@ -65,22 +68,12 @@ class FactoryTest extends TestCase {
 	public function test_gets_ip_address() {
 		$comment = $this->get_base_comment();
 
-		$_SERVER['REMOTE_ADDR']          = '192.0.2.1';
-		$_SERVER['HTTP_X_FORWARDED_FOR'] = '192.0.2.2, 10.0.0.10';
-		$_SERVER['HTTP_X_REAL_IP']       = 'bogus';
-		$_SERVER['SCRIPT_NAME']          = '/wp-comments-post.php';
-		$_POST['comment']                = $comment;
+		$_SERVER['HTTP_CLIENT_IP'] = '12.23.34.45';
+		$_SERVER['REQUEST_URI']    = 'https://domain.com/wp-comments-post.php';
+		$_POST['comment']          = $comment;
 
 		$result = Testee::handle_incoming_request( $comment );
-		$this->assertSame( '192.0.2.1', $result['comment_author_IP'], 'Unexpected IP with default detection' );
-
-		Filters::expectApplied( 'antispam_bee_trusted_ip' )
-				->once()
-				->with( '192.0.2.1' )
-				->andReturn( '192.0.2.2' );
-
-        $result = Testee::handle_incoming_request( $comment );
-        $this->assertSame( '192.0.2.2', $result['comment_author_IP'], 'Unexpected IP with custom hook' );
+		$this->assertSame( '12.23.34.45', $result['comment_author_IP'] );
 	}
 
 	/**
@@ -92,18 +85,16 @@ class FactoryTest extends TestCase {
 	 *
 	 * @covers       Testee::handle_incoming_request()
 	 *
-	 * @param array  $comment Comment overrides to use.
-	 * @param string $reason  Expected spam reason to catch.
 	 */
-	public function test_spam_reasons( $comment, $reason ) {
-		$comment = array_merge( $this->get_base_comment(), $comment );
+	public function test_spam_reasons($comment, $reason) {
+		$comment = array_merge($this->get_base_comment(), $comment);
 
-		$_SERVER['REMOTE_ADDR'] = '12.23.34.45';
-		$_SERVER['SCRIPT_NAME'] = '/wp-comments-post.php';
-		$_POST['comment']       = $comment;
+		$_SERVER['HTTP_CLIENT_IP'] = '12.23.34.45';
+		$_SERVER['REQUEST_URI']    = 'https://domain.com/wp-comments-post.php';
+		$_POST['comment']          = $comment;
 
 		// This is where we check for the spam reason that was detected.
-		Functions::expect( 'add_comment_meta' )->once()
+		expect( 'add_comment_meta' )->once()
 		         ->with(
 			         1,
 			         'antispam_bee_reason',
@@ -114,37 +105,6 @@ class FactoryTest extends TestCase {
 		Testee::handle_incoming_request( $comment );
 		// ... let Antispam Bee add the spam reason as comment meta.
 		Testee::add_spam_reason_to_comment( 1 );
-	}
-
-	public function test_prepare_comment_field() {
-        Functions::when( 'esc_js' )->returnArg();
-        Functions::when( 'esc_attr' )->returnArg();
-
-        // Empty data.
-        self::assertSame( '', Testee::prepare_comment_field( '' ) );
-
-        // Non-matching textarea.
-        $raw = '<p>Text before</p>' .
-               '<textarea id="my-textarea" name="text" class="some-class">My Content</textarea>' .
-               '<p>Text after</p>';
-        self::assertSame( $raw, Testee::prepare_comment_field( $raw ) );
-
-        // Matching textarea.
-        $raw = '<p>Text before</p>' .
-               '<textarea id="my-textarea" name="comment" class="some-class">My Content</textarea>' .
-               '<p>Text after</p>';
-        $expected_regex = '#^<p>Text before</p>' .
-                          '<textarea autocomplete="new-password"  id="[a-f0-9]{10}"  name="[a-f0-9]{10}"   class="some-class">My Content</textarea>' .
-                          '<textarea id="comment" aria-label="hp-comment" aria-hidden="true" name="comment" autocomplete="new-password" style=".+" tabindex="-1"></textarea>' .
-                          '<script data-noptimize>.+document.getElementById\("[a-f0-9]{10}"\).setAttribute\( "id", "comment" \);</script>' .
-                          '<p>Text after</p>$#';
-        self::assertRegExp( $expected_regex, Testee::prepare_comment_field( $raw ) );
-
-        // Unquoted name.
-        $raw = '<p>Text before</p>' .
-               '<textarea id="my-textarea" name=comment class="some-class">My Content</textarea>' .
-               '<p>Text after</p>';
-        self::assertRegExp( $expected_regex, Testee::prepare_comment_field( $raw ) );
 	}
 
 	/**
@@ -175,7 +135,7 @@ class FactoryTest extends TestCase {
 			// @ToDo: static $_reason
 			array(
 				array(
-					'comment_content' => "this is a pharmacy, why does it work now?.",
+					'comment_content'      => "this is a pharmacy, why does it work now?.",
 					'comment_author_email' => 'test@yandex.ru',
 				),
 				'regexp',

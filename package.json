@@ -1,10 +1,7 @@
 {
-  "private": true,
-  "devDependencies": {
-    "@wordpress/eslint-plugin": "^24.3.0",
-    "@wordpress/stylelint-config": "^23.33.0",
-    "eslint": "^8.57.1",
-    "prettier": "^3.8.1",
-    "stylelint": "^16.26.1"
-  }
+	"name": "@pluginkollektiv/antispam-bee",
+	"version": "3.0.0",
+	"description": "Antispam Bee blocks spam comments and trackbacks effectively and without captchas.",
+	"author": "pluginkollektiv",
+	"license": "GPL-2.0-or-later"
 }

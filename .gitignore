@@ -1,13 +1,15 @@
-css/*.min.css
-js/*.min.js
+assets/dist
 .idea/
+build/
 node_modules/
 tmp/
 vendor/
 chromedriver
+composer.lock
 DOCKER_ENV
 driver.tar.gz
 driver.zip
 geckodrier
 nohup.out
 package-lock.json
+yarn.lock

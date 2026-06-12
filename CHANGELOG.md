@@ -1,5 +1,16 @@
 ## Changelog ##
 
+### 3.0.0 – WIP ###
+* **English**
+	* Complete code rewrite and backend UI overhaul
+    * Allows to extend Antispam Bee with own rules
+    * Allows to use Antispam Bee rules for other reactions than comments, for example, forms
+
+* **Deutsch**
+	* Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
+    * Möglichkeit der Erweiterung von Antispam Bee um eigene Spam-Regeln
+    * Erlaubt die Nutzung von Antispam Bee für andere Reaktionen als Kommentare, beispielsweise Formulare
+
 ### 2.11.12 ###
 * **English**
   * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)
