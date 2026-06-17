@@ -1,5 +1,15 @@
 ## Changelog ##
 
+### 2.11.13 ###
+* **English**
+  * Fix: Escape settings action link URL with `esc_url()` (Refs #534) (Thanks @thisismyurl!)
+  * Fix: Replace deprecated `strip_tags()` with `wp_strip_all_tags()` in spam notification email body (Refs #534) (Thanks @thisismyurl!)
+
+* **Deutsch**
+  * Fix: Einstellungs-Link-URL mit `esc_url()` maskieren (Refs #534) (Danke @thisismyurl!)
+  * Fix: Veraltetes `strip_tags()` durch `wp_strip_all_tags()` im Spam-Benachrichtigungs-E-Mail-Body ersetzen (Refs #534) (Danke @thisismyurl!)
+
+
 ### 2.11.12 ###
 * **English**
   * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)
