@@ -586,11 +586,13 @@ class Antispam_Bee {
 			array(
 				sprintf(
 					'<a href="%s">%s</a>',
-					add_query_arg(
-						array(
-							'page' => 'antispam_bee',
-						),
-						admin_url( 'options-general.php' )
+					esc_url(
+						add_query_arg(
+							array(
+								'page' => 'antispam_bee',
+							),
+							admin_url( 'options-general.php' )
+						)
 					),
 					esc_attr__( 'Settings', 'antispam-bee' )
 				),
@@ -2394,7 +2396,12 @@ class Antispam_Bee {
 	 * @return  mixed        FALSE in case of error
 	 */
 	private static function _update_spam_log( $comment ) {
-		if ( ! defined( 'ANTISPAM_BEE_LOG_FILE' ) || ! ANTISPAM_BEE_LOG_FILE || validate_file( ANTISPAM_BEE_LOG_FILE ) !== 0 || ! is_writable( ANTISPAM_BEE_LOG_FILE ) ) {
+		if (
+			! defined( 'ANTISPAM_BEE_LOG_FILE' ) ||
+			! ANTISPAM_BEE_LOG_FILE ||
+			validate_file( ANTISPAM_BEE_LOG_FILE ) !== 0 ||
+			! is_writable( ANTISPAM_BEE_LOG_FILE )
+		) {
 			return false;
 		}
 
@@ -2579,7 +2586,7 @@ class Antispam_Bee {
 		);
 
 		// Content.
-		$content = strip_tags( stripslashes( $comment['comment_content'] ) );
+		$content = wp_strip_all_tags( stripslashes( $comment['comment_content'] ) );
 		if ( ! $content ) {
 			$content = sprintf(
 				'-- %s --',
@@ -2600,11 +2607,11 @@ class Antispam_Bee {
 		$body = sprintf(
 			"%s \"%s\"\r\n\r\n",
 			esc_html__( 'New spam comment on your post', 'antispam-bee' ),
-			strip_tags( $post->post_title )
+			wp_strip_all_tags( $post->post_title )
 		) . sprintf(
 			"%s: %s\r\n",
 			esc_html__( 'Author', 'antispam-bee' ),
-			( empty( $comment['comment_author'] ) ? '' : strip_tags( $comment['comment_author'] ) )
+			( empty( $comment['comment_author'] ) ? '' : wp_strip_all_tags( $comment['comment_author'] ) )
 		) . sprintf(
 			"URL: %s\r\n",
 			// empty check exists.
