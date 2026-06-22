@@ -1,0 +1,55 @@
+.a11y-dialog-container,
+div[data-a11y-dialog-hide] {
+    position: fixed; /* 1 */
+    top: 0; /* 1 */
+    right: 0; /* 1 */
+    bottom: 0; /* 1 */
+    left: 0; /* 1 */
+}
+
+.a11y-dialog-container {
+    z-index: 2; /* 1 */
+    display: flex; /* 2 */
+}
+
+.a11y-dialog-container[aria-hidden="true"] {
+    display: none; /* 1 */
+}
+
+.a11y-dialog-container > div {
+    width: 100%;
+}
+
+div[data-a11y-dialog-hide] {
+    background-color: rgba(0, 0, 0, 0.35); /* 1 */
+}
+
+.a11y-dialog-container .dialog-content {
+    margin: auto; /* 1 */
+    z-index: 2; /* 2 */
+    position: relative; /* 2 */
+    background-color: white; /* 3 */
+    width: 312px;
+    max-height: calc(100% - 100px);
+    overflow: auto;
+    top: 50px;
+    padding: 1rem;
+    box-sizing: border-box;
+    box-shadow: 0 10px 10px rgba(0,0,0,.25);
+}
+
+.a11y-dialog-container .dialog-content > :first-child {
+    margin-top: 0;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+    font-size: 24px;
+    line-height: 1.4;
+}
+
+.asb-report-spam-button {
+    white-space: nowrap;
+    background: #007cba;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: none;
+    outline: 1px solid transparent;
+}
