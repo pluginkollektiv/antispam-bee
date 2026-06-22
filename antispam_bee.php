@@ -2396,7 +2396,12 @@ class Antispam_Bee {
 	 * @return  mixed        FALSE in case of error
 	 */
 	private static function _update_spam_log( $comment ) {
-		if ( ! defined( 'ANTISPAM_BEE_LOG_FILE' ) || ! ANTISPAM_BEE_LOG_FILE || validate_file( ANTISPAM_BEE_LOG_FILE ) !== 0 || ! is_writable( ANTISPAM_BEE_LOG_FILE ) ) {
+		if (
+			! defined( 'ANTISPAM_BEE_LOG_FILE' ) ||
+			! ANTISPAM_BEE_LOG_FILE ||
+			validate_file( ANTISPAM_BEE_LOG_FILE ) !== 0 ||
+			! is_writable( ANTISPAM_BEE_LOG_FILE )
+		) {
 			return false;
 		}
 
