@@ -811,13 +811,25 @@ class Antispam_Bee {
 		$plugin = get_plugin_data( __FILE__ );
 
 		wp_register_style(
+			'chartist_css',
+			plugins_url( '/css/chartist.min.css', __FILE__ ),
+			array(),
+			'1.3.0'
+		);
+		wp_register_style(
+			'chartist_tooltip_css',
+			plugins_url( '/css/chartist-plugin-tooltip.min.css', __FILE__ ),
+			array(),
+			'1.0.0'
+		);
+		wp_register_style(
 			'ab_chart',
 			plugins_url( 'css/dashboard.min.css', __FILE__ ),
 			array(),
 			$plugin['Version']
 		);
 
-		wp_print_styles( 'ab_chart' );
+		wp_print_styles( array( 'chartist_css', 'chartist_tooltip_css', 'ab_chart' ) );
 	}
 
 
@@ -835,25 +847,25 @@ class Antispam_Bee {
 		$plugin = get_plugin_data( __FILE__ );
 
 		wp_enqueue_script(
-			'raphael',
-			plugins_url( 'js/raphael.min.js', __FILE__ ),
+			'chartist_js',
+			plugins_url( 'js/chartist.min.js', __FILE__ ),
 			array(),
-			'2.1.0',
+			'1.3.0',
 			true
 		);
 
 		wp_enqueue_script(
-			'ab-raphael',
-			plugins_url( 'js/raphael.helper.min.js', __FILE__ ),
-			array( 'raphael' ),
-			$plugin['Version'],
+			'chartist_tooltip_js',
+			plugins_url( 'js/chartist-plugin-tooltip.min.js', __FILE__ ),
+			array( 'chartist_js' ),
+			'1.0.0',
 			true
 		);
 
 		wp_enqueue_script(
 			'ab_chart_js',
 			plugins_url( 'js/dashboard.min.js', __FILE__ ),
-			array( 'jquery', 'ab-raphael' ),
+			array( 'jquery', 'chartist_js' ),
 			$plugin['Version'],
 			true
 		);
