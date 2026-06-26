@@ -116,6 +116,9 @@ class SettingsPage {
 				ContentTypeHelper::get_type_name( $type )
 			);
 		}
+
+		$tabs['support'] = new Tab( 'support', __( 'Support', 'antispam-bee' ) );
+
 		$this->tabs = $tabs;
 
 		$this->populate_tabs();
@@ -213,16 +216,57 @@ class SettingsPage {
 				<?php endforeach; ?>
 			</ul>
 
-			<form
-				action="<?php echo esc_url( add_query_arg( 'tab', $this->active_tab, admin_url( 'options.php' ) ) ); ?>"
-				method="post">
-				<input type="hidden" name="action" value="ab_save_changes"/>
+			<?php if ( 'support' === $this->active_tab ) : ?>
+				<div class="ab-support-links" style="margin-top: 1.5em;">
+					<h2><?php esc_html_e( 'Donate', 'antispam-bee' ); ?></h2>
+					<p>
+						<?php esc_html_e( 'Antispam Bee is free and maintained by volunteers. However, keeping the plugin infrastructure running involves real costs. If you find it useful, please consider supporting the project with a donation:', 'antispam-bee' ); ?>
+					</p>
+					<p>
+						<a class="button" href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW" target="_blank" rel="noopener noreferrer">
+							<?php esc_html_e( 'Make a donation to the Pluginkollektiv', 'antispam-bee' ); ?>
+						</a>
+					</p>
+					<h2><?php esc_html_e( 'FAQ', 'antispam-bee' ); ?></h2>
+					<p>
+						<?php esc_html_e( 'Find answers to the most common questions about Antispam Bee — from installation and configuration to troubleshooting:', 'antispam-bee' ); ?>
+					</p>
+					<p>
+						<a class="button" href="<?php echo esc_url( __( 'https://wordpress.org/plugins/antispam-bee/#faq', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer">
+							<?php esc_html_e( 'Get answers on frequently asked questions', 'antispam-bee' ); ?>
+						</a>
+					</p>
+					<h2><?php esc_html_e( 'Documentation', 'antispam-bee' ); ?></h2>
+					<p>
+						<?php esc_html_e( 'Read the full documentation to learn about all features, configuration options, and best practices for keeping your site spam-free:', 'antispam-bee' ); ?>
+					</p>
+					<p>
+						<a class="button" href="<?php echo esc_url( __( 'https://antispambee.pluginkollektiv.org/documentation', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer">
+							<?php esc_html_e( 'Read the plugin documentation', 'antispam-bee' ); ?>
+						</a>
+					</p>
+					<h2><?php esc_html_e( 'Support', 'antispam-bee' ); ?></h2>
+					<p>
+						<?php esc_html_e( 'For any questions please use the wordpress.org forums. And if you can share your experience you are more than welcome to answer questions there as well:', 'antispam-bee' ); ?>
+					</p>
+					<p>
+						<a class="button" href="https://wordpress.org/support/plugin/antispam-bee/" target="_blank" rel="noopener noreferrer">
+							<?php esc_html_e( 'Ask for help in the support form', 'antispam-bee' ); ?>
+						</a>
+					</p>
+				</div>
+			<?php else : ?>
+				<form
+					action="<?php echo esc_url( add_query_arg( 'tab', $this->active_tab, admin_url( 'options.php' ) ) ); ?>"
+					method="post">
+					<input type="hidden" name="action" value="ab_save_changes"/>
 
-				<?php settings_fields( self::SETTINGS_PAGE_SLUG ); ?>
-				<?php do_settings_sections( self::SETTINGS_PAGE_SLUG ); ?>
+					<?php settings_fields( self::SETTINGS_PAGE_SLUG ); ?>
+					<?php do_settings_sections( self::SETTINGS_PAGE_SLUG ); ?>
 
-				<?php submit_button(); ?>
-			</form>
+					<?php submit_button(); ?>
+				</form>
+			<?php endif; ?>
 		</div>
 		<?php
 	}
