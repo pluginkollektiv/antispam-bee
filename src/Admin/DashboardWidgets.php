@@ -89,14 +89,4 @@ class DashboardWidgets {
 	private static function get_spam_count(): string {
 		return intval( Settings::get_option( 'spam_count', 0 ) );
 	}
-
-	/**
-	 * Output the number of spam comments
-	 *
-	 * @since  0.1
-	 * @since  2.4
-	 */
-	public static function the_spam_count(): void {
-		echo esc_html( number_format_i18n( self::get_spam_count() ) );
-	}
 }
