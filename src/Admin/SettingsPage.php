@@ -14,6 +14,7 @@ use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
+use const AntispamBee\MAIN_PLUGIN_FILE;
 
 // @todo: add `ids` to the `h2` section headlines. After first analyzation, that seems only to be possible via JS
 /**
@@ -61,6 +62,8 @@ class SettingsPage {
 	public function init(): void {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'admin_init', [ $this, 'setup_settings' ] );
+		add_filter( 'plugin_action_links_' . plugin_basename( MAIN_PLUGIN_FILE ), [ $this, 'add_action_links' ] );
+		add_filter( 'plugin_row_meta', [ $this, 'add_row_meta' ], 10, 2 );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$this->active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'general';
@@ -225,5 +228,45 @@ class SettingsPage {
 			</form>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Add a Settings link to the plugin action links.
+	 *
+	 * @param array $links Existing action links.
+	 * @return array Modified action links.
+	 */
+	public function add_action_links( array $links ): array {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return $links;
+		}
+
+		return array_merge(
+			[
+				'<a href="' . esc_url( add_query_arg( 'page', self::SETTINGS_PAGE_SLUG, admin_url( 'options-general.php' ) ) ) . '">' . esc_html__( 'Settings', 'antispam-bee' ) . '</a>',
+			],
+			$links
+		);
+	}
+
+	/**
+	 * Add Donate and Support links to the plugin row meta.
+	 *
+	 * @param array  $links Existing row meta links.
+	 * @param string $file  Plugin basename of the current row.
+	 * @return array Modified row meta links.
+	 */
+	public function add_row_meta( array $links, string $file ): array {
+		if ( plugin_basename( MAIN_PLUGIN_FILE ) !== $file ) {
+			return $links;
+		}
+
+		return array_merge(
+			$links,
+			[
+				'<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Donate', 'antispam-bee' ) . '</a>',
+				'<a href="https://wordpress.org/support/plugin/antispam-bee" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Support', 'antispam-bee' ) . '</a>',
+			]
+		);
 	}
 }
