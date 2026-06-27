@@ -92,11 +92,11 @@ jobs:
   phpstan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.5'
           tools: composer
       - name: Install Composer dependencies
         run: composer install --ignore-platform-req=php
@@ -110,7 +110,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: '8.5'
         tools: composer
     - name: Run code style checks for CSS, JavaScript and PHP
       run: |
