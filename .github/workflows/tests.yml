@@ -5,9 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.3', '7.4']
+        php-versions: ['8.5', '7.4']
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v7
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -55,7 +55,7 @@ jobs:
             wordpress: '5.6'
             core: 'https://wordpress.org/wordpress-5.6.zip'
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
@@ -105,7 +105,7 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
