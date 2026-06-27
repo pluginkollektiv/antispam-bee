@@ -226,7 +226,25 @@ class SettingsPage {
 				<?php settings_fields( self::SETTINGS_PAGE_SLUG ); ?>
 				<?php do_settings_sections( self::SETTINGS_PAGE_SLUG ); ?>
 
-				<?php submit_button(); ?>
+				<?php if ( 'general' === $this->active_tab ) : ?>
+					<style>
+						.ab-form-footer { display: flex; align-items: center; }
+						.ab-support-links { display: flex; gap: 1em; margin-left: 1.5em; padding-left: 1.5em; border-left: 1px solid #c3c4c7; font-size: 0.85em; }
+						.ab-support-links a { color: #646970; text-decoration: none; }
+						.ab-support-links a:hover { color: #135e96; text-decoration: underline; }
+					</style>
+					<p class="submit ab-form-footer">
+						<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Save Changes' ); ?>">
+						<span class="ab-support-links">
+							<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Donate', 'antispam-bee' ); ?></a>
+							<a href="<?php echo esc_url( __( 'https://wordpress.org/plugins/antispam-bee/#faq', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FAQ', 'antispam-bee' ); ?></a>
+							<a href="<?php echo esc_url( __( 'https://antispambee.pluginkollektiv.org/documentation', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Manual', 'antispam-bee' ); ?></a>
+							<a href="https://wordpress.org/support/plugin/antispam-bee/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Support', 'antispam-bee' ); ?></a>
+						</span>
+					</p>
+				<?php else : ?>
+					<?php submit_button(); ?>
+				<?php endif; ?>
 			</form>
 		</div>
 		<?php
