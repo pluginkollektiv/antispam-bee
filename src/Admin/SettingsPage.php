@@ -15,6 +15,7 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 use const AntispamBee\MAIN_PLUGIN_FILE;
+use const AntispamBee\PLUGIN_VERSION;
 
 // @todo: add `ids` to the `h2` section headlines. After first analyzation, that seems only to be possible via JS
 /**
@@ -62,11 +63,30 @@ class SettingsPage {
 	public function init(): void {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'admin_init', [ $this, 'setup_settings' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_filter( 'plugin_action_links_' . plugin_basename( MAIN_PLUGIN_FILE ), [ $this, 'add_action_links' ] );
 		add_filter( 'plugin_row_meta', [ $this, 'add_row_meta' ], 10, 2 );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$this->active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'general';
+	}
+
+	/**
+	 * Enqueue admin stylesheet on the settings page.
+	 *
+	 * @param string $hook_suffix Current admin page hook suffix.
+	 */
+	public function enqueue_scripts( string $hook_suffix ): void {
+		if ( 'settings_page_' . self::SETTINGS_PAGE_SLUG !== $hook_suffix ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'antispam-bee-admin',
+			plugin_dir_url( MAIN_PLUGIN_FILE ) . 'src/Admin/assets/admin.css',
+			[],
+			PLUGIN_VERSION
+		);
 	}
 
 	/**
@@ -203,7 +223,6 @@ class SettingsPage {
 
 			<nav aria-label="<?php esc_attr_e( 'Settings sections', 'antispam-bee' ); ?>">
 				<ul class="nav-tab-wrapper">
-					<style>.nav-tab-wrapper li { margin-bottom: 0; }</style>
 					<?php foreach ( $this->tabs as $tab ) : ?>
 					<li>
 						<?php if ( $tab->get_slug() === $this->active_tab ) : ?>
@@ -226,7 +245,19 @@ class SettingsPage {
 				<?php settings_fields( self::SETTINGS_PAGE_SLUG ); ?>
 				<?php do_settings_sections( self::SETTINGS_PAGE_SLUG ); ?>
 
-				<?php submit_button(); ?>
+				<?php if ( 'general' === $this->active_tab ) : ?>
+					<p class="submit ab-form-footer">
+						<?php echo get_submit_button( null, 'primary', 'submit', false ); ?>
+						<span class="ab-support-links">
+							<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Donate', 'antispam-bee' ); ?></a>
+							<a href="<?php echo esc_url( __( 'https://wordpress.org/plugins/antispam-bee/#faq', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FAQ', 'antispam-bee' ); ?></a>
+							<a href="<?php echo esc_url( __( 'https://antispambee.pluginkollektiv.org/documentation', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Manual', 'antispam-bee' ); ?></a>
+							<a href="https://wordpress.org/support/plugin/antispam-bee/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Support', 'antispam-bee' ); ?></a>
+						</span>
+					</p>
+				<?php else : ?>
+					<?php submit_button(); ?>
+				<?php endif; ?>
 			</form>
 		</div>
 		<?php
