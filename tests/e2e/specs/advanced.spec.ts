@@ -35,7 +35,7 @@ test.describe( 'Advanced spam settings', () => {
 		// Default options keep spam flagged (delete processor is off).
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
 			url: 'http://nuclear-secrets.com',
 		} );
 
@@ -55,7 +55,7 @@ test.describe( 'Advanced spam settings', () => {
 
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
 			url: 'http://nuclear-secrets.com',
 		} );
 
@@ -73,7 +73,7 @@ test.describe( 'Advanced spam settings', () => {
 		// Default options already have save_reason enabled.
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
 		} );
 
 		await adminLogin( page );
@@ -91,7 +91,7 @@ test.describe( 'Advanced spam settings', () => {
 
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
 		} );
 
 		await adminLogin( page );

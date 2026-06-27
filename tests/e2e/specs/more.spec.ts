@@ -6,14 +6,31 @@
  */
 import { test, expect, adminLogin } from '../fixtures/base';
 
+const spamComments = [
+	{
+		comment: 'Release the viagra!',
+		author: 'Mr. Burns',
+		email: 'montgomery.c.burns.1866@nuclear-secrets.com',
+		url: 'http://nuclear-secrets.com',
+	},
+	{
+		comment: 'Release the viagra, again!',
+		author: 'Mr. Burns',
+		email: 'montgomery.c.burns.1866@nuclear-secrets.com',
+		url: 'http://nuclear-secrets.com',
+	},
+];
+
 async function submitSpamComment(
 	page: import( '@playwright/test' ).Page,
 	index: number
 ) {
+	const data = spamComments[ index - 1 ];
 	await page.goto( '/?p=1' );
-	await page.fill( '#comment', `Buy Viagra now! Comment ${ index }` );
-	await page.fill( '#author', `Spammer ${ index }` );
-	await page.fill( '#email', `spammer${ index }@spam.com` );
+	await page.fill( '#comment', data.comment );
+	await page.fill( '#author', data.author );
+	await page.fill( '#email', data.email );
+	await page.fill( '#url', data.url );
 	await page.click( '#submit' );
 }
 

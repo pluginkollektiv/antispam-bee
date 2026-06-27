@@ -42,7 +42,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await fillComment( page, {
 			comment: 'Release the hounds!',
 			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
 			url: 'http://nuclear-secrets.com',
 			fillHoneypot: true,
 		} );
@@ -64,7 +64,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await fillComment( page, {
 			comment: 'Release the hounds!',
 			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
 			fillHoneypot: true,
 		} );
 
@@ -83,7 +83,7 @@ test.describe( 'Spam filter mechanisms', () => {
 
 		// First comment — caught by RegExp ("buy amazing" matches the built-in pattern).
 		await fillComment( page, {
-			comment: 'buy amazing Neutrons here!',
+			comment: 'you can Buy amazing Neutrons here!',
 			author: 'Montgomery',
 			email: 'montgomery.c.burns.1866@aol.com',
 			url: 'http://nuclear-secrets.com',
@@ -147,7 +147,7 @@ test.describe( 'Spam filter mechanisms', () => {
 
 		// First comment — caught by RegExp ("buy amazing" matches the built-in pattern).
 		await fillComment( page, {
-			comment: 'buy amazing Neutrons here!',
+			comment: 'you can Buy amazing Neutrons here!',
 			author: 'Montgomery',
 			email: 'same-email@nuclear.com',
 			url: 'http://nuclear-secrets.com',
@@ -173,7 +173,7 @@ test.describe( 'Spam filter mechanisms', () => {
 
 		// "buy amazing" matches the built-in regexp pattern.
 		await fillComment( page, {
-			comment: 'buy amazing Neutrons here!',
+			comment: 'you can Buy amazing Neutrons here!',
 			author: 'Montgomery',
 			email: 'montgomery@nuclear.com',
 			url: 'http://shared-spam-url.com',
@@ -195,9 +195,10 @@ test.describe( 'Spam filter mechanisms', () => {
 
 	test( 'regex detects spam keyword (Viagra)', async ( { page, cli } ) => {
 		await fillComment( page, {
-			comment: 'Buy Viagra now!',
-			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			comment: 'Viagra helped me in those days.',
+			author: 'Monty',
+			email: 'monty.1983@nuclear-secrets.com',
+			url: 'http://nuclear-secrets.com',
 		} );
 
 		await adminLogin( page );
@@ -211,9 +212,10 @@ test.describe( 'Spam filter mechanisms', () => {
 		cli,
 	} ) => {
 		await fillComment( page, {
-			comment: 'Check out luxurybrandsale for deals!',
-			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			comment: 'Come to our luxurybrandsale',
+			author: 'Monty',
+			email: 'monty.1983@nuclear-secrets.com',
+			url: 'http://nuclear-secrets.com',
 		} );
 
 		await adminLogin( page );
@@ -234,9 +236,10 @@ test.describe( 'Spam filter mechanisms', () => {
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
 		await fillComment( page, {
-			comment: 'Buy Viagra now!',
-			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			comment: 'Viagra helped me in those days.',
+			author: 'Monty',
+			email: 'monty.1983@nuclear-secrets.com',
+			url: 'http://nuclear-secrets.com',
 		} );
 
 		await adminLogin( page );
@@ -249,9 +252,10 @@ test.describe( 'Spam filter mechanisms', () => {
 
 	test( 'BBCode in comment is detected as spam', async ( { page, cli } ) => {
 		await fillComment( page, {
-			comment: "Check out [url='http://example.com']our store[/url]!",
-			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			comment: 'This is also a [url=http://nuclear-secrets.com]nuclear[/url] page!',
+			author: 'Monty',
+			email: 'monty.1983@nuclear-secrets.com',
+			url: 'http://nuclear-secrets.com',
 		} );
 
 		await adminLogin( page );
@@ -273,16 +277,17 @@ test.describe( 'Spam filter mechanisms', () => {
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
 		await fillComment( page, {
-			comment: "Check out [url='http://example.com']our store[/url]!",
-			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			comment: 'This is also a [url=http://nuclear-secrets.com]nuclear[/url] page!',
+			author: 'Monty',
+			email: 'monty.1983@nuclear-secrets.com',
+			url: 'http://nuclear-secrets.com',
 		} );
 
 		await adminLogin( page );
 		await page.goto(
 			'/wp-admin/edit-comments.php?comment_status=moderated'
 		);
-		await expect( page.locator( 'body' ) ).toContainText( 'Mr. Burns' );
+		await expect( page.locator( 'body' ) ).toContainText( 'Monty' );
 	} );
 
 	test( 'language rule blocks comment in wrong language', async ( {
@@ -304,8 +309,9 @@ test.describe( 'Spam filter mechanisms', () => {
 			// Long English sentence so franc has enough trigrams for reliable detection.
 			comment:
 				'This is a comment written entirely in English and it should be blocked because the site only allows comments written in the German language.',
-			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			author: 'Monty',
+			email: 'monty.1983@nuclear-secrets.com',
+			url: 'http://nuclear-secrets.com',
 		} );
 
 		await adminLogin( page );
@@ -328,9 +334,10 @@ test.describe( 'Spam filter mechanisms', () => {
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
 		await fillComment( page, {
-			comment: 'Hi',
-			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			comment: 'A small text passes the test. Lets check this.',
+			author: 'Monty',
+			email: 'monty.1983@nuclear-secrets.com',
+			url: 'http://nuclear-secrets.com',
 		} );
 
 		// Short comments bypass language detection and should not be in spam.
@@ -354,15 +361,15 @@ test.describe( 'Spam filter mechanisms', () => {
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
 		await fillComment( page, {
-			comment:
-				'This is a perfectly legitimate comment written in English and it should be allowed through because English is the configured allowed language.',
-			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			comment: 'English is allowed!',
+			author: 'Monty',
+			email: 'monty.1983@nuclear-secrets.com',
+			url: 'http://nuclear-secrets.com',
 		} );
 
 		await adminLogin( page );
 		await page.goto( '/wp-admin/edit-comments.php?comment_status=spam' );
-		await expect( page.locator( 'body' ) ).not.toContainText( 'Mr. Burns' );
+		await expect( page.locator( 'body' ) ).not.toContainText( 'Monty' );
 	} );
 
 	test( 'language rule with multiple allowed languages blocks unlisted language', async ( {
@@ -382,8 +389,9 @@ test.describe( 'Spam filter mechanisms', () => {
 		await fillComment( page, {
 			comment:
 				'This is an English comment that should be blocked because only German and Italian are on the allowed language list for this site.',
-			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			author: 'Monty',
+			email: 'monty.1983@nuclear-secrets.com',
+			url: 'http://nuclear-secrets.com',
 		} );
 
 		await adminLogin( page );
@@ -406,15 +414,15 @@ test.describe( 'Spam filter mechanisms', () => {
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
 		await fillComment( page, {
-			comment:
-				'This is a perfectly legitimate comment written in English and it should pass because English is included in the allowed language list alongside Italian.',
-			author: 'Mr. Burns',
-			email: 'burns@nuclear.com',
+			comment: 'English is allowed!',
+			author: 'Monty',
+			email: 'monty.1983@nuclear-secrets.com',
+			url: 'http://nuclear-secrets.com',
 		} );
 
 		await adminLogin( page );
 		await page.goto( '/wp-admin/edit-comments.php?comment_status=spam' );
-		await expect( page.locator( 'body' ) ).not.toContainText( 'Mr. Burns' );
+		await expect( page.locator( 'body' ) ).not.toContainText( 'Monty' );
 	} );
 
 	test( 'manually marking a comment as spam updates local DB', async ( {
