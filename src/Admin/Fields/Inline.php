@@ -22,7 +22,7 @@ class Inline extends Field implements RenderElement {
 	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 
-		if ( ! $this->option['input'] instanceof Field ) {
+		if ( ! $this->option['input'] instanceof InjectableField ) {
 			echo '';
 
 			return;

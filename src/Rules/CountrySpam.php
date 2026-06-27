@@ -80,9 +80,9 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filters the IPLocate API key. With this filter, you can add your own IPLocate API key.
 		 *
-		 * @param string  The current IPLocate API key. Default is `null`.
+		 * @param string $apikey The current IPLocate API key. Default is empty string.
 		 *
-		 * @return string The changed IPLocate API key or null.
+		 * @return string The changed IPLocate API key.
 		 * @since 2.10.0
 		 */
 		$apikey = apply_filters( 'antispam_bee_country_spam_apikey', '' );
@@ -121,7 +121,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 
 		$country = strtoupper( $json['country_code'] );
 
-		if ( empty( $country ) || strlen( $country ) !== 2 ) {
+		if ( strlen( $country ) !== 2 ) {
 			return 0;
 		}
 

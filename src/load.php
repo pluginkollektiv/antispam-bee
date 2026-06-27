@@ -85,7 +85,7 @@ function init(): void {
 
 	$disallow_ajax = apply_filters( 'antispam_bee_disallow_ajax_calls', true );
 
-	$is_ajax_call = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	$is_ajax_call = wp_doing_ajax();
 
 	$is_doing_autosave = defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE;
 

@@ -42,6 +42,8 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			'useragent',
 		];
 
+		$subject = null;
+
 		if ( ContentTypeHelper::COMMENT_TYPE === $item['reaction_type'] ) {
 			$ip        = $item['comment_author_IP'];
 			$url       = $item['comment_author_url'];

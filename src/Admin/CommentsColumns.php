@@ -42,12 +42,12 @@ class CommentsColumns {
 		}
 
 		add_filter( 'manage_edit-comments_columns', [ __CLASS__, 'register_plugin_columns' ] );
-		add_filter( 'manage_comments_custom_column', [ __CLASS__, 'print_plugin_column' ], 10, 2 );
 		add_filter( 'manage_edit-comments_sortable_columns', [ __CLASS__, 'register_sortable_columns' ] );
+		add_action( 'admin_print_styles-edit-comments.php', [ __CLASS__, 'print_column_styles' ] );
+		add_action( 'manage_comments_custom_column', [ __CLASS__, 'print_plugin_column' ], 10, 2 );
+		add_action( 'pre_get_comments', [ __CLASS__, 'filter_by_spam_reason' ] );
 		add_action( 'pre_get_comments', [ __CLASS__, 'set_orderby_query' ] );
 		add_action( 'restrict_manage_comments', [ __CLASS__, 'filter_columns' ] );
-		add_action( 'pre_get_comments', [ __CLASS__, 'filter_by_spam_reason' ] );
-		add_filter( 'admin_print_styles-edit-comments.php', [ __CLASS__, 'print_column_styles' ] );
 	}
 
 	/**
