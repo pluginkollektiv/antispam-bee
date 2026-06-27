@@ -59,7 +59,7 @@
       "phpcs --standard=phpcs.xml -s"
     ],
     "test:unit": [ "phpunit -c phpunit.xml.dist --testsuite unit" ],
-    "phpstan": [ "phpstan analyse --memory-limit=512M" ]
+    "phpstan": [ "phpstan analyse --memory-limit=1G" ]
   },
   "config": {
     "allow-plugins": {
