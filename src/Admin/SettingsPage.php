@@ -201,20 +201,22 @@ class SettingsPage {
 		<div class="wrap" id="ab_main">
 			<h1><?php esc_html_e( 'Antispam Bee', 'antispam-bee' ); ?></h1>
 
-			<ul class="nav-tab-wrapper">
-				<style>.nav-tab-wrapper li { margin-bottom: 0; }</style>
-				<?php foreach ( $this->tabs as $tab ) : ?>
-				<li>
-					<?php if ( $tab->get_slug() === $this->active_tab ) : ?>
-						<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
-							class="nav-tab nav-tab-active"><?php echo esc_html( $tab->get_title() ); ?></a>
-					<?php else : ?>
-						<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
-							class="nav-tab"><?php echo esc_html( $tab->get_title() ); ?></a>
-					<?php endif; ?>
-				</li>
-				<?php endforeach; ?>
-			</ul>
+			<nav aria-label="<?php esc_attr_e( 'Settings sections', 'antispam-bee' ); ?>">
+				<ul class="nav-tab-wrapper">
+					<style>.nav-tab-wrapper li { margin-bottom: 0; }</style>
+					<?php foreach ( $this->tabs as $tab ) : ?>
+					<li>
+						<?php if ( $tab->get_slug() === $this->active_tab ) : ?>
+							<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
+								class="nav-tab nav-tab-active" aria-current="page"><?php echo esc_html( $tab->get_title() ); ?></a>
+						<?php else : ?>
+							<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
+								class="nav-tab"><?php echo esc_html( $tab->get_title() ); ?></a>
+						<?php endif; ?>
+					</li>
+					<?php endforeach; ?>
+				</ul>
+			</nav>
 
 			<form
 				action="<?php echo esc_url( add_query_arg( 'tab', $this->active_tab, admin_url( 'options.php' ) ) ); ?>"
