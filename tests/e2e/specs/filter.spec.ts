@@ -203,7 +203,7 @@ test.describe( 'Spam filter mechanisms', () => {
 
 		await adminLogin( page );
 		await page.goto( '/wp-admin/edit-comments.php?comment_status=spam' );
-		await expect( page.locator( 'body' ) ).toContainText( 'Mr. Burns' );
+		await expect( page.locator( 'body' ) ).toContainText( 'Monty' );
 		await expect( page.locator( 'body' ) ).toContainText( 'RegExp match' );
 	} );
 
@@ -247,7 +247,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await page.goto(
 			'/wp-admin/edit-comments.php?comment_status=moderated'
 		);
-		await expect( page.locator( 'body' ) ).toContainText( 'Mr. Burns' );
+		await expect( page.locator( 'body' ) ).toContainText( 'Monty' );
 	} );
 
 	test( 'BBCode in comment is detected as spam', async ( { page, cli } ) => {
@@ -260,7 +260,7 @@ test.describe( 'Spam filter mechanisms', () => {
 
 		await adminLogin( page );
 		await page.goto( '/wp-admin/edit-comments.php?comment_status=spam' );
-		await expect( page.locator( 'body' ) ).toContainText( 'Mr. Burns' );
+		await expect( page.locator( 'body' ) ).toContainText( 'Monty' );
 		await expect( page.locator( 'body' ) ).toContainText( 'BBCode' );
 	} );
 
@@ -334,7 +334,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
 		await fillComment( page, {
-			comment: 'A small text passes the test. Lets check this.',
+			comment: 'Hi',
 			author: 'Monty',
 			email: 'monty.1983@nuclear-secrets.com',
 			url: 'http://nuclear-secrets.com',
