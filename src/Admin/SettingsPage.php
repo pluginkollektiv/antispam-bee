@@ -219,7 +219,8 @@ class SettingsPage {
 			<h1><?php esc_html_e( 'Antispam Bee', 'antispam-bee' ); ?></h1>
 
 			<div class="nav-tab-wrapper" role="tablist">
-				<?php foreach ( $this->tabs as $tab ) :
+				<?php
+				foreach ( $this->tabs as $tab ) :
 					$is_active = $tab->get_slug() === $this->active_tab;
 					?>
 					<button
@@ -237,9 +238,10 @@ class SettingsPage {
 			<form action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>" method="post">
 				<?php settings_fields( self::SETTINGS_PAGE_SLUG ); ?>
 
-				<?php foreach ( $this->tabs as $tab ) :
+				<?php
+				foreach ( $this->tabs as $tab ) :
 					$is_active = $tab->get_slug() === $this->active_tab;
-				?>
+					?>
 				<div
 					id="nav-tab__content--<?php echo esc_attr( $tab->get_slug() ); ?>"
 					class="nav-tab__content"
