@@ -61,6 +61,7 @@ class SettingsPage {
 	public function init(): void {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'admin_init', [ $this, 'setup_settings' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$this->active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'general';
@@ -76,6 +77,25 @@ class SettingsPage {
 			'manage_options',
 			self::SETTINGS_PAGE_SLUG,
 			[ $this, 'options_page' ]
+		);
+	}
+
+	/**
+	 * Enqueue admin assets for the settings page.
+	 *
+	 * @param string $hook_suffix Current admin page hook suffix.
+	 */
+	public function enqueue_assets( string $hook_suffix ): void {
+		if ( 'settings_page_antispam_bee' !== $hook_suffix ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'antispam-bee-admin-tabs',
+			plugins_url( 'assets/js/admin-tabs.js', dirname( dirname( __DIR__ ) ) . '/antispam_bee.php' ),
+			[],
+			'1.0.0',
+			true
 		);
 	}
 
@@ -120,13 +140,9 @@ class SettingsPage {
 
 		$this->populate_tabs();
 
-		// Register option setting.
+		// Register sections for all tabs.
 		foreach ( $this->tabs as $tab ) {
 			foreach ( $tab->get_sections() as $section ) {
-				if ( $tab->get_slug() !== $this->active_tab ) {
-					continue;
-				}
-
 				$section->render();
 			}
 		}
@@ -146,47 +162,48 @@ class SettingsPage {
 	 * @return void
 	 */
 	protected function populate_tabs(): void {
-		$type = $this->active_tab;
+		foreach ( $this->tabs as $tab ) {
+			$type = $tab->get_slug();
+			$data = [];
 
-		$data = [];
-
-		if ( 'general' === $type ) {
-			$data['general'] = [
-				'title'         => ContentTypeHelper::get_type_name( 'general' ),
-				'description'   => __( 'Setup global plugin spam settings.', 'antispam-bee' ),
-				'controllables' => ComponentsHelper::filter( GeneralOptions::get_controllables(), [ 'reaction_type' => $type ] ),
-			];
-		}
-
-		$data = array_merge(
-			$data,
-			[
-				'rules'           => [
-					'title'         => __( 'Rules', 'antispam-bee' ),
-					'description'   => __( 'Setup rules.', 'antispam-bee' ),
-					'controllables' => ComponentsHelper::filter( $this->rules, [ 'reaction_type' => $type ] ),
-				],
-				'post_processors' => [
-					'title'         => __( 'Post Processors', 'antispam-bee' ),
-					'description'   => __( 'Setup post processors.', 'antispam-bee' ),
-					'controllables' => ComponentsHelper::filter( $this->post_processors, [ 'reaction_type' => $type ] ),
-				],
-			]
-		);
-
-		foreach ( $data as $key => $value ) {
-			if ( empty( $value['controllables'] ) ) {
-				continue;
+			if ( 'general' === $type ) {
+				$data['general'] = [
+					'title'         => ContentTypeHelper::get_type_name( 'general' ),
+					'description'   => __( 'Setup global plugin spam settings.', 'antispam-bee' ),
+					'controllables' => ComponentsHelper::filter( GeneralOptions::get_controllables(), [ 'reaction_type' => $type ] ),
+				];
 			}
 
-			$section = new Section(
-				$key,
-				$value['title'],
-				$value['description'],
-				$type
+			$data = array_merge(
+				$data,
+				[
+					'rules'           => [
+						'title'         => __( 'Rules', 'antispam-bee' ),
+						'description'   => __( 'Setup rules.', 'antispam-bee' ),
+						'controllables' => ComponentsHelper::filter( $this->rules, [ 'reaction_type' => $type ] ),
+					],
+					'post_processors' => [
+						'title'         => __( 'Post Processors', 'antispam-bee' ),
+						'description'   => __( 'Setup post processors.', 'antispam-bee' ),
+						'controllables' => ComponentsHelper::filter( $this->post_processors, [ 'reaction_type' => $type ] ),
+					],
+				]
 			);
-			$section->add_controllables( $value['controllables'] );
-			$this->tabs[ $type ]->add_section( $section );
+
+			foreach ( $data as $key => $value ) {
+				if ( empty( $value['controllables'] ) ) {
+					continue;
+				}
+
+				$section = new Section(
+					$key,
+					$value['title'],
+					$value['description'],
+					$type
+				);
+				$section->add_controllables( $value['controllables'] );
+				$this->tabs[ $type ]->add_section( $section );
+			}
 		}
 	}
 
@@ -198,30 +215,41 @@ class SettingsPage {
 		<div class="wrap" id="ab_main">
 			<h1><?php esc_html_e( 'Antispam Bee', 'antispam-bee' ); ?></h1>
 
-			<ul class="nav-tab-wrapper">
-				<style>.nav-tab-wrapper li { margin-bottom: 0; }</style>
-				<?php foreach ( $this->tabs as $tab ) : ?>
-				<li>
-					<?php if ( $tab->get_slug() === $this->active_tab ) : ?>
-						<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
-							class="nav-tab nav-tab-active"><?php echo esc_html( $tab->get_title() ); ?></a>
-					<?php else : ?>
-						<a href="?page=antispam_bee&tab=<?php echo esc_attr( $tab->get_slug() ); ?>"
-							class="nav-tab"><?php echo esc_html( $tab->get_title() ); ?></a>
-					<?php endif; ?>
-				</li>
+			<div class="nav-tab-wrapper" role="tablist">
+				<?php
+				foreach ( $this->tabs as $tab ) :
+					$is_active = $tab->get_slug() === $this->active_tab;
+					?>
+				<button
+					type="button"
+					id="tab-<?php echo esc_attr( $tab->get_slug() ); ?>"
+					class="nav-tab<?php echo $is_active ? ' nav-tab-active' : ''; ?>"
+					data-tab="<?php echo esc_attr( $tab->get_slug() ); ?>"
+					role="tab"
+					aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>"
+					tabindex="<?php echo $is_active ? '0' : '-1'; ?>"
+				><?php echo esc_html( $tab->get_title() ); ?></button>
 				<?php endforeach; ?>
-			</ul>
+			</div>
 
-			<form
-				action="<?php echo esc_url( add_query_arg( 'tab', $this->active_tab, admin_url( 'options.php' ) ) ); ?>"
-				method="post">
-				<input type="hidden" name="action" value="ab_save_changes"/>
-
+			<form action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>" method="post">
 				<?php settings_fields( self::SETTINGS_PAGE_SLUG ); ?>
-				<?php do_settings_sections( self::SETTINGS_PAGE_SLUG ); ?>
 
-				<?php submit_button(); ?>
+				<?php
+				foreach ( $this->tabs as $tab ) :
+					$is_active = $tab->get_slug() === $this->active_tab;
+					?>
+				<div
+					id="nav-tab__content--<?php echo esc_attr( $tab->get_slug() ); ?>"
+					class="nav-tab__content"
+					role="tabpanel"
+					aria-labelledby="tab-<?php echo esc_attr( $tab->get_slug() ); ?>"
+					<?php echo $is_active ? '' : 'hidden'; ?>
+				>
+					<?php do_settings_sections( self::SETTINGS_PAGE_SLUG . '_' . $tab->get_slug() ); ?>
+					<?php submit_button(); ?>
+				</div>
+				<?php endforeach; ?>
 			</form>
 		</div>
 		<?php

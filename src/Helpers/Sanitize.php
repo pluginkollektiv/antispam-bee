@@ -85,19 +85,36 @@ class Sanitize {
 	 */
 	public static function sanitize_options( array $options ): array {
 		$current_options = Settings::get_options();
+		$options         = ! empty( $options ) ? $options : [];
 
-		if ( empty( $_GET['tab'] ) ) {
-			$tab = 'general';
-		} else {
-			$tab = sanitize_key( wp_unslash( $_GET['tab'] ) );
+		$tabs = self::get_tab_slugs();
+
+		foreach ( $tabs as $tab ) {
+			if ( ! isset( $options[ $tab ] ) ) {
+				$options[ $tab ] = [];
+			}
+			$sanitized_options       = self::sanitize_controllables( $options, $tab );
+			$current_options[ $tab ] = $sanitized_options[ $tab ] ?? [];
 		}
 
-		$options = ! empty( $options ) ? $options : [ $tab => [] ];
-
-		$sanitized_options       = self::sanitize_controllables( $options, $tab );
-		$current_options[ $tab ] = $sanitized_options[ $tab ];
-
 		return $current_options;
+	}
+
+	/**
+	 * Return all valid settings tab slugs derived from registered controllables.
+	 *
+	 * @return string[]
+	 */
+	private static function get_tab_slugs(): array {
+		$tabs = [ 'general' ];
+
+		foreach ( array_merge( Rules::get_controllables(), PostProcessors::get_controllables() ) as $controllable ) {
+			foreach ( $controllable::get_supported_types() as $type ) {
+				$tabs[] = $type;
+			}
+		}
+
+		return array_unique( $tabs );
 	}
 
 	/**
