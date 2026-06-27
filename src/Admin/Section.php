@@ -203,6 +203,8 @@ class Section {
 	 * Renders the settings section.
 	 */
 	public function render(): void {
+		$page = SettingsPage::SETTINGS_PAGE_SLUG . '_' . $this->type;
+
 		add_settings_section(
 			$this->get_slug(),
 			$this->get_title(),
@@ -210,7 +212,7 @@ class Section {
 				$this,
 				'get_callback',
 			],
-			SettingsPage::SETTINGS_PAGE_SLUG
+			$page
 		);
 
 		foreach ( $this->get_rows() as $row ) {
@@ -220,7 +222,7 @@ class Section {
 				function () use ( $row ) {
 					$this->render_row_fields( $row );
 				},
-				SettingsPage::SETTINGS_PAGE_SLUG,
+				$page,
 				$this->get_slug()
 			);
 		}
