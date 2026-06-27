@@ -1,9 +1,15 @@
-assets/dist
+# Directories
 .idea/
+assets/dist
 build/
 node_modules/
+test-results/
+tests/e2e/report/
 tmp/
 vendor/
+
+# Files
+.wp-env.override.json
 chromedriver
 composer.lock
 DOCKER_ENV
@@ -11,5 +17,4 @@ driver.tar.gz
 driver.zip
 geckodrier
 nohup.out
-package-lock.json
 yarn.lock

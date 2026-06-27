@@ -1,0 +1,10 @@
+{
+	"name": "asb-lang-api",
+	"version": "1.0.0",
+	"description": "Local franc-based language detection API for E2E tests",
+	"type": "module",
+	"main": "server.js",
+	"dependencies": {
+		"franc": "^6.2.0"
+	}
+}

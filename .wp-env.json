@@ -1,0 +1,22 @@
+{
+	"core": "WordPress/WordPress",
+	"phpVersion": "8.2",
+	"plugins": [ "." ],
+	"config": {
+		"WP_DEBUG": true,
+		"WP_DEBUG_LOG": true,
+		"WP_DEBUG_DISPLAY": true,
+		"WP_ENVIRONMENT_TYPE": "production"
+	},
+	"lifecycleScripts": {
+		"afterStart": "node tests/e2e/language-api/start.js",
+		"afterDestroy": "node tests/e2e/language-api/stop.js"
+	},
+	"env": {
+		"tests": {
+			"mappings": {
+				"wp-content/mu-plugins": "./tests/e2e/env/mu-plugins"
+			}
+		}
+	}
+}

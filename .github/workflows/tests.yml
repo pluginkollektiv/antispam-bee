@@ -1,4 +1,4 @@
-name: Tests, Behat, Coding Standards
+name: Tests, Coding Standards
 on: push
 jobs:
   test-unit:
@@ -21,62 +21,74 @@ jobs:
     - name: Run tests
       run: |
         composer test:unit
-#  behat:
-#    runs-on: ubuntu-latest
-#    services:
-#      mysql:
-#        image: mysql:5.7
-#        env:
-#          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-#          MYSQL_DATABASE: pluginkollektiv_antispambee_behat
-#        ports:
-#          - '8888:3306'
-#        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-#    strategy:
-#      matrix:
-#        php: ['8']
-#        wordpress: ['nightly', 'latest']
-#        include:
-#          - php: '7.4'
-#            wordpress: '5.5'
-#          - php: '7.4'
-#            wordpress: '5.4'
-#          - php: '7.3'
-#            wordpress: '5.3'
-#          - php: '7.3'
-#            wordpress: '5.2'
-#          - php: '7.3'
-#            wordpress: '5.1'
-#          - php: '7.2'
-#            wordpress: '4.9'
-#          - php: '7.2'
-#            wordpress: '4.8'
-#          - php: '7.2'
-#            wordpress: '4.7'
-#          - php: '7.2'
-#            wordpress: '4.6'
-#    steps:
-#    - uses: actions/checkout@master
-#    - name: Setup PHP
-#      uses: shivammathur/setup-php@v2
-#      with:
-#        php-version: ${{ matrix.php }}
-#        extensions: mbstring, intl, pdo_mysql, zip
-#        ini-values: post_max_size=256M, short_open_tag=On
-#        tools: phpunit, composer
-#    - name: Start mysql service
-#      run: sudo /etc/init.d/mysql start
-#    - name: Install XVFB
-#      run: sudo apt-get update && sudo apt-get install xvfb
-#    - name: Run tests
-#      run: |
-#        composer install --ignore-platform-req=php
-#        ./bin/behat.sh
-#      env:
-#        WORDPRESS_VERSION: ${{ matrix.wordpress }}
-#        NAP_LENGTH: 10
-#    - name: Cleanup xvfb
-#      uses: bcomnes/cleanup-xvfb@v1
+  test-e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '8.5'
+            wordpress: 'nightly'
+            core: 'WordPress/WordPress'
+          - php: '8.5'
+            wordpress: 'latest'
+            core: 'https://wordpress.org/latest.zip'
+          - php: '8.5'
+            wordpress: '7.0'
+            core: 'https://wordpress.org/wordpress-7.0.zip'
+          - php: '8.4'
+            wordpress: '6.9'
+            core: 'https://wordpress.org/wordpress-6.9.zip'
+          - php: '8.3'
+            wordpress: '6.8'
+            core: 'https://wordpress.org/wordpress-6.8.zip'
+          - php: '8.2'
+            wordpress: '6.7'
+            core: 'https://wordpress.org/wordpress-6.7.zip'
+          - php: '8.1'
+            wordpress: '6.6'
+            core: 'https://wordpress.org/wordpress-6.6.zip'
+          - php: '8.0'
+            wordpress: '6.0'
+            core: 'https://wordpress.org/wordpress-6.0.zip'
+          - php: '7.4'
+            wordpress: '5.6'
+            core: 'https://wordpress.org/wordpress-5.6.zip'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    - name: Install npm dependencies
+      run: npm ci
+    - name: Install Playwright browsers
+      run: npx playwright install chromium --with-deps
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        tools: composer
+    - name: Install Composer dependencies
+      run: composer install --no-dev --optimize-autoloader
+    - name: Configure wp-env for matrix
+      run: |
+        echo '{"core":"${{ matrix.core }}","phpVersion":"${{ matrix.php }}"}' > .wp-env.override.json
+    - name: Start wp-env
+      run: npm run env:start
+    - name: Run E2E tests
+      run: npm run test:e2e
+    - name: Upload test report on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report-php${{ matrix.php }}-wp${{ matrix.wordpress }}
+        path: tests/e2e/report/
+        retention-days: 7
+    - name: Stop wp-env
+      if: always()
+      run: npm run env:stop
   quality:
     runs-on: ubuntu-latest
     steps:
