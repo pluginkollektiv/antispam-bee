@@ -44,7 +44,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	 *
 	 * {@inheritDoc} Default: none.
 	 *
-	 * @return mixed
+	 * @return array|null
 	 */
 	public static function get_options(): ?array {
 		return null;

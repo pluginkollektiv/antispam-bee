@@ -58,7 +58,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 		 */
 		$detected_language = apply_filters( 'antispam_bee_detected_lang', null, $comment_text );
 		if ( null !== $detected_language ) {
-			return ! in_array( $detected_language, $allowed_languages, true );
+			return (int) ! in_array( $detected_language, $allowed_languages, true );
 		}
 
 		$text = trim( preg_replace( "/[\n\r\t ]+/", ' ', $comment_text ), ' ' );

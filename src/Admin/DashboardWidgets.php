@@ -86,7 +86,7 @@ class DashboardWidgets {
 	 * @since  0.1
 	 * @since  2.4
 	 */
-	private static function get_spam_count(): string {
+	private static function get_spam_count(): int {
 		return intval( Settings::get_option( 'spam_count', 0 ) );
 	}
 }

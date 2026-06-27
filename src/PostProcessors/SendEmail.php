@@ -58,7 +58,7 @@ class SendEmail extends ControllableBase {
 				/**
 				 * Filters the recipients of the spam notification.
 				 *
-				 * @param array The recipients array.
+				 * @param array $recipients The recipients array.
 				 */
 					apply_filters(
 						'antispam_bee_notification_recipients',
