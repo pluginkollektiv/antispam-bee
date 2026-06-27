@@ -64,7 +64,7 @@ class Section {
 	 * @param string      $description Description of the tab.
 	 * @param string|null $type Item type (e.g. comment, trackback).
 	 */
-	public function __construct( string $slug, string $title, string $description = '', string $type = null ) {
+	public function __construct( string $slug, string $title, string $description = '', ?string $type = null ) {
 		$this->slug        = $slug;
 		$this->title       = $title;
 		$this->description = $description;

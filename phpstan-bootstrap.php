@@ -1,0 +1,12 @@
+<?php
+/**
+ * PHPStan bootstrap file.
+ *
+ * Defines constants that are set dynamically via define( __NAMESPACE__ . '\...', ... )
+ * in antispam_bee.php so PHPStan can resolve them during static analysis.
+ */
+
+namespace AntispamBee;
+
+define( __NAMESPACE__ . '\MAIN_PLUGIN_FILE', __DIR__ . '/antispam_bee.php' );
+define( __NAMESPACE__ . '\PLUGIN_PATH', __DIR__ . '/' );

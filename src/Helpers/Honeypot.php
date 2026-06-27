@@ -103,7 +103,7 @@ class Honeypot {
 
 				$markup = preg_replace_callback(
 					$regex,
-					function ( $matches ) use ( $honeypot_id, $honeypot_name, $attributes_string ) {
+					function ( $matches ) use ( $honeypot_id, $attributes_string ) {
 						$output = '<textarea autocomplete="new-password" ' . $matches['before1'] . $matches['before2'] . $matches['before3'];
 
 						$id_script = '';

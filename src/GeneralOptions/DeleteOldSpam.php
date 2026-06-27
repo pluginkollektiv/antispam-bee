@@ -54,7 +54,7 @@ class DeleteOldSpam extends Base {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array|null
+	 * @return array
 	 */
 	public static function get_options(): array {
 		return [
