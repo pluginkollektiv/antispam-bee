@@ -53,7 +53,7 @@ abstract class Field {
 	 *
 	 * @return string Name of the field.
 	 */
-	public function get_name() {
+	public function get_name(): string {
 		$option_name = Settings::OPTION_NAME;
 		$name        = "{$option_name}[{$this->type}][{$this->controllable_option_name}]";
 
@@ -65,7 +65,7 @@ abstract class Field {
 	 *
 	 * @return string Label of the field.
 	 */
-	public function get_label() {
+	public function get_label(): string {
 		$kses  = $this->option['label_kses'] ?? [];
 		$label = $this->option['label'] ?? '';
 		if ( ! $kses ) {
