@@ -1,0 +1,27 @@
+.nav-tab-wrapper li {
+	margin-bottom: 0;
+}
+
+.ab-form-footer {
+	display: flex;
+	align-items: center;
+}
+
+.ab-support-links {
+	display: flex;
+	gap: 1em;
+	margin-left: 1.5em;
+	padding-left: 1.5em;
+	border-left: 1px solid #c3c4c7;
+	font-size: 0.85em;
+}
+
+.ab-support-links a {
+	color: #646970;
+	text-decoration: none;
+}
+
+.ab-support-links a:hover {
+	color: #135e96;
+	text-decoration: underline;
+}
