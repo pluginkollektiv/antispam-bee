@@ -334,7 +334,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
 		await fillComment( page, {
-			comment: 'Hi',
+			comment: 'A small text passes the test. Lets check this.',
 			author: 'Monty',
 			email: 'monty.1983@nuclear-secrets.com',
 			url: 'http://nuclear-secrets.com',

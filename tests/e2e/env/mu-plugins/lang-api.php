@@ -2,14 +2,23 @@
 /**
  * Plugin Name: Language API Override
  *
- * Hooks the existing antispam_bee_detected_lang filter to query the local
- * asb-lang-api Docker container instead of the remote API. wp_remote_post
- * (without "safe") is used because wp_safe_remote_post rejects internal
- * Docker hostnames that have no public TLD.
+ * Hooks antispam_bee_detected_lang to query the local asb-lang-api Docker
+ * container. wp_safe_remote_post rejects internal Docker hostnames, so we
+ * must call wp_remote_post directly here rather than using the
+ * antispam_bee_lang_api_url filter.
+ *
+ * The 10-word minimum from LangSpam::verify() is replicated here so that
+ * short comments are not sent to franc and bypass language detection, matching
+ * the production behaviour.
  */
 add_filter(
 	'antispam_bee_detected_lang',
 	function ( $detected_language, string $comment_text ) {
+		$words = preg_split( '/[\n\r\t ]+/', trim( $comment_text ), -1, PREG_SPLIT_NO_EMPTY );
+		if ( count( $words ) < 10 ) {
+			return $detected_language;
+		}
+
 		$response = wp_remote_post(
 			'http://asb-lang-api:3000/',
 			[ 'body' => wp_json_encode( [ 'body' => $comment_text ] ) ]
@@ -22,9 +31,6 @@ add_filter(
 
 		$body = json_decode( wp_remote_retrieve_body( $response ) );
 		if ( ! $body || ! isset( $body->code ) || $body->code === 'und' ) {
-			// 'und' means franc could not determine the language (text too short
-			// or ambiguous). Return null so the original LangSpam code path
-			// takes over, which applies the 10-word minimum before flagging.
 			return $detected_language;
 		}
 
