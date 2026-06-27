@@ -89,6 +89,19 @@ jobs:
     - name: Stop wp-env
       if: always()
       run: npm run env:stop
+  phpstan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+      - name: Install Composer dependencies
+        run: composer install --ignore-platform-req=php
+      - name: Run PHPStan
+        run: composer phpstan
   quality:
     runs-on: ubuntu-latest
     steps:

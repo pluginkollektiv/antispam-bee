@@ -4,6 +4,8 @@
  *
  * Defines constants that are set dynamically via define( __NAMESPACE__ . '\...', ... )
  * in antispam_bee.php so PHPStan can resolve them during static analysis.
+ *
+ * @package AntispamBee
  */
 
 namespace AntispamBee;
