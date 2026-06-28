@@ -13,38 +13,25 @@ namespace AntispamBee\Helpers;
 class IpHelper {
 
 	/**
-	 * Return real client IP
+	 * Return real client IP.
+	 *
+	 * By default, only `REMOTE_ADDR` is evaluated. Use the `pre_comment_user_ip`
+	 * filter to supply an IP from a trusted proxy header instead.
+	 *
+	 * @hook    string  pre_comment_user_ip  The client IP, defaults to REMOTE_ADDR.
 	 *
 	 * @return string Client IP
 	 */
 	public static function get_client_ip(): string {
+		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		// Sanitization of $ip takes place further down.
-		$ip = '';
-
-		if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-			$ip = wp_unslash( $_SERVER['HTTP_CLIENT_IP'] );
-		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-			$ip = wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] );
-		} elseif ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
-			$ip = wp_unslash( $_SERVER['HTTP_X_FORWARDED'] );
-		} elseif ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
-			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] );
-		} elseif ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
-			$ip = wp_unslash( $_SERVER['HTTP_FORWARDED'] );
-		}
-
-		$ip = self::sanitize_ip( $ip );
-		if ( $ip ) {
-			return $ip;
-		}
-
-		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
-			return self::sanitize_ip( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
-		}
-
-		return '';
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		return self::sanitize_ip(
+			(string) apply_filters( 'pre_comment_user_ip', wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) )
+		);
+		// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 	}
 
 	/**
