@@ -1,7 +1,7 @@
 import http from 'http';
 import { franc } from 'franc';
 
-const PORT = 3000;
+const PORT = 8080;
 
 http.createServer( ( req, res ) => {
 	if ( req.method !== 'POST' ) {
