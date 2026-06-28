@@ -72,6 +72,7 @@ class PluginStateChangeHandler {
 		}
 
 		delete_option( Settings::OPTION_NAME );
+		delete_option( 'antispambee_db_version' );
 		// @todo: do that when out of beta.
 		// delete_option( 'antispam_bee' );
 
