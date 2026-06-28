@@ -36,7 +36,6 @@ class UpgradeNotice {
 	 * @param \stdClass $response    Update response object from the WordPress.org API.
 	 *
 	 * @since 3.0.0
-	 *
 	 */
 	public static function render( array $plugin_data, \stdClass $response ): void {
 		if ( empty( $response->upgrade_notice ) ) {

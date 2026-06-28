@@ -37,7 +37,6 @@ async function submitSpamComment(
 test.describe( 'Dashboard statistics', () => {
 	test( 'spam counter widget is hidden when disabled', async ( {
 		page,
-		cli,
 	} ) => {
 		// Statistics widget is disabled by default; confirm it is absent.
 		await adminLogin( page );

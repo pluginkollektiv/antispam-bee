@@ -64,13 +64,18 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
-			<property name="prefixes" type="array" value="antispam_bee,AntispamBee"/>
+			<property name="prefixes" type="array">
+				<element value="antispam_bee"/>
+				<element value="AntispamBee"/>
+			</property>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<!-- Value: replace the text domain used. Separate multiple prefixes with a comma. -->
-			<property name="text_domain" type="array" value="antispam-bee"/>
+			<property name="text_domain" type="array">
+				<element value="antispam-bee"/>
+			</property>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
