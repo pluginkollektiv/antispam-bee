@@ -18,7 +18,9 @@ class UpgradeNotice {
 	public static function init(): void {
 		add_action(
 			'in_plugin_update_message-' . plugin_basename( \AntispamBee\MAIN_PLUGIN_FILE ),
-			[ __CLASS__, 'render' ]
+			[ __CLASS__, 'render' ],
+			10,
+			2
 		);
 	}
 
@@ -30,27 +32,33 @@ class UpgradeNotice {
 	 * section from readme.txt inline so editors see breaking-change warnings
 	 * without leaving the plugins list.
 	 *
+	 * @param array     $plugin_data Plugin header data from the local plugin file.
+	 * @param \stdClass $response    Update response object from the WordPress.org API.
+	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $plugin_data Plugin header data returned by the WordPress update API.
 	 */
-	public static function render( array $plugin_data ): void {
-		if ( empty( $plugin_data['upgrade_notice'] ) ) {
+	public static function render( array $plugin_data, \stdClass $response ): void {
+		if ( empty( $response->upgrade_notice ) ) {
 			return;
 		}
 
 		printf(
 			'<div class="update-message">%s</div>',
 			wp_kses(
-				wpautop( $plugin_data['upgrade_notice'] ),
+				wpautop( $response->upgrade_notice ),
 				[
 					'p'      => [],
+					'br'     => [],
 					'a'      => [
 						'href'  => [],
 						'title' => [],
 					],
 					'strong' => [],
 					'em'     => [],
+					'ul'     => [],
+					'ol'     => [],
+					'li'     => [],
 				]
 			)
 		);
