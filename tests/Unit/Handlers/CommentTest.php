@@ -19,8 +19,8 @@ class CommentTest extends TestCase {
 
 		$_POST   = null;
 		$_SERVER = [
-			'HTTP_CLIENT_IP' => '192.0.2.100',
-			'SCRIPT_NAME'    => '/index.php'
+			'REMOTE_ADDR' => '192.0.2.100',
+			'SCRIPT_NAME' => '/index.php',
 		];
 
 		stubs(
