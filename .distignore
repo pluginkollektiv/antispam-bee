@@ -42,7 +42,7 @@
 /docker_tag
 /driver.tar.gz
 /driver.zip
-/geckodrier
+/geckodriver
 /nohup.out
 /output.log
 /package-lock.json
