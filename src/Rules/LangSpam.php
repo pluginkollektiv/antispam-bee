@@ -63,19 +63,22 @@ class LangSpam extends ControllableBase implements SpamReason {
 
 		$text = trim( preg_replace( "/[\n\r\t ]+/", ' ', $comment_text ), ' ' );
 
-		/*
-		 * translators: If your word count is based on single characters (e.g. East Asian characters),
-		 * enter 'characters_excluding_spaces' or 'characters_including_spaces'. Otherwise, enter 'words'.
-		 * Do not translate into your own language.
-		 */
-		if ( strpos(
+		if ( function_exists( 'wp_get_word_count_type' ) ) {
+			$word_count_type = wp_get_word_count_type();
+		} else {
+			/*
+			 * translators: If your word count is based on single characters (e.g. East Asian characters),
+			 * enter 'characters_excluding_spaces' or 'characters_including_spaces'. Otherwise, enter 'words'.
+			 * Do not translate into your own language.
+			 */
 			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
-			_x( 'words', 'Word count type. Do not translate!' ),
-			'characters'
-		) === 0 && preg_match(
+			$word_count_type = _x( 'words', 'Word count type. Do not translate!' );
+		}
+
+		if ( strpos( $word_count_type, 'characters' ) === 0 && preg_match(
 			'/^utf\-?8$/i',
 			get_option( 'blog_charset' )
-		) ) { // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+		) ) {
 			preg_match_all( '/./u', $text, $words_array );
 			$word_count = 0;
 			if ( isset( $words_array[0] ) ) {
