@@ -1,0 +1,7 @@
+---
+description: Contribution guidelines for Antispam Bee
+globs: ["**/*"]
+alwaysApply: true
+---
+
+Read AGENTS.md for the full contribution guidelines.
