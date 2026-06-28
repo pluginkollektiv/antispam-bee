@@ -7,7 +7,7 @@ jobs:
       matrix:
         php-versions: ['8.3', '7.4']
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v7
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -21,6 +21,7 @@ jobs:
     - name: Run tests
       run: |
         composer test:unit
+
   test-e2e:
     runs-on: ubuntu-latest
     strategy:
@@ -29,37 +30,28 @@ jobs:
         include:
           - php: '8.5'
             wordpress: 'nightly'
-            core: 'WordPress/WordPress'
           - php: '8.5'
             wordpress: 'latest'
-            core: 'https://wordpress.org/latest.zip'
           - php: '8.5'
             wordpress: '7.0'
-            core: 'https://wordpress.org/wordpress-7.0.zip'
           - php: '8.4'
             wordpress: '6.9'
-            core: 'https://wordpress.org/wordpress-6.9.zip'
           - php: '8.3'
             wordpress: '6.8'
-            core: 'https://wordpress.org/wordpress-6.8.zip'
           - php: '8.2'
             wordpress: '6.7'
-            core: 'https://wordpress.org/wordpress-6.7.zip'
           - php: '8.1'
             wordpress: '6.6'
-            core: 'https://wordpress.org/wordpress-6.6.zip'
           - php: '8.0'
             wordpress: '6.0'
-            core: 'https://wordpress.org/wordpress-6.0.zip'
           - php: '7.4'
             wordpress: '5.6'
-            core: 'https://wordpress.org/wordpress-5.6.zip'
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
-        node-version: '20'
+        node-version: '22'
         cache: 'npm'
     - name: Install npm dependencies
       run: npm ci
@@ -74,14 +66,19 @@ jobs:
       run: composer install --no-dev --optimize-autoloader
     - name: Configure wp-env for matrix
       run: |
-        echo '{"core":"${{ matrix.core }}","phpVersion":"${{ matrix.php }}"}' > .wp-env.override.json
+        case "${{ matrix.wordpress }}" in
+          nightly) CORE="WordPress/WordPress" ;;
+          latest)  CORE="https://wordpress.org/latest.zip" ;;
+          *)       CORE="https://wordpress.org/wordpress-${{ matrix.wordpress }}.zip" ;;
+        esac
+        echo "{\"core\":\"${CORE}\",\"phpVersion\":\"${{ matrix.php }}\"}" | tee .wp-env.override.json
     - name: Start wp-env
       run: npm run env:start
     - name: Run E2E tests
       run: npm run test:e2e
     - name: Upload test report on failure
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: playwright-report-php${{ matrix.php }}-wp${{ matrix.wordpress }}
         path: tests/e2e/report/
@@ -89,10 +86,11 @@ jobs:
     - name: Stop wp-env
       if: always()
       run: npm run env:stop
+
   quality:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
