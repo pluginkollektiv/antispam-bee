@@ -111,8 +111,8 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 				'email' => '@mail\.ru|@yandex\.',
 			],
 			[
-				'body' => '^https?:\/\/shorturl\.fm\/[a-zA-Z0-9]{5}$',
-				'email' => '@gmail\.com',
+				'body'   => '^https?:\/\/shorturl\.fm\/[a-zA-Z0-9]{5}$',
+				'email'  => '@gmail\.com',
 				'author' => '^[A-Z][a-z]+\d{3,4}$',
 			],
 			[
