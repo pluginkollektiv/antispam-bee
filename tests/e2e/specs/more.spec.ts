@@ -43,7 +43,7 @@ test.describe( 'Dashboard statistics', () => {
 		await adminLogin( page );
 		await page.goto( '/wp-admin/' );
 		await expect( page.locator( 'body' ) ).not.toContainText(
-			'comments blocked'
+			'blocked'
 		);
 	} );
 
@@ -57,9 +57,7 @@ test.describe( 'Dashboard statistics', () => {
 
 		await adminLogin( page );
 		await page.goto( '/wp-admin/' );
-		await expect( page.locator( 'body' ) ).toContainText(
-			'comments blocked'
-		);
+		await expect( page.locator( 'body' ) ).toContainText( 'blocked' );
 	} );
 
 	test( 'spam counter increments when spam is caught', async ( {
@@ -76,9 +74,7 @@ test.describe( 'Dashboard statistics', () => {
 
 		await adminLogin( page );
 		await page.goto( '/wp-admin/' );
-		await expect( page.locator( 'body' ) ).toContainText(
-			'2 comments blocked'
-		);
+		await expect( page.locator( 'body' ) ).toContainText( '2 blocked' );
 	} );
 
 	test.skip(
