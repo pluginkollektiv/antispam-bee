@@ -53,8 +53,9 @@ class ContentTypeHelper {
 		/**
 		 * Filters if a reaction is from a provided list of reaction types.
 		 *
+		 * @param bool   $is_one_of      Whether the reaction is one of the provided types.
 		 * @param array  $reaction       Reaction data array, reaction type needs to be provided as `comment_type`.
-		 * @param array  $reaction_types Array of reaction types to check for.
+		 * @param array  $reaction_types An array of reaction types to check for.
 		 * @param string $context        Optional context.
 		 *
 		 * @return bool

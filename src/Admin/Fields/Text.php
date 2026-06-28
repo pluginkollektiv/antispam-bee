@@ -12,7 +12,7 @@ use AntispamBee\Admin\RenderElement;
 /**
  * Text field.
  */
-class Text extends Field implements RenderElement {
+class Text extends Field implements RenderElement, InjectableField {
 
 	/**
 	 * Placeholder string.

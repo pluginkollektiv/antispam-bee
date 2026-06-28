@@ -234,12 +234,7 @@ class Settings {
 			return [];
 		}
 
-		$path_parts = explode( '.', $path );
-		if ( empty( $path_parts ) ) {
-			return [];
-		}
-
-		return $path_parts;
+		return explode( '.', $path );
 	}
 
 	/**

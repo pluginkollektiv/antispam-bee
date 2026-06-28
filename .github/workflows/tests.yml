@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.3', '7.4']
+        php-versions: ['8.5', '7.4']
     steps:
     - uses: actions/checkout@v7
     - name: Setup PHP
@@ -89,6 +89,20 @@ jobs:
       if: always()
       run: npm run env:stop
 
+  phpstan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          tools: composer
+      - name: Install Composer dependencies
+        run: composer install --ignore-platform-req=php
+      - name: Run PHPStan
+        run: composer phpstan
+
   quality:
     runs-on: ubuntu-latest
     steps:
@@ -96,7 +110,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: '8.5'
         tools: composer
     - name: Run code style checks for CSS, JavaScript and PHP
       run: |
