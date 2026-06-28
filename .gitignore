@@ -23,7 +23,7 @@
 /composer.lock
 /driver.tar.gz
 /driver.zip
-/geckodrier
+/geckodriver
 /nohup.out
 /output.log
 /yarn.lock
