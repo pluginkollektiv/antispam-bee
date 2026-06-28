@@ -31,9 +31,6 @@ pre_init();
  * Pre init function to check the plugins compatibility.
  */
 function pre_init(): void {
-	// Load the translation, as they might be needed in pre_init.
-	add_action( 'plugins_loaded', __NAMESPACE__ . '\load_textdomain', 5 );
-
 	// Check, if the min. required PHP version is available and if not, show an admin notice.
 	if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\min_php_version_error' );
@@ -65,15 +62,6 @@ function pre_init(): void {
 
 	// If all checks were successful, load the plugin.
 	require_once PLUGIN_PATH . 'src/load.php';
-}
-
-/**
- * Load plugin textdomain.
- *
- * @since 1.0.0
- */
-function load_textdomain(): void {
-	load_plugin_textdomain( 'antispam-bee' );
 }
 
 /**
