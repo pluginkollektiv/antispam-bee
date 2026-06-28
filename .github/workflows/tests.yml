@@ -1,5 +1,7 @@
 name: Tests, Coding Standards
-on: push
+on:
+  push:
+  pull_request:
 jobs:
   test-unit:
     runs-on: ubuntu-latest
