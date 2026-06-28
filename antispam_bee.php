@@ -1975,12 +1975,18 @@ class Antispam_Bee {
 		$word_count = 0;
 		$text       = trim( preg_replace( "/[\n\r\t ]+/", ' ', $comment_text ), ' ' );
 
-		/*
-		 * translators: If your word count is based on single characters (e.g. East Asian characters),
-		 * enter 'characters_excluding_spaces' or 'characters_including_spaces'. Otherwise, enter 'words'.
-		 * Do not translate into your own language.
-		 */
-		if ( strpos( _x( 'words', 'Word count type. Do not translate!' ), 'characters' ) === 0 && preg_match( '/^utf\-?8$/i', get_option( 'blog_charset' ) ) ) { // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+		if ( function_exists( 'wp_get_word_count_type' ) ) {
+			$word_count_type = wp_get_word_count_type();
+		} else {
+			/*
+			 * translators: If your word count is based on single characters (e.g. East Asian characters),
+			 * enter 'characters_excluding_spaces' or 'characters_including_spaces'. Otherwise, enter 'words'.
+			 * Do not translate into your own language.
+			 */
+			$word_count_type = _x( 'words', 'Word count type. Do not translate!' ); // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+		}
+
+		if ( strpos( $word_count_type, 'characters' ) === 0 && preg_match( '/^utf\-?8$/i', get_option( 'blog_charset' ) ) ) {
 			preg_match_all( '/./u', $text, $words_array );
 			if ( isset( $words_array[0] ) ) {
 				$word_count = count( $words_array[0] );
