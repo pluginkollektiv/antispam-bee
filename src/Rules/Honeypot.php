@@ -49,7 +49,8 @@ class Honeypot extends ControllableBase implements SpamReason {
 				}
 
 				return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
-			}
+			},
+			99
 		);
 	}
 
