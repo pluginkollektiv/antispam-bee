@@ -1,4 +1,5 @@
 # Directories
+.aider/
 .idea/
 assets/dist
 build/
@@ -9,12 +10,17 @@ tmp/
 vendor/
 
 # Files
-.wp-env.override.json
+.aider.conf.yml
+AGENTS.local.md
+.claude/settings.local.json
 chromedriver
+CLAUDE.local.md
 composer.lock
+CONVENTIONS.local.md
 DOCKER_ENV
 driver.tar.gz
 driver.zip
 geckodrier
 nohup.out
+.wp-env.override.json
 yarn.lock
