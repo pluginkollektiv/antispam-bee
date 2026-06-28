@@ -10,6 +10,7 @@ namespace AntispamBee;
 use AntispamBee\Admin\CommentsColumns;
 use AntispamBee\Admin\DashboardWidgets;
 use AntispamBee\Admin\SettingsPage;
+use AntispamBee\Admin\UpgradeNotice;
 use AntispamBee\Crons\DeleteSpamCron;
 use AntispamBee\GeneralOptions\DeleteOldSpam;
 use AntispamBee\GeneralOptions\IgnoreLinkbacks;
@@ -49,6 +50,7 @@ function init(): void {
 		DashboardWidgets::class,
 		new SettingsPage(),
 		CommentsColumns::class,
+		UpgradeNotice::class,
 		DeleteSpamCron::class,
 		Settings::class,
 		// Handlers.
@@ -109,7 +111,7 @@ function init(): void {
 	}
 }
 
-add_action( 'plugins_loaded', __NAMESPACE__ . '\init' );
+add_action( 'plugins_loaded', __NAMESPACE__ . '\\init' );
 
 // Register the activation, deactivation and uninstall hooks.
 register_activation_hook( MAIN_PLUGIN_FILE, [ PluginStateChangeHandler::class, 'activate' ] );
