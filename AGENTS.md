@@ -19,6 +19,13 @@ Fix code style violations automatically with `composer csfix`.
 - Never commit directly to `develop` or `master`
 - Use conventional commit messages: `feat:`, `fix:`, `test:`, `refactor:`, `chore:`, etc.
 
+## Distribution ignore rules (`.distignore`)
+
+Dotfiles, build artifacts, and dev-only files must not ship in the plugin distribution. When adding new entries to `.distignore`:
+
+- Directories go under the `# Directories` section, files under `# Files`
+- Keep each section sorted alphabetically
+
 ## Pull requests
 
 - Base branch: `develop`
