@@ -19,12 +19,35 @@ Fix code style violations automatically with `composer csfix`.
 - Never commit directly to `develop` or `master`
 - Use conventional commit messages: `feat:`, `fix:`, `test:`, `refactor:`, `chore:`, etc.
 
-## Distribution ignore rules (`.distignore`)
+## Ignore / export files
 
-Dotfiles, build artifacts, and dev-only files must not ship in the plugin distribution. When adding new entries to `.distignore`:
+Three files control what is excluded from VCS and distributions. Keep them in sync when adding new dotfiles or dev-only assets.
 
-- Directories go under the `# Directories` section, files under `# Files`
-- Keep each section sorted alphabetically
+### `.gitignore`
+
+Excludes local artifacts from git tracking.
+
+- Directories use a trailing `/` (e.g. `/build/`) — required to match directories only, not same-named files
+- Use `/` prefix for root-level entries (e.g. `/.idea/`)
+- Use `/**/` prefix for entries that must also match in subdirectories (e.g. `/**/node_modules/`, `/**/vendor/`)
+- Keep each section (`# Directories`, `# Files`) sorted alphabetically
+
+### `.distignore`
+
+Excludes files from `wp dist-zip` plugin packages. WP-CLI does not support glob syntax — use plain root-relative paths only.
+
+- No trailing `/` on directories (not needed by WP-CLI)
+- Always use `/` prefix (e.g. `/bin`, `/node_modules`)
+- Keep each section (`# Directories`, `# Files`) sorted alphabetically
+
+### `.gitattributes`
+
+Excludes tracked files from `git archive` exports via `export-ignore`.
+
+- Only tracked files and directories need an entry here — gitignored paths are already absent from archives
+- Always use `/` prefix (e.g. `/.github export-ignore`)
+- No trailing `/` on directories (not needed)
+- Keep each section (`# Directories`, `# Files`) sorted alphabetically
 
 ## Pull requests
 
