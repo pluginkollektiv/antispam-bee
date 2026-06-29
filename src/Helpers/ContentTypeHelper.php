@@ -17,7 +17,7 @@ class ContentTypeHelper {
 	const LINKBACK_TYPE = 'linkback';
 
 	/**
-	 * Get huam-readable item type name.
+	 * Get human-readable item type name.
 	 *
 	 * @param string $item_type Type name.
 	 * @return string Readable type name.

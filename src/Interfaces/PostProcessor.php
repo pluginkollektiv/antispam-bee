@@ -32,7 +32,7 @@ interface PostProcessor {
 	public static function get_supported_types(): array;
 
 	/**
-	 * Does this processor mark am element as deleted?
+	 * Does this processor mark an element as deleted?
 	 *
 	 * @return bool
 	 */

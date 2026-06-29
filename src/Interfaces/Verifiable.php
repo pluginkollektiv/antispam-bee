@@ -22,7 +22,7 @@ interface Verifiable {
 
 	/**
 	 * Get rule weight.
-	 * This value can be used to tweak the overall results. Will be user as a multiplier of the verification result.
+	 * This value can be used to tweak the overall results. Will be used as a multiplier of the verification result.
 	 *
 	 * @return int Weight factor.
 	 */
@@ -43,7 +43,7 @@ interface Verifiable {
 	public static function get_supported_types(): array;
 
 	/**
-	 * It this rule final?
+	 * Is this rule final?
 	 *
 	 * @return bool
 	 */

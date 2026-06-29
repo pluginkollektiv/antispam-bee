@@ -28,10 +28,12 @@ define( __NAMESPACE__ . '\PLUGIN_PATH', plugin_dir_path( MAIN_PLUGIN_FILE ) );
 pre_init();
 
 /**
- * Pre init function to check the plugins compatibility.
+ * Pre init function to check the plugins' compatibility.
+ *
+ * @return void
  */
 function pre_init(): void {
-	// Check, if the min. required PHP version is available and if not, show an admin notice.
+	// Check if the min. required PHP version is available and if not, show an admin notice.
 	if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\min_php_version_error' );
 
@@ -39,7 +41,7 @@ function pre_init(): void {
 		return;
 	}
 
-	// Check, if the DOMDocument class exists.
+	// Check if the `DOMDocument` class exists.
 	if ( ! class_exists( 'DOMDocument' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\domdocument_class_error' );
 
@@ -65,7 +67,9 @@ function pre_init(): void {
 }
 
 /**
- * Show a admin notice error message, if the PHP version is too low
+ * Show an admin notice error message if the PHP version is too low
+ *
+ * @return void
  */
 function min_php_version_error(): void {
 	echo '<div class="error"><p>';
@@ -74,7 +78,9 @@ function min_php_version_error(): void {
 }
 
 /**
- * Show a admin notice error message, if the PHP version is too low
+ * Show an admin notice error message if the `DOMDocument` class is missing
+ *
+ * @return void
  */
 function domdocument_class_error(): void {
 	echo '<div class="error"><p>';
@@ -83,7 +89,9 @@ function domdocument_class_error(): void {
 }
 
 /**
- * Show a admin notice error message, if the PHP version is too low
+ * Show an admin notice error message if the Composer autoloader is missing
+ *
+ * @return void
  */
 function autoloader_missing(): void {
 	echo '<div class="error"><p>';
