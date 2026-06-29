@@ -1,20 +1,29 @@
 # Directories
-.idea/
-assets/dist
-build/
-node_modules/
-test-results/
-tests/e2e/report/
-tmp/
-vendor/
+/.aider/
+/.claude/
+/.idea/
+/assets/dist
+/build/
+/**/node_modules/
+/test-results/
+/tests/e2e/report/
+/tmp/
+/**/vendor/
 
 # Files
-.wp-env.override.json
-chromedriver
-composer.lock
-DOCKER_ENV
-driver.tar.gz
-driver.zip
-geckodrier
-nohup.out
-yarn.lock
+/.aider.conf.yml
+/.phpunit.result.cache
+/.windsurfrules
+/.wp-env.override.json
+/AGENTS.local.md
+/CLAUDE.local.md
+/CONVENTIONS.local.md
+/DOCKER_ENV
+/chromedriver
+/composer.lock
+/driver.tar.gz
+/driver.zip
+/geckodriver
+/nohup.out
+/output.log
+/yarn.lock
