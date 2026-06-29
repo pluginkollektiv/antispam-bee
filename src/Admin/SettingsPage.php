@@ -16,7 +16,6 @@ use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 use const AntispamBee\MAIN_PLUGIN_FILE;
 
-// @todo: add `ids` to the `h2` section headlines. After first analysis, that seems only to be possible via JS
 /**
  * Antispam Bee Settings Page
  */
