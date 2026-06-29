@@ -93,7 +93,7 @@ abstract class Base implements Verifiable {
 
 	/**
 	 * Get rule weight.
-	 * This value can be used to tweak the overall results. Will be user as a multiplier of the verification result.
+	 * This value can be used to tweak the overall results. Will be used as a multiplier of the verification result.
 	 *
 	 * @return int Weight factor.
 	 */
@@ -111,7 +111,7 @@ abstract class Base implements Verifiable {
 	}
 
 	/**
-	 * It this rule final?
+	 * Is this rule final?
 	 *
 	 * @return bool
 	 */
@@ -120,7 +120,7 @@ abstract class Base implements Verifiable {
 	}
 
 	/**
-	 * It this rule invisible?
+	 * Is this rule invisible?
 	 *
 	 * @return bool
 	 */

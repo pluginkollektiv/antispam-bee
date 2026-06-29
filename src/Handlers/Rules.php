@@ -159,7 +159,6 @@ class Rules {
 	 * @return array List of filtered elements.
 	 */
 	private static function filter( array $options ): array {
-		// Todo: discuss if our rules should be filterable or not.
 		return ComponentsHelper::filter( apply_filters( 'antispam_bee_rules', [] ), $options );
 	}
 

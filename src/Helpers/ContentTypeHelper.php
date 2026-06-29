@@ -17,7 +17,7 @@ class ContentTypeHelper {
 	const LINKBACK_TYPE = 'linkback';
 
 	/**
-	 * Get huam-readable item type name.
+	 * Get human-readable item type name.
 	 *
 	 * @param string $item_type Type name.
 	 * @return string Readable type name.
@@ -29,7 +29,6 @@ class ContentTypeHelper {
 			self::LINKBACK_TYPE => __( 'Linkback', 'antispam-bee' ),
 		];
 
-		// Todo: Write a doc how to add custom types.
 		$type_names = array_merge( apply_filters( 'antispam_bee_item_types', [] ), $type_names );
 
 		return $type_names[ $item_type ] ?? $item_type;

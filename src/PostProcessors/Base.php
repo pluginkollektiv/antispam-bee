@@ -73,12 +73,11 @@ abstract class Base implements PostProcessor {
 	 * @return string[]
 	 */
 	public static function get_supported_types(): array {
-		// @todo: add filter
 		return static::$supported_types;
 	}
 
 	/**
-	 * Does this processor mark am element as deleted?
+	 * Does this processor mark an element as deleted?
 	 *
 	 * @return bool
 	 */

@@ -91,7 +91,6 @@ class DeleteForReasons extends ControllableBase {
 	public static function get_options(): array {
 		$options = [];
 		foreach ( self::get_supported_types() as $type ) {
-			// @todo: disable the reasons checkboxes if the rule is not active.
 			$filtered_rules   = Rules::get_spam_rules( $type );
 			$checkbox_options = [];
 

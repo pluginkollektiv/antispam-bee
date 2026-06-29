@@ -132,7 +132,6 @@ class Honeypot {
 					$markup
 				);
 				break;
-			// Todo: Add the possibility to use an input instead a textarea (for next version).
 			default:
 				break;
 		}

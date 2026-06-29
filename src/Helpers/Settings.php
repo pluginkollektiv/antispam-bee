@@ -39,7 +39,6 @@ class Settings {
 		],
 	];
 
-	// @todo: check if code is PHP 7 compatible
 	const OPTION_NAME = 'antispam_bee_options';
 
 	/**

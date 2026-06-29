@@ -16,7 +16,6 @@ use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 use const AntispamBee\MAIN_PLUGIN_FILE;
 
-// @todo: add `ids` to the `h2` section headlines. After first analyzation, that seems only to be possible via JS
 /**
  * Antispam Bee Settings Page
  */
@@ -106,15 +105,6 @@ class SettingsPage {
 	 * Setup tabs content.
 	 */
 	public function setup_settings(): void {
-		// Todo: Add a way to build rows and fields with a fluent interface? (Nice-to-have).
-
-		/*
-		 * Todo: Instead of using an array to pass options to a function, one could introduce a class that contains
-		 *   these options as class attributes. You instantiate an object of this class and pass it to the
-		 *   Components::filter() method. For frequently used options, one could also use blueprints for options.
-		 *   This would make refactoring easier, but would slightly increase the complexity. (nice-to-have).
-		 */
-
 		// Todo: Fix the confusing naming. We have a lot of type e.g. (Nice-to-have).
 
 		$tabs['general'] = new Tab(
