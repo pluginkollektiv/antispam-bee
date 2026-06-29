@@ -32,8 +32,6 @@ class ApprovedEmail extends ControllableBase {
 	/**
 	 * Verify an item.
 	 *
-	 * Todo: Discuss if this (and gravatar) should be final rules, and also surpass the Honeypot.
-	 *
 	 * @param array $item Item to verify.
 	 * @return int Numeric result.
 	 */

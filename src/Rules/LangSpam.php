@@ -176,7 +176,6 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 * @return array
 	 */
 	public static function get_options(): array {
-		// @todo: we should enable the user to select all 82 languages we can detect. we use presets: the site language, the site language + english, if more than two langs are installed, use those; and: custom. We could check the preferred languages UI for the custom option. And also for the ISO codes.
 		$languages = [
 			'de' => __( 'German', 'antispam-bee' ),
 			'en' => __( 'English', 'antispam-bee' ),
@@ -185,7 +184,6 @@ class LangSpam extends ControllableBase implements SpamReason {
 			'es' => __( 'Spanish', 'antispam-bee' ),
 		];
 
-		// Todo: Deprecate old filters.
 		/**
 		 * Filter the possible languages for the language spam test
 		 *
