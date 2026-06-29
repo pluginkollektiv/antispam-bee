@@ -19,10 +19,10 @@ class ContentTypeHelper {
 	/**
 	 * Get human-readable item type name.
 	 *
-	 * @param string $item_type Type name.
+	 * @param string $reaction_type Reaction type.
 	 * @return string Readable type name.
 	 */
-	public static function get_type_name( string $item_type ): string {
+	public static function get_type_name( string $reaction_type ): string {
 		$type_names = [
 			self::GENERAL_TYPE  => __( 'General', 'antispam-bee' ),
 			self::COMMENT_TYPE  => __( 'Comment', 'antispam-bee' ),
@@ -31,7 +31,7 @@ class ContentTypeHelper {
 
 		$type_names = array_merge( apply_filters( 'antispam_bee_item_types', [] ), $type_names );
 
-		return $type_names[ $item_type ] ?? $item_type;
+		return $type_names[ $reaction_type ] ?? $reaction_type;
 	}
 
 	/**

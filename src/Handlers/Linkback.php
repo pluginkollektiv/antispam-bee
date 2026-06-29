@@ -21,7 +21,7 @@ class Linkback extends Reaction {
 	 *
 	 * @var string
 	 */
-	protected static $type = 'linkback';
+	protected static $reaction_type = 'linkback';
 
 	/**
 	 * Process a linkback.

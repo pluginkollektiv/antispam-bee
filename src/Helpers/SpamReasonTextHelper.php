@@ -37,7 +37,7 @@ class SpamReasonTextHelper {
 	 * @return void
 	 */
 	public static function populate(): void {
-		$rules                 = Rules::get_spam_rules();
+		$rules                 = Rules::get_spam_reason_rules();
 		self::$slug_text_array = [];
 		foreach ( $rules as $rule ) {
 			self::$slug_text_array[ $rule::get_slug() ] = $rule::get_reason_text();

@@ -109,8 +109,8 @@ class Sanitize {
 		$tabs = [ 'general' ];
 
 		foreach ( array_merge( Rules::get_controllables(), PostProcessors::get_controllables() ) as $controllable ) {
-			foreach ( $controllable::get_supported_types() as $type ) {
-				$tabs[] = $type;
+			foreach ( $controllable::get_supported_types() as $reaction_type ) {
+				$tabs[] = $reaction_type;
 			}
 		}
 

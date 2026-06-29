@@ -15,11 +15,11 @@ use AntispamBee\Interfaces\Controllable;
  */
 abstract class Field {
 	/**
-	 * Item type.
+	 * Reaction type.
 	 *
 	 * @var string
 	 */
-	protected $type;
+	protected $reaction_type;
 
 	/**
 	 * Field options.
@@ -38,12 +38,12 @@ abstract class Field {
 	/**
 	 * Initializing field
 	 *
-	 * @param string $type         Item type.
-	 * @param array  $option       Field options.
-	 * @param string $controllable The related controllable (class name).
+	 * @param string $reaction_type Reaction type.
+	 * @param array  $option        Field options.
+	 * @param string $controllable  The related controllable (class name).
 	 */
-	public function __construct( string $type, array $option, string $controllable ) {
-		$this->type                     = $type;
+	public function __construct( string $reaction_type, array $option, string $controllable ) {
+		$this->reaction_type            = $reaction_type;
 		$this->option                   = $option;
 		$this->controllable_option_name = $controllable::get_option_name( $this->option['option_name'] );
 	}
@@ -55,7 +55,7 @@ abstract class Field {
 	 */
 	public function get_name(): string {
 		$option_name = Settings::OPTION_NAME;
-		$name        = "{$option_name}[{$this->type}][{$this->controllable_option_name}]";
+		$name        = "{$option_name}[{$this->reaction_type}][{$this->controllable_option_name}]";
 
 		return str_replace( '-', '_', $name );
 	}
@@ -98,7 +98,7 @@ abstract class Field {
 	 * @return mixed Value stored in database.
 	 */
 	protected function get_value() {
-		return Settings::get_option( $this->controllable_option_name, $this->type );
+		return Settings::get_option( $this->controllable_option_name, $this->reaction_type );
 	}
 
 	/**

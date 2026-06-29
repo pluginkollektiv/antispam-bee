@@ -17,11 +17,11 @@ use AntispamBee\Interfaces\Controllable;
 abstract class Base implements Controllable {
 
 	/**
-	 * Option type.
+	 * Component type.
 	 *
 	 * @var string
 	 */
-	protected static $type = 'general';
+	protected static $component_type = 'general';
 
 	/**
 	 * Option slug.
@@ -84,12 +84,12 @@ abstract class Base implements Controllable {
 	/**
 	 * Returns activation state for this option.
 	 *
-	 * @param string $type One of the types defined in AntispamBee\Helpers\ItemTypeHelper::get_types().
+	 * @param string $reaction_type One of the supported reaction types (comment, linkback, general).
 	 *
 	 * @return mixed|null
 	 */
-	public static function is_active( string $type = 'general' ) {
-		return Settings::get_option( static::get_option_name( 'active' ), $type );
+	public static function is_active( string $reaction_type = 'general' ) {
+		return Settings::get_option( static::get_option_name( 'active' ), $reaction_type );
 	}
 
 	/**
@@ -112,12 +112,12 @@ abstract class Base implements Controllable {
 	}
 
 	/**
-	 * Get type of the option.
+	 * Get the component type (rule, post_processor or general).
 	 *
 	 * @return string
 	 */
-	public static function get_type(): string {
-		return static::$type;
+	public static function get_component_type(): string {
+		return static::$component_type;
 	}
 
 	/**
@@ -128,9 +128,9 @@ abstract class Base implements Controllable {
 	 * @return string Corresponding option name
 	 */
 	public static function get_option_name( string $name ): string {
-		$type        = static::get_type();
-		$slug        = static::get_slug();
-		$option_name = "{$type}_{$slug}_{$name}";
+		$component_type = static::get_component_type();
+		$slug           = static::get_slug();
+		$option_name    = "{$component_type}_{$slug}_{$name}";
 
 		return str_replace( '-', '_', $option_name );
 	}

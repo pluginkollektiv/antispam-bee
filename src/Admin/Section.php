@@ -49,11 +49,11 @@ class Section {
 	private $rows = [];
 
 	/**
-	 * Item type.
+	 * Reaction type.
 	 *
 	 * @var string
 	 */
-	private $type;
+	private $reaction_type;
 
 
 	/**
@@ -62,13 +62,13 @@ class Section {
 	 * @param string      $slug Slug of the tab.
 	 * @param string      $title Title for tab.
 	 * @param string      $description Description of the tab.
-	 * @param string|null $type Item type (e.g. comment, trackback).
+	 * @param string|null $reaction_type Reaction type (e.g. comment, trackback).
 	 */
-	public function __construct( string $slug, string $title, string $description = '', ?string $type = null ) {
-		$this->slug        = $slug;
-		$this->title       = $title;
-		$this->description = $description;
-		$this->type        = $type;
+	public function __construct( string $slug, string $title, string $description = '', ?string $reaction_type = null ) {
+		$this->slug          = $slug;
+		$this->title         = $title;
+		$this->description   = $description;
+		$this->reaction_type = $reaction_type;
 	}
 
 	/**
@@ -110,7 +110,7 @@ class Section {
 			if ( ! empty( $options ) ) {
 				foreach ( $options as $option ) {
 					$valid_for = $option['valid_for'] ?? null;
-					if ( null !== $valid_for && $this->type !== $valid_for ) {
+					if ( null !== $valid_for && $this->reaction_type !== $valid_for ) {
 						continue;
 					}
 					$fields[] = $this->generate_field( $option, $controllable );
@@ -134,17 +134,17 @@ class Section {
 	private function generate_field( array $option, string $controllable ): ?Field {
 		switch ( $option['type'] ) {
 			case 'input':
-				return new Text( $this->type, $option, $controllable );
+				return new Text( $this->reaction_type, $option, $controllable );
 			case 'select':
-				return new Select( $this->type, $option, $controllable );
+				return new Select( $this->reaction_type, $option, $controllable );
 			case 'textarea':
-				return new Textarea( $this->type, $option, $controllable );
+				return new Textarea( $this->reaction_type, $option, $controllable );
 			case 'checkbox':
-				return new Checkbox( $this->type, $option, $controllable );
+				return new Checkbox( $this->reaction_type, $option, $controllable );
 			case 'checkbox-group':
-				return new CheckboxGroup( $this->type, $option, $controllable );
+				return new CheckboxGroup( $this->reaction_type, $option, $controllable );
 			case 'inline':
-				return new Inline( $this->type, $option, $controllable );
+				return new Inline( $this->reaction_type, $option, $controllable );
 		}
 
 		error_log( 'Missing or invalid `type` for field' );
@@ -203,7 +203,7 @@ class Section {
 	 * Renders the settings section.
 	 */
 	public function render(): void {
-		$page = SettingsPage::SETTINGS_PAGE_SLUG . '_' . $this->type;
+		$page = SettingsPage::SETTINGS_PAGE_SLUG . '_' . $this->reaction_type;
 
 		add_settings_section(
 			$this->get_slug(),
