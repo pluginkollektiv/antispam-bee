@@ -34,7 +34,7 @@ pre_init();
  */
 function pre_init(): void {
 	// Check if the min. required PHP version is available and if not, show an admin notice.
-	if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
+	if ( version_compare( PHP_VERSION, '7.2', '<' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\min_php_version_error' );
 
 		// Stop the further processing of the plugin.
