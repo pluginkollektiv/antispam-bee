@@ -62,7 +62,6 @@ class SettingsPage {
 	public function init(): void {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'admin_init', [ $this, 'setup_settings' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_filter( 'plugin_action_links_' . plugin_basename( MAIN_PLUGIN_FILE ), [ $this, 'add_action_links' ] );
 		add_filter( 'plugin_row_meta', [ $this, 'add_row_meta' ], 10, 2 );
@@ -87,6 +86,14 @@ class SettingsPage {
 			[],
 			PLUGIN_VERSION
 		);
+
+		wp_enqueue_script(
+			'antispam-bee-admin-tabs',
+			plugin_dir_url( MAIN_PLUGIN_FILE ) . 'assets/js/admin-tabs.js',
+			[],
+			PLUGIN_VERSION,
+			true
+		);
 	}
 
 	/**
@@ -99,25 +106,6 @@ class SettingsPage {
 			'manage_options',
 			self::SETTINGS_PAGE_SLUG,
 			[ $this, 'options_page' ]
-		);
-	}
-
-	/**
-	 * Enqueue admin assets for the settings page.
-	 *
-	 * @param string $hook_suffix Current admin page hook suffix.
-	 */
-	public function enqueue_assets( string $hook_suffix ): void {
-		if ( 'settings_page_antispam_bee' !== $hook_suffix ) {
-			return;
-		}
-
-		wp_enqueue_script(
-			'antispam-bee-admin-tabs',
-			plugins_url( 'assets/js/admin-tabs.js', dirname( dirname( __DIR__ ) ) . '/antispam_bee.php' ),
-			[],
-			'3.0.0',
-			true
 		);
 	}
 
