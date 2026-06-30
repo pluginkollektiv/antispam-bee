@@ -2,26 +2,90 @@
 	margin-bottom: 0;
 }
 
-.ab-form-footer {
+.ab-action-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 16px;
+}
+
+.ab-action-row .submit {
+	margin: 0;
+	flex-shrink: 0;
+}
+
+.ab-help-links {
+	flex: 1;
+	min-width: 320px;
+}
+
+.ab-help-links ul {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ab-help-links li {
+	margin: 0;
 	display: flex;
 	align-items: center;
 }
 
-.ab-support-links {
-	display: flex;
-	gap: 1em;
-	margin-left: 1.5em;
-	padding-left: 1.5em;
-	border-left: 1px solid #c3c4c7;
-	font-size: 0.85em;
+.ab-help-links li + li::before {
+	content: "•";
+	display: inline-block;
+	margin: 0 .75em;
+	color: #8c8f94;
+	font-size: .75em;
+	vertical-align: middle;
 }
 
-.ab-support-links a {
-	color: #646970;
+.ab-help-links a {
 	text-decoration: none;
 }
 
-.ab-support-links a:hover {
-	color: #135e96;
-	text-decoration: underline;
+/* Wide screens: grid keeps links truly centered on the row, button stays left */
+@media (min-width: 961px) {
+	.ab-action-row {
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		align-items: center;
+	}
+
+	.ab-action-row .submit {
+		grid-column: 1;
+		justify-self: start;
+	}
+
+	.ab-help-links {
+		grid-column: 2;
+		flex: none;
+	}
+}
+
+/* Medium screens: links right-aligned, still beside the button */
+@media (max-width: 960px) {
+	.ab-help-links ul {
+		justify-content: flex-end;
+		align-items: flex-end;
+	}
+}
+
+/* Small screens: stack below button, left-aligned, with top border */
+@media (max-width: 782px) {
+	.ab-help-links {
+		flex-basis: 100%;
+	}
+
+	.ab-help-links ul {
+		justify-content: flex-start;
+		align-items: center;
+		width: fit-content;
+		border-top: 1px solid #c3c4c7;
+		padding-top: 16px;
+	}
 }
