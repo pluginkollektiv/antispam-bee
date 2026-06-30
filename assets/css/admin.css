@@ -2,6 +2,10 @@
 	margin-bottom: 0;
 }
 
+.nav-tab-wrapper button {
+	cursor: pointer;
+}
+
 .ab-action-row {
 	display: flex;
 	flex-wrap: wrap;

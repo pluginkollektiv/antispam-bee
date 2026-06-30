@@ -82,7 +82,7 @@ class SettingsPage {
 
 		wp_enqueue_style(
 			'antispam-bee-admin',
-			plugin_dir_url( MAIN_PLUGIN_FILE ) . 'src/Admin/assets/admin.css',
+			plugin_dir_url( MAIN_PLUGIN_FILE ) . 'assets/css/admin.css',
 			[],
 			PLUGIN_VERSION
 		);
