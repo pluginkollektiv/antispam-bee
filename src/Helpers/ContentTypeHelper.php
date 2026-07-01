@@ -17,19 +17,19 @@ class ContentTypeHelper {
 	const LINKBACK_TYPE = 'linkback';
 
 	/**
-	 * Get human-readable item type name.
+	 * Get human-readable reaction type name.
 	 *
 	 * @param string $reaction_type Reaction type.
-	 * @return string Readable type name.
+	 * @return string Readable reaction type name.
 	 */
-	public static function get_type_name( string $reaction_type ): string {
+	public static function get_reaction_type_name( string $reaction_type ): string {
 		$type_names = [
 			self::GENERAL_TYPE  => __( 'General', 'antispam-bee' ),
 			self::COMMENT_TYPE  => __( 'Comment', 'antispam-bee' ),
 			self::LINKBACK_TYPE => __( 'Linkback', 'antispam-bee' ),
 		];
 
-		$type_names = array_merge( apply_filters( 'antispam_bee_item_types', [] ), $type_names );
+		$type_names = array_merge( apply_filters( 'antispam_bee_reaction_types', [] ), $type_names );
 
 		return $type_names[ $reaction_type ] ?? $reaction_type;
 	}

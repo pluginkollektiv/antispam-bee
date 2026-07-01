@@ -124,7 +124,7 @@ class SettingsPage {
 		foreach ( $reaction_types as $reaction_type ) {
 			$tabs[ $reaction_type ] = new Tab(
 				$reaction_type,
-				ContentTypeHelper::get_type_name( $reaction_type )
+				ContentTypeHelper::get_reaction_type_name( $reaction_type )
 			);
 		}
 		$this->tabs = $tabs;
@@ -159,7 +159,7 @@ class SettingsPage {
 
 			if ( 'general' === $reaction_type ) {
 				$data['general'] = [
-					'title'         => ContentTypeHelper::get_type_name( 'general' ),
+					'title'         => ContentTypeHelper::get_reaction_type_name( 'general' ),
 					'description'   => __( 'Setup global plugin spam settings.', 'antispam-bee' ),
 					'controllables' => ComponentsHelper::filter( GeneralOptions::get_controllables(), [ 'reaction_type' => $reaction_type ] ),
 				];
