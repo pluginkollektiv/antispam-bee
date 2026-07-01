@@ -23,6 +23,7 @@ namespace AntispamBee;
 
 define( __NAMESPACE__ . '\MAIN_PLUGIN_FILE', __FILE__ );
 define( __NAMESPACE__ . '\PLUGIN_PATH', plugin_dir_path( MAIN_PLUGIN_FILE ) );
+define( __NAMESPACE__ . '\PLUGIN_VERSION', '3.0.0-alpha.15' );
 
 // The pre_init functions check the compatibility of the plugin and calls the init function, if check were successful.
 pre_init();

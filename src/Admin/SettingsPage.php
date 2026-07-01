@@ -15,6 +15,7 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 use const AntispamBee\MAIN_PLUGIN_FILE;
+use const AntispamBee\PLUGIN_VERSION;
 
 /**
  * Antispam Bee Settings Page
@@ -61,12 +62,38 @@ class SettingsPage {
 	public function init(): void {
 		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 		add_action( 'admin_init', [ $this, 'setup_settings' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_filter( 'plugin_action_links_' . plugin_basename( MAIN_PLUGIN_FILE ), [ $this, 'add_action_links' ] );
 		add_filter( 'plugin_row_meta', [ $this, 'add_row_meta' ], 10, 2 );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$this->active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'general';
+	}
+
+	/**
+	 * Enqueue admin stylesheet on the settings page.
+	 *
+	 * @param string $hook_suffix Current admin page hook suffix.
+	 */
+	public function enqueue_scripts( string $hook_suffix ): void {
+		if ( 'settings_page_' . self::SETTINGS_PAGE_SLUG !== $hook_suffix ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'antispam-bee-admin',
+			plugin_dir_url( MAIN_PLUGIN_FILE ) . 'assets/css/admin.css',
+			[],
+			PLUGIN_VERSION
+		);
+
+		wp_enqueue_script(
+			'antispam-bee-admin-tabs',
+			plugin_dir_url( MAIN_PLUGIN_FILE ) . 'assets/js/admin-tabs.js',
+			[],
+			PLUGIN_VERSION,
+			true
+		);
 	}
 
 	/**
@@ -79,25 +106,6 @@ class SettingsPage {
 			'manage_options',
 			self::SETTINGS_PAGE_SLUG,
 			[ $this, 'options_page' ]
-		);
-	}
-
-	/**
-	 * Enqueue admin assets for the settings page.
-	 *
-	 * @param string $hook_suffix Current admin page hook suffix.
-	 */
-	public function enqueue_assets( string $hook_suffix ): void {
-		if ( 'settings_page_antispam_bee' !== $hook_suffix ) {
-			return;
-		}
-
-		wp_enqueue_script(
-			'antispam-bee-admin-tabs',
-			plugins_url( 'assets/js/admin-tabs.js', dirname( dirname( __DIR__ ) ) . '/antispam_bee.php' ),
-			[],
-			'3.0.0',
-			true
 		);
 	}
 
@@ -238,7 +246,21 @@ class SettingsPage {
 					<?php echo $is_active ? '' : 'hidden'; ?>
 				>
 					<?php do_settings_sections( self::SETTINGS_PAGE_SLUG . '_' . $tab->get_slug() ); ?>
-					<?php submit_button(); ?>
+
+					<div class="ab-action-row">
+						<?php submit_button(); ?>
+
+						<?php if ( 'general' === $this->active_tab ) : ?>
+							<nav class="ab-help-links" aria-label="<?php echo esc_attr__( 'Plugin resources', 'antispam-bee' ); ?>">
+								<ul>
+									<li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Donate', 'antispam-bee' ); ?></a></li>
+									<li><a href="<?php echo esc_url( __( 'https://wordpress.org/plugins/antispam-bee/#faq', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FAQ', 'antispam-bee' ); ?></a></li>
+									<li><a href="<?php echo esc_url( __( 'https://antispambee.pluginkollektiv.org/documentation', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Manual', 'antispam-bee' ); ?></a></li>
+									<li><a href="https://wordpress.org/support/plugin/antispam-bee/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Support', 'antispam-bee' ); ?></a></li>
+								</ul>
+							</nav>
+						<?php endif; ?>
+					</div>
 				</div>
 				<?php endforeach; ?>
 			</form>
