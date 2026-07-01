@@ -211,7 +211,7 @@ EOF;
 		$template_content = self::get_body_template();
 
 		$content       = self::get_content( $comment );
-		$reaction_type = ContentTypeHelper::get_type_name( $item['reaction_type'] );
+		$reaction_type = ContentTypeHelper::get_reaction_type_name( $item['reaction_type'] );
 
 		$spam_reasons = SpamReasonTextHelper::get_texts_by_slugs( $item['asb_reasons'] );
 

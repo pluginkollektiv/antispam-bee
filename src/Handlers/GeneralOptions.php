@@ -13,29 +13,29 @@ namespace AntispamBee\Handlers;
 class GeneralOptions {
 
 	/**
-	 * Options type.
+	 * Reaction type.
 	 *
 	 * @var string
 	 */
-	protected $type;
+	protected $reaction_type;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param string $type Option type.
+	 * @param string $reaction_type Reaction type.
 	 */
-	public function __construct( string $type ) {
-		$this->type = $type;
+	public function __construct( string $reaction_type ) {
+		$this->reaction_type = $reaction_type;
 	}
 
 	/**
 	 * Get controllable items for this option.
 	 *
-	 * @param string $type Option type.
+	 * @param string $reaction_type Reaction type.
 	 * @return array List of controllable items.
 	 */
-	public static function get_controllables( string $type = 'general' ): array {
-		if ( 'general' !== $type ) {
+	public static function get_controllables( string $reaction_type = 'general' ): array {
+		if ( 'general' !== $reaction_type ) {
 			return [];
 		}
 

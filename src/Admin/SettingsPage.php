@@ -105,8 +105,6 @@ class SettingsPage {
 	 * Setup tabs content.
 	 */
 	public function setup_settings(): void {
-		// Todo: Fix the confusing naming. We have a lot of type e.g. (Nice-to-have).
-
 		$tabs['general'] = new Tab(
 			'general',
 			__( 'General', 'antispam-bee' )
@@ -114,19 +112,19 @@ class SettingsPage {
 
 		$this->rules           = Rules::get_controllables();
 		$this->post_processors = PostProcessors::get_controllables();
-		$types                 = [];
+		$reaction_types        = [];
 		foreach ( $this->rules as $rule ) {
-			$types = array_merge( $types, $rule::get_supported_types() );
+			$reaction_types = array_merge( $reaction_types, $rule::get_supported_types() );
 		}
 		foreach ( $this->post_processors as $post_processor ) {
-			$types = array_merge( $types, $post_processor::get_supported_types() );
+			$reaction_types = array_merge( $reaction_types, $post_processor::get_supported_types() );
 		}
-		$types = array_unique( $types );
+		$reaction_types = array_unique( $reaction_types );
 
-		foreach ( $types as $type ) {
-			$tabs[ $type ] = new Tab(
-				$type,
-				ContentTypeHelper::get_type_name( $type )
+		foreach ( $reaction_types as $reaction_type ) {
+			$tabs[ $reaction_type ] = new Tab(
+				$reaction_type,
+				ContentTypeHelper::get_reaction_type_name( $reaction_type )
 			);
 		}
 		$this->tabs = $tabs;
@@ -156,14 +154,14 @@ class SettingsPage {
 	 */
 	protected function populate_tabs(): void {
 		foreach ( $this->tabs as $tab ) {
-			$type = $tab->get_slug();
-			$data = [];
+			$reaction_type = $tab->get_slug();
+			$data          = [];
 
-			if ( 'general' === $type ) {
+			if ( 'general' === $reaction_type ) {
 				$data['general'] = [
-					'title'         => ContentTypeHelper::get_type_name( 'general' ),
+					'title'         => ContentTypeHelper::get_reaction_type_name( 'general' ),
 					'description'   => __( 'Setup global plugin spam settings.', 'antispam-bee' ),
-					'controllables' => ComponentsHelper::filter( GeneralOptions::get_controllables(), [ 'reaction_type' => $type ] ),
+					'controllables' => ComponentsHelper::filter( GeneralOptions::get_controllables(), [ 'reaction_type' => $reaction_type ] ),
 				];
 			}
 
@@ -173,12 +171,12 @@ class SettingsPage {
 					'rules'           => [
 						'title'         => __( 'Rules', 'antispam-bee' ),
 						'description'   => __( 'Setup rules.', 'antispam-bee' ),
-						'controllables' => ComponentsHelper::filter( $this->rules, [ 'reaction_type' => $type ] ),
+						'controllables' => ComponentsHelper::filter( $this->rules, [ 'reaction_type' => $reaction_type ] ),
 					],
 					'post_processors' => [
 						'title'         => __( 'Post Processors', 'antispam-bee' ),
 						'description'   => __( 'Setup post processors.', 'antispam-bee' ),
-						'controllables' => ComponentsHelper::filter( $this->post_processors, [ 'reaction_type' => $type ] ),
+						'controllables' => ComponentsHelper::filter( $this->post_processors, [ 'reaction_type' => $reaction_type ] ),
 					],
 				]
 			);
@@ -192,10 +190,10 @@ class SettingsPage {
 					$key,
 					$value['title'],
 					$value['description'],
-					$type
+					$reaction_type
 				);
 				$section->add_controllables( $value['controllables'] );
-				$this->tabs[ $type ]->add_section( $section );
+				$this->tabs[ $reaction_type ]->add_section( $section );
 			}
 		}
 	}

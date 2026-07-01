@@ -87,17 +87,17 @@ class Settings {
 	/**
 	 * Get single option field
 	 *
-	 * @param string $option_name Option name.
-	 * @param string $type The type.
+	 * @param string $option_name   Option name.
+	 * @param string $reaction_type The reaction type.
 	 *
 	 * @return mixed Field value.
 	 */
-	public static function get_option( string $option_name, string $type = 'general' ) {
+	public static function get_option( string $option_name, string $reaction_type = 'general' ) {
 		$options = self::get_options();
 
 		$value_path = "$option_name";
-		if ( ! empty( $type ) ) {
-			$value_path = "$type.$option_name";
+		if ( ! empty( $reaction_type ) ) {
+			$value_path = "$reaction_type.$option_name";
 		}
 		$value_path = str_replace( '-', '_', $value_path );
 

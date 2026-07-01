@@ -31,8 +31,8 @@ class CommentsColumns {
 
 		$supported_types = SaveReason::get_supported_types();
 		$show_column     = false;
-		foreach ( $supported_types as $type ) {
-			$show_column = Settings::get_option( SaveReason::get_option_name( 'active' ), $type );
+		foreach ( $supported_types as $reaction_type ) {
+			$show_column = Settings::get_option( SaveReason::get_option_name( 'active' ), $reaction_type );
 			if ( $show_column ) {
 				break;
 			}

@@ -19,7 +19,7 @@ abstract class Reaction {
 	 *
 	 * @var string
 	 */
-	protected static $type = 'comment';
+	protected static $reaction_type = 'comment';
 
 	/**
 	 * Initialize the handler.
@@ -60,7 +60,7 @@ abstract class Reaction {
 	 */
 	public static function process( array $reaction ): array {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
-		$rules   = new Rules( static::$type );
+		$rules   = new Rules( static::$reaction_type );
 		$is_spam = $rules->apply( $reaction );
 
 		if ( $is_spam ) {
@@ -78,7 +78,7 @@ abstract class Reaction {
 	 * @return array|never-return Handled reaction (or die, if item was deleted)
 	 */
 	protected static function handle_spam( array $reaction, Rules $rules ) {
-		$item = PostProcessors::apply( static::$type, $reaction, $rules->get_spam_reasons() );
+		$item = PostProcessors::apply( static::$reaction_type, $reaction, $rules->get_spam_reasons() );
 		if ( ! isset( $item['asb_marked_as_delete'] ) ) {
 			add_filter(
 				'pre_comment_approved',

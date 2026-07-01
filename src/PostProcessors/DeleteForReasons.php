@@ -90,8 +90,8 @@ class DeleteForReasons extends ControllableBase {
 	 */
 	public static function get_options(): array {
 		$options = [];
-		foreach ( self::get_supported_types() as $type ) {
-			$filtered_rules   = Rules::get_spam_rules( $type );
+		foreach ( self::get_supported_types() as $reaction_type ) {
+			$filtered_rules   = Rules::get_spam_reason_rules( $reaction_type );
 			$checkbox_options = [];
 
 			foreach ( $filtered_rules as $rule ) {
@@ -102,7 +102,7 @@ class DeleteForReasons extends ControllableBase {
 			}
 
 			$options[] = [
-				'valid_for'   => $type,
+				'valid_for'   => $reaction_type,
 				'label'       => __( 'Reasons', 'antispam-bee' ),
 				'type'        => 'checkbox-group',
 				'options'     => $checkbox_options,

@@ -19,11 +19,11 @@ use AntispamBee\Interfaces\Verifiable;
 class Rules {
 
 	/**
-	 * Rule type.
+	 * Reaction type.
 	 *
 	 * @var string
 	 */
-	protected $type;
+	protected $reaction_type;
 
 	/**
 	 * List of spam reasons.
@@ -42,10 +42,10 @@ class Rules {
 	/**
 	 * Ruleset constructor.
 	 *
-	 * @param string $type Item type.
+	 * @param string $reaction_type Reaction type.
 	 */
-	public function __construct( string $type ) {
-		$this->type = $type;
+	public function __construct( string $reaction_type ) {
+		$this->reaction_type = $reaction_type;
 	}
 
 	/**
@@ -55,8 +55,8 @@ class Rules {
 	 * @return bool Item identified as spam.
 	 */
 	public function apply( array $item ): bool {
-		$item['reaction_type'] = $this->type;
-		$rules                 = self::get( $this->type, true );
+		$item['reaction_type'] = $this->reaction_type;
+		$rules                 = self::get( $this->reaction_type, true );
 
 		$no_spam_threshold = (float) apply_filters( 'antispam_bee_no_spam_threshold', 0.0 );
 		$spam_threshold    = (float) apply_filters( 'antispam_bee_spam_threshold', 0.0 );
@@ -104,14 +104,14 @@ class Rules {
 	/**
 	 * Get applicable rules.
 	 *
-	 * @param string|null $type        Reaction type.
-	 * @param bool        $only_active Get only active rules.
+	 * @param string|null $reaction_type Reaction type.
+	 * @param bool        $only_active   Get only active rules.
 	 * @return array List of applicable rules.
 	 */
-	public static function get( ?string $type = null, bool $only_active = false ): array {
+	public static function get( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
 			[
-				'reaction_type' => $type,
+				'reaction_type' => $reaction_type,
 				'only_active'   => $only_active,
 				'implements'    => Verifiable::class,
 			]
@@ -121,14 +121,14 @@ class Rules {
 	/**
 	 * Get controllable items.
 	 *
-	 * @param string|null $type        Reaction type.
-	 * @param bool        $only_active Get only active items.
+	 * @param string|null $reaction_type Reaction type.
+	 * @param bool        $only_active   Get only active items.
 	 * @return array List of suitable controllables.
 	 */
-	public static function get_controllables( ?string $type = null, bool $only_active = false ): array {
+	public static function get_controllables( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
 			[
-				'reaction_type' => $type,
+				'reaction_type' => $reaction_type,
 				'only_active'   => $only_active,
 				'implements'    => [ Verifiable::class, Controllable::class ],
 			]
@@ -136,16 +136,16 @@ class Rules {
 	}
 
 	/**
-	 * Todo: Try to find a better suited method name.
+	 * Get rules that provide a spam reason (implement the SpamReason interface).
 	 *
-	 * @param string|null $type        Reaction type.
-	 * @param bool        $only_active Get only active rules.
-	 * @return array List of applicable rules.
+	 * @param string|null $reaction_type Reaction type.
+	 * @param bool        $only_active   Get only active rules.
+	 * @return array List of rules that provide a spam reason.
 	 */
-	public static function get_spam_rules( ?string $type = null, bool $only_active = false ): array {
+	public static function get_spam_reason_rules( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
 			[
-				'reaction_type' => $type,
+				'reaction_type' => $reaction_type,
 				'only_active'   => $only_active,
 				'implements'    => [ Verifiable::class, SpamReason::class ],
 			]

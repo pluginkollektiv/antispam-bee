@@ -62,11 +62,11 @@ interface Controllable {
 	/**
 	 * Returns activation state for this element.
 	 *
-	 * @param string $type One of the types defined in AntispamBee\Helpers\ItemTypeHelper::get_types().
+	 * @param string $reaction_type One of the supported reaction types (comment, linkback, general).
 	 *
 	 * @return mixed|null
 	 */
-	public static function is_active( string $type );
+	public static function is_active( string $reaction_type );
 
 	/**
 	 * Only print custom options?
@@ -84,11 +84,11 @@ interface Controllable {
 	public static function get_supported_types(): array;
 
 	/**
-	 * Get type of the controllable.
+	 * Get the component type (rule, post_processor or general).
 	 *
 	 * @return string
 	 */
-	public static function get_type(): string;
+	public static function get_component_type(): string;
 
 	/**
 	 * Get controllable slug.
@@ -99,7 +99,7 @@ interface Controllable {
 
 	/**
 	 * Get option name.
-	 * This will typically add type and slug prefixes to the short name.
+	 * This will typically add the component type and slug prefixes to the short name.
 	 *
 	 * @param string $name Name suffix.
 	 * @return string Corresponding option name
