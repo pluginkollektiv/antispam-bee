@@ -2,6 +2,10 @@
 
 General rules for AI agents contributing to this project.
 
+## What is project code
+
+Project code lives in `src/`, `tests/`, and the root PHP files (e.g. `antispam_bee.php`). Ignore `vendor/` and `node_modules/` when searching, reviewing, or reasoning about the code — both are gitignored, installed locally by `composer install` / `npm install`, and contain only third-party dependencies you must not modify. The plugin ships **no** runtime dependencies; everything in `vendor/` is a `require-dev` code-quality tool (PHPCS, PHPStan, PHPUnit, WP-CLI, WPCS, …), so treating it as project code produces false findings.
+
 ## Code quality — verify before every commit
 
 | Check                   | Command                                      |
