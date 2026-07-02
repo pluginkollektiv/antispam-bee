@@ -73,7 +73,15 @@ abstract class Base implements PostProcessor {
 	 * @return string[]
 	 */
 	public static function get_supported_types(): array {
-		return static::$supported_types;
+		/**
+		 * Filter the reaction types that are supported by the post processor.
+		 *
+		 * @param array $supported_types The supported types.
+		 * @param string $slug The post processor’s slug.
+		 *
+		 * @return array Array of supported types.
+		 */
+		return apply_filters( 'antispam_bee_post_processor_supported_types', static::$supported_types, static::$slug );
 	}
 
 	/**
