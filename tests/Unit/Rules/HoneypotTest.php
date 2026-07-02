@@ -95,5 +95,12 @@ class HoneypotTest extends AbstractRuleTestCase {
 			'secret was not moved to hidden field'
 		);
 
+		// Honeypot field entirely absent while the secret field is present.
+		$_POST = [
+			'd7dcf95a06' => 'S3cr3t',
+		];
+		Honeypot::precheck();
+		self::assertSame( 1, $_POST['ab_spam__hidden_field'], 'missing hidden field not detected' );
+
 	}
 }
