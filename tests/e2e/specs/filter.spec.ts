@@ -75,6 +75,28 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).not.toContainText( 'Mr. Burns' );
 	} );
 
+	test( 'honeypot lets a genuine comment through when the trap is empty', async ( {
+		page,
+	} ) => {
+		// Genuine visitor: fills the visible comment field but leaves the
+		// hidden honeypot trap empty (fillHoneypot omitted).
+		await fillComment( page, {
+			comment: 'Thanks for the great article, very helpful!',
+			author: 'Lisa Simpson',
+			email: 'lisa.simpson@springfield-elementary.edu',
+		} );
+
+		await adminLogin( page );
+		await page.goto( '/wp-admin/edit-comments.php?comment_status=spam' );
+		await expect( page.locator( 'body' ) ).not.toContainText(
+			'Lisa Simpson'
+		);
+		await page.goto(
+			'/wp-admin/edit-comments.php?comment_status=moderated'
+		);
+		await expect( page.locator( 'body' ) ).toContainText( 'Lisa Simpson' );
+	} );
+
 	test( 'local spam DB flags comment from same IP', async ( {
 		page,
 		cli,
