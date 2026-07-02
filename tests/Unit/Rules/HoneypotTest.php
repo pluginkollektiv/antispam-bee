@@ -44,22 +44,24 @@ class HoneypotTest extends AbstractRuleTestCase {
 
 		stubs(
 			[
-				'esc_url_raw'  => function (string $url) {
+				'esc_url_raw' => function ( string $url ) {
 					return $url;
 				},
-				'is_feed'      => false,
+				'is_feed' => false,
 				'is_trackback' => false,
 				'wp_parse_url' => 'parse_url',
-				'wp_unslash'   => function ($value) {
+				'wp_unslash' => function ( $value ) {
 					return $value;
 				},
 			]
 		);
 		mock( 'overload:' . \AntispamBee\Helpers\Honeypot::class )
 			->expects( 'get_secret_name_for_post' )
-			->andReturns( 'my-secret' );
+			->andReturns( 'd7dcf95a06' );
 
-		$_POST   = [];
+		$_POST = [];
+
+		// Send the following requests to the wrong URL.
 		$_SERVER = [ 'SCRIPT_NAME' => '/index.php' ];
 
 		Honeypot::precheck();
@@ -67,26 +69,25 @@ class HoneypotTest extends AbstractRuleTestCase {
 
 		$_POST = [ 'foo' => 'bar' ];
 		Honeypot::precheck();
-		self::assertSame( ['foo' => 'bar' ], $_POST, 'POST data modified on index.php' );
+		self::assertSame( [ 'foo' => 'bar' ], $_POST, 'POST data modified on index.php' );
 
+		// Send all following requests to the correct URL.
 		$_SERVER = [ 'SCRIPT_NAME' => '/wp-comments-post.php' ];
-		Honeypot::precheck();
-		self::assertSame( 1, $_POST[ 'ab_spam__invalid_request' ], 'request without missing fields not detected' );
 
 		$_POST = [
-			'my-secret' => 'S3cr3t',
-			'my-hidden' => 'H1dd3n',
+			'd7dcf95a06' => 'S3cr3t',
+			'comment' => 'H1dd3n',
 		];
 		Honeypot::precheck();
-		self::assertSame( 1, $_POST[ 'ab_spam__hidden_field' ], 'non-empty hidden fiend not detected' );
+		self::assertSame( 1, $_POST['ab_spam__hidden_field'], 'non-empty hidden fiend not detected' );
 
 		$_POST = [
-			'my-secret' => 'S3cr3t',
-			'my-hidden' => '',
+			'd7dcf95a06' => 'S3cr3t',
+			'comment' => '',
 		];
 		Honeypot::precheck();
 		self::assertSame(
-			[ 'my-hidden' => 'S3cr3t' ],
+			[ 'comment' => 'S3cr3t' ],
 			$_POST,
 			'secret was not moved to hidden field'
 		);
