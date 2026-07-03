@@ -26,7 +26,7 @@ jobs:
 
       - name: Build plugin
         run: |
-          ./vendor/bin/wp dist-archive . ./${{ github.event.repository.name }}.zip
+          vendor/bin/wp dist-archive . ./${{ github.event.repository.name }}.zip
           mkdir tmp-build
           unzip ${{ github.event.repository.name }}.zip -d tmp-build
 
