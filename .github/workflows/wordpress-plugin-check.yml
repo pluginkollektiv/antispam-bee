@@ -14,19 +14,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Composer install
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: latest
           coverage: none
           tools: wp-cli
 
-      - name: Install dependencies
-        run: composer install --no-dev -o
+      - name: Install dist-archive command
+        run: wp package install wp-cli/dist-archive-command
 
       - name: Build plugin
         run: |
-          vendor/bin/wp dist-archive . ./${{ github.event.repository.name }}.zip
+          wp dist-archive . ./${{ github.event.repository.name }}.zip
           mkdir tmp-build
           unzip ${{ github.event.repository.name }}.zip -d tmp-build
 
