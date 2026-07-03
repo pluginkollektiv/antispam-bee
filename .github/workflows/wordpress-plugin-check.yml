@@ -22,11 +22,15 @@ jobs:
           tools: wp-cli
 
       - name: Install dist-archive command
-        # `wp package install` forwards GITHUB_TOKEN to Composer's github-oauth
-        # config, and Composer rejects both the runner's token format and an
-        # empty value. wp-cli only skips it when the variable is absent (it
-        # guards with is_string(), and getenv() returns '' for a set-but-empty
-        # var), so unset it entirely — the package is public and needs no auth.
+        # setup-php seeds Composer's auth with a github-oauth token that Composer
+        # rejects as malformed, and `wp package install` registers the package as
+        # a GitHub VCS repo, which forces that token to be used. Isolate Composer
+        # from the ambient auth: a fresh COMPOSER_HOME (no seeded auth.json), an
+        # empty COMPOSER_AUTH, and no GITHUB_TOKEN. The package is public, so
+        # anonymous access is sufficient.
+        env:
+          COMPOSER_HOME: ${{ runner.temp }}/composer-home
+          COMPOSER_AUTH: '{}'
         run: |
           unset GITHUB_TOKEN
           wp package install wp-cli/dist-archive-command:^3.1
