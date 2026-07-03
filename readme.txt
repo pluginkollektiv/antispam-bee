@@ -5,7 +5,7 @@
 * Requires at least: 4.6
 * Tested up to:      7.0
 * Requires PHP:      7.2
-* Stable tag:        2.11.12
+* Stable tag:        3.0.0-beta.1
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,8 +50,8 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * If you don’t know how to install a plugin for WordPress, [here’s how](https://wordpress.org/documentation/article/manage-plugins/#automatic-plugin-installation-1).
 
 ### Requirements ###
-* PHP 5.2.4 or greater
-* WordPress 4.5 or greater
+* PHP 7.2 or greater
+* WordPress 4.6 or greater
 
 ### Settings ###
 After you have activated *Antispam Bee* the plugin will block spam comments out of the box. However, you may want to visit *Settings → Antispam Bee* to configure your custom set of anti-spam options that works best for your site.
@@ -98,8 +98,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 ## Changelog ##
 
-### 3.0.0 – WIP ###
-	* Complete code rewrite and backend UI overhaul
+### 3.0.0 ###
+    * Complete code rewrite and backend UI overhaul
     * Allows to extend Antispam Bee with own rules
     * Allows to use Antispam Bee rules for other reactions than comments, for example, forms
 
