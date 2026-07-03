@@ -21,6 +21,9 @@ jobs:
           coverage: none
           tools: wp-cli
 
+      - name: Install dependencies
+        run: composer install --no-dev -o
+
       - name: Build plugin
         run: |
           ./vendor/bin/wp dist-archive . ./${{ github.event.repository.name }}.zip
