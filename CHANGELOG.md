@@ -707,7 +707,7 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 
 ### 1.4 ###
 * **English**
-   * Enable stricter inspection for incomming comments
+   * Enable stricter inspection for incoming comments
    * Do not check if the author has already commented and approved
 * **Deutsch**
    * strengere Kontrolle für eingehende Kommentare aktiviert
