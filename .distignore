@@ -24,3 +24,4 @@
 /phpcs.xml
 /phpunit.xml.dist
 /playwright.config.ts
+/typos.toml

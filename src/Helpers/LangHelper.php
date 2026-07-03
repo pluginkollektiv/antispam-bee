@@ -23,6 +23,7 @@ class LangHelper {
 	 * @since   2.9.0
 	 */
 	public static function map( string $franc_code ): string {
+		// spellchecker:off.
 		$codes = [
 			'zha' => 'za',
 			'zho' => 'zh',
@@ -210,6 +211,7 @@ class LangHelper {
 			'aze' => 'az',
 			'nds' => 'de',
 		];
+		// spellchecker:on.
 
 		if ( array_key_exists( $franc_code, $codes ) ) {
 			return $codes[ $franc_code ];
