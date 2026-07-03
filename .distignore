@@ -3,10 +3,12 @@
 /.github
 /.wordpress-org
 /bin
+/docs
 /tests
 
 # Files
 /.distignore
+/.editorconfig
 /.gitattributes
 /.gitignore
 /.sonarcloud.properties
@@ -22,6 +24,7 @@
 /package-lock.json
 /package.json
 /phpcs.xml
+/phpstan-bootstrap.php
 /phpunit.xml.dist
 /playwright.config.ts
 /typos.toml
