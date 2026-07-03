@@ -22,12 +22,14 @@ jobs:
           tools: wp-cli
 
       - name: Install dist-archive command
-        # Clear GITHUB_TOKEN so `wp package install` does not pass the runner's
-        # Actions token to Composer's github-oauth config (Composer rejects its
-        # format). The package is public, so no authentication is required.
-        env:
-          GITHUB_TOKEN: ''
-        run: wp package install wp-cli/dist-archive-command:^3.1
+        # `wp package install` forwards GITHUB_TOKEN to Composer's github-oauth
+        # config, and Composer rejects both the runner's token format and an
+        # empty value. wp-cli only skips it when the variable is absent (it
+        # guards with is_string(), and getenv() returns '' for a set-but-empty
+        # var), so unset it entirely — the package is public and needs no auth.
+        run: |
+          unset GITHUB_TOKEN
+          wp package install wp-cli/dist-archive-command:^3.1
 
       - name: Build plugin
         run: |
