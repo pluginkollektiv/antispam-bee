@@ -7,7 +7,6 @@
 
 namespace AntispamBee\Helpers;
 
-use AntispamBee\Handlers\PluginUpdate;
 use AntispamBee\Handlers\Rules;
 
 /**

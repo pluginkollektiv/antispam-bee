@@ -8,7 +8,6 @@
 namespace AntispamBee\Crons;
 
 use AntispamBee\Helpers\Settings;
-use const AntispamBee\PLUGIN_PATH;
 
 /**
  * Cron job to delete spam from database.

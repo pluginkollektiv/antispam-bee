@@ -55,21 +55,4 @@ export class WpCli {
 	pluginDeactivate( slug: string ): void {
 		this.run( `plugin deactivate ${ slug }` );
 	}
-
-	postCreate( fields: Record< string, string > ): number {
-		const args = Object.entries( fields )
-			.map( ( [ k, v ] ) => `--${ k }="${ v }"` )
-			.join( ' ' );
-		const id = this.run( `post create ${ args } --porcelain` );
-		return parseInt( id, 10 );
-	}
-
-	postExists( id: number ): boolean {
-		try {
-			this.run( `post get ${ id } --field=ID` );
-			return true;
-		} catch {
-			return false;
-		}
-	}
 }

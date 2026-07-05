@@ -11,7 +11,6 @@ use AntispamBee\Admin\Fields\Field;
 use AntispamBee\Handlers\GeneralOptions;
 use AntispamBee\Handlers\PostProcessors;
 use AntispamBee\Handlers\Rules;
-use AntispamBee\Interfaces\Controllable;
 
 /**
  * Helps by providing reusable sanitizing functions

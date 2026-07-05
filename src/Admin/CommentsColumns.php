@@ -8,7 +8,6 @@
 namespace AntispamBee\Admin;
 
 use AntispamBee\Handlers\PluginUpdate;
-use AntispamBee\Handlers\Rules;
 use AntispamBee\Helpers\DashboardHelper;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Helpers\SpamReasonTextHelper;

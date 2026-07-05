@@ -15,13 +15,6 @@ use DOMXPath;
  */
 class Honeypot {
 	/**
-	 * The salt used for the dynamic field name.
-	 *
-	 * @var string
-	 */
-	protected $salt;
-
-	/**
 	 * Inject the honeypot field.
 	 *
 	 * @param string $markup The field markup.

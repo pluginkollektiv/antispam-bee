@@ -8,7 +8,6 @@
 namespace AntispamBee\Admin\Fields;
 
 use AntispamBee\Helpers\Settings;
-use AntispamBee\Interfaces\Controllable;
 
 /**
  * Abstract class for field.

@@ -10,7 +10,6 @@ namespace AntispamBee\Rules;
 use AntispamBee\Helpers\Honeypot as HoneypotField;
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\DataHelper;
-use AntispamBee\Helpers\DebugMode;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\SpamReason;
 

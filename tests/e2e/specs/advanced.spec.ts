@@ -4,7 +4,7 @@
  * Honeypot detection is the spam trigger throughout; the honeypot textarea
  * has aria-hidden="true" and name="comment" after v3's DOM injection.
  */
-import { test, expect, adminLogin, DEFAULT_OPTIONS } from '../fixtures/base';
+import { test, expect, adminLogin } from '../fixtures/base';
 
 async function fillHoneypotComment(
 	page: import( '@playwright/test' ).Page,
