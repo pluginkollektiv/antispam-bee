@@ -61,7 +61,17 @@ class IpHelper {
 	}
 
 	/**
-	 * Anonymize the IP addresses
+	 * Anonymize an IP address.
+	 *
+	 * Only the network portion is kept, the host portion is zeroed out. For
+	 * IPv4 the first three octets are retained (a `/24` network), for IPv6 the
+	 * first three groups are retained (a `/48` network). This keeps enough of
+	 * the address for reliable country-level geolocation while removing the host.
+	 *
+	 * WordPress core's {@see wp_privacy_anonymize_ip()} is used when available;
+	 * it applies the same masks and additionally handles ports, brackets and
+	 * zone identifiers. The bundled masking is only a fallback for environments
+	 * where that function does not exist.
 	 *
 	 * @param string $ip Original IP.
 	 *
@@ -69,12 +79,40 @@ class IpHelper {
 	 * @since   2.5.1
 	 */
 	public static function anonymize_ip( string $ip ): string {
-		preg_match( '/\w+([\.:])\w+/', $ip, $matches );
-		$ip_start = $matches[0];
-		if ( '.' === $matches[1] ) {
-			return $ip_start . '.0.0';
+		if ( function_exists( 'wp_privacy_anonymize_ip' ) ) {
+			return wp_privacy_anonymize_ip( $ip );
 		}
 
-		return $ip_start . '::';
+		return self::mask_ip( $ip );
+	}
+
+	/**
+	 * Fallback anonymization used when {@see wp_privacy_anonymize_ip()} is
+	 * unavailable.
+	 *
+	 * Keeps the first three octets of an IPv4 address (a `/24` network) and the
+	 * first three groups of an IPv6 address (a `/48` network). Invalid input is
+	 * returned unchanged.
+	 *
+	 * @param string $ip Original IP.
+	 *
+	 * @return string Anonymous IP.
+	 */
+	private static function mask_ip( string $ip ): string {
+		$packed = filter_var( $ip, FILTER_VALIDATE_IP ) ? inet_pton( $ip ) : false;
+
+		if ( false === $packed ) {
+			return $ip;
+		}
+
+		if ( 4 === strlen( $packed ) ) {
+			// IPv4: keep the first three octets (a /24 network).
+			$mask = (string) inet_pton( '255.255.255.0' );
+		} else {
+			// IPv6: keep the first three groups (a /48 network).
+			$mask = (string) inet_pton( 'ffff:ffff:ffff::' );
+		}
+
+		return (string) inet_ntop( $packed & $mask );
 	}
 }
