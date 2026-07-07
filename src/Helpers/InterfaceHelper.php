@@ -38,7 +38,7 @@ class InterfaceHelper {
 			return false;
 		}
 
-		if ( empty( $interfaces ) || ! is_array( $interfaces ) ) {
+		if ( empty( $interfaces ) ) {
 			return false;
 		}
 

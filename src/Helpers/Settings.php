@@ -199,10 +199,6 @@ class Settings {
 	 * @return void
 	 */
 	public static function remove_array_key_by_path( string $path, array &$array ): void {
-		if ( ! is_array( $array ) ) {
-			return;
-		}
-
 		$path_parts = self::get_path_parts( $path );
 		if ( empty( $path_parts ) ) {
 			return;
@@ -245,10 +241,6 @@ class Settings {
 	 * @return void
 	 */
 	public static function set_array_value_by_path( string $path, $sanitized, array &$options ): void {
-		if ( ! is_array( $options ) ) {
-			return;
-		}
-
 		if ( null === $sanitized ) {
 			return;
 		}

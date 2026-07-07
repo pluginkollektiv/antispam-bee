@@ -191,7 +191,7 @@ class PluginUpdate {
 	 * @return array Converted array of selected options.
 	 */
 	private static function convert_multiselect_values( array $values, array $mapping = [] ): array {
-		if ( ! is_array( $values ) || empty( $values ) ) {
+		if ( empty( $values ) ) {
 			return $values;
 		}
 

@@ -33,7 +33,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
-		if ( ! isset( $item['comment_author_IP'] ) || empty( $item['comment_author_IP'] ) ) {
+		if ( empty( $item['comment_author_IP'] ) ) {
 			return 0;
 		}
 		$ip = $item['comment_author_IP'];

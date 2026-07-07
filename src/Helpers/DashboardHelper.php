@@ -20,7 +20,7 @@ class DashboardHelper {
 	 * @return bool
 	 */
 	public static function is_dashboard_page(): bool {
-		return ( empty( $GLOBALS['pagenow'] ) || ( ! empty( $GLOBALS['pagenow'] ) && 'index.php' === $GLOBALS['pagenow'] ) );
+		return ( empty( $GLOBALS['pagenow'] ) || ( 'index.php' === $GLOBALS['pagenow'] ) );
 	}
 
 	/**
