@@ -54,7 +54,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			$subject   = array(
 				'ip'        => $ip,
 				'rawurl'    => $url,
-				'host'      => DataHelper::parse_url( $url, 'host' ),
+				'host'      => DataHelper::parse_url( $url ),
 				'body'      => $body,
 				'email'     => $email,
 				'author'    => $author,
@@ -69,7 +69,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			$subject = [
 				'ip'     => $ip,
 				'rawurl' => $url,
-				'host'   => DataHelper::parse_url( $url, 'host' ),
+				'host'   => DataHelper::parse_url( $url ),
 				'body'   => $body,
 				'email'  => '',
 				'author' => '',
