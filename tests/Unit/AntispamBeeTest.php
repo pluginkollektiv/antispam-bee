@@ -3,6 +3,7 @@
 namespace AntispamBee\Tests\Unit\Core;
 
 use Antispam_Bee as Testee;
+use Brain\Monkey\Expectation\Exception\ExpectationArgsRequired;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 
 use function Brain\Monkey\Functions\expect;
@@ -79,6 +80,7 @@ class FactoryTest extends TestCase {
 	/**
 	 * Tests various spam reasons.
 	 *
+	 * @throws ExpectationArgsRequired
 	 * @since        2.7.0
 	 *
 	 * @dataProvider spam_reasons_data_provider
