@@ -50,6 +50,22 @@ function pre_init(): void {
 		return;
 	}
 
+	// Check if the `LibXML` PHP extension is available.
+	if ( ! extension_loaded('libxml') ) {
+		add_action( 'admin_notices', __NAMESPACE__ . '\libxml_extension_missing' );
+
+		// Stop the further processing of the plugin.
+		return;
+	}
+
+	// Check if the `JSON` PHP extension is available.
+	if ( ! extension_loaded('json') ) {
+		add_action( 'admin_notices', __NAMESPACE__ . '\json_extension_missing' );
+
+		// Stop the further processing of the plugin.
+		return;
+	}
+
 	if ( file_exists( PLUGIN_PATH . 'composer.json' ) && ! file_exists( PLUGIN_PATH . 'vendor/autoload.php' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\autoloader_missing' );
 
@@ -68,7 +84,7 @@ function pre_init(): void {
 }
 
 /**
- * Show an admin notice error message if the PHP version is too low
+ * Show an admin notice error message if the PHP version is too low.
  *
  * @return void
  */
@@ -79,7 +95,7 @@ function min_php_version_error(): void {
 }
 
 /**
- * Show an admin notice error message if the `DOMDocument` class is missing
+ * Show an admin notice error message if the `DOMDocument` class is missing.
  *
  * @return void
  */
@@ -90,7 +106,29 @@ function domdocument_class_error(): void {
 }
 
 /**
- * Show an admin notice error message if the Composer autoloader is missing
+ * Show an admin notice error message if the `LibXML` extension is missing.
+ *
+ * @return void
+ */
+function libxml_extension_missing(): void {
+	echo '<div class="error"><p>';
+	esc_html_e( 'Antispam Bee requires the LibXML PHP extension. Please install the PHP LibXML extension.', 'antispam-bee' );
+	echo '</p></div>';
+}
+
+/**
+ * Show an admin notice error message if the `JSON` extension is missing.
+ *
+ * @return void
+ */
+function json_extension_missing(): void {
+	echo '<div class="error"><p>';
+	esc_html_e( 'Antispam Bee requires the JSON PHP extension. Please install the PHP JSON extension.', 'antispam-bee' );
+	echo '</p></div>';
+}
+
+/**
+ * Show an admin notice error message if the Composer autoloader is missing.
  *
  * @return void
  */
