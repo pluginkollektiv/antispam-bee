@@ -74,7 +74,7 @@ class Section {
 	/**
 	 * Add controllable items to section.
 	 *
-	 * @param array|null $controllables List of controllable items to add.
+	 * @param class-string<Controllable>[]|null $controllables List of controllable items to add.
 	 * @return void
 	 */
 	public function add_controllables( ?array $controllables ): void {
@@ -86,7 +86,7 @@ class Section {
 	/**
 	 * Generate settings fields for a list of controllable items.
 	 *
-	 * @param Controllable[]|String[] $controllables List of controllable items to add.
+	 * @param class-string<Controllable>[] $controllables List of controllable items to add.
 	 * @return void
 	 */
 	private function generate_fields( array $controllables ): void {

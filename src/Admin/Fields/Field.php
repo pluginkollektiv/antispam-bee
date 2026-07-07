@@ -8,6 +8,7 @@
 namespace AntispamBee\Admin\Fields;
 
 use AntispamBee\Helpers\Settings;
+use AntispamBee\Interfaces\Controllable;
 
 /**
  * Abstract class for field.
@@ -37,9 +38,9 @@ abstract class Field {
 	/**
 	 * Initializing field
 	 *
-	 * @param string $reaction_type Reaction type.
-	 * @param array  $option        Field options.
-	 * @param string $controllable  The related controllable (class name).
+	 * @param string                     $reaction_type Reaction type.
+	 * @param array                      $option        Field options.
+	 * @param class-string<Controllable> $controllable  The related controllable (class name).
 	 */
 	public function __construct( string $reaction_type, array $option, string $controllable ) {
 		$this->reaction_type            = $reaction_type;

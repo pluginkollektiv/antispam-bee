@@ -11,6 +11,7 @@ use AntispamBee\Admin\Fields\Field;
 use AntispamBee\Handlers\GeneralOptions;
 use AntispamBee\Handlers\PostProcessors;
 use AntispamBee\Handlers\Rules;
+use AntispamBee\Interfaces\Controllable;
 
 /**
  * Helps by providing reusable sanitizing functions
@@ -165,10 +166,11 @@ class Sanitize {
 	/**
 	 * Call a sanitization callback.
 	 *
-	 * @param array  $controllable_option Controllable options.
-	 * @param array  $options             Options.
-	 * @param string $tab                 Settings tab.
-	 * @param string $controllable        Controllable element (class name).
+	 * @param array                      $controllable_option Controllable options.
+	 * @param array                      $options             Options.
+	 * @param string                     $tab                 Settings tab.
+	 * @param class-string<Controllable> $controllable        Controllable element (class name).
+	 *
 	 * @return void
 	 */
 	private static function call_sanitize_callback( array $controllable_option, array &$options, string $tab, string $controllable ): void {
