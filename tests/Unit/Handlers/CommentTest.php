@@ -20,7 +20,6 @@ class CommentTest extends TestCase {
 		$_POST   = null;
 		$_SERVER = [
 			'REMOTE_ADDR' => '192.0.2.100',
-			'SCRIPT_NAME' => '/index.php',
 		];
 
 		stubs(
