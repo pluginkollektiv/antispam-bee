@@ -26,6 +26,13 @@ class Honeypot extends ControllableBase implements SpamReason {
 	protected static $slug = 'asb-honeypot';
 
 	/**
+	 * A filled honeypot is a definitive spam signal.
+	 *
+	 * @var bool
+	 */
+	protected static $is_final = true;
+
+	/**
 	 * Only comments are supported.
 	 *
 	 * @var string[]
