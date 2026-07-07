@@ -104,7 +104,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 			return 0;
 		}
 
-		$body = (string) wp_remote_retrieve_body( $response );
+		$body = wp_remote_retrieve_body( $response );
 
 		$json = json_decode( $body, true );
 
