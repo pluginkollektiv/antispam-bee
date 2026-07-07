@@ -43,4 +43,21 @@ class IpHelperTest extends TestCase {
 
 		self::assertSame( '192.0.2.2', IpHelper::get_client_ip(), 'pre_comment_user_ip filter should override the IP' );
 	}
+
+	/**
+	 * @dataProvider anonymize_ip_provider
+	 */
+	public function test_anonymize_ip( string $ip, string $expected, string $message ): void {
+		self::assertSame( $expected, IpHelper::anonymize_ip( $ip ), $message );
+	}
+
+	public function anonymize_ip_provider(): array {
+		return [
+			[ '192.0.2.123', '192.0.0.0', 'IPv4 address should be truncated' ],
+			[ '2001:db8:85a3::8a2e:370:7334', '2001:db8::', 'IPv6 address should be truncated' ],
+			[ '', '', 'empty input should result in an empty string' ],
+			[ '::1', '', 'unmatchable input should result in an empty string' ],
+			[ 'no-ip-at-all', '', 'non-IP input should result in an empty string' ],
+		];
+	}
 }
