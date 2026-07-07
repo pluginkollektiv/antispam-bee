@@ -31,7 +31,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Pull requests for documented bugs are highly appreciated.
 * If you think you’ve found a bug (e.g., you’re experiencing unexpected behavior), please post at the [support forums](https://wordpress.org/support/plugin/antispam-bee) first.
 * If you want to help us translate this plugin, you can do so [on WordPress Translate](https://translate.wordpress.org/projects/wp-plugins/antispam-bee).
-* To test the plugin on your local machine, simply run `docker-compose up` in the root folder and open `http://localhost:8081/` in your browser.
+* To test the plugin on your local machine, simply run `npm install` and then `npm run env:start` in the root folder and open `http://localhost:8888/` in your browser.
 
 ### Donate
 [Donate to us via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW)
@@ -44,8 +44,8 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * If you don’t know how to install a plugin for WordPress, [here’s how](https://wordpress.org/documentation/article/manage-plugins/#automatic-plugin-installation-1).
 
 ### Requirements ###
-* PHP 7.0 or greater
-* WordPress 4.5 or greater
+* PHP 7.2 or greater
+* WordPress 4.6 or greater
 
 ### Settings ###
 After you have activated *Antispam Bee,* the plugin will block spam comments out of the box. However, you may want to visit *Settings → Antispam Bee* to configure your custom set of anti-spam options that works best for your site.
