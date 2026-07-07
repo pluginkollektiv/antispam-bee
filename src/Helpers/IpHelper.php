@@ -54,7 +54,7 @@ class IpHelper {
 		}
 
 		return (string) preg_replace(
-			'/[^0-9a-f:. ]/si',
+			'/[^0-9a-f:. ]/i',
 			'',
 			$raw_ip
 		);
