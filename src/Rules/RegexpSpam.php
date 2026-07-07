@@ -29,7 +29,15 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	 *
 	 * Content fields using pre-defined and custom regular expressions.
 	 *
-	 * @param array $item Item to verify.
+	 * @param array{
+	 *     reaction_type: string,
+	 *     comment_author_IP?: string,
+	 *     comment_author_url?: string,
+	 *     comment_content?: string,
+	 *     comment_author_email?: string,
+	 *     comment_author?: string,
+	 *     comment_agent?: string,
+	 * } $item Item to verify.
 	 *
 	 * @return int Numeric result.
 	 */
@@ -46,12 +54,12 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		$subject = null;
 
 		if ( ContentTypeHelper::COMMENT_TYPE === $item['reaction_type'] ) {
-			$ip        = $item['comment_author_IP'];
-			$url       = $item['comment_author_url'];
-			$body      = $item['comment_content'];
-			$email     = $item['comment_author_email'];
-			$author    = $item['comment_author'];
-			$useragent = $item['comment_agent'];
+			$ip        = $item['comment_author_IP'] ?? '';
+			$url       = $item['comment_author_url'] ?? '';
+			$body      = $item['comment_content'] ?? '';
+			$email     = $item['comment_author_email'] ?? '';
+			$author    = $item['comment_author'] ?? '';
+			$useragent = $item['comment_agent'] ?? '';
 			$subject   = [
 				'ip'        => $ip,
 				'rawurl'    => $url,
@@ -64,9 +72,9 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		}
 
 		if ( ContentTypeHelper::LINKBACK_TYPE === $item['reaction_type'] ) {
-			$ip      = $item['comment_author_IP'];
-			$url     = $item['comment_author_url'];
-			$body    = $item['comment_content'];
+			$ip      = $item['comment_author_IP'] ?? '';
+			$url     = $item['comment_author_url'] ?? '';
+			$body    = $item['comment_content'] ?? '';
 			$subject = [
 				'ip'     => $ip,
 				'rawurl' => $url,

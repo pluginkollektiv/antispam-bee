@@ -162,7 +162,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 					'https://antispambee.pluginkollektiv.org/documentation/#block-comments-from-specific-countries',
 					'antispam-bee'
 				),
-				'https'
+				[ 'https' ]
 			)
 		);
 
@@ -182,7 +182,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array The rule options.
+	 * @return array<int, array<string, mixed>> The rule options.
 	 */
 	public static function get_options(): array {
 		$iso_codes_link = 'https://www.iso.org/obp/ui/#search/code/';

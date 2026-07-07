@@ -2,9 +2,10 @@ includes:
   - vendor/szepeviktor/phpstan-wordpress/extension.neon
 
 parameters:
-  level: 3
+  level: 8
   paths:
     - src/
     - antispam_bee.php
   bootstrapFiles:
     - phpstan-bootstrap.php
+  treatPhpDocTypesAsCertain: false

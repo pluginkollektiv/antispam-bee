@@ -25,7 +25,7 @@ class ValidGravatar extends ControllableBase {
 	/**
 	 * Only comments are supported.
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
@@ -34,7 +34,7 @@ class ValidGravatar extends ControllableBase {
 	 *
 	 * Test if author's email points to a valid Gravatar.
 	 *
-	 * @param array $item Item to verify.
+	 * @param array<string, mixed> $item Item to verify.
 	 *
 	 * @return int Numeric result.
 	 */
@@ -91,7 +91,7 @@ class ValidGravatar extends ControllableBase {
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
 			esc_url(
 				__( 'https://antispambee.pluginkollektiv.org/documentation/#trust-commenters-with-a-gravatar', 'antispam-bee' ),
-				'https'
+				[ 'https' ]
 			)
 		);
 

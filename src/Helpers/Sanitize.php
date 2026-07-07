@@ -63,9 +63,9 @@ class Sanitize {
 	/**
 	 * Sanitize the options.
 	 *
-	 * @param array $options Options to sanitize.
+	 * @param array<string, array<string, string>> $options Options to sanitize.
 	 *
-	 * @return array Sanitized options.
+	 * @return array<string, array<string, string>> Sanitized options.
 	 */
 	public static function sanitize_options( array $options ): array {
 		$current_options = Settings::get_options();
