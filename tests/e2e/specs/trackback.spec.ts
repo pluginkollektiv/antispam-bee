@@ -15,8 +15,8 @@ test.describe( 'Trackback spam filtering', () => {
 	} ) => {
 		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Nuclear Power Plants',
-			excerpt: "use [url='http://example.com']bbCode[/url]",
-			url: 'http://nuclear-power.rocks',
+			excerpt: "use [url='https://example.com']bbCode[/url]",
+			url: 'https://example.com',
 			blog_name: 'Mr. Burns Spam Corp.',
 		} );
 
@@ -38,8 +38,8 @@ test.describe( 'Trackback spam filtering', () => {
 		cli.commentCreate( {
 			comment_content: 'Spam comment',
 			comment_author: 'Spammer',
-			comment_author_email: 'spam@spam-trackback.com',
-			comment_author_url: 'http://spam-trackback-url.com',
+			comment_author_email: 'spam@spam.example.com',
+			comment_author_url: 'https://spam.example.com',
 			comment_author_IP: '10.0.0.1',
 			comment_date: '2020-01-01 00:00:00',
 			comment_approved: 'spam',
@@ -49,7 +49,7 @@ test.describe( 'Trackback spam filtering', () => {
 		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Spam Trackback',
 			excerpt: 'A trackback from a known spam URL.',
-			url: 'http://spam-trackback-url.com',
+			url: 'https://spam.example.com',
 			blog_name: 'Spam Blog',
 		} );
 
@@ -71,8 +71,8 @@ test.describe( 'Trackback spam filtering', () => {
 		await page.goto( '/?p=1' );
 		await page.fill( '#comment', 'Viagra is the way to go!' );
 		await page.fill( '#author', 'Montgomery' );
-		await page.fill( '#email', 'montgomery.c.burns.1866@aol.com' );
-		await page.fill( '#url', 'http://nuclear-secrets.com' );
+		await page.fill( '#email', 'montgomery.c.burns.1866@example.com' );
+		await page.fill( '#url', 'https://example.com' );
 		await page.click( '#submit' );
 
 		// Wait for the local spam DB to persist the entry.
@@ -81,7 +81,7 @@ test.describe( 'Trackback spam filtering', () => {
 		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Trackback From Spam IP',
 			excerpt: 'A perfectly normal trackback.',
-			url: 'http://different-url-for-trackback.com',
+			url: 'https://subdomain.example.com',
 			blog_name: 'Another Blog',
 		} );
 
@@ -100,7 +100,7 @@ test.describe( 'Trackback spam filtering', () => {
 		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Viagra',
 			excerpt: 'has more use cases than you think',
-			url: 'http://explore.viagra',
+			url: 'https://viagra.example.com',
 			blog_name: 'Mr. Burns Spam Corp.',
 		} );
 
@@ -122,7 +122,7 @@ test.describe( 'Trackback spam filtering', () => {
 		await sendTrackback( WP_BASE_URL, 1, {
 			title: postTitle,
 			excerpt: 'A trackback where blog name matches the post title.',
-			url: 'http://some-blog.com',
+			url: 'https://blog.example.com',
 			blog_name: postTitle,
 		} );
 
@@ -150,7 +150,7 @@ test.describe( 'Trackback spam filtering', () => {
 			// Long English excerpt so franc has enough trigrams for reliable detection.
 			excerpt:
 				'This is an English trackback excerpt that should be blocked because only the German language is allowed on this site and this text is clearly written in English.',
-			url: 'http://english-blog.com',
+			url: 'https://en.example.com',
 			blog_name: 'English Blog',
 		} );
 

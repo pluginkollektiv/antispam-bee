@@ -42,8 +42,8 @@ test.describe( 'Spam filter mechanisms', () => {
 		await fillComment( page, {
 			comment: 'Release the hounds!',
 			author: 'Mr. Burns',
-			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'montgomery.c.burns.1866@example.com',
+			url: 'https://example.com',
 			fillHoneypot: true,
 		} );
 
@@ -64,7 +64,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await fillComment( page, {
 			comment: 'Release the hounds!',
 			author: 'Mr. Burns',
-			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
+			email: 'montgomery.c.burns.1866@example.com',
 			fillHoneypot: true,
 		} );
 
@@ -99,7 +99,6 @@ test.describe( 'Spam filter mechanisms', () => {
 
 	test( 'local spam DB flags comment from same IP', async ( {
 		page,
-		cli,
 	} ) => {
 		test.setTimeout( 90_000 );
 
@@ -108,7 +107,7 @@ test.describe( 'Spam filter mechanisms', () => {
 			comment: 'you can Buy amazing Neutrons here!',
 			author: 'Montgomery',
 			email: 'montgomery.c.burns.1866@aol.com',
-			url: 'http://nuclear-secrets.com',
+			url: 'https://example.com',
 		} );
 
 		// Wait for the local spam DB to persist the entry.
@@ -118,8 +117,8 @@ test.describe( 'Spam filter mechanisms', () => {
 		await fillComment( page, {
 			comment: 'Excellent indeed!',
 			author: 'Monty',
-			email: 'monty.1983@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.info',
+			email: 'monty.1983@example.com',
+			url: 'https://nuclear-secrets.info',
 		} );
 
 		await adminLogin( page );
@@ -143,7 +142,7 @@ test.describe( 'Spam filter mechanisms', () => {
 			comment_content: 'Spam comment',
 			comment_author: 'Spammer',
 			comment_author_email: 'spam@example.com',
-			comment_author_url: 'http://spam.com',
+			comment_author_url: 'https://spam.com',
 			comment_author_IP: '127.0.0.1',
 			comment_date: '2020-01-01 00:00:00',
 			comment_approved: 'spam',
@@ -164,7 +163,9 @@ test.describe( 'Spam filter mechanisms', () => {
 		);
 	} );
 
-	test( 'local spam DB flags by email', async ( { page, cli } ) => {
+	test( 'local spam DB flags by email', async ( {
+		page,
+	}) => {
 		test.setTimeout( 90_000 );
 
 		// First comment — caught by RegExp ("buy amazing" matches the built-in pattern).
@@ -172,7 +173,7 @@ test.describe( 'Spam filter mechanisms', () => {
 			comment: 'you can Buy amazing Neutrons here!',
 			author: 'Montgomery',
 			email: 'same-email@nuclear.com',
-			url: 'http://nuclear-secrets.com',
+			url: 'https://example.com',
 		} );
 
 		await page.waitForTimeout( 15_000 );
@@ -182,7 +183,7 @@ test.describe( 'Spam filter mechanisms', () => {
 			comment: 'Excellent indeed!',
 			author: 'Monty',
 			email: 'same-email@nuclear.com',
-			url: 'http://other-site.info',
+			url: 'https://other-site.info',
 		} );
 
 		await adminLogin( page );
@@ -190,7 +191,9 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Local DB' );
 	} );
 
-	test( 'local spam DB flags by URL', async ( { page, cli } ) => {
+	test( 'local spam DB flags by URL', async ( {
+		page,
+	} ) => {
 		test.setTimeout( 90_000 );
 
 		// "buy amazing" matches the built-in regexp pattern.
@@ -198,7 +201,7 @@ test.describe( 'Spam filter mechanisms', () => {
 			comment: 'you can Buy amazing Neutrons here!',
 			author: 'Montgomery',
 			email: 'montgomery@nuclear.com',
-			url: 'http://shared-spam-url.com',
+			url: 'https://shared-spam-url.com',
 		} );
 
 		await page.waitForTimeout( 15_000 );
@@ -207,7 +210,7 @@ test.describe( 'Spam filter mechanisms', () => {
 			comment: 'Excellent indeed!',
 			author: 'Monty',
 			email: 'monty@different.com',
-			url: 'http://shared-spam-url.com',
+			url: 'https://shared-spam-url.com',
 		} );
 
 		await adminLogin( page );
@@ -215,12 +218,14 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Local DB' );
 	} );
 
-	test( 'regex detects spam keyword (Viagra)', async ( { page, cli } ) => {
+	test( 'regex detects spam keyword (Viagra)', async ( {
+		page,
+	} ) => {
 		await fillComment( page, {
 			comment: 'Viagra helped me in those days.',
 			author: 'Monty',
-			email: 'monty.1983@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
 		} );
 
 		await adminLogin( page );
@@ -231,13 +236,12 @@ test.describe( 'Spam filter mechanisms', () => {
 
 	test( 'regex detects spam keyword (luxurybrandsale)', async ( {
 		page,
-		cli,
 	} ) => {
 		await fillComment( page, {
 			comment: 'Come to our luxurybrandsale',
 			author: 'Monty',
-			email: 'monty.1983@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
 		} );
 
 		await adminLogin( page );
@@ -260,8 +264,8 @@ test.describe( 'Spam filter mechanisms', () => {
 		await fillComment( page, {
 			comment: 'Viagra helped me in those days.',
 			author: 'Monty',
-			email: 'monty.1983@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
 		} );
 
 		await adminLogin( page );
@@ -274,10 +278,10 @@ test.describe( 'Spam filter mechanisms', () => {
 
 	test( 'BBCode in comment is detected as spam', async ( { page, cli } ) => {
 		await fillComment( page, {
-			comment: 'This is also a [url=http://nuclear-secrets.com]nuclear[/url] page!',
+			comment: 'This is also a [url=https://example.com]nuclear[/url] page!',
 			author: 'Monty',
-			email: 'monty.1983@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
 		} );
 
 		await adminLogin( page );
@@ -299,10 +303,10 @@ test.describe( 'Spam filter mechanisms', () => {
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
 		await fillComment( page, {
-			comment: 'This is also a [url=http://nuclear-secrets.com]nuclear[/url] page!',
+			comment: 'This is also a [url=https://example.com]nuclear[/url] page!',
 			author: 'Monty',
-			email: 'monty.1983@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
 		} );
 
 		await adminLogin( page );
@@ -332,8 +336,8 @@ test.describe( 'Spam filter mechanisms', () => {
 			comment:
 				'This is a comment written entirely in English and it should be blocked because the site only allows comments written in the German language.',
 			author: 'Monty',
-			email: 'monty.1983@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
 		} );
 
 		await adminLogin( page );
@@ -358,8 +362,8 @@ test.describe( 'Spam filter mechanisms', () => {
 		await fillComment( page, {
 			comment: 'A small text passes the test. Lets check this.',
 			author: 'Monty',
-			email: 'monty.1983@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
 		} );
 
 		// Short comments bypass language detection and should not be in spam.
@@ -385,8 +389,8 @@ test.describe( 'Spam filter mechanisms', () => {
 		await fillComment( page, {
 			comment: 'English is allowed!',
 			author: 'Monty',
-			email: 'monty.1983@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
 		} );
 
 		await adminLogin( page );
@@ -412,8 +416,8 @@ test.describe( 'Spam filter mechanisms', () => {
 			comment:
 				'This is an English comment that should be blocked because only German and Italian are on the allowed language list for this site.',
 			author: 'Monty',
-			email: 'monty.1983@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
 		} );
 
 		await adminLogin( page );
@@ -438,8 +442,8 @@ test.describe( 'Spam filter mechanisms', () => {
 		await fillComment( page, {
 			comment: 'English is allowed!',
 			author: 'Monty',
-			email: 'monty.1983@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
 		} );
 
 		await adminLogin( page );
@@ -466,7 +470,7 @@ test.describe( 'Spam filter mechanisms', () => {
 			comment: 'A totally legitimate comment.',
 			author: 'Legitimate User',
 			email: 'legit@example.com',
-			url: 'http://legit-site.com',
+			url: 'https://legit.example.com',
 		} );
 
 		// Mark it as spam via admin.
@@ -492,7 +496,7 @@ test.describe( 'Spam filter mechanisms', () => {
 			comment: 'Another comment.',
 			author: 'Also Legit',
 			email: 'also@different.com',
-			url: 'http://different-site.com',
+			url: 'https://different.example.com',
 		} );
 
 		// Re-login to check the spam folder.

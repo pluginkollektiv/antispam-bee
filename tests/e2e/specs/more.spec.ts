@@ -10,14 +10,14 @@ const spamComments = [
 	{
 		comment: 'Release the viagra!',
 		author: 'Mr. Burns',
-		email: 'montgomery.c.burns.1866@nuclear-secrets.com',
-		url: 'http://nuclear-secrets.com',
+		email: 'montgomery.c.burns.1866@example.com',
+		url: 'https://example.com',
 	},
 	{
 		comment: 'Release the viagra, again!',
 		author: 'Mr. Burns',
-		email: 'montgomery.c.burns.1866@nuclear-secrets.com',
-		url: 'http://nuclear-secrets.com',
+		email: 'montgomery.c.burns.1866@example.com',
+		url: 'https://example.com',
 	},
 ];
 

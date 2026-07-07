@@ -30,13 +30,12 @@ async function fillHoneypotComment(
 test.describe( 'Advanced spam settings', () => {
 	test( 'spam is saved in database (flag_spam on)', async ( {
 		page,
-		cli,
 	} ) => {
 		// Default options keep spam flagged (delete processor is off).
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'montgomery.c.burns.1866@example.com',
+			url: 'https://example.com',
 		} );
 
 		await adminLogin( page );
@@ -55,8 +54,8 @@ test.describe( 'Advanced spam settings', () => {
 
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'montgomery.c.burns.1866@example.com',
+			url: 'https://example.com',
 		} );
 
 		await expect( page.locator( 'body' ) ).toContainText( 'Spam deleted.' );
@@ -68,12 +67,11 @@ test.describe( 'Advanced spam settings', () => {
 
 	test( 'spam reason is saved and visible (save_reason on)', async ( {
 		page,
-		cli,
 	} ) => {
 		// Default options already have save_reason enabled.
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
+			email: 'montgomery.c.burns.1866@example.com',
 		} );
 
 		await adminLogin( page );
@@ -91,7 +89,7 @@ test.describe( 'Advanced spam settings', () => {
 
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
+			email: 'montgomery.c.burns.1866@example.com',
 		} );
 
 		await adminLogin( page );
