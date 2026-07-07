@@ -9,6 +9,7 @@ namespace AntispamBee\Helpers;
 
 use AntispamBee\Interfaces\Controllable;
 use ReflectionClass;
+use ReflectionException;
 use const AntispamBee\PLUGIN_PATH;
 
 /**
@@ -29,7 +30,7 @@ class ComponentsHelper {
 	 * @type string|array $implements      Interface(s) that should be implemented.
 	 *                                     }
 	 * @return array Filtered list.
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 */
 	public static function filter( array $components, array $options ): array {
 		$reaction_type = $options['reaction_type'] ?? null;

@@ -7,6 +7,9 @@
 
 namespace AntispamBee\Helpers;
 
+use const ANTISPAM_BEE_DEBUG_MODE_ENABLED;
+use const WP_CONTENT_DIR;
+
 /**
  * Debug Mode.
  */
@@ -25,7 +28,7 @@ class DebugMode {
 	 */
 	public static function enabled(): bool {
 		if ( null === static::$debug_mode_enabled ) {
-			static::$debug_mode_enabled = defined( 'ANTISPAM_BEE_DEBUG_MODE_ENABLED' ) ? \ANTISPAM_BEE_DEBUG_MODE_ENABLED : false;
+			static::$debug_mode_enabled = defined( 'ANTISPAM_BEE_DEBUG_MODE_ENABLED' ) ? ANTISPAM_BEE_DEBUG_MODE_ENABLED : false;
 		}
 
 		return static::$debug_mode_enabled;
@@ -44,7 +47,7 @@ class DebugMode {
 
 		$date        = date( 'Y-m-d' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$time        = date( 'H-i-s' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-		$content_dir = \WP_CONTENT_DIR;
+		$content_dir = WP_CONTENT_DIR;
 
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug use.
 		error_log( "[{$date} {$time}] {$message}\n", 3, "{$content_dir}/asb-debug.{$date}.log" );
