@@ -11,7 +11,6 @@ import { WP_BASE_URL } from '../config';
 test.describe( 'Trackback spam filtering', () => {
 	test( 'BBCode in trackback excerpt is detected as spam', async ( {
 		page,
-		cli,
 	} ) => {
 		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Nuclear Power Plants',
@@ -61,7 +60,6 @@ test.describe( 'Trackback spam filtering', () => {
 
 	test( 'trackback from IP in local spam DB is detected', async ( {
 		page,
-		cli,
 	} ) => {
 		test.setTimeout( 90_000 );
 
@@ -95,7 +93,6 @@ test.describe( 'Trackback spam filtering', () => {
 
 	test( 'regex detects spam keyword in trackback', async ( {
 		page,
-		cli,
 	} ) => {
 		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Viagra',
@@ -114,7 +111,6 @@ test.describe( 'Trackback spam filtering', () => {
 
 	test( 'trackback title matching post title is detected', async ( {
 		page,
-		cli,
 	} ) => {
 		// Get the title of post ID 1.
 		const postTitle = 'Hello world!';

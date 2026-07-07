@@ -2,10 +2,10 @@
  * Covers filter.feature: all spam detection rule scenarios.
  *
  * Spam reason strings match the v3 source (not the old Behat assertions):
- *   - "Local DB"     (was "Local DB Spam")
- *   - "RegExp match" (was "Regular Expression")
- *   - "Language"     (was "Comment Language")
- *   - "Honeypot" and "BBCode" unchanged.
+ *	- "Local DB"	  (was "Local DB Spam")
+ *	- "RegExp match" (was "Regular Expression")
+ *	- "Language"	  (was "Comment Language")
+ *	- "Honeypot" and "BBCode" unchanged.
  */
 import { test, expect, adminLogin } from '../fixtures/base';
 
@@ -38,7 +38,9 @@ async function fillComment(
 }
 
 test.describe( 'Spam filter mechanisms', () => {
-	test( 'honeypot catches spam comment', async ( { page, cli } ) => {
+	test( 'honeypot catches spam comment', async ( {
+		page,
+	} ) => {
 		await fillComment( page, {
 			comment: 'Release the hounds!',
 			author: 'Mr. Burns',
@@ -276,7 +278,9 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Monty' );
 	} );
 
-	test( 'BBCode in comment is detected as spam', async ( { page, cli } ) => {
+	test( 'BBCode in comment is detected as spam', async ( {
+		page,
+	} ) => {
 		await fillComment( page, {
 			comment: 'This is also a [url=https://example.com]nuclear[/url] page!',
 			author: 'Monty',
