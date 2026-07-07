@@ -17,13 +17,13 @@ class BBCodeTest extends AbstractRuleTestCase {
 		$item['comment_content'] = 'No link here.';
 		self::assertSame( 0, BBCode::verify( $item ), 'unexpected result for comment without BBCode' );
 
-		$item['comment_content'] = 'Link to [url]http://example.com[/url].';
+		$item['comment_content'] = 'Link to [url]https://example.com[/url].';
 		self::assertSame( 1, BBCode::verify( $item ), 'unexpected result for comment with simple URL' );
 
-		$item['comment_content'] = 'This is a [url=http://example.com]link[/url].';
+		$item['comment_content'] = 'This is a [url=https://example.com]link[/url].';
 		self::assertSame( 1, BBCode::verify( $item ), 'unexpected result for comment with wrapped URL' );
 
-		$item['comment_content'] = 'This is a [UrL=http://example.com]link[/uRl].';
+		$item['comment_content'] = 'This is a [UrL=https://example.com]link[/uRl].';
 		self::assertSame( 1, BBCode::verify( $item ), 'check should be case-insensitive' );
 
 		$item['comment_content'] = 'This is [b]bold[/b] and [i]italic[/i] text.';
