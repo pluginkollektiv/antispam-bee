@@ -12,6 +12,7 @@ use AntispamBee\Helpers\DebugMode;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\SpamReason;
 use AntispamBee\Interfaces\Verifiable;
+use ReflectionException;
 
 /**
  * Rules.
@@ -156,7 +157,9 @@ class Rules {
 	 * Filter items.
 	 *
 	 * @param array $options Filter options.
+	 *
 	 * @return array List of filtered elements.
+	 * @throws ReflectionException
 	 */
 	private static function filter( array $options ): array {
 		return ComponentsHelper::filter( apply_filters( 'antispam_bee_rules', [] ), $options );

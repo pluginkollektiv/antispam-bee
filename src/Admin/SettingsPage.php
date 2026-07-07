@@ -14,6 +14,7 @@ use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
+use ReflectionException;
 use const AntispamBee\MAIN_PLUGIN_FILE;
 use const AntispamBee\PLUGIN_VERSION;
 
@@ -159,6 +160,7 @@ class SettingsPage {
 	 * Populate settings tabs.
 	 *
 	 * @return void
+	 * @throws ReflectionException
 	 */
 	protected function populate_tabs(): void {
 		foreach ( $this->tabs as $tab ) {

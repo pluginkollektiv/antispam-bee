@@ -10,6 +10,7 @@ namespace AntispamBee\Handlers;
 use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
+use ReflectionException;
 
 /**
  * Post processors.
@@ -86,7 +87,9 @@ class PostProcessors {
 	 * Filter items.
 	 *
 	 * @param array $options Filter options.
+	 *
 	 * @return array List of filtered elements.
+	 * @throws ReflectionException
 	 */
 	private static function filter( array $options ): array {
 		return ComponentsHelper::filter( apply_filters( 'antispam_bee_post_processors', [] ), $options );
