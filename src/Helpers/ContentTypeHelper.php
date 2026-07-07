@@ -59,8 +59,6 @@ class ContentTypeHelper {
 		 *
 		 * @return bool
 		 */
-		$is_one_of = (bool) apply_filters( 'antispam_bee_reaction_is_one_of', $is_one_of, $reaction, $reaction_types, $context );
-
-		return $is_one_of;
+		return (bool) apply_filters( 'antispam_bee_reaction_is_one_of', $is_one_of, $reaction, $reaction_types, $context );
 	}
 }
