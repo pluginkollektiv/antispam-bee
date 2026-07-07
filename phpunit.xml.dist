@@ -1,7 +1,7 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/9.2/phpunit.xsd"
 		 backupGlobals="false"
-		 bootstrap="./vendor/autoload.php"
+		 bootstrap="tests/bootstrap.php"
 		 colors="true"
 		 beStrictAboutTestsThatDoNotTestAnything="true"
 		 beStrictAboutOutputDuringTests="true"
@@ -18,7 +18,4 @@
 			<directory suffix=".php">tests/Integration</directory>
 		</testsuite>
 	</testsuites>
-	<listeners>
-		<listener class="TestListener" file="tests/TestListener.php"/>
-	</listeners>
 </phpunit>

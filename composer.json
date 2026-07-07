@@ -44,7 +44,8 @@
   "autoload-dev": {
     "classmap": [
       "antispam_bee.php",
-      "src/"
+      "src/",
+      "tests/_stubs/"
     ],
     "psr-4": {
       "AntispamBee\\Tests\\": "tests/"
