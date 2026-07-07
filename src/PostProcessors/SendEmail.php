@@ -179,7 +179,7 @@ $new_spam_comment
 $author: {{comment_author}}
 $url: {{comment_author_url}}
 $type: {{reaction_type}}
-Whois: http://whois.arin.net/rest/ip/{{comment_author_IP}}
+Whois: https://whois.arin.net/rest/ip/{{comment_author_IP}}
 $spam_reasons: {{spam_reasons}}
 
 {{content}}
