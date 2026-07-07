@@ -61,6 +61,7 @@ abstract class AbstractRuleTestCase extends TestCase {
 	 * @param string $author_url   Author URL.
 	 * @param string $author_ip    Author IP address.
 	 * @param string $content      Content.
+	 * @param string $agent        User agent.
 	 *
 	 * @return array Comment array.
 	 */
@@ -70,7 +71,8 @@ abstract class AbstractRuleTestCase extends TestCase {
 		string $author_email = 'test.author@example.com',
 		string $author_url = 'www.example.com',
 		string $author_ip = '192.0.2.1',
-		string $content = 'This is the base test comment.'
+		string $content = 'This is the base test comment.',
+		string $agent = 'Mozilla/5.0'
 	): array {
 		return array(
 			'reaction_type'        => ContentTypeHelper::COMMENT_TYPE,
@@ -80,6 +82,7 @@ abstract class AbstractRuleTestCase extends TestCase {
 			'comment_author_url'   => $author_url,
 			'comment_author_IP'    => $author_ip,
 			'comment_content'      => $content,
+			'comment_agent'        => $agent,
 		);
 	}
 }
