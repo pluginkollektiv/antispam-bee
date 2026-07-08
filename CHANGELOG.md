@@ -3,7 +3,7 @@
 ### 3.0.0 – WIP ###
 * **English**
 	* Complete code rewrite and backend UI overhaul
-    * Allows to extend Antispam Bee with own rules
+    * Allows extending Antispam Bee with your own rules
     * Allows to use Antispam Bee rules for other reactions than comments, for example, forms
 
 * **Deutsch**
@@ -20,14 +20,14 @@
 
 ### 2.11.11 ###
 * **English**
-  * Enhancement: Add shorturl.fm spam pattern
+  * Enhancement: Add a shorturl.fm spam pattern
 
 * **Deutsch**
   * Verbesserung: Hinzufügen eines Musters für shorturl.fm Spam
 
 ### 2.11.10 ###
 * **English**
-  * Fix: remove build-tool warnings from minified Javascript and CSS resources
+  * Fix: remove build-tool warnings from minified JavaScript and CSS resources
 
 * **Deutsch**
   * Fix: Build-Tool-Warnungen aus minifizierten Javascript und CSS Ressourcen entfernt
@@ -44,7 +44,7 @@
 ### 2.11.8 ###
 * **English**
   * Tweak: Minor code changes and housekeeping
-  * Tweak: Add link to Patchstack in readme
+  * Tweak: Add a link to Patchstack in readme
   * Maintenance: Tested up to WordPress 6.8
 
 * **Deutsch**
@@ -54,7 +54,7 @@
 
 ### 2.11.7 ###
 * **English**
-  * Tweak: Use SCRIPT_NAME instead of REQUEST_URI to check path
+  * Tweak: Use SCRIPT_NAME instead of REQUEST_URI to check the path
   * Fix: Remove `add_reasons_to_defaults()` from general initialization for better WordPress 6.7 compatibility
   * Maintenance: Tested up to WordPress 6.7
 
@@ -65,7 +65,7 @@
 
 ### 2.11.6 ###
 * **English**
-  * Fix: Delete missed out option on uninstall (Thanks @okvee!)
+  * Fix: Delete a missed out option on uninstallation (Thanks @okvee!)
   * Tweak: Minor i18n improvements (Thanks Pedro!)
   * Tweak: Minor code changes and housekeeping
   * Tweak: Updated dependencies
@@ -77,7 +77,7 @@
   * Tweak: Aktualisierte Abhängigkeiten
 
 ### 2.11.5 ###
-IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `antispam_bee_trusted_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`  (don’t return an empty value here, otherwise all comments are marked as spam).
+IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `antispam_bee_trusted_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED` (don’t return an empty value here, otherwise all comments are marked as spam).
 WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter einem Proxy oder ähnlich bist, musst du den `antispam_bee_trusted_ip`-Filter verwenden, um die richtige Adresse des Users von einem Header wie `HTTP_X_FORWARDED` zu bekommen (hier darfst du keinen leeren String zurückgeben, sonst werden alle Kommentare als Spam markiert).
 * **English**
   * Fix: Usage of core filter `pre_comment_user_ip` breaks ASB if the IP address is removed for GDPR compliance
@@ -87,12 +87,12 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 
 ### 2.11.4 ###
 IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `pre_comment_user_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.  
-WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter einem Proxy oder ähnlich bist, musst du den `pre_comment_user_ip`-Filter verwenden, um die richtige Adresse des Users von einem Header wie `HTTP_X_FORWARDED` zu bekommen.
+WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter einem Proxy oder ähnlich bist, musst du den `pre_comment_user_ip`-Filter verwenden, um die richtige Adresse des Users von einem Header wie `HTTP_X_FORWARDED` zu bekommen.  
 * **English**
   * Fix: Read client IP for country check from `REMOTE_ADDR` only (filterable via `pre_comment_user_ip`)
-  * Fix: No spam reason in spam notification email, and related PHP warning
+  * Fix: No spam reason in spam notification email and related PHP warning
   * Fix: Remove outdated info from readme
-  * Enhancement: Show upgrade notice on plugin overview page
+  * Enhancement: Show the upgrade notice on the plugin overview page
   * Maintenance: Tested up to WordPress 6.3
 
 * **Deutsch**
@@ -105,7 +105,7 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 ### 2.11.3 ###
 * **English**
   * Fix: Multiselect for "Delete comments by spam reasons" was not saving values
-  * Fix: Fix broken link for ISO country codes
+  * Fix: Fix a broken link for ISO country codes
   * Maintenance: Added test for PHP 8.2
   * Maintenance: Tested up to WordPress 6.2
 
@@ -118,7 +118,7 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 ### 2.11.2 ###
 * **English**
   * Tweak: remove superfluous translations
-  * Tweak: make FAQ link an anchor link
+  * Tweak: make an FAQ link an anchor link
   * Fix: spam counter no longer raises a warning with PHP 8.1 if no spam is present yet
   * Fix: spam reasons are now localized correctly
   * Fix: Translations were loaded twice on some admin pages
@@ -134,7 +134,7 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 
 ### 2.11.1 ###
 * **English**
-  * Tweak: remove superfluous type attribute from inline script tag
+  * Tweak: remove superfluous type attribute from the inline script tag
   * Maintenance: Tested up to WordPress 6.0
 
 * **Deutsch**
@@ -159,12 +159,12 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 ### 2.10.0 ###
 * **English**
   * Fix: Switch from ip2country.info to iplocate.io for country check
-  * Enhancement: Use filter to add the honeypot field instead of output buffering for new installations and added option to switch between the both ways
+  * Enhancement: Use filter to add the honeypot field instead of output buffering for new installations and added an option to switch between the both ways
   * Tweak: Added comment user agent to regex pattern check
   * Tweak: Make the ping detection filterable to support new comment types
   * Tweak: Updated internal documentation links
   * Tweak: Several updates and optimizations in the testing process
-  * Tweak: Adjust color palette to recent WP version
+  * Tweak: Adjust color palette to a recent WP version
   * Tweak: Adjust wording in variables and option names
   * Readme: Add new contributor and clean up unused code
 
@@ -195,10 +195,10 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 ### 2.9.3 ###
 * **English**
   * Fixed: Compatibility with WordPress 5.5
-  * Fixed: Undefined index on spam list page
-  * Tweak: Better wording on settings page
+  * Fixed: Undefined index on the spam list page
+  * Tweak: Better wording on the settings page
   * Tweak: AMP compatibility
-  * Tweak: Protect CSS from overwrite through bad themes
+  * Tweak: Protect CSS from overwriting through bad themes
 
 * **Deutsch**
   * Fix: Kompatibilität mit WordPress 5.5
@@ -210,11 +210,11 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 ### 2.9.2 ###
 * **English**
   * Fix: Delete comment meta for deleted old spam. For the cleanup of older orphaned comment meta we suggest the usage of [WP Sweep](https://wordpress.org/plugins/wp-sweep/)
-  * Fix: Statistic in dashboard showed wrong value
+  * Fix: Statistic in the dashboard showed the wrong value
   * Tweak: Change autocomplete attribute to "new-password"
   * Tweak: Autoptimize compatibility improved
   * Tweak: Renamed blacklist/whitelist to a better phrase
-  * Tweak: Added new pattern
+  * Tweak: Added a new pattern
   * Tweak: UI and text optimizations
   * Tweak: Better compatibility with some server configurations
   * Tweak: Make spam reason sortable and filterable
@@ -250,7 +250,7 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
   * Compatible with the AMP plugin (https://wordpress.org/plugins/amp/)
   * Improved dashboard tooltips
   * Improvements for the language detection API
-  * Scalable IP look up for local spam database
+  * Scalable IP look up for a local spam database
 
 
 * **Deutsch**
@@ -265,31 +265,31 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 * **English**
   * Introduction of coding standards.
   * Switch to franc language detection API for the language check.
-  * Do not longer overwrite the IP address WordPress saves with the comment by using `pre_comment_user_ip`.
+  * Do no longer overwrite the IP address WordPress saves with the comment by using `pre_comment_user_ip`.
   * Do not show "Trust commenters with a Gravatar" if the "Show Gravatar" option is not set.
-  * Skip the checks, when I ping myself.
+  * Skip the checks when I ping myself.
   * Fixes some wrong usages of the translation functions.
   * Use the regular expressions check also for trackbacks.
-  * Add option to delete Antispam Bee related data when plugin gets deleted via the admin interface.
+  * Add an option to delete Antispam Bee related data when the plugin gets deleted via the admin interface.
   * Save a hashed + salted IP for every comment
-  * New check for incoming Trackbacks.
+  * New check for incoming trackbacks.
   * Introduction of behat tests.
   * Updates the used JavaScript library for the statistics widget.
-  * Bugfix in the "Comment form used outside of posts" option.
+  * Bugfix in the "Comment form used outside posts" option.
 
 * **Deutsch**
   * Einführung von Coding Standards.
   * Wechsel auf die Franc Spracherkennungs API für den Sprach-Check.
-  * Beendet das Überschreiben der IP Adresse via `pre_comment_user_ip`, welche WordPress mit dem Kommentar speichert.
-  * Zeige die Option "Vertraue Kommentaren mit Gravatar" nur an wenn die Option "Zeige Gravatar" aktiviert ist.
+  * Beendet das Überschreiben der IP-Adresse via `pre_comment_user_ip`, welche WordPress mit dem Kommentar speichert.
+  * Zeige die Option "Vertraue Kommentaren mit Gravatar" nur an, wenn die Option "Zeige Gravatar" aktiviert ist.
   * Überspringe die Filter, wenn ich mich selbst anpinge.
   * Repariert einige falsche Verwendungsweisen der Übersetzungsfunktionalitäten.
-  * Wende den reguläre Ausdrücke Check auch auf Trackbacks an.
+  * Wende die regulären Ausdrücke Check auch auf Trackbacks an.
   * Option hinzugefügt, dass Daten von Antispam Bee gelöscht werden, wenn das Plugin über das Admin Interface gelöscht wird.
   * Speichere für jeden Kommentar eine salted Hash der IP Adresse.
   * Ein neuer Check für eingehende Trackbacks.
   * Einführung von Behat tests.
-  * Aktualisiert die genutzte JavaScript Bibliothek für das Statistik Widget.
+  * Aktualisiert die genutzte JavaScript-Bibliothek für das Statistik-Widget.
   * Bugfix in der "Kommentarformular wird außerhalb von Beiträgen verwendet" Einstellung
 
 ### 2.8.1 ###
@@ -313,7 +313,7 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
   * Fixes small bug on mobile views
   * Allow more than one language in language check
   * Minor interface improvements
-  * Remove old russian and Dutch translation files
+  * Remove old Russian and Dutch translation files
   * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
 
 * **Deutsch**
@@ -351,7 +351,7 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
    * More default Regexes
    * Unit Test Framework
    * Accessibility and GUI improvements
-   * An [english documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now available, too. Some corrections in the german documentation.
+   * An [english documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now available, too. Some corrections in the German documentation.
    * Some bugfixes - Among other things for WPML compatibility
    * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/3?closed=1
 
@@ -368,7 +368,7 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 ### 2.6.9 ###
 * **English**
    * Updates donation links throughout the plugin
-   * Fixes an error were JavaScript on the dashboard was erroneously being enqueued
+   * Fixes an error where JavaScript on the dashboard was erroneously being enqueued
    * Ensures compatibility with the latest WordPress version
 * **Deutsch**
    * Aktualisierung der Spenden Links im gesamten Plugin
@@ -382,20 +382,20 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
    * updated plugin text domain to include a dash instead of an underscore
    * updated, translated + formatted README.md
    * updated expired link URLs in plugin and languages files
-   * updated [plugin authors](https://gist.github.com/glueckpress/f058c0ab973d45a72720)
+   * updated [plugin authors](https://pluginkollektiv.org/hello-world/)
 * **Deutsch**
    * eine POT-Datei hinzugefügt
    * deutsche Übersetzung aktualisiert, formale Version hinzugefügt
    * Die Text Domain des Plugins in der ReadMe aktualisiert. Statt einem Unterstrich enthält der Name nun ein Bindestrich.
    * README.md aktualisiert, übersetzt und formatiert
    * verwaiste Link-Adressen in dem Plugin und den Sprachdateien aktualisiert
-   * [Plugin Autor](https://gist.github.com/glueckpress/f058c0ab973d45a72720) aktualisiert
+   * [Plugin Autor](https://pluginkollektiv.org/de/hallo-welt/) aktualisiert
 
 ### 2.6.7 ###
 * **English**
-   * Removal of functions *Block comments from specific countries* and *Allow comments only in certain language* for financial reasons
+   * Removal of functions *Block comments from specific countries* and *Allow comments only in certain language* for financial reasons - [more information](https://antispambee.pluginkollektiv.org/news/2015/removal-of-allow-comments-only-in-certain-language/)
 * **Deutsch**
-   * Entfernung der Funktionen *Kommentare nur in einer Sprache zulassen* und *Bestimmte Länder blockieren bzw. erlauben* aus finanziellen Gründen - [Hintergrund-Informationen](https://antispambee.pluginkollektiv.org/news/2015/removal-of-allow-comments-only-in-certain-language/)
+   * Entfernung der Funktionen *Kommentare nur in einer Sprache zulassen* und *Bestimmte Länder blockieren bzw. erlauben* aus finanziellen Gründen - [Hintergrund-Informationen](https://antispambee.pluginkollektiv.org/de/news/2015/ausfall-kommentare-nur-in-einer-sprache-zulassen/)
 
 ### 2.6.6 ###
 * **English**
@@ -419,7 +419,7 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 
 ### 2.6.4 ###
 * **English**
-   * Consideration of the comment time (Spam if a comment was written in less than 5 seconds)
+   * Consideration of the comment time (Spam if a comment was written in less than 5 seconds) - [more information](https://antispambee.pluginkollektiv.org/news/2014/antispam-bee-2-6-4/)
    * *Release time investment (Development & QA): 6.25 h*
 * **Deutsch**
    * Berücksichtigung der Kommentarzeit (Spam, wenn ein Kommentar in unter 5 Sekunden verfasst) - [Hintergrund-Informationen](https://antispambee.pluginkollektiv.org/news/2014/antispam-bee-2-6-4/)
