@@ -3,7 +3,6 @@
 namespace AntispamBee\Tests\Unit\Rules;
 
 use AntispamBee\Rules\RegexpSpam;
-use Brain\Monkey\Expectation\Exception\ExpectationArgsRequired;
 
 use function Brain\Monkey\Functions\when;
 use function Brain\Monkey\Filters\expectApplied;
