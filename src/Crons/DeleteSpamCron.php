@@ -10,7 +10,7 @@ namespace AntispamBee\Crons;
 use AntispamBee\Helpers\Settings;
 
 /**
- * Cron job to delete spam from database.
+ * Cron job to delete spam from the database.
  */
 class DeleteSpamCron {
 

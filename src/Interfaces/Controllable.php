@@ -9,7 +9,7 @@ namespace AntispamBee\Interfaces;
 
 /**
  * Common interface for controllable elements.
- * This can be options, processors or rules.
+ * This can be options, processors, or rules.
  */
 interface Controllable {
 
