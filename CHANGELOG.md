@@ -30,7 +30,7 @@
   * Fix: remove build-tool warnings from minified JavaScript and CSS resources
 
 * **Deutsch**
-  * Fix: Build-Tool-Warnungen aus minifizierten Javascript und CSS Ressourcen entfernt
+  * Fix: Build-Tool-Warnungen aus minifizierten JavaScript und CSS Ressourcen entfernt
 
 ### 2.11.9 ###
 * **English**
@@ -210,8 +210,8 @@ WICHTIG: Wenn du den Spam-Check für bestimmte Länder verwendest und hinter ein
 ### 2.9.2 ###
 * **English**
   * Fix: Delete comment meta for deleted old spam. For the cleanup of older orphaned comment meta we suggest the usage of [WP Sweep](https://wordpress.org/plugins/wp-sweep/)
-  * Fix: Statistic in the dashboard showed the wrong value
-  * Tweak: Change autocomplete attribute to "new-password"
+  * Fix: Statistics in the dashboard showed the wrong value
+  * Tweak: Change the autocomplete attribute to "new-password"
   * Tweak: Autoptimize compatibility improved
   * Tweak: Renamed blacklist/whitelist to a better phrase
   * Tweak: Added a new pattern

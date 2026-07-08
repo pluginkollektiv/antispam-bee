@@ -23,7 +23,7 @@ Target PHP 7.2+. Avoid syntax introduced in PHP 7.4 or later: typed properties, 
 
 - **Capability checks** — gate every admin action with `current_user_can( 'manage_options' )` before reading `$_GET`/`$_POST` or writing data.
 - **Nonces** — verify with `check_admin_referer()` (form submissions) or `wp_verify_nonce()` (AJAX); generate with `wp_nonce_field()` / `wp_create_nonce()`.
-- **Sanitise input** — use `sanitize_text_field( wp_unslash( $value ) )`, `sanitize_key()`, `absint()`, etc. on all untrusted input at the point of reading.
+- **Sanitize input** — use `sanitize_text_field( wp_unslash( $value ) )`, `sanitize_key()`, `absint()`, etc. on all untrusted input at the point of reading.
 - **Escape output** — use `esc_html()`, `esc_attr()`, `esc_url()`, or `wp_kses()` at the point of output; never store pre-escaped values.
 - **Text domain** — always `'antispam-bee'` (matches the plugin slug); do not use a variable or a different string.
 
