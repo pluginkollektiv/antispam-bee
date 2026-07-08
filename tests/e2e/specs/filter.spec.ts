@@ -495,7 +495,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		// Log out so the second comment form has author/email/URL fields.
 		await page.context().clearCookies();
 
-		// A second comment from the same IP should now be caught by local DB.
+		// Local DB should now catch a second comment from the same IP.
 		await fillComment( page, {
 			comment: 'Another comment.',
 			author: 'Also Legit',

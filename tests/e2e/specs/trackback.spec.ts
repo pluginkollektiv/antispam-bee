@@ -32,7 +32,7 @@ test.describe( 'Trackback spam filtering', () => {
 		cli,
 	} ) => {
 		// Pre-create a spam comment with the matching URL on post 2 (not post 1).
-		// This avoids WordPress's "duplicate ping from same URL for THIS post" rejection
+		// This avoids WordPress's "duplicate ping from the same URL for THIS post" rejection
 		// while still seeding the cross-post local DB that the rule queries.
 		cli.commentCreate( {
 			comment_content: 'Spam comment',

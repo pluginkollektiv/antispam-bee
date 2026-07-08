@@ -11,7 +11,7 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
- * Rule that is responsible for checking that at least a certain timespan has passed so that the comment won‘t be marked as invalid.
+ * Rule that is responsible for checking that at least a certain timespan has passed so that the comment won't be marked as invalid.
  */
 class TooFastSubmit extends ControllableBase implements SpamReason {
 
@@ -96,7 +96,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
 	 * @return string
 	 */
@@ -105,7 +105,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
 	 * @return string|null
 	 */
