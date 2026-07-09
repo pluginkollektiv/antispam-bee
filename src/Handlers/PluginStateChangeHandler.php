@@ -29,6 +29,13 @@ class PluginStateChangeHandler {
 	}
 
 	/**
+	 * Initialization of the cronjobs.
+	 */
+	public static function init_scheduled_hook(): void {
+		DeleteSpamCron::maybe_change_cron_state();
+	}
+
+	/**
 	 * Deactivate callback.
 	 */
 	public static function deactivate(): void {
@@ -42,6 +49,7 @@ class PluginStateChangeHandler {
 	public static function uninstall(): void {
 		if ( ! is_multisite() ) {
 			self::maybe_remove_antispam_bee_data();
+
 			return;
 		}
 
@@ -80,12 +88,5 @@ class PluginStateChangeHandler {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		// $wpdb->query( 'DELETE FROM `' . $wpdb->commentmeta . '`WHERE `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")' );
 		// See https://github.com/pluginkollektiv/antispam-bee/issues/744 - enable on stable 3.0 release.
-	}
-
-	/**
-	 * Initialization of the cronjobs.
-	 */
-	public static function init_scheduled_hook(): void {
-		DeleteSpamCron::maybe_change_cron_state();
 	}
 }

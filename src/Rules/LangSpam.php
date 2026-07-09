@@ -31,6 +31,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 * Check for allowed languages.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -50,8 +51,8 @@ class LangSpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filters the detected language. With this filter, other detection methods can skip in and detect the language.
 		 *
-		 * @param null $detected_language The detected language.
-		 * @param string $comment_text The text, to detect the language.
+		 * @param null   $detected_language The detected language.
+		 * @param string $comment_text      The text, to detect the language.
 		 *
 		 * @return null|string The detected language or null.
 		 * @since 2.8.2
@@ -76,16 +77,16 @@ class LangSpam extends ControllableBase implements SpamReason {
 		}
 
 		if ( strpos( $word_count_type, 'characters' ) === 0 && preg_match(
-			'/^utf\-?8$/i',
-			get_option( 'blog_charset' )
-		) ) {
+				'/^utf\-?8$/i',
+				get_option( 'blog_charset' )
+			) ) {
 			preg_match_all( '/./u', $text, $words_array );
 			$word_count = 0;
 			if ( isset( $words_array[0] ) ) {
 				$word_count = count( $words_array[0] );
 			}
 		} else {
-			$words_array = preg_split( "/[\n\r\t ]+/", $text, - 1, PREG_SPLIT_NO_EMPTY );
+			$words_array = preg_split( "/[\n\r\t ]+/", $text, -1, PREG_SPLIT_NO_EMPTY );
 			$word_count  = count( $words_array );
 		}
 
@@ -114,7 +115,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 		);
 
 		if ( is_wp_error( $response )
-			|| wp_remote_retrieve_response_code( $response ) !== 200 ) {
+		     || wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			return 0;
 		}
 

@@ -60,6 +60,36 @@ class PluginUpdate {
 	}
 
 	/**
+	 * Whether the database structure is up-to-date.
+	 *
+	 * @return bool
+	 */
+	private static function db_version_is_current(): bool {
+		if ( ! is_null( self::$db_version_is_current ) ) {
+			return self::$db_version_is_current;
+		}
+
+		self::$db_version_is_current = (bool) version_compare(
+			get_option( 'antispambee_db_version', '1.0' ),
+			self::get_plugin_version(),
+			'=='
+		);
+
+		return self::$db_version_is_current;
+	}
+
+	/**
+	 * Get plugin version.
+	 *
+	 * @return string
+	 */
+	private static function get_plugin_version(): string {
+		$meta = get_file_data( MAIN_PLUGIN_FILE, [ 'Version' => 'Version' ] );
+
+		return $meta['Version'];
+	}
+
+	/**
 	 * Makes database changes, if needed.
 	 */
 	private static function maybe_update_database(): void {
@@ -79,9 +109,11 @@ class PluginUpdate {
 
 			// In Version 2.9 the IP of the commenter was saved as a hash. We reverted this solution.
 			// Therefore, we need to delete this unused data.
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery
 			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-			$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash")';
+			$sql = 'DELETE FROM `' . $wpdb->commentmeta . '` WHERE `meta_key` IN ("antispam_bee_iphash")';
 			$wpdb->query( $sql );
+			// phpcs:enable WordPress.DB.DirectDatabaseQuery
 			// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 		}
 
@@ -124,46 +156,46 @@ class PluginUpdate {
 
 			$new_options = [
 				'comment'    => [
-					'post_processor_asb_delete_spam_active' => isset( $options['flag_spam'] ) && ! $options['flag_spam'] ? 'on' : '',
-					'post_processor_asb_send_email_active' => $options['email_notify'] ? 'on' : '',
-					'post_processor_asb_save_reason_active' => isset( $options['no_notice'] ) && ! $options['no_notice'] ? 'on' : '',
-					'rule_asb_regexp_active'               => $options['regexp_check'] ? 'on' : '',
-					'rule_asb_honeypot_active'             => 'on',
-					'rule_asb_db_spam_active'              => $options['spam_ip'] ? 'on' : '',
-					'rule_asb_approved_email_active'       => $options['already_commented'] ? 'on' : '',
-					'rule_asb_too_fast_submit_active'      => $options['time_check'] ? 'on' : '',
-					'post_processor_asb_delete_for_reasons_active' => $options['reasons_enable'] ? 'on' : '',
+					'post_processor_asb_delete_spam_active'         => isset( $options['flag_spam'] ) && ! $options['flag_spam'] ? 'on' : '',
+					'post_processor_asb_send_email_active'          => $options['email_notify'] ? 'on' : '',
+					'post_processor_asb_save_reason_active'         => isset( $options['no_notice'] ) && ! $options['no_notice'] ? 'on' : '',
+					'rule_asb_regexp_active'                        => $options['regexp_check'] ? 'on' : '',
+					'rule_asb_honeypot_active'                      => 'on',
+					'rule_asb_db_spam_active'                       => $options['spam_ip'] ? 'on' : '',
+					'rule_asb_approved_email_active'                => $options['already_commented'] ? 'on' : '',
+					'rule_asb_too_fast_submit_active'               => $options['time_check'] ? 'on' : '',
+					'post_processor_asb_delete_for_reasons_active'  => $options['reasons_enable'] ? 'on' : '',
 					'post_processor_asb_delete_for_reasons_reasons' => $delete_reasons,
-					'rule_asb_bbcode_active'               => $options['bbcode_check'] ? 'on' : '',
-					'rule_asb_valid_gravatar_active'       => $options['gravatar_check'] ? 'on' : '',
-					'rule_asb_country_spam_active'         => $options['country_code'] ? 'on' : '',
-					'rule_asb_country_spam_denied'         => $options['country_denied'] ?? '',
-					'rule_asb_country_spam_allowed'        => $options['country_allowed'] ?? '',
-					'rule_asb_lang_spam_active'            => $options['translate_api'] ? 'on' : '',
-					'rule_asb_lang_spam_allowed'           => $allowed_languages,
+					'rule_asb_bbcode_active'                        => $options['bbcode_check'] ? 'on' : '',
+					'rule_asb_valid_gravatar_active'                => $options['gravatar_check'] ? 'on' : '',
+					'rule_asb_country_spam_active'                  => $options['country_code'] ? 'on' : '',
+					'rule_asb_country_spam_denied'                  => $options['country_denied'] ?? '',
+					'rule_asb_country_spam_allowed'                 => $options['country_allowed'] ?? '',
+					'rule_asb_lang_spam_active'                     => $options['translate_api'] ? 'on' : '',
+					'rule_asb_lang_spam_allowed'                    => $allowed_languages,
 				],
 				'linkback'   => [
-					'post_processor_asb_delete_spam_active' => isset( $options['flag_spam'] ) && ! $options['flag_spam'] ? 'on' : '',
-					'post_processor_asb_send_email_active' => $options['email_notify'] ? 'on' : '',
-					'post_processor_asb_save_reason_active' => isset( $options['no_notice'] ) && ! $options['no_notice'] ? 'on' : '',
-					'rule_asb_regexp_active'               => $options['regexp_check'] ? 'on' : '',
-					'rule_asb_db_spam_active'              => $options['spam_ip'] ? 'on' : '',
-					'post_processor_asb_delete_for_reasons_active' => $options['reasons_enable'] ? 'on' : '',
+					'post_processor_asb_delete_spam_active'         => isset( $options['flag_spam'] ) && ! $options['flag_spam'] ? 'on' : '',
+					'post_processor_asb_send_email_active'          => $options['email_notify'] ? 'on' : '',
+					'post_processor_asb_save_reason_active'         => isset( $options['no_notice'] ) && ! $options['no_notice'] ? 'on' : '',
+					'rule_asb_regexp_active'                        => $options['regexp_check'] ? 'on' : '',
+					'rule_asb_db_spam_active'                       => $options['spam_ip'] ? 'on' : '',
+					'post_processor_asb_delete_for_reasons_active'  => $options['reasons_enable'] ? 'on' : '',
 					'post_processor_asb_delete_for_reasons_reasons' => $delete_reasons,
-					'rule_asb_bbcode_active'               => $options['bbcode_check'] ? 'on' : '',
-					'rule_asb_valid_gravatar_active'       => $options['gravatar_check'] ? 'on' : '',
-					'rule_asb_country_spam_active'         => $options['country_code'] ? 'on' : '',
-					'rule_asb_country_spam_denied'         => $options['country_denied'] ?? '',
-					'rule_asb_country_spam_allowed'        => $options['country_allowed'] ?? '',
-					'rule_asb_lang_spam_active'            => $options['translate_api'] ? 'on' : '',
-					'rule_asb_lang_spam_allowed'           => $allowed_languages,
+					'rule_asb_bbcode_active'                        => $options['bbcode_check'] ? 'on' : '',
+					'rule_asb_valid_gravatar_active'                => $options['gravatar_check'] ? 'on' : '',
+					'rule_asb_country_spam_active'                  => $options['country_code'] ? 'on' : '',
+					'rule_asb_country_spam_denied'                  => $options['country_denied'] ?? '',
+					'rule_asb_country_spam_allowed'                 => $options['country_allowed'] ?? '',
+					'rule_asb_lang_spam_active'                     => $options['translate_api'] ? 'on' : '',
+					'rule_asb_lang_spam_allowed'                    => $allowed_languages,
 				],
 				'general'    => [
-					'general_delete_spam_cronjob_enabled_active' => $options['cronjob_enable'] ? 'on' : '',
+					'general_delete_spam_cronjob_enabled_active'                   => $options['cronjob_enable'] ? 'on' : '',
 					'general_delete_spam_cronjob_enabled_delete_spam_cronjob_days' => $options['cronjob_interval'] ?? 30,
-					'general_statistics_on_dashboard_active' => $options['dashboard_count'] ? 'on' : '',
-					'general_ignore_linkbacks_active' => $options['ignore_pings'] ? 'on' : '',
-					'general_delete_data_on_uninstall_active' => $options['delete_data_on_uninstall'] ? 'on' : '',
+					'general_statistics_on_dashboard_active'                       => $options['dashboard_count'] ? 'on' : '',
+					'general_ignore_linkbacks_active'                              => $options['ignore_pings'] ? 'on' : '',
+					'general_delete_data_on_uninstall_active'                      => $options['delete_data_on_uninstall'] ? 'on' : '',
 				],
 				'spam_count' => $options['spam_count'] ?? 0,
 			];
@@ -205,35 +237,5 @@ class PluginUpdate {
 		}
 
 		return $new_array;
-	}
-
-	/**
-	 * Get plugin version.
-	 *
-	 * @return string
-	 */
-	private static function get_plugin_version(): string {
-		$meta = get_file_data( MAIN_PLUGIN_FILE, [ 'Version' => 'Version' ] );
-
-		return $meta['Version'];
-	}
-
-	/**
-	 * Whether the database structure is up-to-date.
-	 *
-	 * @return bool
-	 */
-	private static function db_version_is_current(): bool {
-		if ( ! is_null( self::$db_version_is_current ) ) {
-			return self::$db_version_is_current;
-		}
-
-		self::$db_version_is_current = (bool) version_compare(
-			get_option( 'antispambee_db_version', '1.0' ),
-			self::get_plugin_version(),
-			'=='
-		);
-
-		return self::$db_version_is_current;
 	}
 }

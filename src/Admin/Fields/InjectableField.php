@@ -8,7 +8,7 @@
 namespace AntispamBee\Admin\Fields;
 
 /**
- * Marks a field as injectable into an Inline field wrapper.
+ * Marks a field as injectable into an inline field wrapper.
  */
 interface InjectableField {
 

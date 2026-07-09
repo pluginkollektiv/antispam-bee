@@ -5,9 +5,8 @@ namespace AntispamBee\Tests\Unit\Helpers;
 use AntispamBee\Helpers\IpHelper;
 use Brain\Monkey\Expectation\Exception\ExpectationArgsRequired;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
-
-use function Brain\Monkey\Functions\when;
 use function Brain\Monkey\Filters\expectApplied;
+use function Brain\Monkey\Functions\when;
 
 /**
  * Unit tests for {@see IpHelper}.

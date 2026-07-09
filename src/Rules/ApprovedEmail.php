@@ -33,6 +33,7 @@ class ApprovedEmail extends ControllableBase {
 	 * Verify an item.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {

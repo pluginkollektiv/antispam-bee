@@ -32,6 +32,7 @@ class GeneralOptions {
 	 * Get controllable items for this option.
 	 *
 	 * @param string $reaction_type Reaction type.
+	 *
 	 * @return array List of controllable items.
 	 */
 	public static function get_controllables( string $reaction_type = 'general' ): array {

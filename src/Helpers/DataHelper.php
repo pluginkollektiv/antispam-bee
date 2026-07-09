@@ -17,6 +17,7 @@ class DataHelper {
 	 *
 	 * @param array $keys List of keys.
 	 * @param array $data Data to filter.
+	 *
 	 * @return array Data elements with matching keys.
 	 */
 	public static function get_values_by_keys( array $keys, array $data ): array {
@@ -35,6 +36,7 @@ class DataHelper {
 	 *
 	 * @param string[] $substrs Key substrings to filters.
 	 * @param array    $data    Data to filter.
+	 *
 	 * @return array Data elements with matching keys.
 	 */
 	public static function get_values_where_key_contains( array $substrs, array $data ): array {
@@ -55,6 +57,7 @@ class DataHelper {
 	 *
 	 * @param string $url       URL to parse.
 	 * @param string $component URL component (default: "host").
+	 *
 	 * @return string URL component.
 	 */
 	public static function parse_url( string $url, string $component = 'host' ): string {

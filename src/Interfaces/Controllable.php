@@ -102,6 +102,7 @@ interface Controllable {
 	 * This will typically add the component type and slug prefixes to the short name.
 	 *
 	 * @param string $name Name suffix.
+	 *
 	 * @return string Corresponding option name
 	 */
 	public static function get_option_name( string $name ): string;

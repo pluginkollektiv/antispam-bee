@@ -9,11 +9,14 @@ namespace AntispamBee\Helpers;
 
 use AntispamBee\Handlers\PluginUpdate;
 
+// phpcs:disable Universal.NamingConventions.NoReservedKeywordParameterNames.arrayFound
+
 /**
  * Settings helper.
  */
 class Settings {
 
+	const OPTION_NAME = 'antispam_bee_options';
 	/**
 	 * Default options.
 	 *
@@ -39,8 +42,6 @@ class Settings {
 		],
 	];
 
-	const OPTION_NAME = 'antispam_bee_options';
-
 	/**
 	 * Initialize.
 	 *
@@ -60,28 +61,11 @@ class Settings {
 	 *
 	 * @param mixed $old_value The old option value.
 	 * @param mixed $value     The new option value.
+	 *
 	 * @return void
 	 */
 	public static function update_cache( $old_value, $value ): void {
 		wp_cache_set( self::OPTION_NAME, $value );
-	}
-
-	/**
-	 * Get all plugin options
-	 *
-	 * @return array $options Array with option fields.
-	 */
-	public static function get_options(): array {
-		PluginUpdate::maybe_run_plugin_updated_logic();
-		$options = wp_cache_get( self::OPTION_NAME );
-		if ( $options ) {
-			return $options;
-		}
-
-		$options = get_option( self::OPTION_NAME, self::$defaults );
-		wp_cache_set( self::OPTION_NAME, $options );
-
-		return $options;
 	}
 
 	/**
@@ -105,7 +89,25 @@ class Settings {
 	}
 
 	/**
-	 * Get value from array by path.
+	 * Get all plugin options
+	 *
+	 * @return array $options Array with option fields.
+	 */
+	public static function get_options(): array {
+		PluginUpdate::maybe_run_plugin_updated_logic();
+		$options = wp_cache_get( self::OPTION_NAME );
+		if ( $options ) {
+			return $options;
+		}
+
+		$options = get_option( self::OPTION_NAME, self::$defaults );
+		wp_cache_set( self::OPTION_NAME, $options );
+
+		return $options;
+	}
+
+	/**
+	 * Get value from an array by path.
 	 *
 	 * @param string $path  Dot-separated path to the wanted value.
 	 * @param array  $array Options array.
@@ -129,6 +131,38 @@ class Settings {
 		}
 
 		return $option_value;
+	}
+
+	/**
+	 * Get path parts from dot-separated notation.
+	 *
+	 * @param mixed $path Dot-separated path to the wanted value.
+	 *
+	 * @return string[] Path parts.
+	 */
+	private static function get_path_parts( $path ): array {
+		if ( ! is_string( $path ) ) {
+			return [];
+		}
+
+		return explode( '.', $path );
+	}
+
+	/**
+	 * Update single option field
+	 *
+	 * @param string $field Field name.
+	 * @param mixed  $value The Field value.
+	 *
+	 * @since  0.1
+	 * @since  2.4
+	 */
+	public static function update_option( string $field, $value ): void {
+		self::update_options(
+			[
+				$field => $value,
+			]
+		);
 	}
 
 	/**
@@ -156,23 +190,6 @@ class Settings {
 	}
 
 	/**
-	 * Update single option field
-	 *
-	 * @param string $field Field name.
-	 * @param mixed  $value The Field value.
-	 *
-	 * @since  0.1
-	 * @since  2.4
-	 */
-	public static function update_option( string $field, $value ): void {
-		self::update_options(
-			[
-				$field => $value,
-			]
-		);
-	}
-
-	/**
 	 * Check and return an array key
 	 *
 	 * @param array  $array Array with values.
@@ -196,6 +213,7 @@ class Settings {
 	 *
 	 * @param string $path  Dot-separated path to the wanted value.
 	 * @param array  $array Array to filter.
+	 *
 	 * @return void
 	 */
 	public static function remove_array_key_by_path( string $path, array &$array ): void {
@@ -219,25 +237,12 @@ class Settings {
 	}
 
 	/**
-	 * Get path parts from dot-separated notation.
-	 *
-	 * @param mixed $path Dot-separated path to the wanted value.
-	 * @return string[] Path parts.
-	 */
-	private static function get_path_parts( $path ): array {
-		if ( ! is_string( $path ) ) {
-			return [];
-		}
-
-		return explode( '.', $path );
-	}
-
-	/**
 	 * Set an array item at given path.
 	 *
 	 * @param string $path      Dot-separated path to the wanted value.
 	 * @param mixed  $sanitized Sanitized value.
 	 * @param array  $options   Options array to process.
+	 *
 	 * @return void
 	 */
 	public static function set_array_value_by_path( string $path, $sanitized, array &$options ): void {

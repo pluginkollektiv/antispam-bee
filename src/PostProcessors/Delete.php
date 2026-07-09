@@ -30,6 +30,7 @@ class Delete extends ControllableBase {
 	 * Process an item, i.e. mark it for deletion.
 	 *
 	 * @param array $item Item to process.
+	 *
 	 * @return array Processed item.
 	 */
 	public static function process( array $item ): array {

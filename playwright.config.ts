@@ -6,7 +6,7 @@ export default defineConfig( {
 	// DB state is shared; sequential execution is required.
 	fullyParallel: false,
 	workers: 1,
-	forbidOnly: !! process.env.CI,
+	forbidOnly: !!process.env.CI,
 	retries: process.env.CI ? 1 : 0,
 	reporter: [
 		[ 'list' ],
@@ -20,7 +20,7 @@ export default defineConfig( {
 	projects: [
 		{
 			name: 'chromium',
-			use: { ...devices[ 'Desktop Chrome' ] },
+			use: { ...devices['Desktop Chrome'] },
 		},
 	],
 	globalSetup: './tests/e2e/fixtures/global-setup.ts',

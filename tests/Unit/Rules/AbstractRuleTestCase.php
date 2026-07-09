@@ -27,32 +27,6 @@ abstract class AbstractRuleTestCase extends TestCase {
 	}
 
 	/**
-	 * Test for expected slug.
-	 * Might seem redundant, but we might just have forgotten about this...
-	 *
-	 * @return void
-	 */
-	public function test_slug() {
-		self::assertSame( $this->slug, $this->rule::get_slug(), 'unexpected slug' );
-	}
-
-	/**
-	 * Test initialization.
-	 * All rules should add themselves to the rules filter by default.
-	 * Might be overwritten, if a rule does special initialization.
-	 *
-	 * @return void
-	 */
-	public function test_init() {
-		$this->rule::init();
-
-		self::assertNotFalse(
-			has_filter( 'antispam_bee_rules', array( $this->rule, 'add_rule' ) ),
-			'add_rule filter was not added'
-		);
-	}
-
-	/**
 	 * Generate a test comment.
 	 *
 	 * @param int    $id           Comment ID.
@@ -83,6 +57,32 @@ abstract class AbstractRuleTestCase extends TestCase {
 			'comment_author_IP'    => $author_ip,
 			'comment_content'      => $content,
 			'comment_agent'        => $agent,
+		);
+	}
+
+	/**
+	 * Test for expected slug.
+	 * Might seem redundant, but we might just have forgotten about this...
+	 *
+	 * @return void
+	 */
+	public function test_slug() {
+		self::assertSame( $this->slug, $this->rule::get_slug(), 'unexpected slug' );
+	}
+
+	/**
+	 * Test initialization.
+	 * All rules should add themselves to the rules filter by default.
+	 * Might be overwritten, if a rule does special initialization.
+	 *
+	 * @return void
+	 */
+	public function test_init() {
+		$this->rule::init();
+
+		self::assertNotFalse(
+			has_filter( 'antispam_bee_rules', array( $this->rule, 'add_rule' ) ),
+			'add_rule filter was not added'
 		);
 	}
 }

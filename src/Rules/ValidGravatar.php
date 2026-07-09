@@ -35,6 +35,7 @@ class ValidGravatar extends ControllableBase {
 	 * Test if author's email points to a valid Gravatar.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -56,7 +57,7 @@ class ValidGravatar extends ControllableBase {
 		}
 
 		if ( wp_remote_retrieve_response_code( $response ) === 200 ) {
-			return - 1;
+			return -1;
 		}
 
 		return 0;

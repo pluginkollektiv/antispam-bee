@@ -35,6 +35,7 @@ class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
 	 * Test if a linkback title is blog name.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {

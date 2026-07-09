@@ -24,15 +24,6 @@ class DashboardHelper {
 	}
 
 	/**
-	 * Check, if we are on the edit comments page.
-	 *
-	 * @return bool
-	 */
-	public static function is_edit_comments_page(): bool {
-		return ( ! empty( $GLOBALS['pagenow'] ) && 'edit-comments.php' === $GLOBALS['pagenow'] );
-	}
-
-	/**
 	 * Check, if we are on the edit comments page on the spam comment status listing.
 	 *
 	 * @return bool
@@ -40,5 +31,14 @@ class DashboardHelper {
 	public static function is_edit_spam_comments_page(): bool {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		return self::is_edit_comments_page() && ! empty( $_GET['comment_status'] ) && 'spam' === $_GET['comment_status'];
+	}
+
+	/**
+	 * Check, if we are on the edit comments page.
+	 *
+	 * @return bool
+	 */
+	public static function is_edit_comments_page(): bool {
+		return ( ! empty( $GLOBALS['pagenow'] ) && 'edit-comments.php' === $GLOBALS['pagenow'] );
 	}
 }

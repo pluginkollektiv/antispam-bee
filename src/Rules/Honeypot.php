@@ -7,9 +7,9 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Helpers\Honeypot as HoneypotField;
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\DataHelper;
+use AntispamBee\Helpers\Honeypot as HoneypotField;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\SpamReason;
 
@@ -59,6 +59,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	 * Check if request contains data from the honeypot field.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -96,12 +97,14 @@ class Honeypot extends ControllableBase implements SpamReason {
 		// The secret comment field was not present in $_POST data.
 		if ( is_null( $plugin_field ) ) {
 			$_POST['ab_spam__invalid_request'] = 1;
+
 			return;
 		}
 
 		// The honeypot field was not present in $_POST data or was filled out.
 		if ( is_null( $hidden_field ) || ! empty( $hidden_field ) ) {
 			$_POST['ab_spam__hidden_field'] = 1;
+
 			return;
 		}
 

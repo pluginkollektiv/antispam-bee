@@ -10,11 +10,11 @@ namespace AntispamBee\Admin\Fields;
 use AntispamBee\Admin\RenderElement;
 
 /**
- * Text field.
+ * Textarea field.
  */
 class Textarea extends Field implements RenderElement {
 	/**
-	 * Render HTML.
+	 * Render the HTML.
 	 */
 	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -22,7 +22,7 @@ class Textarea extends Field implements RenderElement {
 		printf(
 			'<p><label for="%1$s">%2$s</label></p><p><textarea name="%1$s" id="%1$s" placeholder="%4$s">%3$s</textarea></p>',
 			esc_attr( $this->get_name() ),
-			$this->get_label(),
+			$this->get_label(), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			esc_html( $this->get_value() ),
 			esc_attr( $this->get_placeholder() )
 		);

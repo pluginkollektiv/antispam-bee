@@ -49,6 +49,17 @@ class DeleteSpamCron {
 	}
 
 	/**
+	 * Unregister this cron job.
+	 *
+	 * @return void
+	 */
+	public static function unregister(): void {
+		if ( wp_next_scheduled( self::CRONJOB_NAME ) ) {
+			wp_clear_scheduled_hook( self::CRONJOB_NAME );
+		}
+	}
+
+	/**
 	 * Register (schedule) this cron job.
 	 *
 	 * @return void
@@ -60,17 +71,6 @@ class DeleteSpamCron {
 				'daily',
 				self::CRONJOB_NAME
 			);
-		}
-	}
-
-	/**
-	 * Unregister this cron job.
-	 *
-	 * @return void
-	 */
-	public static function unregister(): void {
-		if ( wp_next_scheduled( self::CRONJOB_NAME ) ) {
-			wp_clear_scheduled_hook( self::CRONJOB_NAME );
 		}
 	}
 
@@ -96,6 +96,7 @@ class DeleteSpamCron {
 
 		global $wpdb;
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery
 		$wpdb->query(
 			$wpdb->prepare(
 				"DELETE c, cm FROM `$wpdb->comments` AS c LEFT JOIN `$wpdb->commentmeta` AS cm ON (c.comment_ID = cm.comment_id) WHERE c.comment_approved = 'spam' AND SUBDATE(NOW(), %d) > c.comment_date_gmt",
@@ -104,5 +105,6 @@ class DeleteSpamCron {
 		);
 
 		$wpdb->query( "OPTIMIZE TABLE `$wpdb->comments`" );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery
 	}
 }

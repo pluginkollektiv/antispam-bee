@@ -51,7 +51,7 @@ function pre_init(): void {
 	}
 
 	// Check if the `LibXML` PHP extension is available.
-	if ( ! extension_loaded('libxml') ) {
+	if ( ! extension_loaded( 'libxml' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\libxml_extension_missing' );
 
 		// Stop the further processing of the plugin.
@@ -59,7 +59,7 @@ function pre_init(): void {
 	}
 
 	// Check if the `JSON` PHP extension is available.
-	if ( ! extension_loaded('json') ) {
+	if ( ! extension_loaded( 'json' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\json_extension_missing' );
 
 		// Stop the further processing of the plugin.

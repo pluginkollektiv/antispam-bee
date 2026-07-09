@@ -10,6 +10,7 @@ namespace AntispamBee\Admin;
 use AntispamBee\GeneralOptions\Statistics;
 use AntispamBee\Helpers\DashboardHelper;
 use AntispamBee\Helpers\Settings;
+
 /**
  * Class DashboardWidgets
  */

@@ -59,9 +59,9 @@ class Section {
 	/**
 	 * Initializing Tab.
 	 *
-	 * @param string      $slug Slug of the tab.
-	 * @param string      $title Title for tab.
-	 * @param string      $description Description of the tab.
+	 * @param string      $slug          Slug of the tab.
+	 * @param string      $title         Title for tab.
+	 * @param string      $description   Description of the tab.
 	 * @param string|null $reaction_type Reaction type (e.g. comment, trackback).
 	 */
 	public function __construct( string $slug, string $title, string $description = '', ?string $reaction_type = null ) {
@@ -75,6 +75,7 @@ class Section {
 	 * Add controllable items to section.
 	 *
 	 * @param class-string<Controllable>[]|null $controllables List of controllable items to add.
+	 *
 	 * @return void
 	 */
 	public function add_controllables( ?array $controllables ): void {
@@ -87,6 +88,7 @@ class Section {
 	 * Generate settings fields for a list of controllable items.
 	 *
 	 * @param class-string<Controllable>[] $controllables List of controllable items to add.
+	 *
 	 * @return void
 	 */
 	private function generate_fields( array $controllables ): void {
@@ -125,10 +127,20 @@ class Section {
 	}
 
 	/**
+	 * Get description.
+	 *
+	 * @return string Title of the field.
+	 */
+	public function get_description(): string {
+		return $this->description;
+	}
+
+	/**
 	 * Generate field for a controllable item's option.
 	 *
 	 * @param array  $option       Option name.
 	 * @param string $controllable Controllable item (class name).
+	 *
 	 * @return Checkbox|CheckboxGroup|Inline|Select|Text|Textarea|null
 	 */
 	private function generate_field( array $option, string $controllable ): ?Field {
@@ -147,44 +159,10 @@ class Section {
 				return new Inline( $this->reaction_type, $option, $controllable );
 		}
 
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		error_log( 'Missing or invalid `type` for field' );
+
 		return null;
-	}
-
-	/**
-	 * Get Name.
-	 *
-	 * @return string Name of the field.
-	 */
-	public function get_slug(): string {
-		return $this->slug;
-	}
-
-	/**
-	 * Get title.
-	 *
-	 * @return string Title of the field.
-	 */
-	public function get_title(): string {
-		return $this->title;
-	}
-
-	/**
-	 * Get description.
-	 *
-	 * @return string Title of the field.
-	 */
-	public function get_description(): string {
-		return $this->description;
-	}
-
-	/**
-	 * Get fields.
-	 *
-	 * @return array
-	 */
-	public function get_rows(): array {
-		return $this->rows;
 	}
 
 	/**
@@ -226,6 +204,33 @@ class Section {
 				$this->get_slug()
 			);
 		}
+	}
+
+	/**
+	 * Get Name.
+	 *
+	 * @return string Name of the field.
+	 */
+	public function get_slug(): string {
+		return $this->slug;
+	}
+
+	/**
+	 * Get title.
+	 *
+	 * @return string Title of the field.
+	 */
+	public function get_title(): string {
+		return $this->title;
+	}
+
+	/**
+	 * Get fields.
+	 *
+	 * @return array
+	 */
+	public function get_rows(): array {
+		return $this->rows;
 	}
 
 	/**

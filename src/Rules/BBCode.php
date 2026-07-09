@@ -27,6 +27,7 @@ class BBCode extends ControllableBase implements SpamReason {
 	 * Check whether any content part contains BBCode links.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {

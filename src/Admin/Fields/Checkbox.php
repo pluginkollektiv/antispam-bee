@@ -14,7 +14,7 @@ use AntispamBee\Admin\RenderElement;
  */
 class Checkbox extends Field implements RenderElement {
 	/**
-	 * Get HTML.
+	 * Get the HTML.
 	 */
 	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped

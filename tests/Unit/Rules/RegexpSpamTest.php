@@ -3,25 +3,13 @@
 namespace AntispamBee\Tests\Unit\Rules;
 
 use AntispamBee\Rules\RegexpSpam;
-
-use function Brain\Monkey\Functions\when;
 use function Brain\Monkey\Filters\expectApplied;
+use function Brain\Monkey\Functions\when;
 
 class RegexpSpamTest extends AbstractRuleTestCase {
 
 	public function __construct() {
 		parent::__construct( RegexpSpam::class, 'asb-regexp' );
-	}
-
-	/**
-	 * Set up the test environment.
-	 *
-	 * @return void
-	 */
-	protected function set_up() {
-		parent::set_up();
-
-		when( 'wp_parse_url' )->alias( 'parse_url' );
 	}
 
 	public function test_verify() {
@@ -82,5 +70,16 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 			RegexpSpam::verify( $item ),
 			'custom patterns added via the antispam_bee_patterns filter should be applied'
 		);
+	}
+
+	/**
+	 * Set up the test environment.
+	 *
+	 * @return void
+	 */
+	protected function set_up() {
+		parent::set_up();
+
+		when( 'wp_parse_url' )->alias( 'parse_url' );
 	}
 }

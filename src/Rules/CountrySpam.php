@@ -30,6 +30,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 * Check whether a reaction originates from an allowed country.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -44,13 +45,13 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		$allowed = preg_split(
 			'/[\s,;]+/',
 			$country_allowed,
-			- 1,
+			-1,
 			PREG_SPLIT_NO_EMPTY
 		);
 		$denied  = preg_split(
 			'/[\s,;]+/',
 			$country_denied,
-			- 1,
+			-1,
 			PREG_SPLIT_NO_EMPTY
 		);
 
@@ -61,10 +62,10 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filter to hook into the `Country_Spam::verify` functionality, to implement for example a custom IP check.
 		 *
-		 * @param null $is_country_spam The `is_country_spam` result.
-		 * @param string $ip The IP address.
-		 * @param array $allowed The list of allowed country codes.
-		 * @param array $denied The list of denied country codes.
+		 * @param null   $is_country_spam The `is_country_spam` result.
+		 * @param string $ip              The IP address.
+		 * @param array  $allowed         The list of allowed country codes.
+		 * @param array  $denied          The list of denied country codes.
 		 *
 		 * @return null|boolean The `is_country_spam` result or null.
 		 * @since 2.10.0
@@ -185,6 +186,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 */
 	public static function get_options(): array {
 		$iso_codes_link = 'https://www.iso.org/obp/ui/#search/code/';
+
 		return [
 			[
 				'type'        => 'textarea',
@@ -231,6 +233,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 * Sanitize ISO code strings.
 	 *
 	 * @param string $value Comma-separated list of potential ISO country codes.
+	 *
 	 * @return string Comma-separated list if sanitized ISO country codes.
 	 */
 	private static function sanitize_iso_codes_string( string $value ): string {

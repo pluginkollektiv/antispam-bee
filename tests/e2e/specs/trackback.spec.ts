@@ -4,14 +4,12 @@
  * Trackbacks are sent via HTTP POST to /wp-trackback.php using the helper
  * utility; no browser interaction is required for submission.
  */
-import { test, expect, adminLogin } from '../fixtures/base';
+import { adminLogin, expect, test } from '../fixtures/base';
 import { sendTrackback } from '../utils/trackback';
 import { WP_BASE_URL } from '../config';
 
 test.describe( 'Trackback spam filtering', () => {
-	test( 'BBCode in trackback excerpt is detected as spam', async ( {
-		page,
-	} ) => {
+	test( 'BBCode in trackback excerpt is detected as spam', async ( { page } ) => {
 		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Nuclear Power Plants',
 			excerpt: "use [url='https://example.com']bbCode[/url]",
@@ -27,10 +25,7 @@ test.describe( 'Trackback spam filtering', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'BBCode' );
 	} );
 
-	test( 'trackback from URL in local spam DB is detected', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'trackback from URL in local spam DB is detected', async ( { page, cli } ) => {
 		// Pre-create a spam comment with the matching URL on post 2 (not post 1).
 		// This avoids WordPress's "duplicate ping from the same URL for THIS post" rejection
 		// while still seeding the cross-post local DB that the rule queries.
@@ -58,9 +53,7 @@ test.describe( 'Trackback spam filtering', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Local DB' );
 	} );
 
-	test( 'trackback from IP in local spam DB is detected', async ( {
-		page,
-	} ) => {
+	test( 'trackback from IP in local spam DB is detected', async ( { page } ) => {
 		test.setTimeout( 90_000 );
 
 		// Submit a browser comment that gets caught as spam by regexp.
@@ -91,9 +84,7 @@ test.describe( 'Trackback spam filtering', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Local DB' );
 	} );
 
-	test( 'regex detects spam keyword in trackback', async ( {
-		page,
-	} ) => {
+	test( 'regex detects spam keyword in trackback', async ( { page } ) => {
 		await sendTrackback( WP_BASE_URL, 1, {
 			title: 'Viagra',
 			excerpt: 'has more use cases than you think',
@@ -109,9 +100,7 @@ test.describe( 'Trackback spam filtering', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'RegExp match' );
 	} );
 
-	test( 'trackback title matching post title is detected', async ( {
-		page,
-	} ) => {
+	test( 'trackback title matching post title is detected', async ( { page } ) => {
 		// Get the title of post ID 1.
 		const postTitle = 'Hello world!';
 
@@ -129,10 +118,7 @@ test.describe( 'Trackback spam filtering', () => {
 		);
 	} );
 
-	test( 'language rule blocks trackback in wrong language', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'language rule blocks trackback in wrong language', async ( { page, cli } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.linkback.rule_asb_lang_spam_active = 'on';
 		opts.linkback.rule_asb_lang_spam_allowed = { de: 'on' };

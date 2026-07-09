@@ -70,7 +70,7 @@ class CommentsColumns {
 	/**
 	 * Display plugin column values on comments screen
 	 *
-	 * @param string  $column Currently selected column.
+	 * @param string  $column     Currently selected column.
 	 * @param integer $comment_id Comment ID.
 	 *
 	 * @since   2.6.0
@@ -140,14 +140,17 @@ class CommentsColumns {
 	public static function filter_columns(): void {
 		global $wpdb;
 		?>
-		<label class="screen-reader-text"
-				for="filter-by-comment-spam-reason"><?php esc_html_e( 'Filter by spam reason', 'antispam-bee' ); ?></label>
+		<label class="screen-reader-text" for="filter-by-comment-spam-reason">
+			<?php esc_html_e( 'Filter by spam reason', 'antispam-bee' ); ?>
+		</label>
 		<select id="filter-by-comment-spam-reason" name="comment_spam_reason">
 			<option value=""><?php esc_html_e( 'All spam reasons', 'antispam-bee' ); ?></option>
 			<?php
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended
 			$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
-			$tmp     = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}commentmeta WHERE meta_key = 'antispam_bee_reason' GROUP BY meta_value", ARRAY_A );
+			$tmp = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}commentmeta WHERE meta_key = 'antispam_bee_reason' GROUP BY meta_value", ARRAY_A );
+
 			$reasons = [];
 			foreach ( $tmp as $t ) {
 				$reasons = array_merge( $reasons, explode( ',', $t['meta_value'] ) );
@@ -158,7 +161,7 @@ class CommentsColumns {
 
 			foreach ( $reasons as $reason ) {
 				if ( isset( $reason_mapping[ $reason ] ) ) {
-					if ( in_array( $reason_mapping[ $reason ], $reasons ) ) {
+					if ( in_array( $reason_mapping[ $reason ], $reasons, true ) ) {
 						continue;
 					}
 
@@ -188,7 +191,7 @@ class CommentsColumns {
 		}
 
 		$reasons_mapping = PluginUpdate::$spam_reasons_mapping;
-		if ( ! in_array( $spam_reason, $reasons_mapping ) && ! isset( $reasons_mapping[ $spam_reason ] ) ) {
+		if ( ! in_array( $spam_reason, $reasons_mapping, true ) && ! isset( $reasons_mapping[ $spam_reason ] ) ) {
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 			$query->query_vars['meta_key'] = 'antispam_bee_reason';
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
@@ -199,6 +202,7 @@ class CommentsColumns {
 			return;
 		}
 
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		$query->query_vars['meta_query'] = [
 			'relation' => 'OR',
 			[

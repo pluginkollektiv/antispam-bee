@@ -83,8 +83,8 @@ abstract class Base implements Verifiable {
 		/**
 		 * Filter the reaction types that are supported by the rule.
 		 *
-		 * @param array $supported_types The supported types.
-		 * @param string $slug The rule’s slug.
+		 * @param array  $supported_types The supported types.
+		 * @param string $slug            The rule’s slug.
 		 *
 		 * @return array Array of supported types.
 		 */

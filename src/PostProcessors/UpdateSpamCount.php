@@ -27,6 +27,7 @@ class UpdateSpamCount extends Base {
 	 * Increment the spam counter by 1.
 	 *
 	 * @param array $item Item to process.
+	 *
 	 * @return array Processed item.
 	 */
 	public static function process( array $item ): array {

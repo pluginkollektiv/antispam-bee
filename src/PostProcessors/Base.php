@@ -76,8 +76,8 @@ abstract class Base implements PostProcessor {
 		/**
 		 * Filter the reaction types that are supported by the post processor.
 		 *
-		 * @param array $supported_types The supported types.
-		 * @param string $slug The post processor’s slug.
+		 * @param array  $supported_types The supported types.
+		 * @param string $slug            The post processor’s slug.
 		 *
 		 * @return array Array of supported types.
 		 */

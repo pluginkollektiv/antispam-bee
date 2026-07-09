@@ -24,6 +24,7 @@ class SaveReason extends ControllableBase {
 	 * Save spam reasons.
 	 *
 	 * @param array $item Item to process.
+	 *
 	 * @return array Processed item.
 	 */
 	public static function process( array $item ): array {
@@ -33,6 +34,7 @@ class SaveReason extends ControllableBase {
 
 		if ( ! isset( $item['asb_reasons'] ) ) {
 			$item['asb_post_processors_failed'][] = self::get_slug();
+
 			return $item;
 		}
 

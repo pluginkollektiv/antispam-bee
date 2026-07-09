@@ -23,7 +23,8 @@ run( `docker build -t ${ CONTAINER_NAME } "${ __dirname }"`, { stdio: 'inherit' 
 // Remove any stale container from a previous run.
 try {
 	run( `docker rm -f ${ CONTAINER_NAME }`, { stdio: 'pipe' } );
-} catch {}
+} catch {
+}
 
 // Start the container (no network yet — we connect it below).
 run( `docker run -d --name ${ CONTAINER_NAME } ${ CONTAINER_NAME }`, {

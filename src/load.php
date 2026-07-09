@@ -17,8 +17,8 @@ use AntispamBee\GeneralOptions\IgnoreLinkbacks;
 use AntispamBee\GeneralOptions\Statistics;
 use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Handlers\Comment;
-use AntispamBee\Handlers\PluginStateChangeHandler;
 use AntispamBee\Handlers\Linkback;
+use AntispamBee\Handlers\PluginStateChangeHandler;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Helpers\SpamReasonTextHelper;
 use AntispamBee\PostProcessors\Delete;
@@ -35,10 +35,10 @@ use AntispamBee\Rules\EmptyData;
 use AntispamBee\Rules\Honeypot as HoneypotRule;
 use AntispamBee\Rules\InvalidRequest;
 use AntispamBee\Rules\LangSpam;
-use AntispamBee\Rules\RegexpSpam;
-use AntispamBee\Rules\TooFastSubmit;
 use AntispamBee\Rules\LinkbackFromMyself;
 use AntispamBee\Rules\LinkbackPostTitleIsBlogName;
+use AntispamBee\Rules\RegexpSpam;
+use AntispamBee\Rules\TooFastSubmit;
 use AntispamBee\Rules\ValidGravatar;
 
 /**

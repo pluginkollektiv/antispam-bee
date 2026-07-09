@@ -23,39 +23,35 @@ use const AntispamBee\PLUGIN_VERSION;
  */
 class SettingsPage {
 	/**
+	 * The slug used for the Settings page
+	 *
+	 * @var string
+	 */
+	const SETTINGS_PAGE_SLUG = 'antispam_bee';
+	/**
 	 * Active tab
 	 *
 	 * @var string
 	 */
 	private $active_tab = '';
-
 	/**
 	 * Tabs
 	 *
 	 * @var Tab[]
 	 */
 	private $tabs = [];
-
 	/**
 	 * List of controllable rules.
 	 *
 	 * @var Rules[]
 	 */
 	private $rules = [];
-
 	/**
 	 * List of controllable post processors
 	 *
 	 * @var PostProcessors[]
 	 */
 	private $post_processors = [];
-
-	/**
-	 * The slug used for the Settings page
-	 *
-	 * @var string
-	 */
-	const SETTINGS_PAGE_SLUG = 'antispam_bee';
 
 	/**
 	 * Add Hooks.
@@ -240,30 +236,45 @@ class SettingsPage {
 				foreach ( $this->tabs as $tab ) :
 					$is_active = $tab->get_slug() === $this->active_tab;
 					?>
-				<div
-					id="nav-tab__content--<?php echo esc_attr( $tab->get_slug() ); ?>"
-					class="nav-tab__content"
-					role="tabpanel"
-					aria-labelledby="tab-<?php echo esc_attr( $tab->get_slug() ); ?>"
-					<?php echo $is_active ? '' : 'hidden'; ?>
-				>
-					<?php do_settings_sections( self::SETTINGS_PAGE_SLUG . '_' . $tab->get_slug() ); ?>
+					<div
+							id="nav-tab__content--<?php echo esc_attr( $tab->get_slug() ); ?>"
+							class="nav-tab__content"
+							role="tabpanel"
+							aria-labelledby="tab-<?php echo esc_attr( $tab->get_slug() ); ?>"
+						<?php echo $is_active ? '' : 'hidden'; ?>
+					>
+						<?php do_settings_sections( self::SETTINGS_PAGE_SLUG . '_' . $tab->get_slug() ); ?>
 
-					<div class="ab-action-row">
-						<?php submit_button(); ?>
+						<div class="ab-action-row">
+							<?php submit_button(); ?>
 
-						<?php if ( 'general' === $this->active_tab ) : ?>
-							<nav class="ab-help-links" aria-label="<?php echo esc_attr__( 'Plugin resources', 'antispam-bee' ); ?>">
-								<ul>
-									<li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Donate', 'antispam-bee' ); ?></a></li>
-									<li><a href="<?php echo esc_url( __( 'https://wordpress.org/plugins/antispam-bee/#faq', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FAQ', 'antispam-bee' ); ?></a></li>
-									<li><a href="<?php echo esc_url( __( 'https://antispambee.pluginkollektiv.org/documentation', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Manual', 'antispam-bee' ); ?></a></li>
-									<li><a href="https://wordpress.org/support/plugin/antispam-bee/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Support', 'antispam-bee' ); ?></a></li>
-								</ul>
-							</nav>
-						<?php endif; ?>
+							<?php if ( 'general' === $this->active_tab ) : ?>
+								<nav class="ab-help-links"
+								     aria-label="<?php echo esc_attr__( 'Plugin resources', 'antispam-bee' ); ?>">
+									<ul>
+										<li>
+											<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW"
+											   target="_blank"
+											   rel="noopener noreferrer"><?php esc_html_e( 'Donate', 'antispam-bee' ); ?></a>
+										</li>
+										<li>
+											<a href="<?php echo esc_url( __( 'https://wordpress.org/plugins/antispam-bee/#faq', 'antispam-bee' ) ); ?>"
+											   target="_blank"
+											   rel="noopener noreferrer"><?php esc_html_e( 'FAQ', 'antispam-bee' ); ?></a>
+										</li>
+										<li>
+											<a href="<?php echo esc_url( __( 'https://antispambee.pluginkollektiv.org/documentation', 'antispam-bee' ) ); ?>"
+											   target="_blank"
+											   rel="noopener noreferrer"><?php esc_html_e( 'Manual', 'antispam-bee' ); ?></a>
+										</li>
+										<li><a href="https://wordpress.org/support/plugin/antispam-bee/" target="_blank"
+										       rel="noopener noreferrer"><?php esc_html_e( 'Support', 'antispam-bee' ); ?></a>
+										</li>
+									</ul>
+								</nav>
+							<?php endif; ?>
+						</div>
 					</div>
-				</div>
 				<?php endforeach; ?>
 			</form>
 		</div>
@@ -274,6 +285,7 @@ class SettingsPage {
 	 * Add a Settings link to the plugin action links.
 	 *
 	 * @param array $links Existing action links.
+	 *
 	 * @return array Modified action links.
 	 */
 	public function add_action_links( array $links ): array {
@@ -294,6 +306,7 @@ class SettingsPage {
 	 *
 	 * @param array  $links Existing row meta links.
 	 * @param string $file  Plugin basename of the current row.
+	 *
 	 * @return array Modified row meta links.
 	 */
 	public function add_row_meta( array $links, string $file ): array {

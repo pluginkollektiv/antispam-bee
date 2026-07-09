@@ -36,20 +36,20 @@ abstract class Field {
 	protected $controllable_option_name;
 
 	/**
-	 * Initializing field
+	 * Initializing the field.
 	 *
 	 * @param string                     $reaction_type Reaction type.
 	 * @param array                      $option        Field options.
 	 * @param class-string<Controllable> $controllable  The related controllable (class name).
 	 */
-	public function __construct( string $reaction_type, array $option, string $controllable ) {
+	public function __construct( string $reaction_type, array $option, string $controllable ) { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint -- `class-string<Controllable>` is a PHPStan-only generic type; the native hint is `string`.
 		$this->reaction_type            = $reaction_type;
 		$this->option                   = $option;
 		$this->controllable_option_name = $controllable::get_option_name( $this->option['option_name'] );
 	}
 
 	/**
-	 * Get Name.
+	 * Get the Name.
 	 *
 	 * @return string Name of the field.
 	 */
@@ -61,7 +61,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Get label.
+	 * Get the label.
 	 *
 	 * @return string Label of the field.
 	 */
@@ -71,11 +71,12 @@ abstract class Field {
 		if ( ! $kses ) {
 			return esc_html( $label );
 		}
+
 		return wp_kses( $label, $kses );
 	}
 
 	/**
-	 * Get placeholder.
+	 * Get the placeholder.
 	 *
 	 * @return string
 	 */
@@ -84,16 +85,14 @@ abstract class Field {
 	}
 
 	/**
-	 * Get Description.
+	 * Get the HTML for the field.
 	 *
-	 * @return string Description of the field.
+	 * @return void
 	 */
-	public function get_description(): string {
-		return $this->option['description'] ?? '';
-	}
+	abstract public function render(): void;
 
 	/**
-	 * Get Value.
+	 * Get the value.
 	 *
 	 * @return mixed Value stored in database.
 	 */
@@ -111,7 +110,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Show description if not empty.
+	 * Show the description if not empty.
 	 */
 	protected function maybe_show_description(): void {
 		if ( ! empty( $this->get_description() ) ) {
@@ -123,9 +122,11 @@ abstract class Field {
 	}
 
 	/**
-	 * Get HTML for field.
+	 * Get the description.
 	 *
-	 * @return void
+	 * @return string Description of the field.
 	 */
-	abstract public function render(): void;
+	public function get_description(): string {
+		return $this->option['description'] ?? '';
+	}
 }

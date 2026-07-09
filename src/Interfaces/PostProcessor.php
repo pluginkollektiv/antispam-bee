@@ -13,6 +13,7 @@ interface PostProcessor {
 	 * Process an item.
 	 *
 	 * @param array $item Item to process.
+	 *
 	 * @return array Processed item.
 	 */
 	public static function process( array $item ): array;

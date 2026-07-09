@@ -1,73 +1,77 @@
 {
-  "name": "pluginkollektiv/antispam-bee",
-  "description": "Antispam Bee blocks spam comments and trackbacks effectively and without captchas.",
-  "keywords": [
-    "WordPress",
-    "antispam",
-    "honeypot"
-  ],
-  "homepage": "https://antispambee.pluginkollektiv.org/",
-  "authors": [
-    {
-      "name": "pluginkollektiv",
-      "homepage": "https://pluginkollektiv.org/",
-      "role": "Maintainer"
-    }
-  ],
-  "support": {
-    "issues": "https://github.com/pluginkollektiv/antispam-bee/issues",
-    "source": "https://github.com/pluginkollektiv/antispam-bee",
-    "docs": "https://antispambee.pluginkollektiv.org/documentation/"
-  },
-  "type": "wordpress-plugin",
-  "license": "GPL-v2",
-  "require": {
-    "php": ">=7.2",
-    "ext-libxml": "*",
-    "ext-dom": "*",
-    "ext-json": "*"
-  },
-  "require-dev": {
-    "dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
-    "phpcompatibility/phpcompatibility-wp": "^2.1",
-    "wp-cli/wp-cli-bundle": "@stable",
-    "wp-coding-standards/wpcs": "^3.2.0",
-    "yoast/wp-test-utils": "^1.2",
-    "phpstan/phpstan": "^2.2",
-    "szepeviktor/phpstan-wordpress": "^2.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "AntispamBee\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "classmap": [
-      "antispam_bee.php",
-      "src/",
-      "tests/_stubs/"
-    ],
-    "psr-4": {
-      "AntispamBee\\Tests\\": "tests/"
-    }
-  },
-  "scripts": {
-    "cs": [
-      "@lint-php"
-    ],
-    "csfix": [
-      "phpcbf --standard=phpcs.xml"
-    ],
-    "lint-php": [
-      "phpcs --standard=phpcs.xml -s"
-    ],
-    "test:unit": [ "phpunit -c phpunit.xml.dist --testsuite unit" ],
-    "phpstan": [ "phpstan analyse --memory-limit=1G" ]
-  },
-  "config": {
-    "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true,
-      "cweagans/composer-patches": true
-    }
-  }
+	"name": "pluginkollektiv/antispam-bee",
+	"description": "Antispam Bee blocks spam comments and trackbacks effectively and without captchas.",
+	"keywords": [
+		"WordPress",
+		"antispam",
+		"honeypot"
+	],
+	"homepage": "https://antispambee.pluginkollektiv.org/",
+	"authors": [
+		{
+			"name": "pluginkollektiv",
+			"homepage": "https://pluginkollektiv.org/",
+			"role": "Maintainer"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/pluginkollektiv/antispam-bee/issues",
+		"source": "https://github.com/pluginkollektiv/antispam-bee",
+		"docs": "https://antispambee.pluginkollektiv.org/documentation/"
+	},
+	"type": "wordpress-plugin",
+	"license": "GPL-v2",
+	"require": {
+		"php": ">=7.2",
+		"ext-libxml": "*",
+		"ext-dom": "*",
+		"ext-json": "*"
+	},
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"wp-cli/wp-cli-bundle": "@stable",
+		"wp-coding-standards/wpcs": "^3.2.0",
+		"yoast/wp-test-utils": "^1.2",
+		"phpstan/phpstan": "^2.2",
+		"szepeviktor/phpstan-wordpress": "^2.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"AntispamBee\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"classmap": [
+			"antispam_bee.php",
+			"src/",
+			"tests/_stubs/"
+		],
+		"psr-4": {
+			"AntispamBee\\Tests\\": "tests/"
+		}
+	},
+	"scripts": {
+		"cs": [
+			"@lint-php"
+		],
+		"csfix": [
+			"phpcbf --standard=phpcs.xml"
+		],
+		"lint-php": [
+			"phpcs --standard=phpcs.xml -s"
+		],
+		"test:unit": [
+			"phpunit -c phpunit.xml.dist --testsuite unit"
+		],
+		"phpstan": [
+			"phpstan analyse --memory-limit=1G"
+		]
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"cweagans/composer-patches": true
+		}
+	}
 }

@@ -24,11 +24,13 @@ class UpdateSpamLog extends Base {
 	 * Append a line to the spam log file.
 	 *
 	 * @param array $item Item to process.
+	 *
 	 * @return array Processed item.
 	 */
 	public static function process( array $item ): array {
 		if ( ! isset( $item['comment_post_ID'] ) || ! isset( $item['comment_author_IP'] ) ) {
 			$item['asb_post_processors_failed'][] = self::get_slug();
+
 			return $item;
 		}
 
@@ -36,6 +38,7 @@ class UpdateSpamLog extends Base {
 			! defined( 'ANTISPAM_BEE_LOG_FILE' )
 			|| ! ANTISPAM_BEE_LOG_FILE
 			|| validate_file( ANTISPAM_BEE_LOG_FILE ) !== 0
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- WP_Filesystem cannot perform an atomic FILE_APPEND | LOCK_EX write to the log file.
 			|| ! is_writable( ANTISPAM_BEE_LOG_FILE )
 		) {
 			return $item;
@@ -49,6 +52,7 @@ class UpdateSpamLog extends Base {
 			PHP_EOL
 		);
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- WP_Filesystem cannot perform an atomic FILE_APPEND | LOCK_EX write to the log file.
 		file_put_contents(
 			ANTISPAM_BEE_LOG_FILE,
 			$entry,

@@ -41,6 +41,31 @@ abstract class ControllableBase extends Base implements Controllable {
 	}
 
 	/**
+	 * Get option name.
+	 * This will add type and slug prefixes to the short name.
+	 *
+	 * @param string $name Name suffix.
+	 *
+	 * @return string Corresponding option name
+	 */
+	public static function get_option_name( string $name ): string {
+		$component_type = static::get_component_type();
+		$slug           = static::get_slug();
+		$option_name    = "{$component_type}_{$slug}_{$name}";
+
+		return str_replace( '-', '_', $option_name );
+	}
+
+	/**
+	 * Get the component type (rule, post_processor or general).
+	 *
+	 * @return string
+	 */
+	public static function get_component_type(): string {
+		return static::$component_type;
+	}
+
+	/**
 	 * Get post processor options.
 	 *
 	 * {@inheritDoc} Default: none.
@@ -59,29 +84,5 @@ abstract class ControllableBase extends Base implements Controllable {
 	 */
 	public static function only_print_custom_options(): bool {
 		return static::$only_print_custom_options;
-	}
-
-	/**
-	 * Get the component type (rule, post_processor or general).
-	 *
-	 * @return string
-	 */
-	public static function get_component_type(): string {
-		return static::$component_type;
-	}
-
-	/**
-	 * Get option name.
-	 * This will add type and slug prefixes to the short name.
-	 *
-	 * @param string $name Name suffix.
-	 * @return string Corresponding option name
-	 */
-	public static function get_option_name( string $name ): string {
-		$component_type = static::get_component_type();
-		$slug           = static::get_slug();
-		$option_name    = "{$component_type}_{$slug}_{$name}";
-
-		return str_replace( '-', '_', $option_name );
 	}
 }

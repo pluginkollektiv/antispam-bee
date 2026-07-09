@@ -10,12 +10,12 @@ namespace AntispamBee\Admin\Fields;
 use AntispamBee\Admin\RenderElement;
 
 /**
- * Text field.
+ * Select field.
  */
 class Select extends Field implements RenderElement {
 
 	/**
-	 * Get HTML.
+	 * Get the HTML.
 	 */
 	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped

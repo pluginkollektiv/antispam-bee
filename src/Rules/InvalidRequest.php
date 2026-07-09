@@ -27,6 +27,7 @@ class InvalidRequest extends Base implements SpamReason {
 	 * Check for invalid request content in POST data.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {

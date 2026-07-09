@@ -34,6 +34,7 @@ class DeleteForReasons extends ControllableBase {
 	 * Process an item, i.e. mark it for deletion.
 	 *
 	 * @param array $item Item to process.
+	 *
 	 * @return array Processed item.
 	 */
 	public static function process( array $item ): array {
@@ -54,15 +55,6 @@ class DeleteForReasons extends ControllableBase {
 	}
 
 	/**
-	 * Get element name.
-	 *
-	 * @return string
-	 */
-	public static function get_name(): string {
-		return __( 'Delete by reasons', 'antispam-bee' );
-	}
-
-	/**
 	 * Get element label (optional).
 	 *
 	 * @return string|null
@@ -79,7 +71,6 @@ class DeleteForReasons extends ControllableBase {
 	public static function get_description(): ?string {
 		return null;
 	}
-
 
 	/**
 	 * Get post processor options.
@@ -114,5 +105,14 @@ class DeleteForReasons extends ControllableBase {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Get element name.
+	 *
+	 * @return string
+	 */
+	public static function get_name(): string {
+		return __( 'Delete by reasons', 'antispam-bee' );
 	}
 }

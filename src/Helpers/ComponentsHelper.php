@@ -56,7 +56,7 @@ class ComponentsHelper {
 
 			// Filter by supported types like Comment, Linkback.
 			$supported_types = $component::get_supported_types();
-			if ( ! is_null( $reaction_type ) && ! in_array( $reaction_type, $supported_types ) ) {
+			if ( ! is_null( $reaction_type ) && ! in_array( $reaction_type, $supported_types, true ) ) {
 				continue;
 			}
 
@@ -74,6 +74,7 @@ class ComponentsHelper {
 
 			// Remove third-party components with `asb-` prefix.
 			if ( 0 !== strpos( $reflection->getFileName(), PLUGIN_PATH ) && 0 === strpos( $component::get_slug(), 'asb-' ) ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 				error_log( __( 'Antispam Bee: You shall not use `asb-` as slug prefix for your custom rules and post processors.', 'antispam-bee' ) );
 				continue;
 			}

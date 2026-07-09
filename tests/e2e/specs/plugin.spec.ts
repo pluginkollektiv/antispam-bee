@@ -1,4 +1,4 @@
-import { test, expect, adminLogin } from '../fixtures/base';
+import { adminLogin, expect, test } from '../fixtures/base';
 
 test.describe( 'Plugin basics', () => {
 	test( 'plugin appears on the plugins page', async ( { page } ) => {

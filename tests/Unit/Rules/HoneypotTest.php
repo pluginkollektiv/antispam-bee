@@ -3,7 +3,6 @@
 namespace AntispamBee\Tests\Unit\Rules;
 
 use AntispamBee\Rules\Honeypot;
-
 use function Brain\Monkey\Functions\stubs;
 
 /**
@@ -44,13 +43,13 @@ class HoneypotTest extends AbstractRuleTestCase {
 
 		stubs(
 			[
-				'esc_url_raw' => function ( string $url ) {
+				'esc_url_raw'  => function ( string $url ) {
 					return $url;
 				},
-				'is_feed' => false,
+				'is_feed'      => false,
 				'is_trackback' => false,
 				'wp_parse_url' => 'parse_url',
-				'wp_unslash' => function ( $value ) {
+				'wp_unslash'   => function ( $value ) {
 					return $value;
 				},
 			]
@@ -75,18 +74,18 @@ class HoneypotTest extends AbstractRuleTestCase {
 		$_SERVER = [ 'SCRIPT_NAME' => '/wp-comments-post.php' ];
 
 		Honeypot::precheck();
-		self::assertSame( 1, $_POST[ 'ab_spam__invalid_request' ], 'request without missing fields not detected' );
+		self::assertSame( 1, $_POST['ab_spam__invalid_request'], 'request without missing fields not detected' );
 
 		$_POST = [
 			'd7dcf95a06' => 'S3cr3t',
-			'comment' => 'H1dd3n',
+			'comment'    => 'H1dd3n',
 		];
 		Honeypot::precheck();
 		self::assertSame( 1, $_POST['ab_spam__hidden_field'], 'non-empty hidden fiend not detected' );
 
 		$_POST = [
 			'd7dcf95a06' => 'S3cr3t',
-			'comment' => '',
+			'comment'    => '',
 		];
 		Honeypot::precheck();
 		self::assertSame(

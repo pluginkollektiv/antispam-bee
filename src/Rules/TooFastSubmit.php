@@ -11,7 +11,8 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
- * Rule that is responsible for checking that at least a certain timespan has passed so that the comment won't be marked as invalid.
+ * Rule that is responsible for checking that at least a certain
+ * timespan has passed so that the comment won't be marked as invalid.
  */
 class TooFastSubmit extends ControllableBase implements SpamReason {
 
@@ -58,11 +59,11 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 				);
 
 				return $field_markup . sprintf(
-					'<input type="hidden" name="ab_init_time" data-unique-id="%s" value="%d" />%s',
-					$unique_id,
-					time(),
-					$script
-				);
+						'<input type="hidden" name="ab_init_time" data-unique-id="%s" value="%d" />%s',
+						$unique_id,
+						time(),
+						$script
+					);
 			}
 		);
 	}
@@ -73,6 +74,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	 * Test for time between page initialization and reaction.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {

@@ -28,6 +28,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	 * Test item for spam patterns from database.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -58,6 +59,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 			return 0;
 		}
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery
 		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		$filter_sql = implode( ' OR ', $filter );
@@ -73,8 +75,9 @@ class DbSpam extends ControllableBase implements SpamReason {
 				$params
 			)
 		);
-		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery
 		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 
 		return (int) ! empty( $result );
 	}

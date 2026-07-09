@@ -4,7 +4,6 @@ namespace AntispamBee\Tests\Unit\Rules;
 
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Rules\EmptyData;
-
 use function Brain\Monkey\Functions\when;
 
 class EmptyDataTest extends AbstractRuleTestCase {

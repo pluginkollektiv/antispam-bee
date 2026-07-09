@@ -50,9 +50,46 @@ class Rules {
 	}
 
 	/**
+	 * Get controllable items.
+	 *
+	 * @param string|null $reaction_type Reaction type.
+	 * @param bool        $only_active   Get only active items.
+	 *
+	 * @return array List of suitable controllables.
+	 */
+	public static function get_controllables( ?string $reaction_type = null, bool $only_active = false ): array {
+		return self::filter(
+			[
+				'reaction_type' => $reaction_type,
+				'only_active'   => $only_active,
+				'implements'    => [ Verifiable::class, Controllable::class ],
+			]
+		);
+	}
+
+	/**
+	 * Get rules that provide a spam reason (implement the SpamReason interface).
+	 *
+	 * @param string|null $reaction_type Reaction type.
+	 * @param bool        $only_active   Get only active rules.
+	 *
+	 * @return array List of rules that provide a spam reason.
+	 */
+	public static function get_spam_reason_rules( ?string $reaction_type = null, bool $only_active = false ): array {
+		return self::filter(
+			[
+				'reaction_type' => $reaction_type,
+				'only_active'   => $only_active,
+				'implements'    => [ Verifiable::class, SpamReason::class ],
+			]
+		);
+	}
+
+	/**
 	 * Apply rules.
 	 *
 	 * @param array $item Item to apply rules to.
+	 *
 	 * @return bool Item identified as spam.
 	 */
 	public function apply( array $item ): bool {
@@ -69,6 +106,7 @@ class Rules {
 		unset( $log_item['comment_author_IP'] );
 		unset( $log_item['user_id'] );
 		unset( $log_item['user_ID'] );
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		DebugMode::log( 'Looping through spam rules for reaction with the following data: ' . print_r( $log_item, true ) );
 
 		foreach ( $rules as $rule ) {
@@ -107,6 +145,7 @@ class Rules {
 	 *
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active rules.
+	 *
 	 * @return array List of applicable rules.
 	 */
 	public static function get( ?string $reaction_type = null, bool $only_active = false ): array {
@@ -120,45 +159,12 @@ class Rules {
 	}
 
 	/**
-	 * Get controllable items.
-	 *
-	 * @param string|null $reaction_type Reaction type.
-	 * @param bool        $only_active   Get only active items.
-	 * @return array List of suitable controllables.
-	 */
-	public static function get_controllables( ?string $reaction_type = null, bool $only_active = false ): array {
-		return self::filter(
-			[
-				'reaction_type' => $reaction_type,
-				'only_active'   => $only_active,
-				'implements'    => [ Verifiable::class, Controllable::class ],
-			]
-		);
-	}
-
-	/**
-	 * Get rules that provide a spam reason (implement the SpamReason interface).
-	 *
-	 * @param string|null $reaction_type Reaction type.
-	 * @param bool        $only_active   Get only active rules.
-	 * @return array List of rules that provide a spam reason.
-	 */
-	public static function get_spam_reason_rules( ?string $reaction_type = null, bool $only_active = false ): array {
-		return self::filter(
-			[
-				'reaction_type' => $reaction_type,
-				'only_active'   => $only_active,
-				'implements'    => [ Verifiable::class, SpamReason::class ],
-			]
-		);
-	}
-
-	/**
 	 * Filter items.
 	 *
 	 * @param array $options Filter options.
 	 *
 	 * @return array List of filtered elements.
+	 *
 	 * @throws ReflectionException
 	 */
 	private static function filter( array $options ): array {

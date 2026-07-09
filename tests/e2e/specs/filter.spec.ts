@@ -7,7 +7,7 @@
  *	- "Language"	  (was "Comment Language")
  *	- "Honeypot" and "BBCode" unchanged.
  */
-import { test, expect, adminLogin } from '../fixtures/base';
+import { adminLogin, expect, test } from '../fixtures/base';
 
 async function fillComment(
 	page: import( '@playwright/test' ).Page,
@@ -38,9 +38,7 @@ async function fillComment(
 }
 
 test.describe( 'Spam filter mechanisms', () => {
-	test( 'honeypot catches spam comment', async ( {
-		page,
-	} ) => {
+	test( 'honeypot catches spam comment', async ( { page } ) => {
 		await fillComment( page, {
 			comment: 'Release the hounds!',
 			author: 'Mr. Burns',
@@ -55,10 +53,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Honeypot' );
 	} );
 
-	test( 'honeypot spam is deleted when delete processor is active', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'honeypot spam is deleted when delete processor is active', async ( { page, cli } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.post_processor_asb_delete_spam_active = 'on';
 		cli.optionUpdate( 'antispam_bee_options', opts );
@@ -77,9 +72,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).not.toContainText( 'Mr. Burns' );
 	} );
 
-	test( 'honeypot lets a genuine comment through when the trap is empty', async ( {
-		page,
-	} ) => {
+	test( 'honeypot lets a genuine comment through when the trap is empty', async ( { page } ) => {
 		// Genuine visitor: fills the visible comment field but leaves the
 		// hidden honeypot trap empty (fillHoneypot omitted).
 		await fillComment( page, {
@@ -99,9 +92,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Lisa Simpson' );
 	} );
 
-	test( 'local spam DB flags comment from same IP', async ( {
-		page,
-	} ) => {
+	test( 'local spam DB flags comment from same IP', async ( { page } ) => {
 		test.setTimeout( 90_000 );
 
 		// First comment — caught by RegExp ("buy amazing" matches the built-in pattern).
@@ -129,10 +120,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Local DB' );
 	} );
 
-	test( 'local spam DB does not flag when db_spam rule is off', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'local spam DB does not flag when db_spam rule is off', async ( { page, cli } ) => {
 		// Disable the local DB rule but keep regexp active.
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_db_spam_active = '';
@@ -165,9 +153,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		);
 	} );
 
-	test( 'local spam DB flags by email', async ( {
-		page,
-	}) => {
+	test( 'local spam DB flags by email', async ( { page } ) => {
 		test.setTimeout( 90_000 );
 
 		// First comment — caught by RegExp ("buy amazing" matches the built-in pattern).
@@ -193,9 +179,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Local DB' );
 	} );
 
-	test( 'local spam DB flags by URL', async ( {
-		page,
-	} ) => {
+	test( 'local spam DB flags by URL', async ( { page } ) => {
 		test.setTimeout( 90_000 );
 
 		// "buy amazing" matches the built-in regexp pattern.
@@ -220,9 +204,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Local DB' );
 	} );
 
-	test( 'regex detects spam keyword (Viagra)', async ( {
-		page,
-	} ) => {
+	test( 'regex detects spam keyword (Viagra)', async ( { page } ) => {
 		await fillComment( page, {
 			comment: 'Viagra helped me in those days.',
 			author: 'Monty',
@@ -236,9 +218,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'RegExp match' );
 	} );
 
-	test( 'regex detects spam keyword (luxurybrandsale)', async ( {
-		page,
-	} ) => {
+	test( 'regex detects spam keyword (luxurybrandsale)', async ( { page } ) => {
 		await fillComment( page, {
 			comment: 'Come to our luxurybrandsale',
 			author: 'Monty',
@@ -251,10 +231,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'RegExp match' );
 	} );
 
-	test( 'regex disabled allows spam keywords through', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'regex disabled allows spam keywords through', async ( { page, cli } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_regexp_active = '';
 		opts.comment.rule_asb_db_spam_active = '';
@@ -278,9 +255,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Monty' );
 	} );
 
-	test( 'BBCode in comment is detected as spam', async ( {
-		page,
-	} ) => {
+	test( 'BBCode in comment is detected as spam', async ( { page } ) => {
 		await fillComment( page, {
 			comment: 'This is also a [url=https://example.com]nuclear[/url] page!',
 			author: 'Monty',
@@ -294,10 +269,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'BBCode' );
 	} );
 
-	test( 'BBCode detection disabled allows BBCode through', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'BBCode detection disabled allows BBCode through', async ( { page, cli } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_bbcode_active = '';
 		opts.comment.rule_asb_regexp_active = '';
@@ -320,10 +292,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Monty' );
 	} );
 
-	test( 'language rule blocks comment in wrong language', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'language rule blocks comment in wrong language', async ( { page, cli } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_lang_spam_active = 'on';
 		opts.comment.rule_asb_lang_spam_allowed = { de: 'on' };
@@ -350,9 +319,9 @@ test.describe( 'Spam filter mechanisms', () => {
 	} );
 
 	test( 'language rule skips short comments (too little text to detect)', async ( {
-		page,
-		cli,
-	} ) => {
+		                                                                                page,
+		                                                                                cli
+	                                                                                } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_lang_spam_active = 'on';
 		opts.comment.rule_asb_lang_spam_allowed = { de: 'on' };
@@ -376,10 +345,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).not.toContainText( 'Language' );
 	} );
 
-	test( 'language rule allows comment in the allowed language', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'language rule allows comment in the allowed language', async ( { page, cli } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_lang_spam_active = 'on';
 		opts.comment.rule_asb_lang_spam_allowed = { en: 'on' };
@@ -403,9 +369,9 @@ test.describe( 'Spam filter mechanisms', () => {
 	} );
 
 	test( 'language rule with multiple allowed languages blocks unlisted language', async ( {
-		page,
-		cli,
-	} ) => {
+		                                                                                        page,
+		                                                                                        cli
+	                                                                                        } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_lang_spam_active = 'on';
 		opts.comment.rule_asb_lang_spam_allowed = { de: 'on', it: 'on' };
@@ -430,9 +396,9 @@ test.describe( 'Spam filter mechanisms', () => {
 	} );
 
 	test( 'language rule with multiple allowed languages passes listed language', async ( {
-		page,
-		cli,
-	} ) => {
+		                                                                                      page,
+		                                                                                      cli
+	                                                                                      } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_lang_spam_active = 'on';
 		opts.comment.rule_asb_lang_spam_allowed = { it: 'on', en: 'on' };
@@ -455,10 +421,7 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).not.toContainText( 'Monty' );
 	} );
 
-	test( 'manually marking a comment as spam updates local DB', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'manually marking a comment as spam updates local DB', async ( { page, cli } ) => {
 		test.setTimeout( 90_000 );
 
 		// Disable all rules except db_spam so a legitimate comment passes first.

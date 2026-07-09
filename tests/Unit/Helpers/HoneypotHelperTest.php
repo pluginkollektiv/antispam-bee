@@ -4,7 +4,6 @@ namespace AntispamBee\Tests\Unit\Helpers;
 
 use AntispamBee\Helpers\Honeypot;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
-
 use function Brain\Monkey\Functions\when;
 
 if ( ! defined( 'NONCE_SALT' ) ) {
@@ -15,12 +14,6 @@ if ( ! defined( 'NONCE_SALT' ) ) {
  * Unit tests for {@see Honeypot} (helper).
  */
 class HoneypotHelperTest extends TestCase {
-
-	protected function set_up(): void {
-		parent::set_up();
-		when( 'esc_attr' )->returnArg();
-		when( 'esc_js' )->returnArg();
-	}
 
 	/**
 	 * @runInSeparateProcess
@@ -61,5 +54,11 @@ class HoneypotHelperTest extends TestCase {
 
 		self::assertNotEmpty( $result, 'inject() should handle textarea with unquoted attributes' );
 		self::assertStringContainsString( 'name="' . $name . '"', $result, 'Secret name should be in the output for unquoted markup' );
+	}
+
+	protected function set_up(): void {
+		parent::set_up();
+		when( 'esc_attr' )->returnArg();
+		when( 'esc_js' )->returnArg();
 	}
 }

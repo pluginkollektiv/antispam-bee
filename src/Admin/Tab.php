@@ -35,8 +35,8 @@ class Tab {
 	/**
 	 * Initialize the tab.
 	 *
-	 * @param string    $slug Title for tab.
-	 * @param string    $title Title for tab.
+	 * @param string    $slug     Title for tab.
+	 * @param string    $title    Title for tab.
 	 * @param Section[] $sections Sections object array.
 	 */
 	public function __construct( string $slug, string $title, array $sections = [] ) {
@@ -76,6 +76,7 @@ class Tab {
 	 * Add a section to the settings tab.
 	 *
 	 * @param Section $section Section to add.
+	 *
 	 * @return void
 	 */
 	public function add_section( Section $section ): void {

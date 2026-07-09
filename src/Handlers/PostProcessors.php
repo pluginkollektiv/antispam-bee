@@ -69,6 +69,18 @@ class PostProcessors {
 	}
 
 	/**
+	 * Filter items.
+	 *
+	 * @param array $options Filter options.
+	 *
+	 * @return array List of filtered elements.
+	 * @throws ReflectionException
+	 */
+	private static function filter( array $options ): array {
+		return ComponentsHelper::filter( apply_filters( 'antispam_bee_post_processors', [] ), $options );
+	}
+
+	/**
 	 * Get controllable items.
 	 *
 	 * @param string|null $reaction_type Reaction type.
@@ -85,17 +97,5 @@ class PostProcessors {
 				'implements'    => [ PostProcessor::class, Controllable::class ],
 			]
 		);
-	}
-
-	/**
-	 * Filter items.
-	 *
-	 * @param array $options Filter options.
-	 *
-	 * @return array List of filtered elements.
-	 * @throws ReflectionException
-	 */
-	private static function filter( array $options ): array {
-		return ComponentsHelper::filter( apply_filters( 'antispam_bee_post_processors', [] ), $options );
 	}
 }

@@ -63,24 +63,10 @@ class Sanitize {
 	}
 
 	/**
-	 * Sanitize a checkbox value.
-	 * Valid values are "on" or null.
-
-	 * @param mixed $value Raw checkbox value.
-	 * @return string|null Sanitized value.
-	 */
-	public static function checkbox( $value ): ?string {
-		if ( 'on' === $value ) {
-			return $value;
-		}
-
-		return null;
-	}
-
-	/**
 	 * Sanitize options.
 	 *
 	 * @param array $options Options to sanitize.
+	 *
 	 * @return array Sanitized options.
 	 */
 	public static function sanitize_options( array $options ): array {
@@ -122,6 +108,7 @@ class Sanitize {
 	 *
 	 * @param array  $options Options.
 	 * @param string $tab     Settings tab.
+	 *
 	 * @return array Sanitized options.
 	 */
 	private static function sanitize_controllables( array $options, string $tab ): array {
@@ -164,6 +151,22 @@ class Sanitize {
 	}
 
 	/**
+	 * Sanitize a checkbox value.
+	 * Valid values are "on" or null.
+	 *
+	 * @param mixed $value Raw checkbox value.
+	 *
+	 * @return string|null Sanitized value.
+	 */
+	public static function checkbox( $value ): ?string {
+		if ( 'on' === $value ) {
+			return $value;
+		}
+
+		return null;
+	}
+
+	/**
 	 * Call a sanitization callback.
 	 *
 	 * @param array                      $controllable_option Controllable options.
@@ -173,7 +176,7 @@ class Sanitize {
 	 *
 	 * @return void
 	 */
-	private static function call_sanitize_callback( array $controllable_option, array &$options, string $tab, string $controllable ): void {
+	private static function call_sanitize_callback( array $controllable_option, array &$options, string $tab, string $controllable ): void { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint -- `class-string<Controllable>` is a PHPStan-only generic type; the native hint is `string`.
 		if ( ! isset( $controllable_option['sanitize'] ) ) {
 			return;
 		}
@@ -183,18 +186,18 @@ class Sanitize {
 		}
 
 		$option_name = $controllable::get_option_name( $controllable_option['option_name'] );
-		$path        = str_replace( '-', '_', "$tab.$option_name" );
-		$new_value   = Settings::get_array_value_by_path( $path, $options );
+		$option_path = str_replace( '-', '_', "$tab.$option_name" );
+		$new_value   = Settings::get_array_value_by_path( $option_path, $options );
 
 		if ( is_callable( $controllable_option['sanitize'] ) ) {
 			$sanitized = call_user_func( $controllable_option['sanitize'], $new_value );
 			if ( null === $sanitized ) {
-				Settings::remove_array_key_by_path( $path, $options );
+				Settings::remove_array_key_by_path( $option_path, $options );
 
 				return;
 			}
 
-			Settings::set_array_value_by_path( $path, $sanitized, $options );
+			Settings::set_array_value_by_path( $option_path, $sanitized, $options );
 		}
 	}
 }

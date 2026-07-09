@@ -30,6 +30,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	 * Content fields using pre-defined and custom regular expressions
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
