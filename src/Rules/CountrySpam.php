@@ -234,7 +234,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 *
 	 * @param string $value Comma-separated list of potential ISO country codes.
 	 *
-	 * @return string Comma-separated list if sanitized ISO country codes.
+	 * @return string Comma-separated list of sanitized ISO country codes.
 	 */
 	private static function sanitize_iso_codes_string( string $value ): string {
 		$value  = strtoupper( $value );

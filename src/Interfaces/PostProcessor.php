@@ -7,6 +7,9 @@
 
 namespace AntispamBee\Interfaces;
 
+/**
+ * Post processor interface.
+ */
 interface PostProcessor {
 
 	/**

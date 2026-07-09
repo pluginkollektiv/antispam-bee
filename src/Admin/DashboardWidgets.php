@@ -12,7 +12,7 @@ use AntispamBee\Helpers\DashboardHelper;
 use AntispamBee\Helpers\Settings;
 
 /**
- * Class DashboardWidgets
+ * Dashboard widgets handler.
  */
 class DashboardWidgets {
 
@@ -27,11 +27,11 @@ class DashboardWidgets {
 	}
 
 	/**
-	 * Display the spam counts on the dashboard
+	 * Display the spam counts on the dashboard.
 	 *
 	 * @param array $items Initial array with dashboard items.
 	 *
-	 * @return  array $items  Merged array with dashboard items.
+	 * @return  array         Merged array with dashboard items.
 	 * @since  0.1
 	 * @since  2.6.5
 	 */
@@ -82,7 +82,7 @@ class DashboardWidgets {
 	}
 
 	/**
-	 * Return the number of spam comments
+	 * Return the number of spam comments.
 	 *
 	 * @since  0.1
 	 * @since  2.4

@@ -57,7 +57,7 @@ class Section {
 
 
 	/**
-	 * Initializing Tab.
+	 * Initialize the tab.
 	 *
 	 * @param string      $slug          Slug of the tab.
 	 * @param string      $title         Title for tab.
@@ -178,7 +178,7 @@ class Section {
 	}
 
 	/**
-	 * Renders the settings section.
+	 * Render the settings section.
 	 */
 	public function render(): void {
 		$page = SettingsPage::SETTINGS_PAGE_SLUG . '_' . $this->reaction_type;
@@ -207,7 +207,7 @@ class Section {
 	}
 
 	/**
-	 * Get Name.
+	 * Get name.
 	 *
 	 * @return string Name of the field.
 	 */
@@ -234,7 +234,7 @@ class Section {
 	}
 
 	/**
-	 * Renders the fields for a row.
+	 * Render the fields for a row.
 	 *
 	 * @param array $row Row of fields.
 	 */

@@ -68,7 +68,7 @@ class SendEmail extends ControllableBase {
 					/**
 					 * Filters the subject of the spam notification.
 					 *
-					 * @param string $subject subject line.
+					 * @param string $subject Subject line.
 					 */
 					apply_filters(
 						'antispam_bee_notification_subject',

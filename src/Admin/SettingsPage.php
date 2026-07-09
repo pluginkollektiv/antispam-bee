@@ -19,23 +19,23 @@ use const AntispamBee\MAIN_PLUGIN_FILE;
 use const AntispamBee\PLUGIN_VERSION;
 
 /**
- * Antispam Bee Settings Page
+ * Antispam Bee settings page.
  */
 class SettingsPage {
 	/**
-	 * The slug used for the Settings page
+	 * The slug used for the settings page.
 	 *
 	 * @var string
 	 */
 	const SETTINGS_PAGE_SLUG = 'antispam_bee';
 	/**
-	 * Active tab
+	 * Active tab.
 	 *
 	 * @var string
 	 */
 	private $active_tab = '';
 	/**
-	 * Tabs
+	 * Tabs.
 	 *
 	 * @var Tab[]
 	 */
@@ -47,7 +47,7 @@ class SettingsPage {
 	 */
 	private $rules = [];
 	/**
-	 * List of controllable post processors
+	 * List of controllable post processors.
 	 *
 	 * @var PostProcessors[]
 	 */

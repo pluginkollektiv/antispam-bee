@@ -60,7 +60,7 @@ interface Controllable {
 
 
 	/**
-	 * Returns activation state for this element.
+	 * Return activation state for this element.
 	 *
 	 * @param string $reaction_type One of the supported reaction types (comment, linkback, general).
 	 *
@@ -103,7 +103,7 @@ interface Controllable {
 	 *
 	 * @param string $name Name suffix.
 	 *
-	 * @return string Corresponding option name
+	 * @return string Corresponding option name.
 	 */
 	public static function get_option_name( string $name ): string;
 }

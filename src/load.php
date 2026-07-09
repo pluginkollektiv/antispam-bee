@@ -1,6 +1,6 @@
 <?php
 /**
- * Main plugin file to load other classes
+ * Main plugin file to load other classes.
  *
  * @package AntispamBee
  */
@@ -42,7 +42,7 @@ use AntispamBee\Rules\TooFastSubmit;
 use AntispamBee\Rules\ValidGravatar;
 
 /**
- * Init function of the plugin
+ * Init function of the plugin.
  */
 function init(): void {
 	// Construct all modules to initialize.

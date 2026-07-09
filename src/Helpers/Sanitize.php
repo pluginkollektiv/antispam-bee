@@ -14,12 +14,12 @@ use AntispamBee\Handlers\Rules;
 use AntispamBee\Interfaces\Controllable;
 
 /**
- * Helps by providing reusable sanitizing functions
+ * Helps by providing reusable sanitizing functions.
  */
 class Sanitize {
 
 	/**
-	 * Sanitizes a checkbox group based on the given values and the valid ones.
+	 * Sanitize a checkbox group based on the given values and the valid ones.
 	 *
 	 * @param mixed $values        Values to sanitize.
 	 * @param array $valid_options List of allowed keys.
@@ -36,7 +36,7 @@ class Sanitize {
 	}
 
 	/**
-	 * Sanitizes an array of strings to match ISO format.
+	 * Sanitize an array of strings to match ISO format.
 	 *
 	 * @param mixed $codes List of potential ISO codes to sanitize.
 	 *

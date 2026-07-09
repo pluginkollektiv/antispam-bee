@@ -11,7 +11,7 @@ use stdClass;
 use const AntispamBee\MAIN_PLUGIN_FILE;
 
 /**
- * Class UpgradeNotice
+ * Upgrade notice handler.
  */
 class UpgradeNotice {
 

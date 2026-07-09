@@ -39,7 +39,7 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	/**
 	 * Verify an item.
 	 *
-	 * Test if a linkback originals from its own target.
+	 * Test if a linkback originates from its own target.
 	 *
 	 * @param array $item Item to verify.
 	 *

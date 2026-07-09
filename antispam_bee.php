@@ -25,11 +25,11 @@ define( __NAMESPACE__ . '\MAIN_PLUGIN_FILE', __FILE__ );
 define( __NAMESPACE__ . '\PLUGIN_PATH', plugin_dir_path( MAIN_PLUGIN_FILE ) );
 define( __NAMESPACE__ . '\PLUGIN_VERSION', '3.0.0-beta.1' );
 
-// The pre_init functions check the compatibility of the plugin and calls the init function, if check were successful.
+// The pre_init function checks the plugin's compatibility and calls the init function if the check was successful.
 pre_init();
 
 /**
- * Pre init function to check the plugins' compatibility.
+ * Pre init function to check the plugin's compatibility.
  *
  * @return void
  */

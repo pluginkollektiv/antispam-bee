@@ -10,7 +10,7 @@ namespace AntispamBee\Rules;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
- * Checks if request is valid.
+ * Checks if the request is valid.
  */
 class InvalidRequest extends Base implements SpamReason {
 

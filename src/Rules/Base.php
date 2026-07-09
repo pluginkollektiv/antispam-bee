@@ -75,7 +75,7 @@ abstract class Base implements Verifiable {
 	}
 
 	/**
-	 * Returns the types for which this rule can be used.
+	 * Return the types for which this rule can be used.
 	 *
 	 * @return array
 	 */

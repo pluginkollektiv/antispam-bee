@@ -78,7 +78,7 @@ abstract class Reaction {
 	 * @param array $reaction Reaction to handle.
 	 * @param Rules $rules    Ruleset to apply.
 	 *
-	 * @return array|never-return Handled reaction (or die, if item was deleted)
+	 * @return array|never-return Handled reaction (or die, if item was deleted).
 	 */
 	protected static function handle_spam( array $reaction, Rules $rules ) {
 		$item = PostProcessors::apply( static::$reaction_type, $reaction, $rules->get_spam_reasons() );

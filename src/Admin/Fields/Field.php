@@ -36,7 +36,7 @@ abstract class Field {
 	protected $controllable_option_name;
 
 	/**
-	 * Initializing the field.
+	 * Initialize the field.
 	 *
 	 * @param string                     $reaction_type Reaction type.
 	 * @param array                      $option        Field options.
@@ -49,7 +49,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Get the Name.
+	 * Get the name.
 	 *
 	 * @return string Name of the field.
 	 */

@@ -12,7 +12,7 @@ use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Helpers\Settings;
 
 /**
- * Class PluginStateChangeHandler
+ * Plugin state change handler.
  */
 class PluginStateChangeHandler {
 
@@ -29,7 +29,7 @@ class PluginStateChangeHandler {
 	}
 
 	/**
-	 * Initialization of the cronjobs.
+	 * Initialize the cronjobs.
 	 */
 	public static function init_scheduled_hook(): void {
 		DeleteSpamCron::maybe_change_cron_state();

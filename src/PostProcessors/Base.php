@@ -46,7 +46,7 @@ abstract class Base implements PostProcessor {
 	}
 
 	/**
-	 * Adds post processor class to array of post processors.
+	 * Add post processor class to array of post processors.
 	 *
 	 * @param PostProcessor[] $post_processors Currently registered post processors.
 	 *

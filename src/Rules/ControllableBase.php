@@ -30,7 +30,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	protected static $component_type = 'rule';
 
 	/**
-	 * Returns activation state of this rule.
+	 * Return activation state of this rule.
 	 *
 	 * @param string $reaction_type One of the supported reaction types (comment, linkback, general).
 	 *
@@ -46,7 +46,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	 *
 	 * @param string $name Name suffix.
 	 *
-	 * @return string Corresponding option name
+	 * @return string Corresponding option name.
 	 */
 	public static function get_option_name( string $name ): string {
 		$component_type = static::get_component_type();

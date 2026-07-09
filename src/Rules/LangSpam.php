@@ -189,9 +189,9 @@ class LangSpam extends ControllableBase implements SpamReason {
 		];
 
 		/**
-		 * Filter the possible languages for the language spam test
+		 * Filter the possible languages for the language spam test.
 		 *
-		 * @param (array) $languages The languages
+		 * @param (array) $languages The languages.
 		 *
 		 * @return (array)
 		 * @since 2.7.1

@@ -20,7 +20,7 @@ class IpHelper {
 	 *
 	 * @hook    string  pre_comment_user_ip  The client IP, defaults to REMOTE_ADDR.
 	 *
-	 * @return string Client IP
+	 * @return string Client IP.
 	 */
 	public static function get_client_ip(): string {
 		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
@@ -61,7 +61,7 @@ class IpHelper {
 	}
 
 	/**
-	 * Anonymize the IP addresses
+	 * Anonymize an IP address.
 	 *
 	 * @param string $ip Original IP.
 	 *

@@ -49,7 +49,7 @@ class PluginUpdate {
 	private static $db_version_is_current = null;
 
 	/**
-	 * Runs after Antispam Bee was upgraded.
+	 * Run after Antispam Bee was upgraded.
 	 */
 	public static function maybe_run_plugin_updated_logic(): void {
 		if ( self::db_version_is_current() || self::$db_update_triggered ) {
@@ -90,7 +90,7 @@ class PluginUpdate {
 	}
 
 	/**
-	 * Makes database changes, if needed.
+	 * Make database changes, if needed.
 	 */
 	private static function maybe_update_database(): void {
 		// Prevent further update triggers during the same request that run before the DB version is updated.
@@ -214,7 +214,7 @@ class PluginUpdate {
 
 	/**
 	 * Convert multiselect values.
-	 * Takes an array of selected keys, applies optional mapping and generated a new array using
+	 * Takes an array of selected keys, applies optional mapping and generates a new array using
 	 * these values as keys and "on" as value.
 	 *
 	 * @param array $values  Selected values.

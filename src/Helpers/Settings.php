@@ -69,7 +69,7 @@ class Settings {
 	}
 
 	/**
-	 * Get single option field
+	 * Get a single option field.
 	 *
 	 * @param string $option_name   Option name.
 	 * @param string $reaction_type The reaction type.
@@ -89,9 +89,9 @@ class Settings {
 	}
 
 	/**
-	 * Get all plugin options
+	 * Get all plugin options.
 	 *
-	 * @return array $options Array with option fields.
+	 * @return array Array with option fields.
 	 */
 	public static function get_options(): array {
 		PluginUpdate::maybe_run_plugin_updated_logic();
@@ -149,10 +149,10 @@ class Settings {
 	}
 
 	/**
-	 * Update single option field
+	 * Update a single option field.
 	 *
 	 * @param string $field Field name.
-	 * @param mixed  $value The Field value.
+	 * @param mixed  $value The field value.
 	 *
 	 * @since  0.1
 	 * @since  2.4
@@ -166,13 +166,13 @@ class Settings {
 	}
 
 	/**
-	 * Update multiple option fields
+	 * Update multiple option fields.
 	 *
 	 * @param array $data Array with plugin option fields.
 	 *
-	 * @since  2.6.1
-	 *
 	 * @since  0.1
+	 *
+	 * @since  2.6.1
 	 */
 	public static function update_options( array $data ): void {
 		$options = get_option( self::OPTION_NAME );
@@ -190,15 +190,15 @@ class Settings {
 	}
 
 	/**
-	 * Check and return an array key
+	 * Check and return an array key.
 	 *
 	 * @param array  $array Array with values.
 	 * @param string $key   Name of the key.
 	 *
 	 * @return  mixed         Value of the requested key.
-	 * @since   2.10.0 Only return `null` if option does not exist.
-	 *
 	 * @since   2.4.2
+	 *
+	 * @since   2.10.0 Only return `null` if option does not exist.
 	 */
 	public static function get_key( array $array, string $key ) {
 		if ( empty( $array ) || empty( $key ) || ! isset( $array[ $key ] ) ) {

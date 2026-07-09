@@ -8,7 +8,7 @@
 namespace AntispamBee\Helpers;
 
 /**
- * Class DashboardHelper
+ * Dashboard helper.
  *
  * A helper providing some conditional functions for the dashboard.
  */

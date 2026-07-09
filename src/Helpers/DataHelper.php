@@ -34,7 +34,7 @@ class DataHelper {
 	/**
 	 * Get values with a key containing given values.
 	 *
-	 * @param string[] $substrs Key substrings to filters.
+	 * @param string[] $substrs Key substrings to filter.
 	 * @param array    $data    Data to filter.
 	 *
 	 * @return array Data elements with matching keys.

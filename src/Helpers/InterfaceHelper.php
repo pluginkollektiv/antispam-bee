@@ -14,7 +14,7 @@ namespace AntispamBee\Helpers;
  */
 class InterfaceHelper {
 	/**
-	 * Checks if a class implements an interface.
+	 * Check if a class implements an interface.
 	 *
 	 * @param string $class_name     Fully-qualified class name.
 	 * @param string $interface_name Fully-qualified interface name.

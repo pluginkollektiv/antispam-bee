@@ -16,12 +16,12 @@ use WP_Comment_Query;
 use wpdb;
 
 /**
- * Class CommentsColumns
+ * Comments columns handler.
  */
 class CommentsColumns {
 
 	/**
-	 * Registers the module hooks.
+	 * Register the module hooks.
 	 */
 	public static function init(): void {
 		if ( ! DashboardHelper::is_edit_spam_comments_page() ) {
@@ -68,7 +68,7 @@ class CommentsColumns {
 	}
 
 	/**
-	 * Display plugin column values on comments screen
+	 * Display plugin column values on comments screen.
 	 *
 	 * @param string  $column     Currently selected column.
 	 * @param integer $comment_id Comment ID.
@@ -97,11 +97,11 @@ class CommentsColumns {
 	}
 
 	/**
-	 * Register plugin sortable columns on comments screen
+	 * Register plugin sortable columns on comments screen.
 	 *
 	 * @param array $columns Registered columns.
 	 *
-	 * @return  array  $columns Columns with AB field.
+	 * @return  array          Columns with AB field.
 	 * @since   2.6.3
 	 * @change  2.6.3
 	 */
@@ -112,7 +112,7 @@ class CommentsColumns {
 	}
 
 	/**
-	 * Adjust orderby query
+	 * Adjust orderby query.
 	 *
 	 * @param WP_Comment_Query $query Current WordPress query.
 	 *
@@ -133,7 +133,7 @@ class CommentsColumns {
 	}
 
 	/**
-	 * Filter comments by the spam reason
+	 * Filter comments by the spam reason.
 	 *
 	 * @global wpdb $wpdb
 	 */
@@ -180,7 +180,7 @@ class CommentsColumns {
 	}
 
 	/**
-	 * Filter comments by the spam reason
+	 * Filter comments by the spam reason.
 	 *
 	 * @param WP_Comment_Query $query Current WordPress query.
 	 */
@@ -219,7 +219,7 @@ class CommentsColumns {
 	}
 
 	/**
-	 * Print CSS for the plugin column
+	 * Print CSS for the plugin column.
 	 *
 	 * @since   2.6.1
 	 * @change  2.6.1

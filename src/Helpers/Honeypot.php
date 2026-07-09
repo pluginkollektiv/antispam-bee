@@ -134,7 +134,7 @@ class Honeypot {
 
 
 	/**
-	 * Returns the secret of a post used in the textarea id attribute.
+	 * Return the secret of a post used in the textarea id attribute.
 	 *
 	 * @return string
 	 * @since 2.10.0 Modify secret generation because `always_allowed` option no longer exists
@@ -157,7 +157,7 @@ class Honeypot {
 	}
 
 	/**
-	 * Ensures that the secret starts with a letter.
+	 * Ensure that the secret starts with a letter.
 	 *
 	 * @param string $secret The secret.
 	 *
@@ -173,7 +173,7 @@ class Honeypot {
 	}
 
 	/**
-	 * Testing if we are on an AMP site.
+	 * Test if we are on an AMP site.
 	 *
 	 * Starting with v2.0, amp_is_request() is the preferred method to check,
 	 * but we fall back to the then deprecated is_amp_endpoint() as needed.
@@ -185,7 +185,7 @@ class Honeypot {
 	}
 
 	/**
-	 * Returns the secret of a post used in the textarea name attribute.
+	 * Return the secret of a post used in the textarea name attribute.
 	 *
 	 * @return string
 	 * @since 2.10.0 Modify secret generation because `always_allowed` option no longer exists

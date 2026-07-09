@@ -27,7 +27,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	/**
 	 * Verify an item.
 	 *
-	 * Content fields using pre-defined and custom regular expressions
+	 * Content fields using pre-defined and custom regular expressions.
 	 *
 	 * @param array $item Item to verify.
 	 *

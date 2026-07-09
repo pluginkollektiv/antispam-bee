@@ -15,11 +15,11 @@ namespace AntispamBee\Helpers;
 class LangHelper {
 
 	/**
-	 * Map franc language codes
+	 * Map franc language codes.
 	 *
 	 * @param string $franc_code The franc code, received from the service.
 	 *
-	 * @return string             Mapped ISO code
+	 * @return string             Mapped ISO code.
 	 * @since   2.9.0
 	 */
 	public static function map( string $franc_code ): string {

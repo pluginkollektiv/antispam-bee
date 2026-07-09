@@ -52,7 +52,7 @@ class SpamReasonTextHelper {
 	}
 
 	/**
-	 * Gets the spam reason texts by an array of slugs
+	 * Get the spam reason texts by an array of slugs.
 	 *
 	 * @param array $slugs List of rule slugs.
 	 *

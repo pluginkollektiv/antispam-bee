@@ -1,6 +1,6 @@
 <?php
 /**
- * Valid Gravator Rule.
+ * Valid Gravatar Rule.
  *
  * @package AntispamBee\Rules
  */
