@@ -3,8 +3,8 @@
 [![Build status](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/tests.yml/badge.svg)](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/tests.yml) [![Current Antispam Bee version](https://img.shields.io/wordpress/plugin/v/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/) [![Number of downloads](https://img.shields.io/wordpress/plugin/dt/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/advanced/) [![Number of active installs](https://img.shields.io/wordpress/plugin/installs/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/advanced/) [![WordPress plugin rating](https://img.shields.io/wordpress/plugin/r/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/#reviews) [![Donate with PayPal](https://img.shields.io/badge/PayPal-Donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW)
 
 Antispam plugin with a sophisticated toolset for effective day-to-day comment and linkback
-spam-fighting. Built with data protection and privacy in mind, and extendable with own anti-spam
-rules and the possibility to use Antispam Bee rules for other reactions than comments and linkbacks.
+spam-fighting. Built with data protection and privacy in mind and extendable with your own
+anti-spam rules and allows using Antispam Bee rules for other reactions than comments and linkbacks.
 
 ## Description ##
 
@@ -47,7 +47,7 @@ European data privacy standards.
 * To test the plugin on your local machine, simply run `npm install` and then `npm run env:start` in
   the root folder and open `http://localhost:8888/` in your browser.
 
-### Donate
+### Donate ###
 
 [Donate to us via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW)
 
@@ -68,7 +68,7 @@ European data privacy standards.
 
 ### Settings ###
 
-After you have activated *Antispam Bee,* the plugin will block spam comments out of the box.
+After you have activated *Antispam Bee*, the plugin will block spam comments out of the box.
 However, you may want to visit *Settings → Antispam Bee* to configure your custom set of anti-spam
 options that works best for your site.
 

@@ -5,7 +5,7 @@
 * **English**
     * Complete code rewrite and backend UI overhaul
     * Allows extending Antispam Bee with your own rules
-    * Allows to use Antispam Bee rules for other reactions than comments, for example, forms
+    * Allows using Antispam Bee rules for other reactions than comments, for example, forms
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -77,7 +77,7 @@
 ### 2.11.6 ###
 
 * **English**
-    * Fix: Delete a missed out option on uninstallation (Thanks @okvee!)
+    * Fix: Delete a missed-out option on uninstallation (Thanks @okvee!)
     * Tweak: Minor i18n improvements (Thanks Pedro!)
     * Tweak: Minor code changes and housekeeping
     * Tweak: Updated dependencies
@@ -281,7 +281,7 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
     * Tweak: Kommentare nach Spamgrund sortier- und filterbar gemacht
     * Tweak: Neuer Spamgrund für manuell markierten Spam eingeführt
     * Maintenance: Ungenutzter Code wurde gelöscht
-    * Maintenance: Der Fake IP check wurde entfernt. Dieser war unzuverlässig und produzierte
+    * Maintenance: Der Fake IP Check wurde entfernt. Dieser war unzuverlässig und produzierte
       falsche Ergebnisse
     * Maintenance: Einige Probleme mit unseren Coding standards wurden gefixt
     * Maintenance: Getestet bis WordPress 5.4
@@ -361,7 +361,7 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
     * Removed stopforumspam.com to avoid potential GDPR violation
     * Improves IP handling to comply with GDPR
     * Improves PHP7.2 compatibility
-    * Fixes small bug on mobile views
+    * Fixes a small bug on mobile views
     * Allow more than one language in language check
     * Minor interface improvements
     * Remove old Russian and Dutch translation files
@@ -369,7 +369,7 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
 
 * **Deutsch**
     - Entfernt stopforumspam.com zur Vorbeugung möglicher DSGVO-Verletzungen
-    - Verändert den Umgang mit IP-Adressen um der DSGVO zu entsprechen
+    - Verändert den Umgang mit IP-Adressen, um der DSGVO zu entsprechen
     - Verbessert PHP7.2-Kompatibilität
     - Behebt einen CSS-Bugfix der mobilen Darstellung
     - Erlaube mehr als eine Sprache im Sprachencheck
@@ -405,7 +405,7 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
     * More default Regexes
     * Unit Test Framework
     * Accessibility and GUI improvements
-    * An [english documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now
+    * The [English documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now
       available, too. Some corrections in the German documentation.
     * Some bugfixes - Among other things for WPML compatibility
     * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/3?closed=1
@@ -438,16 +438,16 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
 
 * **English**
     * added a POT file
-    * updated German translation, added formal version
+    * updated German translation, added a formal version
     * updated plugin text domain to include a dash instead of an underscore
     * updated, translated + formatted README.md
     * updated expired link URLs in plugin and languages files
     * updated [plugin authors](https://pluginkollektiv.org/hello-world/)
 * **Deutsch**
     * eine POT-Datei hinzugefügt
-    * deutsche Übersetzung aktualisiert, formale Version hinzugefügt
-    * Die Text Domain des Plugins in der ReadMe aktualisiert. Statt einem Unterstrich enthält der
-      Name nun ein Bindestrich.
+    * deutsche Übersetzung aktualisiert und formale Version hinzugefügt
+    * Die Text-Domain des Plugins wird in der ReadMe aktualisiert. Statt eines Unterstrichs enthält 
+      der Name nun einen Bindestrich.
     * README.md aktualisiert, übersetzt und formatiert
     * verwaiste Link-Adressen in dem Plugin und den Sprachdateien aktualisiert
     * [Plugin Autor](https://pluginkollektiv.org/de/hallo-welt/) aktualisiert
@@ -592,11 +592,11 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
 * **English**
     * Jubilee edition
     * New mascot for Antispam Bee
-    * Advanced Scanning on IP, URL and e-mail address of incoming comments in local blog spam
+    * Advanced Scanning on IP, URL and e-mail address of incoming comments in the local blog spam
       database
 * **Deutsch**
     *
-  Jubiläumsausgabe: [Details zum Update](https://plus.googlehttps://antispambee.pluginkollektiv.org/de/news/2013/jubilaeumsausgabe-antispam-bee-2-5-4/)
+  Jubiläumsausgabe: [Details zum Update](https://antispambee.pluginkollektiv.org/de/news/2013/jubilaeumsausgabe-antispam-bee-2-5-4/)
     * Neues Maskottchen für Antispam Bee
     * Erweiterte Prüfung eingehender Kommentare in lokaler Blog-Spamdatenbank auf IP, URL und
       E-Mail-Adresse
@@ -606,7 +606,7 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
 * **English**
     * Optimization of regular expression
 * **Deutsch**
-    * Optimierung des Regulären Ausdrucks
+    * Optimierung des regulären Ausdrucks
 
 ### 2.5.2 ###
 
@@ -656,7 +656,7 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
 * **English**
     * Revised layout settings
     * Deletion of Project Honey Pot
-    * TornevallNET as new DNSBL service
+    * TornevallNET as a new DNSBL service
     * WordPress 3.4 as a minimum requirement
     * WordPress 3.5 support
     * Recast of the online manual
@@ -710,7 +710,7 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
 ### 2.4.1 ###
 
 * **English**
-    * Add russian translation
+    * Add Russian translation
     * Fix for the textarea replace
     * Detect and hide admin notices
 * **Deutsch**
@@ -757,7 +757,7 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
 ### 2.0 ###
 
 * **English**
-    * Allow comments only in certain language (English/German)
+    * Allow comments only in certain languages (English/German)
     * Consider comments which are already marked as spam
     * Dashboard Stats: Change from canvas to image format
     * System requirements: WordPress 2.8
@@ -768,7 +768,7 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
     * Das Plugin kann nun Kommentare berücksichtigen, die bereits als Spam markiert wurden
     * Dashboard-Statistik: Wechsel von canvas zu einem Bildformat
     * Systemvoraussetzungen: WordPress 2.8
-    * Entfernung des Migrationsscriptes
+    * Entfernung des Migrationsscripts
     * Plugin Sicherheit verbessert
 
 ### 1.9 ###
@@ -889,7 +889,7 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
     * Language support for Italian and Turkish
 * **Deutsch**
     * Spam-Ordner Bereinigung nach n Tagen
-    * Optionales verstecken des &quot;als Spam markiert&quot; Hinweises
+    * Optionales Verstecken des &quot;als Spam markiert&quot; Hinweises
     * Übersetzungen für Italienisch und Türkisch
 
 ### 0.6 ###

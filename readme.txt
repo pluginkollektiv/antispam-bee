@@ -9,10 +9,10 @@
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Sophisticated antispam plugin for effective daily comment and trackback spam-fighting. Built with data protection and privacy in mind.
+Sophisticated antispam plugin for effective daily comment and linkback spam-fighting. Built with data protection and privacy in mind.
 
 ## Description ##
-Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively, without captchas and without sending personal information to third party services. It is free of charge, ad-free and 100% GDPR-compliant.
+Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and linkbacks effectively, without captchas and without sending personal information to third-party services. It is free of charge, ad-free and 100% GDPR-compliant.
 
 ### Feature/Settings Overview ###
 * Trust approved commenters.
@@ -22,7 +22,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Block or allow commenters from certain countries.
 * Treat BBCode links as spam.
 * Use regular expressions.
-* Search local spam database for commenters previously marked as spammers.
+* Search the local spam database for commenters previously marked as spammers.
 * Notify admins by e-mail about incoming spam.
 * Delete existing spam after n days.
 * Limit approval to comments/pings (will delete other comment types).
@@ -54,17 +54,17 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * WordPress 4.6 or greater
 
 ### Settings ###
-After you have activated *Antispam Bee*, the plugin will block spam comments out of the box. However, you may want to visit *Settings → Antispam Bee* to configure your custom set of anti-spam options that works best for your site.
+After you have activated *Antispam Bee*, the plugin will block spam comments out of the box. However, you may want to visit *Settings → Antispam Bee* to configure your custom set of antispam options that works best for your site.
 
 ## Frequently Asked Questions ##
 
-### Does Antispam Bee prevent spam registrations or protects form plugins? ###
-Antispam Bee works best with default WordPress comments. It does not help to protect form plugins and does not prevent spam registrations. Hopefully, we can provide better hooks for third party plugins to use Antispam Bee to fill this gap in the forthcoming new major version.
+### Does Antispam Bee prevent spam registrations or protect form plugins? ###
+Antispam Bee works best with default WordPress comments. It does not help to protect form plugins and does not prevent spam registrations. Hopefully, we can provide better hooks for third-party plugins to use Antispam Bee to fill this gap in the forthcoming new major version.
 
-### Does Antispam Bee work with Jetpack, wpDiscuz, Disqus Comments and similar comment plugins?
+### Does Antispam Bee work with Jetpack, wpDiscuz, Disqus Comments and similar comment plugins? ###
 Antispam Bee works best with default WordPress comments. It is not compatible with Jetpack, wpDiscuz or Disqus Comments as those plugins load a new comment form within an iframe. Thus, Antispam Bee cannot access the comment form directly.
 
-### Does Antispam Bee work with AJAX comment plugins or similar theme features?
+### Does Antispam Bee work with AJAX comment plugins or similar theme features? ###
 Whether Antispam Bee works with a comment form submitted via AJAX depends on how the AJAX request is made. If the request goes to the file that usually also receives the comments, Antispam Bee could work with it out of the box (the [WP Ajaxify Comments](https://wordpress.org/plugins/wp-ajaxify-comments/) plugin does this, for example).
 
 If the comments are sent to the `admin-ajax.php`, the `antispam_bee_disallow_ajax_calls` filter must be used to run ASB for requests to that file as well. If the script does not send all form data to the file, but only some selected ones, further customization is probably necessary, as [exemplified in this post by Torsten Landsiedel](https://torstenlandsiedel.de/2020/10/04/ajaxifizierte-kommentare-und-antispam-bee/) (in German).
@@ -76,13 +76,13 @@ Antispam Bee is developed in Europe. You might have heard we can be a bit nitpic
 No, the plugin works as is. You may want to configure your favorite settings, though.
 
 ### Does Antispam Bee work with shortened IPs? ###
-Generally yes. However, commissioning the Antispam Bee plugin for canceled or shortened IP addresses in comment metadata is not recommended. Because the name and the e-mail address of the comments are not unique, an IP address is the only reliable measure. The more complete the stored IP addresses, the more reliable the assignment or detection of spam.
+Generally yes. However, running Antispam Bee with truncated or shortened IP addresses in comment metadata is not recommended. Because the name and the e-mail address of a comment are not unique, the IP address is the only reliable measure. The more complete the stored IP addresses, the more reliable the assignment or detection of spam.
 
 ### How can I submit undetected spam? ###
-If the antispam plugin has passed some spam comments, these comments can be reported for analysis. A [Google table](http://goo.gl/forms/ITzVHXkLVL) was created for this purpose.
+If the antispam plugin has let some spam comments through, these comments can be reported for analysis. A [Google Form](http://goo.gl/forms/ITzVHXkLVL) was created for this purpose.
 
 ### Antispam Bee with Varnish? ###
-If WordPress is operated with Apache + Varnish, the actual IP address of the visitors does not appear in WordPress. Accordingly, the Antispam-Plugin lacks the base for the correct functionality. An adaptation in the Varnish configuration file /etc/varnish/default.vcl provides a remedy and forwards the original (not from Apache) IP address in the HTTP header X-Forwarded-For:
+If WordPress is operated with Apache + Varnish, the actual IP address of the visitors does not appear in WordPress. Accordingly, Antispam Bee lacks the basis it needs to function correctly. An adaptation in the Varnish configuration file /etc/varnish/default.vcl provides a remedy and forwards the original (not from Apache) IP address in the HTTP header X-Forwarded-For:
 
 > if (req.restarts == 0) {
 >     set req.http.X-Forwarded-For = client.ip;
@@ -198,7 +198,7 @@ IMPORTANT: If you use the country check and are behind a proxy or similar, you n
 
 ### 2.9.2 ###
   * Fix: Delete comment meta for deleted old spam. For the cleanup of older orphaned comment meta we suggest the usage of [WP Sweep](https://wordpress.org/plugins/wp-sweep/)
-  * Fix: Statistic in the dashboard showed the wrong value
+  * Fix: Statistics in the dashboard showed the wrong value
   * Tweak: Change autocomplete attribute to "new-password"
   * Tweak: Autoptimize compatibility improved
   * Tweak: Renamed blacklist/whitelist to a better phrase
