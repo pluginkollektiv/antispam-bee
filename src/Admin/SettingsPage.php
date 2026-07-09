@@ -249,26 +249,18 @@ class SettingsPage {
 							<?php submit_button(); ?>
 
 							<?php if ( 'general' === $this->active_tab ) : ?>
-								<nav class="ab-help-links"
-								     aria-label="<?php echo esc_attr__( 'Plugin resources', 'antispam-bee' ); ?>">
+								<nav class="ab-help-links" aria-label="<?php echo esc_attr__( 'Plugin resources', 'antispam-bee' ); ?>">
 									<ul>
 										<li>
-											<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW"
-											   target="_blank"
-											   rel="noopener noreferrer"><?php esc_html_e( 'Donate', 'antispam-bee' ); ?></a>
+											<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Donate', 'antispam-bee' ); ?></a>
 										</li>
 										<li>
-											<a href="<?php echo esc_url( __( 'https://wordpress.org/plugins/antispam-bee/#faq', 'antispam-bee' ) ); ?>"
-											   target="_blank"
-											   rel="noopener noreferrer"><?php esc_html_e( 'FAQ', 'antispam-bee' ); ?></a>
+											<a href="<?php echo esc_url( __( 'https://wordpress.org/plugins/antispam-bee/#faq', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FAQ', 'antispam-bee' ); ?></a>
 										</li>
 										<li>
-											<a href="<?php echo esc_url( __( 'https://antispambee.pluginkollektiv.org/documentation', 'antispam-bee' ) ); ?>"
-											   target="_blank"
-											   rel="noopener noreferrer"><?php esc_html_e( 'Manual', 'antispam-bee' ); ?></a>
+											<a href="<?php echo esc_url( __( 'https://antispambee.pluginkollektiv.org/documentation', 'antispam-bee' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Manual', 'antispam-bee' ); ?></a>
 										</li>
-										<li><a href="https://wordpress.org/support/plugin/antispam-bee/" target="_blank"
-										       rel="noopener noreferrer"><?php esc_html_e( 'Support', 'antispam-bee' ); ?></a>
+										<li><a href="https://wordpress.org/support/plugin/antispam-bee/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Support', 'antispam-bee' ); ?></a>
 										</li>
 									</ul>
 								</nav>

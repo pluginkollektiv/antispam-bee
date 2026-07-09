@@ -69,6 +69,19 @@ class Rules {
 	}
 
 	/**
+	 * Filter items.
+	 *
+	 * @param array $options Filter options.
+	 *
+	 * @return array A list of filtered elements.
+	 *
+	 * @throws ReflectionException
+	 */
+	private static function filter( array $options ): array {
+		return ComponentsHelper::filter( apply_filters( 'antispam_bee_rules', [] ), $options );
+	}
+
+	/**
 	 * Get the rules that provide a spam reason (implement the SpamReason interface).
 	 *
 	 * @param string|null $reaction_type Reaction type.
@@ -159,19 +172,6 @@ class Rules {
 				'implements'    => Verifiable::class,
 			]
 		);
-	}
-
-	/**
-	 * Filter items.
-	 *
-	 * @param array $options Filter options.
-	 *
-	 * @return array A list of filtered elements.
-	 *
-	 * @throws ReflectionException
-	 */
-	private static function filter( array $options ): array {
-		return ComponentsHelper::filter( apply_filters( 'antispam_bee_rules', [] ), $options );
 	}
 
 	/**

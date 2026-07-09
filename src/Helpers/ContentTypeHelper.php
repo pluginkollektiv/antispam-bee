@@ -12,8 +12,8 @@ namespace AntispamBee\Helpers;
  */
 class ContentTypeHelper {
 
-	const GENERAL_TYPE = 'general';
-	const COMMENT_TYPE = 'comment';
+	const GENERAL_TYPE  = 'general';
+	const COMMENT_TYPE  = 'comment';
 	const LINKBACK_TYPE = 'linkback';
 
 	/**

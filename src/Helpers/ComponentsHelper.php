@@ -20,15 +20,15 @@ class ComponentsHelper {
 	/**
 	 * Filter a list of components.
 	 *
-	 * @param array       $components      Components to filter.
-	 * @param array       $options         {
-	 *                                     Filter options.
+	 * @param array $components      Components to filter.
+	 * @param array $options {
+	 *     Filter options.
 	 *
-	 * @type string       $reaction_type   Reaction type (e.g. "comment").
-	 * @type bool         $only_active     Only active components.
-	 * @type bool         $is_controllable Is controllable type.
-	 * @type string|array $implements      Interface(s) that should be implemented.
-	 *                                     }
+	 *     @type string       $reaction_type   Reaction type (e.g. "comment").
+	 *     @type bool         $only_active     Only active components.
+	 *     @type bool         $is_controllable Is controllable type.
+	 *     @type string|array $implements      Interface(s) that should be implemented.
+	 * }
 	 * @return array Filtered list.
 	 * @throws ReflectionException
 	 */
