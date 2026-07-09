@@ -79,7 +79,7 @@ abstract class Base implements PostProcessor {
 		 * @param array  $supported_types The supported types.
 		 * @param string $slug            The post processor’s slug.
 		 *
-		 * @return array Array of supported types.
+		 * @return array An array of supported types.
 		 */
 		return apply_filters( 'antispam_bee_post_processor_supported_types', static::$supported_types, static::$slug );
 	}

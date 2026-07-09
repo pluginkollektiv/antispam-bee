@@ -35,9 +35,9 @@ class Tab {
 	/**
 	 * Initialize the tab.
 	 *
-	 * @param string    $slug     Title for tab.
-	 * @param string    $title    Title for tab.
-	 * @param Section[] $sections Sections object array.
+	 * @param string    $slug     Slug for the tab.
+	 * @param string    $title    Title for the tab.
+	 * @param Section[] $sections An array of Section objects.
 	 */
 	public function __construct( string $slug, string $title, array $sections = [] ) {
 		$this->slug     = $slug;
@@ -46,25 +46,25 @@ class Tab {
 	}
 
 	/**
-	 * Get slug.
+	 * Get the slug.
 	 *
-	 * @return string Name of the field.
+	 * @return string The tab slug.
 	 */
 	public function get_slug(): string {
 		return $this->slug;
 	}
 
 	/**
-	 * Get title.
+	 * Get the title.
 	 *
-	 * @return string Title of the field.
+	 * @return string The tab title.
 	 */
 	public function get_title(): string {
 		return $this->title;
 	}
 
 	/**
-	 * Get sections.
+	 * Get the sections.
 	 *
 	 * @return Section[]
 	 */

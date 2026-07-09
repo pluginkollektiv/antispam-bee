@@ -86,7 +86,7 @@ abstract class Base implements Verifiable {
 		 * @param array  $supported_types The supported types.
 		 * @param string $slug            The rule’s slug.
 		 *
-		 * @return array Array of supported types.
+		 * @return array An array of supported types.
 		 */
 		return apply_filters( 'antispam_bee_rule_supported_types', static::$supported_types, static::$slug );
 	}

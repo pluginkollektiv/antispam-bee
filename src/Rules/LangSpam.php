@@ -173,7 +173,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get options.
+	 * Get the options.
 	 *
 	 * {@inheritDoc}
 	 *

@@ -52,9 +52,9 @@ class CommentsColumns {
 	/**
 	 * Register plugin columns on comments screen.
 	 *
-	 * @param array $columns Array with existing columns.
+	 * @param array $columns An array with existing columns.
 	 *
-	 * @return  array          Array with extended columns.
+	 * @return  array          An array with extended columns.
 	 * @since   2.6.0
 	 * @change  2.6.0
 	 */

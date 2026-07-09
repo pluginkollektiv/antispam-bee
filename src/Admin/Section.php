@@ -59,8 +59,8 @@ class Section {
 	/**
 	 * Initialize the tab.
 	 *
-	 * @param string      $slug          Slug of the tab.
-	 * @param string      $title         Title for tab.
+	 * @param string      $slug          The slug of the tab.
+	 * @param string      $title         Title for the tab.
 	 * @param string      $description   Description of the tab.
 	 * @param string|null $reaction_type Reaction type (e.g. comment, trackback).
 	 */
@@ -74,7 +74,7 @@ class Section {
 	/**
 	 * Add controllable items to section.
 	 *
-	 * @param class-string<Controllable>[]|null $controllables List of controllable items to add.
+	 * @param class-string<Controllable>[]|null $controllables A list of controllable items to add.
 	 *
 	 * @return void
 	 */
@@ -87,7 +87,7 @@ class Section {
 	/**
 	 * Generate settings fields for a list of controllable items.
 	 *
-	 * @param class-string<Controllable>[] $controllables List of controllable items to add.
+	 * @param class-string<Controllable>[] $controllables A list of controllable items to add.
 	 *
 	 * @return void
 	 */
@@ -127,9 +127,9 @@ class Section {
 	}
 
 	/**
-	 * Get description.
+	 * Get the description.
 	 *
-	 * @return string Title of the field.
+	 * @return string The section description.
 	 */
 	public function get_description(): string {
 		return $this->description;
@@ -207,25 +207,25 @@ class Section {
 	}
 
 	/**
-	 * Get name.
+	 * Get the slug.
 	 *
-	 * @return string Name of the field.
+	 * @return string The section slug.
 	 */
 	public function get_slug(): string {
 		return $this->slug;
 	}
 
 	/**
-	 * Get title.
+	 * Get the title.
 	 *
-	 * @return string Title of the field.
+	 * @return string The section title.
 	 */
 	public function get_title(): string {
 		return $this->title;
 	}
 
 	/**
-	 * Get fields.
+	 * Get the rows.
 	 *
 	 * @return array
 	 */

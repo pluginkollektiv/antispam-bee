@@ -38,7 +38,7 @@ abstract class Base implements Controllable {
 	protected static $only_custom_options = false;
 
 	/**
-	 * Get options.
+	 * Get the options.
 	 *
 	 * {@inheritDoc}
 	 *

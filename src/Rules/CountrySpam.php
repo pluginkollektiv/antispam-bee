@@ -178,7 +178,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get options.
+	 * Get the options.
 	 *
 	 * {@inheritDoc}
 	 *

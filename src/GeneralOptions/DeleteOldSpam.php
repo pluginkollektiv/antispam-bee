@@ -50,7 +50,7 @@ class DeleteOldSpam extends Base {
 	}
 
 	/**
-	 * Get options.
+	 * Get the options.
 	 *
 	 * {@inheritDoc}
 	 *

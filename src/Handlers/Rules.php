@@ -55,7 +55,7 @@ class Rules {
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active items.
 	 *
-	 * @return array List of suitable controllables.
+	 * @return array A list of suitable controllables.
 	 */
 	public static function get_controllables( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
@@ -73,7 +73,7 @@ class Rules {
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active rules.
 	 *
-	 * @return array List of rules that provide a spam reason.
+	 * @return array A list of rules that provide a spam reason.
 	 */
 	public static function get_spam_reason_rules( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
@@ -90,7 +90,7 @@ class Rules {
 	 *
 	 * @param array $item Item to apply rules to.
 	 *
-	 * @return bool Item identified as spam.
+	 * @return bool Whether the item was identified as spam.
 	 */
 	public function apply( array $item ): bool {
 		$item['reaction_type'] = $this->reaction_type;
@@ -146,7 +146,7 @@ class Rules {
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active rules.
 	 *
-	 * @return array List of applicable rules.
+	 * @return array A list of applicable rules.
 	 */
 	public static function get( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
@@ -163,7 +163,7 @@ class Rules {
 	 *
 	 * @param array $options Filter options.
 	 *
-	 * @return array List of filtered elements.
+	 * @return array A list of filtered elements.
 	 *
 	 * @throws ReflectionException
 	 */

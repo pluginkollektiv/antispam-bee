@@ -21,7 +21,7 @@ class PostProcessors {
 	 *
 	 * @param string $reaction_type One of the supported content types.
 	 * @param array  $item          Item to process.
-	 * @param array  $reasons       List of reasons.
+	 * @param array  $reasons       A list of reasons.
 	 *
 	 * @return array
 	 */
@@ -55,7 +55,7 @@ class PostProcessors {
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active post processors.
 	 *
-	 * @return array List of suitable post processors.
+	 * @return array A list of suitable post processors.
 	 * @throws ReflectionException
 	 */
 	public static function get( ?string $reaction_type = null, bool $only_active = false ): array {
@@ -73,7 +73,7 @@ class PostProcessors {
 	 *
 	 * @param array $options Filter options.
 	 *
-	 * @return array List of filtered elements.
+	 * @return array A list of filtered elements.
 	 * @throws ReflectionException
 	 */
 	private static function filter( array $options ): array {
@@ -86,7 +86,7 @@ class PostProcessors {
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active items.
 	 *
-	 * @return array List of suitable controllables.
+	 * @return array A list of suitable controllables.
 	 * @throws ReflectionException
 	 */
 	public static function get_controllables( ?string $reaction_type = null, bool $only_active = false ): array {

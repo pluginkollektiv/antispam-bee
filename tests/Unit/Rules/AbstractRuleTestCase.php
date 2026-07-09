@@ -34,7 +34,7 @@ abstract class AbstractRuleTestCase extends TestCase {
 	 * @param string $author_email Author email.
 	 * @param string $author_url   Author URL.
 	 * @param string $author_ip    Author IP address.
-	 * @param string $content      Content.
+	 * @param string $content      Comment content.
 	 * @param string $agent        User agent.
 	 *
 	 * @return array Comment array.

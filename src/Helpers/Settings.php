@@ -57,7 +57,7 @@ class Settings {
 	}
 
 	/**
-	 * Update cache.
+	 * Update the cache.
 	 *
 	 * @param mixed $old_value The old option value.
 	 * @param mixed $value     The new option value.
@@ -91,7 +91,7 @@ class Settings {
 	/**
 	 * Get all plugin options.
 	 *
-	 * @return array Array with option fields.
+	 * @return array An array with option fields.
 	 */
 	public static function get_options(): array {
 		PluginUpdate::maybe_run_plugin_updated_logic();
@@ -138,7 +138,7 @@ class Settings {
 	 *
 	 * @param mixed $path Dot-separated path to the wanted value.
 	 *
-	 * @return string[] Path parts.
+	 * @return string[] The path parts.
 	 */
 	private static function get_path_parts( $path ): array {
 		if ( ! is_string( $path ) ) {
@@ -168,7 +168,7 @@ class Settings {
 	/**
 	 * Update multiple option fields.
 	 *
-	 * @param array $data Array with plugin option fields.
+	 * @param array $data An array with plugin option fields.
 	 *
 	 * @since  0.1
 	 *
@@ -192,10 +192,10 @@ class Settings {
 	/**
 	 * Check and return an array key.
 	 *
-	 * @param array  $array Array with values.
-	 * @param string $key   Name of the key.
+	 * @param array  $array An array with values.
+	 * @param string $key   The name of the key.
 	 *
-	 * @return  mixed         Value of the requested key.
+	 * @return  mixed         The value of the requested key.
 	 * @since   2.4.2
 	 *
 	 * @since   2.10.0 Only return `null` if option does not exist.
@@ -212,7 +212,7 @@ class Settings {
 	 * Remove array item(s) by key.
 	 *
 	 * @param string $path  Dot-separated path to the wanted value.
-	 * @param array  $array Array to filter.
+	 * @param array  $array The array to filter.
 	 *
 	 * @return void
 	 */
