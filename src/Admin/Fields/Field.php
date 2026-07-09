@@ -38,11 +38,13 @@ abstract class Field {
 	/**
 	 * Initialize the field.
 	 *
-	 * @param string                     $reaction_type Reaction type.
-	 * @param array                      $option        Field options.
-	 * @param class-string<Controllable> $controllable  The related controllable (class name).
+	 * @param string $reaction_type Reaction type.
+	 * @param array  $option        Field options.
+	 * @param string $controllable  The related controllable (class name).
+	 *
+	 * @phpstan-param class-string<Controllable> $controllable
 	 */
-	public function __construct( string $reaction_type, array $option, string $controllable ) { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint -- `class-string<Controllable>` is a PHPStan-only generic type; the native hint is `string`.
+	public function __construct( string $reaction_type, array $option, string $controllable ) {
 		$this->reaction_type            = $reaction_type;
 		$this->option                   = $option;
 		$this->controllable_option_name = $controllable::get_option_name( $this->option['option_name'] );
@@ -51,7 +53,7 @@ abstract class Field {
 	/**
 	 * Get the name.
 	 *
-	 * @return string Name of the field.
+	 * @return string The name of the field.
 	 */
 	public function get_name(): string {
 		$option_name = Settings::OPTION_NAME;
@@ -63,7 +65,7 @@ abstract class Field {
 	/**
 	 * Get the label.
 	 *
-	 * @return string Label of the field.
+	 * @return string The label of the field.
 	 */
 	public function get_label(): string {
 		$kses  = $this->option['label_kses'] ?? [];
@@ -94,7 +96,7 @@ abstract class Field {
 	/**
 	 * Get the value.
 	 *
-	 * @return mixed Value stored in database.
+	 * @return mixed The value stored in the database.
 	 */
 	protected function get_value() {
 		return Settings::get_option( $this->controllable_option_name, $this->reaction_type );

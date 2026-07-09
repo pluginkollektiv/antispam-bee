@@ -22,7 +22,7 @@ class Sanitize {
 	 * Sanitize a checkbox group based on the given values and the valid ones.
 	 *
 	 * @param mixed $values        Values to sanitize.
-	 * @param array $valid_options List of allowed keys.
+	 * @param array $valid_options A list of allowed keys.
 	 *
 	 * @return array Intersection of values and valid options.
 	 * @since 3.0.0
@@ -38,7 +38,7 @@ class Sanitize {
 	/**
 	 * Sanitize an array of strings to match ISO format.
 	 *
-	 * @param mixed $codes List of potential ISO codes to sanitize.
+	 * @param mixed $codes A list of potential ISO codes to sanitize.
 	 *
 	 * @return array Sanitized ISO codes.
 	 * @since 3.0.0
@@ -63,7 +63,7 @@ class Sanitize {
 	}
 
 	/**
-	 * Sanitize options.
+	 * Sanitize the options.
 	 *
 	 * @param array $options Options to sanitize.
 	 *
@@ -169,14 +169,16 @@ class Sanitize {
 	/**
 	 * Call a sanitization callback.
 	 *
-	 * @param array                      $controllable_option Controllable options.
-	 * @param array                      $options             Options.
-	 * @param string                     $tab                 Settings tab.
-	 * @param class-string<Controllable> $controllable        Controllable element (class name).
+	 * @param array  $controllable_option Controllable options.
+	 * @param array  $options             Options.
+	 * @param string $tab                 Settings tab.
+	 * @param string $controllable        Controllable element (class name).
+	 *
+	 * @phpstan-param class-string<Controllable> $controllable
 	 *
 	 * @return void
 	 */
-	private static function call_sanitize_callback( array $controllable_option, array &$options, string $tab, string $controllable ): void { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint -- `class-string<Controllable>` is a PHPStan-only generic type; the native hint is `string`.
+	private static function call_sanitize_callback( array $controllable_option, array &$options, string $tab, string $controllable ): void {
 		if ( ! isset( $controllable_option['sanitize'] ) ) {
 			return;
 		}
