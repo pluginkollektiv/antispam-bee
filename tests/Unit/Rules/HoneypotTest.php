@@ -22,10 +22,10 @@ class HoneypotTest extends AbstractRuleTestCase {
 		$item = self::make_comment();
 
 		$_POST = array();
-		self::assertSame( 0, Honeypot::verify( $item ), 'comment without HP field should be OK' );
+		self::assertSame( 0, Honeypot::verify( $item ), 'Comment without HP field should be OK' );
 
 		$_POST['ab_spam__hidden_field'] = 1;
-		self::assertSame( 999, Honeypot::verify( $item ), 'comment with HP 1 should trigger the rule' );
+		self::assertSame( 999, Honeypot::verify( $item ), 'Comment with HP 1 should trigger the rule' );
 	}
 
 	public function test_init() {
@@ -33,7 +33,7 @@ class HoneypotTest extends AbstractRuleTestCase {
 
 		self::assertNotFalse(
 			has_filter( 'comment_form_field_comment' ),
-			'comment_form_field_comment filter was not added'
+			'The comment_form_field_comment filter was not added'
 		);
 	}
 
@@ -74,14 +74,14 @@ class HoneypotTest extends AbstractRuleTestCase {
 		$_SERVER = [ 'SCRIPT_NAME' => '/wp-comments-post.php' ];
 
 		Honeypot::precheck();
-		self::assertSame( 1, $_POST['ab_spam__invalid_request'], 'request without missing fields not detected' );
+		self::assertSame( 1, $_POST['ab_spam__invalid_request'], 'Request with a missing field not detected' );
 
 		$_POST = [
 			'd7dcf95a06' => 'S3cr3t',
 			'comment'    => 'H1dd3n',
 		];
 		Honeypot::precheck();
-		self::assertSame( 1, $_POST['ab_spam__hidden_field'], 'non-empty hidden fiend not detected' );
+		self::assertSame( 1, $_POST['ab_spam__hidden_field'], 'Non-empty hidden field not detected' );
 
 		$_POST = [
 			'd7dcf95a06' => 'S3cr3t',
@@ -91,7 +91,7 @@ class HoneypotTest extends AbstractRuleTestCase {
 		self::assertSame(
 			[ 'comment' => 'S3cr3t' ],
 			$_POST,
-			'secret was not moved to hidden field'
+			'Secret was not moved to hidden field'
 		);
 
 		// Honeypot field entirely absent while the secret field is present.
@@ -99,7 +99,7 @@ class HoneypotTest extends AbstractRuleTestCase {
 			'd7dcf95a06' => 'S3cr3t',
 		];
 		Honeypot::precheck();
-		self::assertSame( 1, $_POST['ab_spam__hidden_field'], 'missing hidden field not detected' );
+		self::assertSame( 1, $_POST['ab_spam__hidden_field'], 'Missing hidden field not detected' );
 
 	}
 }

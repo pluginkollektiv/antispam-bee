@@ -16,13 +16,13 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 		self::assertSame(
 			0,
 			RegexpSpam::verify( self::make_comment() ),
-			'clean comment should not be flagged'
+			'Clean comment should not be flagged'
 		);
 
 		self::assertSame(
 			0,
 			RegexpSpam::verify( array( 'reaction_type' => 'unknown' ) ),
-			'unknown reaction type should not be flagged'
+			'Unknown reaction type should not be flagged'
 		);
 
 		$spam_author                   = self::make_comment();
@@ -30,7 +30,7 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 		self::assertSame(
 			1,
 			RegexpSpam::verify( $spam_author ),
-			'known spam word in the author name should be flagged'
+			'Known spam word in the author name should be flagged'
 		);
 
 		$spam_body                         = self::make_comment();
@@ -39,7 +39,7 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 		self::assertSame(
 			1,
 			RegexpSpam::verify( $spam_body ),
-			'matching body and email pattern combination should be flagged'
+			'Matching body and email pattern combination should be flagged'
 		);
 
 		$partial_match                    = self::make_comment();
@@ -47,7 +47,7 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 		self::assertSame(
 			0,
 			RegexpSpam::verify( $partial_match ),
-			'a pattern combination should only match if all of its fields match'
+			'A pattern combination should only match if all of its fields match'
 		);
 	}
 
@@ -68,7 +68,7 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 		self::assertSame(
 			1,
 			RegexpSpam::verify( $item ),
-			'custom patterns added via the antispam_bee_patterns filter should be applied'
+			'Custom patterns added via the antispam_bee_patterns filter should be applied'
 		);
 	}
 

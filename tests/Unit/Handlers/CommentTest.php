@@ -46,18 +46,18 @@ class CommentTest extends TestCase {
 
 		$result = Comment::process( $comment );
 		self::assertSame( '192.0.2.100', $result['comment_author_IP'], 'Unexpected author IP on index.php' );
-		self::assertEmpty( $processed, 'Comment should no have been processed on index.php' );
+		self::assertEmpty( $processed, 'Comment should not have been processed on index.php' );
 
 		$_SERVER['SCRIPT_NAME'] = '';
 		$result                 = Comment::process( $comment );
 		self::assertSame( '192.0.2.100', $result['comment_author_IP'], 'Unexpected author IP on invalid request' );
 		self::assertSame( 1, $result['ab_spam__invalid_request'], 'Invalid request not detected' );
-		self::assertEmpty( $processed, 'Comment should no have been processed on invalid request' );
+		self::assertEmpty( $processed, 'Comment should not have been processed on invalid request' );
 
 		$_SERVER['SCRIPT_NAME'] = '/wp-comments-post.php';
 		$result                 = Comment::process( $comment );
 		self::assertSame( '192.0.2.100', $result['comment_author_IP'], 'Unexpected author IP on invalid request' );
-		self::assertArrayNotHasKey( 'processed', $result, 'Comment should no have been processed without POST data' );
+		self::assertArrayNotHasKey( 'processed', $result, 'Comment should not have been processed without POST data' );
 
 		$_POST  = 'test me';
 		$result = Comment::process( $comment );

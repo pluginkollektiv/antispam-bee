@@ -67,7 +67,7 @@ abstract class AbstractRuleTestCase extends TestCase {
 	 * @return void
 	 */
 	public function test_slug() {
-		self::assertSame( $this->slug, $this->rule::get_slug(), 'unexpected slug' );
+		self::assertSame( $this->slug, $this->rule::get_slug(), 'Unexpected slug' );
 	}
 
 	/**
@@ -82,7 +82,7 @@ abstract class AbstractRuleTestCase extends TestCase {
 
 		self::assertNotFalse(
 			has_filter( 'antispam_bee_rules', array( $this->rule, 'add_rule' ) ),
-			'add_rule filter was not added'
+			'The add_rule filter was not added'
 		);
 	}
 }
