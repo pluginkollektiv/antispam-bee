@@ -156,7 +156,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 * @return string|null
 	 */
 	public static function get_description(): ?string {
-		$link1 = sprintf(
+		$link = sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
 			esc_url(
 				__( 'https://antispambee.pluginkollektiv.org/documentation/#allow-comments-only-in-certain-language', 'antispam-bee' ),
@@ -167,7 +167,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 		return sprintf(
 		/* translators: 1: opening <a> tag with a link to documentation. 2: closing </a> tag. */
 			esc_html__( 'Detect and approve only the specified language. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
-			wp_kses_post( $link1 ),
+			wp_kses_post( $link ),
 			'</a>'
 		);
 	}

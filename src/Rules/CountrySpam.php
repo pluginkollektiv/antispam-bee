@@ -155,7 +155,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 * @return string|null
 	 */
 	public static function get_description(): ?string {
-		$link1 = sprintf(
+		$link = sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
 			esc_url(
 				__(
@@ -172,7 +172,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 				'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.',
 				'antispam-bee'
 			),
-			wp_kses_post( $link1 ),
+			wp_kses_post( $link ),
 			'</a>'
 		);
 	}
