@@ -25,7 +25,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	/**
 	 * Verify an item.
 	 *
-	 * Test item for spam patterns from database.
+	 * Test item for spam patterns from the database.
 	 *
 	 * @param array $item Item to verify.
 	 *
@@ -83,7 +83,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
 	 * @return string
 	 */
@@ -92,7 +92,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
 	 * @return string|null
 	 */
@@ -101,7 +101,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
 	 * @return string|null
 	 */
@@ -110,7 +110,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
 	 * @return string
 	 */

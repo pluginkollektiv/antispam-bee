@@ -72,8 +72,8 @@ abstract class AbstractRuleTestCase extends TestCase {
 
 	/**
 	 * Test initialization.
-	 * All rules should add themselves to the rules filter by default.
-	 * Might be overwritten, if a rule does special initialization.
+	 * All rules should add themselves to the rule filter by default.
+	 * Might be overwritten if a rule does special initialization.
 	 *
 	 * @return void
 	 */

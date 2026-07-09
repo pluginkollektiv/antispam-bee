@@ -1,6 +1,6 @@
 <?php
 /**
- * Post Processor Base.
+ * Post-Processor Base.
  *
  * @package AntispamBee\PostProcessors
  */
@@ -11,12 +11,12 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Interfaces\PostProcessor;
 
 /**
- * Abstract base class for post processors.
+ * Abstract base class for post-processors.
  */
 abstract class Base implements PostProcessor {
 
 	/**
-	 * Post processor slug.
+	 * Post-processor slug.
 	 *
 	 * @var string
 	 */
@@ -30,14 +30,14 @@ abstract class Base implements PostProcessor {
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE, ContentTypeHelper::LINKBACK_TYPE ];
 
 	/**
-	 * Does this post processor mark an item as deleted?
+	 * Does this post-processor mark an item as deleted?
 	 *
 	 * @var bool
 	 */
 	protected static $marks_as_delete = false;
 
 	/**
-	 * Add post processor to the list of post processors.
+	 * Add post-processor to the list of post-processors.
 	 *
 	 * @return void
 	 */
@@ -46,11 +46,11 @@ abstract class Base implements PostProcessor {
 	}
 
 	/**
-	 * Add post processor class to array of post processors.
+	 * Add a post-processor class to an array of post-processors.
 	 *
-	 * @param PostProcessor[] $post_processors Currently registered post processors.
+	 * @param PostProcessor[] $post_processors Currently registered post-processors.
 	 *
-	 * @return PostProcessor[] Updated list of post processors.
+	 * @return PostProcessor[] Updated list of post-processors.
 	 */
 	public static function add_post_processor( array $post_processors ): array {
 		$post_processors[] = static::class;
@@ -59,7 +59,7 @@ abstract class Base implements PostProcessor {
 	}
 
 	/**
-	 * Get post processor slug.
+	 * Get the post-processor slug.
 	 *
 	 * @return string The slug.
 	 */
@@ -74,10 +74,10 @@ abstract class Base implements PostProcessor {
 	 */
 	public static function get_supported_types(): array {
 		/**
-		 * Filter the reaction types that are supported by the post processor.
+		 * Filter the reaction types that are supported by the post-processor.
 		 *
 		 * @param array  $supported_types The supported types.
-		 * @param string $slug            The post processor’s slug.
+		 * @param string $slug            The post-processor’s slug.
 		 *
 		 * @return array An array of supported types.
 		 */

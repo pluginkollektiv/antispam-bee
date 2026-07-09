@@ -41,7 +41,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	}
 
 	/**
-	 * Get option name.
+	 * Get the option name.
 	 * This will add type and slug prefixes to the short name.
 	 *
 	 * @param string $name Name suffix.
@@ -57,7 +57,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	}
 
 	/**
-	 * Get the component type (rule, post_processor or general).
+	 * Get the component type (rule, post_processor, or general).
 	 *
 	 * @return string
 	 */
@@ -66,7 +66,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	}
 
 	/**
-	 * Get post processor options.
+	 * Get the post-processor options.
 	 *
 	 * {@inheritDoc} Default: none.
 	 *

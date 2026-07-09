@@ -14,21 +14,21 @@ namespace AntispamBee\Interfaces;
 interface Controllable {
 
 	/**
-	 * Get element name.
+	 * Get the element name.
 	 *
 	 * @return string
 	 */
 	public static function get_name(): string;
 
 	/**
-	 * Get element label (optional).
+	 * Get the element label (optional).
 	 *
 	 * @return string|null
 	 */
 	public static function get_label(): ?string;
 
 	/**
-	 * Get element description (optional).
+	 * Get the element description (optional).
 	 *
 	 * @return string|null
 	 */
@@ -84,21 +84,21 @@ interface Controllable {
 	public static function get_supported_types(): array;
 
 	/**
-	 * Get the component type (rule, post_processor or general).
+	 * Get the component type (rule, post_processor, or general).
 	 *
 	 * @return string
 	 */
 	public static function get_component_type(): string;
 
 	/**
-	 * Get controllable slug.
+	 * Get the controllable slug.
 	 *
 	 * @return string
 	 */
 	public static function get_slug(): string;
 
 	/**
-	 * Get option name.
+	 * Get the option name.
 	 * This will typically add the component type and slug prefixes to the short name.
 	 *
 	 * @param string $name Name suffix.

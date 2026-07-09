@@ -50,11 +50,11 @@ class CommentsColumns {
 	}
 
 	/**
-	 * Register plugin columns on comments screen.
+	 * Register plugin columns on the comments screen.
 	 *
 	 * @param array $columns An array with existing columns.
 	 *
-	 * @return  array          An array with extended columns.
+	 * @return  array An array with extended columns.
 	 * @since   2.6.0
 	 * @change  2.6.0
 	 */
@@ -101,7 +101,7 @@ class CommentsColumns {
 	 *
 	 * @param array $columns Registered columns.
 	 *
-	 * @return  array          Columns with AB field.
+	 * @return  array Columns with AB field.
 	 * @since   2.6.3
 	 * @change  2.6.3
 	 */

@@ -182,7 +182,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
 	 * @return string
 	 */
@@ -191,7 +191,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
 	 * @return string|null
 	 */
@@ -200,7 +200,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
 	 * @return string|null
 	 */
@@ -209,7 +209,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
 	 * @return string
 	 */

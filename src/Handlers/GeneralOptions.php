@@ -29,7 +29,7 @@ class GeneralOptions {
 	}
 
 	/**
-	 * Get controllable items for this option.
+	 * Get the controllable items for this option.
 	 *
 	 * @param string $reaction_type Reaction type.
 	 *

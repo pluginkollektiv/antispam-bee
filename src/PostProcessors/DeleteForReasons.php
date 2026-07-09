@@ -1,6 +1,6 @@
 <?php
 /**
- * Delete For Reasons Post Processor.
+ * DeleteForReasons Post-Processor.
  *
  * @package AntispamBee\PostProcessors
  */
@@ -10,6 +10,7 @@ namespace AntispamBee\PostProcessors;
 use AntispamBee\Handlers\Rules;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
+use ReflectionException;
 
 /**
  * Marks spam comments for deletion if they have a specific reason.
@@ -17,14 +18,14 @@ use AntispamBee\Helpers\Settings;
 class DeleteForReasons extends ControllableBase {
 
 	/**
-	 * Post processor slug.
+	 * Post-processor slug.
 	 *
 	 * @var string
 	 */
 	protected static $slug = 'asb-delete-for-reasons';
 
 	/**
-	 * This post processor marks items for deletion.
+	 * This post-processor marks items for deletion.
 	 *
 	 * @var bool
 	 */
@@ -55,7 +56,7 @@ class DeleteForReasons extends ControllableBase {
 	}
 
 	/**
-	 * Get element label (optional).
+	 * Get the element label (optional).
 	 *
 	 * @return string|null
 	 */
@@ -64,7 +65,7 @@ class DeleteForReasons extends ControllableBase {
 	}
 
 	/**
-	 * Get element description (optional).
+	 * Get the element description (optional).
 	 *
 	 * @return string|null
 	 */
@@ -73,11 +74,12 @@ class DeleteForReasons extends ControllableBase {
 	}
 
 	/**
-	 * Get post processor options.
+	 * Get the post-processor options.
 	 *
 	 * {@inheritDoc}
 	 *
 	 * @return array
+	 * @throws ReflectionException
 	 */
 	public static function get_options(): array {
 		$options = [];
@@ -108,7 +110,7 @@ class DeleteForReasons extends ControllableBase {
 	}
 
 	/**
-	 * Get element name.
+	 * Get the element name.
 	 *
 	 * @return string
 	 */

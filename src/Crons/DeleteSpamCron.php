@@ -1,6 +1,6 @@
 <?php
 /**
- * Delete spam cron job.
+ * Delete a spam cron job.
  *
  * @package AntispamBee\Crons
  */
@@ -76,7 +76,7 @@ class DeleteSpamCron {
 
 	/**
 	 * Run the cron job's tasks.
-	 * Delete spam from database.
+	 * Delete spam from the database.
 	 *
 	 * @return void
 	 */

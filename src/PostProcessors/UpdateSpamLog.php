@@ -1,6 +1,6 @@
 <?php
 /**
- * Update Spam Log Post Processor.
+ * UpdateSpamLog Post-Processor.
  *
  * @package AntispamBee\PostProcessors
  */
@@ -8,12 +8,12 @@
 namespace AntispamBee\PostProcessors;
 
 /**
- * Post Processor that is responsible for updating the spam log file.
+ * Post-processor that is responsible for updating the spam log file.
  */
 class UpdateSpamLog extends Base {
 
 	/**
-	 * Post processor slug.
+	 * Post-processor slug.
 	 *
 	 * @var string
 	 */

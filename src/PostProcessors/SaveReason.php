@@ -1,6 +1,6 @@
 <?php
 /**
- * Save Reasons Post Processor.
+ * SaveReasons Post-Processor.
  *
  * @package AntispamBee\PostProcessors
  */
@@ -8,12 +8,12 @@
 namespace AntispamBee\PostProcessors;
 
 /**
- * Post processor that is responsible for persisting the reason why something was marked as spam.
+ * Post-processor that is responsible for persisting the reason why something was marked as spam.
  */
 class SaveReason extends ControllableBase {
 
 	/**
-	 * Post processor slug.
+	 * Post-processor slug.
 	 *
 	 * @var string
 	 */
@@ -53,7 +53,7 @@ class SaveReason extends ControllableBase {
 	}
 
 	/**
-	 * Get element name.
+	 * Get the element name.
 	 *
 	 * @return string
 	 */
@@ -62,7 +62,7 @@ class SaveReason extends ControllableBase {
 	}
 
 	/**
-	 * Get element label (optional).
+	 * Get the element label (optional).
 	 *
 	 * @return string|null
 	 */
@@ -71,7 +71,7 @@ class SaveReason extends ControllableBase {
 	}
 
 	/**
-	 * Get element description (optional).
+	 * Get the element description (optional).
 	 *
 	 * @return string|null
 	 */

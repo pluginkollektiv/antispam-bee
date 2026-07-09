@@ -49,7 +49,7 @@ abstract class Base implements Controllable {
 	}
 
 	/**
-	 * Add setting to list of general options.
+	 * Add setting to the list of general options.
 	 *
 	 * @return void
 	 * @since 3.0.0
@@ -84,7 +84,7 @@ abstract class Base implements Controllable {
 	}
 
 	/**
-	 * Get option name.
+	 * Get the option name.
 	 * Append type and slug to the given name.
 	 *
 	 * @param string $name Name suffix.
@@ -100,7 +100,7 @@ abstract class Base implements Controllable {
 	}
 
 	/**
-	 * Get the component type (rule, post_processor or general).
+	 * Get the component type (rule, post_processor, or general).
 	 *
 	 * @return string
 	 */
@@ -109,7 +109,7 @@ abstract class Base implements Controllable {
 	}
 
 	/**
-	 * Get option slug.
+	 * Get the option slug.
 	 *
 	 * @return string
 	 */

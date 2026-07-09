@@ -79,7 +79,7 @@ class PluginUpdate {
 	}
 
 	/**
-	 * Get plugin version.
+	 * Get the plugin version.
 	 *
 	 * @return string
 	 */

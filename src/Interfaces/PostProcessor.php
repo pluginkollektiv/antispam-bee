@@ -8,7 +8,7 @@
 namespace AntispamBee\Interfaces;
 
 /**
- * Post processor interface.
+ * Post-processor interface.
  */
 interface PostProcessor {
 
@@ -22,7 +22,7 @@ interface PostProcessor {
 	public static function process( array $item ): array;
 
 	/**
-	 * Get post processor slug.
+	 * Get the post-processor slug.
 	 *
 	 * @return string The slug.
 	 */

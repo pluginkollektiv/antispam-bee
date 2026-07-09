@@ -133,7 +133,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
 	 * @return string
 	 */
@@ -142,7 +142,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
 	 * @return string|null
 	 */
@@ -151,7 +151,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
 	 * @return string|null
 	 */
@@ -165,7 +165,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 		);
 
 		return sprintf(
-		/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
+		/* translators: 1: opening <a> tag with a link to documentation. 2: closing </a> tag. */
 			esc_html__( 'Detect and approve only the specified language. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
 			wp_kses_post( $link1 ),
 			'</a>'
@@ -212,7 +212,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
 	 * @return string
 	 */

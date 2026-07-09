@@ -22,7 +22,7 @@ interface Verifiable {
 	public static function verify( array $item ): int;
 
 	/**
-	 * Get rule weight.
+	 * Get the rule weight.
 	 * This value can be used to tweak the overall results. Will be used as a multiplier of the verification result.
 	 *
 	 * @return int Weight factor.
@@ -30,7 +30,7 @@ interface Verifiable {
 	public static function get_weight(): int;
 
 	/**
-	 * Get element slug.
+	 * Get the element slug.
 	 *
 	 * @return string The slug.
 	 */

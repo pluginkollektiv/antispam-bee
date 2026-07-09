@@ -60,7 +60,7 @@ class ApprovedEmail extends ControllableBase {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
 	 * @return string
 	 */
@@ -69,7 +69,7 @@ class ApprovedEmail extends ControllableBase {
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
 	 * @return string|null
 	 */
@@ -78,7 +78,7 @@ class ApprovedEmail extends ControllableBase {
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
 	 * @return string|null
 	 */

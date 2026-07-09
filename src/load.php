@@ -58,7 +58,7 @@ function init(): void {
 		Linkback::class,
 		// Helpers.
 		SpamReasonTextHelper::class,
-		// Post Processors.
+		// Post-processors.
 		DeleteOldSpam::class,
 		Statistics::class,
 		IgnoreLinkbacks::class,

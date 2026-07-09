@@ -60,7 +60,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		}
 
 		/**
-		 * Filter to hook into the `Country_Spam::verify` functionality, to implement for example a custom IP check.
+		 * Filter to hook into the `Country_Spam::verify` functionality to implement, for example, a custom IP check.
 		 *
 		 * @param null   $is_country_spam The `is_country_spam` result.
 		 * @param string $ip              The IP address.
@@ -132,7 +132,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
 	 * @return string
 	 */
@@ -141,7 +141,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
 	 * @return string|null
 	 */
@@ -150,7 +150,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
 	 * @return string|null
 	 */
@@ -167,7 +167,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		);
 
 		return sprintf(
-		/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
+		/* translators: 1: opening <a> tag with a link to documentation. 2: closing </a> tag. */
 			esc_html__(
 				'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.',
 				'antispam-bee'
@@ -245,7 +245,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
 	 * @return string
 	 */

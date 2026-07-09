@@ -47,7 +47,7 @@ class SettingsPage {
 	 */
 	private $rules = [];
 	/**
-	 * List of controllable post processors.
+	 * List of controllable post-processors.
 	 *
 	 * @var PostProcessors[]
 	 */
@@ -180,8 +180,8 @@ class SettingsPage {
 						'controllables' => ComponentsHelper::filter( $this->rules, [ 'reaction_type' => $reaction_type ] ),
 					],
 					'post_processors' => [
-						'title'         => __( 'Post Processors', 'antispam-bee' ),
-						'description'   => __( 'Setup post processors.', 'antispam-bee' ),
+						'title'         => __( 'Post-processors', 'antispam-bee' ),
+						'description'   => __( 'Setup post-processors.', 'antispam-bee' ),
 						'controllables' => ComponentsHelper::filter( $this->post_processors, [ 'reaction_type' => $reaction_type ] ),
 					],
 				]

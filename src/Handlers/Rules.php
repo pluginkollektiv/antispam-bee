@@ -50,12 +50,13 @@ class Rules {
 	}
 
 	/**
-	 * Get controllable items.
+	 * Get the controllable items.
 	 *
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active items.
 	 *
 	 * @return array A list of suitable controllables.
+	 * @throws ReflectionException
 	 */
 	public static function get_controllables( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
@@ -68,12 +69,13 @@ class Rules {
 	}
 
 	/**
-	 * Get rules that provide a spam reason (implement the SpamReason interface).
+	 * Get the rules that provide a spam reason (implement the SpamReason interface).
 	 *
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active rules.
 	 *
 	 * @return array A list of rules that provide a spam reason.
+	 * @throws ReflectionException
 	 */
 	public static function get_spam_reason_rules( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
@@ -141,12 +143,13 @@ class Rules {
 	}
 
 	/**
-	 * Get applicable rules.
+	 * Get the applicable rules.
 	 *
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active rules.
 	 *
 	 * @return array A list of applicable rules.
+	 * @throws ReflectionException
 	 */
 	public static function get( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
@@ -172,7 +175,7 @@ class Rules {
 	}
 
 	/**
-	 * Get spam reasons.
+	 * Get the spam reasons.
 	 *
 	 * @return array
 	 */
@@ -181,7 +184,7 @@ class Rules {
 	}
 
 	/**
-	 * Get no-spam reasons.
+	 * Get the no-spam reasons.
 	 *
 	 * @return array
 	 */

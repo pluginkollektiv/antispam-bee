@@ -1,6 +1,6 @@
 <?php
 /**
- * Post processors.
+ * Post-processors.
  *
  * @package AntispamBee\Handlers
  */
@@ -13,11 +13,11 @@ use AntispamBee\Interfaces\PostProcessor;
 use ReflectionException;
 
 /**
- * Post processors.
+ * Post-processors.
  */
 class PostProcessors {
 	/**
-	 * Apply post processors.
+	 * Apply post-processors.
 	 *
 	 * @param string $reaction_type One of the supported content types.
 	 * @param array  $item          Item to process.
@@ -31,7 +31,7 @@ class PostProcessors {
 		$item['asb_reasons']   = $reasons;
 		$item['reaction_type'] = $reaction_type;
 
-		// Move the post processors that mark an item as to delete to front,
+		// Move the post-processors that mark an item as to delete to front,
 		// so that following processors know if they handle an item that will be deleted.
 		$pp_count = count( $post_processors );
 		for ( $i = 0; $i < $pp_count; $i++ ) {
@@ -50,12 +50,12 @@ class PostProcessors {
 	}
 
 	/**
-	 * Get a post processor.
+	 * Get a post-processor.
 	 *
 	 * @param string|null $reaction_type Reaction type.
-	 * @param bool        $only_active   Get only active post processors.
+	 * @param bool        $only_active   Get only active post-processors.
 	 *
-	 * @return array A list of suitable post processors.
+	 * @return array A list of suitable post-processors.
 	 * @throws ReflectionException
 	 */
 	public static function get( ?string $reaction_type = null, bool $only_active = false ): array {
@@ -81,7 +81,7 @@ class PostProcessors {
 	}
 
 	/**
-	 * Get controllable items.
+	 * Get the controllable items.
 	 *
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active items.

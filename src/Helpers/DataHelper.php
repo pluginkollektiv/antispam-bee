@@ -13,7 +13,7 @@ namespace AntispamBee\Helpers;
 class DataHelper {
 
 	/**
-	 * Get values by keys.
+	 * Get the values by keys.
 	 *
 	 * @param array $keys A list of keys.
 	 * @param array $data The data to filter.
@@ -32,7 +32,7 @@ class DataHelper {
 	}
 
 	/**
-	 * Get values with a key containing given values.
+	 * Get the values with a key containing given values.
 	 *
 	 * @param string[] $substrs The key substrings to filter.
 	 * @param array    $data    The data to filter.

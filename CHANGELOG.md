@@ -789,7 +789,7 @@ einem Header wie `HTTP_X_FORWARDED` zu bekommen.
 
 * **English**
     * Black and whitelisting for specific countries
-    * "Project Honey Pot" as a optional spammer source
+    * "Project Honey Pot" as an optional spammer source
     * Spam reason in the notification email
     * Visual refresh of the notification email
     * Advanced GUI changes + Fold-out options

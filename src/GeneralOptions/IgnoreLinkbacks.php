@@ -20,7 +20,7 @@ class IgnoreLinkbacks extends Base {
 	protected static $slug = 'ignore-linkbacks';
 
 	/**
-	 * Get option name.
+	 * Get the option name.
 	 *
 	 * @return string
 	 */
@@ -29,7 +29,7 @@ class IgnoreLinkbacks extends Base {
 	}
 
 	/**
-	 * Get option label.
+	 * Get the option label.
 	 *
 	 * @return string|null
 	 */
@@ -38,7 +38,7 @@ class IgnoreLinkbacks extends Base {
 	}
 
 	/**
-	 * Get option description.
+	 * Get the option description.
 	 *
 	 * @return string|null
 	 */

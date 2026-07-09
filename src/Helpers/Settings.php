@@ -107,7 +107,7 @@ class Settings {
 	}
 
 	/**
-	 * Get value from an array by path.
+	 * Get the value from an array by path.
 	 *
 	 * @param string $path  Dot-separated path to the wanted value.
 	 * @param array  $array Options array.
@@ -134,7 +134,7 @@ class Settings {
 	}
 
 	/**
-	 * Get path parts from dot-separated notation.
+	 * Get the path parts from a dot-separated notation.
 	 *
 	 * @param mixed $path Dot-separated path to the wanted value.
 	 *
@@ -195,7 +195,7 @@ class Settings {
 	 * @param array  $array An array with values.
 	 * @param string $key   The name of the key.
 	 *
-	 * @return  mixed         The value of the requested key.
+	 * @return  mixed The value of the requested key.
 	 * @since   2.4.2
 	 *
 	 * @since   2.10.0 Only return `null` if option does not exist.
@@ -237,7 +237,7 @@ class Settings {
 	}
 
 	/**
-	 * Set an array item at given path.
+	 * Set an array item at a given path.
 	 *
 	 * @param string $path      Dot-separated path to the wanted value.
 	 * @param mixed  $sanitized Sanitized value.

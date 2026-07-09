@@ -1,6 +1,6 @@
 <?php
 /**
- * Delete Post Processor.
+ * Delete Post-Processor.
  *
  * @package AntispamBee\PostProcessors
  */
@@ -8,19 +8,19 @@
 namespace AntispamBee\PostProcessors;
 
 /**
- * Post processor that marks spam comments so that they are deleted in the end.
+ * Post-processor that marks spam comments so that they are deleted in the end.
  */
 class Delete extends ControllableBase {
 
 	/**
-	 * Post processor slug.
+	 * Post-processor slug.
 	 *
 	 * @var string
 	 */
 	protected static $slug = 'asb-delete-spam';
 
 	/**
-	 * This post processor marks items for deletion.
+	 * This post-processor marks items for deletion.
 	 *
 	 * @var bool
 	 */
@@ -40,7 +40,7 @@ class Delete extends ControllableBase {
 	}
 
 	/**
-	 * Get element name.
+	 * Get the element name.
 	 *
 	 * @return string
 	 */
@@ -49,7 +49,7 @@ class Delete extends ControllableBase {
 	}
 
 	/**
-	 * Get element label (optional).
+	 * Get the element label (optional).
 	 *
 	 * @return string|null
 	 */
@@ -58,7 +58,7 @@ class Delete extends ControllableBase {
 	}
 
 	/**
-	 * Get element description (optional).
+	 * Get the element description (optional).
 	 *
 	 * @return string|null
 	 */

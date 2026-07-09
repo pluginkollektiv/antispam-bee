@@ -1,6 +1,6 @@
 <?php
 /**
- * Send Email Post Processor.
+ * SendEmail Post-Processor.
  *
  * @package AntispamBee\PostProcessors
  */
@@ -12,12 +12,12 @@ use AntispamBee\Helpers\SpamReasonTextHelper;
 use WP_Post;
 
 /**
- * Post processor that is responsible for sending emails to the user.
+ * Post-processor that is responsible for sending emails to the user.
  */
 class SendEmail extends ControllableBase {
 
 	/**
-	 * Post processor slug.
+	 * Post-processor slug.
 	 *
 	 * @var string
 	 */
@@ -144,7 +144,7 @@ class SendEmail extends ControllableBase {
 	}
 
 	/**
-	 * Get template for email body.
+	 * Get the template for the email body.
 	 *
 	 * @return string
 	 */
@@ -217,7 +217,7 @@ EOF;
 	}
 
 	/**
-	 * Get element name.
+	 * Get the element name.
 	 *
 	 * @return string
 	 */
@@ -226,7 +226,7 @@ EOF;
 	}
 
 	/**
-	 * Get element label (optional).
+	 * Get the element label (optional).
 	 *
 	 * @return string|null
 	 */
@@ -235,7 +235,7 @@ EOF;
 	}
 
 	/**
-	 * Get element description (optional).
+	 * Get the element description (optional).
 	 *
 	 * @return string|null
 	 */

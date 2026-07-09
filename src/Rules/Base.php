@@ -45,7 +45,7 @@ abstract class Base implements Verifiable {
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE, ContentTypeHelper::LINKBACK_TYPE ];
 
 	/**
-	 * Set to `true`, if the rule should not be displayed anywhere,
+	 * Set to `true` if the rule should not be displayed anywhere,
 	 * like in the reasons list for the DeleteForReasons rule.
 	 *
 	 * @var bool
@@ -92,7 +92,7 @@ abstract class Base implements Verifiable {
 	}
 
 	/**
-	 * Get rule weight.
+	 * Get the rule weight.
 	 * This value can be used to tweak the overall results. Will be used as a multiplier of the verification result.
 	 *
 	 * @return int Weight factor.
@@ -102,7 +102,7 @@ abstract class Base implements Verifiable {
 	}
 
 	/**
-	 * Get element slug.
+	 * Get the element slug.
 	 *
 	 * @return string The slug.
 	 */

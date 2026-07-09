@@ -1,6 +1,6 @@
 <?php
 /**
- * Update Spam Count Post Processor.
+ * UpdateSpamCount Post-Processor.
  *
  * @package AntispamBee\PostProcessors
  */
@@ -11,12 +11,12 @@ use AntispamBee\GeneralOptions\Statistics;
 use AntispamBee\Helpers\Settings;
 
 /**
- * Post Processor that is responsible for incrementing the spam count and updating the value.
+ * Post-processor that is responsible for incrementing the spam count and updating the value.
  */
 class UpdateSpamCount extends Base {
 
 	/**
-	 * Post processor slug.
+	 * Post-processor slug.
 	 *
 	 * @var string
 	 */

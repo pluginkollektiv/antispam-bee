@@ -17,7 +17,7 @@ class ContentTypeHelper {
 	const LINKBACK_TYPE = 'linkback';
 
 	/**
-	 * Get human-readable reaction type name.
+	 * Get a human-readable reaction type name.
 	 *
 	 * @param string $reaction_type Reaction type.
 	 *

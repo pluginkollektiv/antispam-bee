@@ -83,7 +83,7 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
 	 * @return string
 	 */
@@ -92,7 +92,7 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
 	 * @return string
 	 */

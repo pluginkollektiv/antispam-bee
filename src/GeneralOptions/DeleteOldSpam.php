@@ -23,7 +23,7 @@ class DeleteOldSpam extends Base {
 	protected static $slug = 'delete-spam-cronjob-enabled';
 
 	/**
-	 * Get option name.
+	 * Get the option name.
 	 *
 	 * @return string
 	 */
@@ -32,7 +32,7 @@ class DeleteOldSpam extends Base {
 	}
 
 	/**
-	 * Get option label.
+	 * Get the option label.
 	 *
 	 * @return string|null
 	 */
@@ -41,7 +41,7 @@ class DeleteOldSpam extends Base {
 	}
 
 	/**
-	 * Get option description.
+	 * Get the option description.
 	 *
 	 * @return null
 	 */

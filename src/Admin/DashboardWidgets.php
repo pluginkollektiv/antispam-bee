@@ -31,7 +31,7 @@ class DashboardWidgets {
 	 *
 	 * @param array $items Initial array with dashboard items.
 	 *
-	 * @return  array         Merged array with dashboard items.
+	 * @return  array Merged array with dashboard items.
 	 * @since  0.1
 	 * @since  2.6.5
 	 */
