@@ -34,13 +34,15 @@ class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
 	 *
 	 * Test if a linkback title is blog name.
 	 *
-	 * @param array<string, mixed> $item Item to verify.
+	 * Handled payload attributes: `body`, `author`.
+	 *
+	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
-		$body      = $item['comment_content'] ?? null;
-		$blog_name = $item['comment_author'] ?? null;
+		$body      = $item['body'] ?? null;
+		$blog_name = $item['author'] ?? null;
 		preg_match( '/<strong>(.*)<\/strong>\\n\\n/', $body, $matches );
 		if ( ! isset( $matches[1] ) ) {
 			return 0;

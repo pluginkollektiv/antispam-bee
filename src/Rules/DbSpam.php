@@ -7,7 +7,6 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
@@ -27,33 +26,34 @@ class DbSpam extends ControllableBase implements SpamReason {
 	 *
 	 * Test item for spam patterns from the database.
 	 *
-	 * @param array<string, mixed> $item Item to verify.
+	 * Handled payload attributes: `url`, `ip`, `email`.
+	 *
+	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
 		$params = [];
 		$filter = [];
-		$values = DataHelper::get_values_where_key_contains( [ 'url' ], $item );
-		$url    = wp_unslash( array_shift( $values ) );
+		$url    = wp_unslash( $item['url'] ?? '' );
 
 		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';
 			$params[] = $url;
 		}
 
-		$ip = DataHelper::get_values_by_keys( [ 'comment_author_IP' ], $item );
+		$ip = $item['ip'] ?? '';
 
 		if ( ! empty( $ip ) ) {
 			$filter[] = '`comment_author_IP` = %s';
-			$params[] = wp_unslash( array_shift( $ip ) );
+			$params[] = wp_unslash( $ip );
 		}
 
-		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $item );
+		$email = $item['email'] ?? '';
 
 		if ( ! empty( $email ) ) {
 			$filter[] = '`comment_author_email` = %s';
-			$params[] = wp_unslash( array_shift( $email ) );
+			$params[] = wp_unslash( $email );
 		}
 		if ( empty( $params ) ) {
 			return 0;

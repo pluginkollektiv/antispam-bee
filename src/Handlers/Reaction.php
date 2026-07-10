@@ -63,7 +63,8 @@ abstract class Reaction {
 	public static function process( array $reaction ): array {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		$rules   = new Rules( static::$reaction_type );
-		$is_spam = $rules->apply( $reaction );
+		$payload = static::build_payload( $reaction );
+		$is_spam = $rules->apply( $payload );
 
 		if ( $is_spam ) {
 			return self::handle_spam( $reaction, $rules );
@@ -71,6 +72,19 @@ abstract class Reaction {
 
 		return $reaction;
 	}
+
+	/**
+	 * Build the normalized payload from the raw reaction data.
+	 *
+	 * Each reaction is responsible for mapping its own content (e.g. the
+	 * WordPress `comment_*` fields) onto the generic payload attributes the
+	 * rules consume, and for any helper-based enrichment (IP lookup, host
+	 * parsing). The returned payload must include the `reaction_type` attribute.
+	 *
+	 * @param array<string, mixed> $reaction Raw reaction data.
+	 * @return array<string, mixed> Normalized payload.
+	 */
+	abstract protected static function build_payload( array $reaction ): array;
 
 	/**
 	 * Handle spam.
