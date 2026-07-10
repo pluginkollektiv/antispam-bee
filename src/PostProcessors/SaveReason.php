@@ -23,9 +23,9 @@ class SaveReason extends ControllableBase {
 	 * Process an item.
 	 * Save spam reasons.
 	 *
-	 * @param array $item Item to process.
+	 * @param array<string, mixed> $item Item to process.
 	 *
-	 * @return array Processed item.
+	 * @return array<string, mixed> Processed item.
 	 */
 	public static function process( array $item ): array {
 		if ( isset( $item['asb_marked_as_delete'] ) && true === $item['asb_marked_as_delete'] ) {

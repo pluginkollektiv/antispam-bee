@@ -52,9 +52,9 @@ class CommentsColumns {
 	/**
 	 * Register plugin columns on the comments screen.
 	 *
-	 * @param array $columns An array with existing columns.
+	 * @param array<string, string> $columns An array with existing columns.
 	 *
-	 * @return  array An array with extended columns.
+	 * @return  array<string, string> An array with extended columns.
 	 */
 	public static function register_plugin_columns( array $columns ): array {
 		return array_merge(
@@ -94,9 +94,9 @@ class CommentsColumns {
 	/**
 	 * Register plugin sortable columns on comments screen.
 	 *
-	 * @param array $columns Registered columns.
+	 * @param array<string, string> $columns Registered columns.
 	 *
-	 * @return  array Columns with AB field.
+	 * @return  array<string, string> Columns with AB field.
 	 */
 	public static function register_sortable_columns( array $columns ): array {
 		$columns['antispam_bee_reason'] = 'antispam_bee_reason';
@@ -202,7 +202,7 @@ class CommentsColumns {
 			],
 			[
 				'key'     => 'antispam_bee_reason',
-				'value'   => array_flip( $reasons_mapping )[ $spam_reason ],
+				'value'   => array_flip( array_filter( $reasons_mapping ) )[ $spam_reason ],
 				'compare' => 'LIKE',
 			],
 		];

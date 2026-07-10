@@ -24,7 +24,7 @@ abstract class Field {
 	/**
 	 * Field options.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $option;
 
@@ -42,6 +42,7 @@ abstract class Field {
 	 * @param array  $option        Field options.
 	 * @param string $controllable  The related controllable (class name).
 	 *
+	 * @phpstan-param array<string, mixed>       $option
 	 * @phpstan-param class-string<Controllable> $controllable
 	 */
 	public function __construct( string $reaction_type, array $option, string $controllable ) {
@@ -105,7 +106,7 @@ abstract class Field {
 	/**
 	 * Get the option payload.
 	 *
-	 * @return array The option payload of the field.
+	 * @return array<string, mixed> The option payload of the field.
 	 */
 	public function get_option(): array {
 		return $this->option;

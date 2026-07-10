@@ -21,10 +21,10 @@ class Sanitize {
 	/**
 	 * Sanitize a checkbox group based on the given values and the valid ones.
 	 *
-	 * @param mixed $values        Values to sanitize.
-	 * @param array $valid_options A list of allowed keys.
+	 * @param mixed                   $values        Values to sanitize.
+	 * @param array<array-key, mixed> $valid_options A list of allowed keys.
 	 *
-	 * @return array Intersection of values and valid options.
+	 * @return array<array-key, mixed> Intersection of values and valid options.
 	 */
 	public static function checkbox_group( $values, array $valid_options ): array {
 		if ( ! is_array( $values ) ) {
@@ -39,7 +39,7 @@ class Sanitize {
 	 *
 	 * @param mixed $codes A list of potential ISO codes to sanitize.
 	 *
-	 * @return array Sanitized ISO codes.
+	 * @return array<array-key, string> Sanitized ISO codes.
 	 */
 	public static function iso_codes( $codes ): array {
 		if ( ! is_array( $codes ) ) {
@@ -104,10 +104,10 @@ class Sanitize {
 	/**
 	 * Sanitize controllable elements.
 	 *
-	 * @param array  $options Options.
-	 * @param string $tab     Settings tab.
+	 * @param array<string, mixed> $options Options.
+	 * @param string               $tab     Settings tab.
 	 *
-	 * @return array Sanitized options.
+	 * @return array<string, mixed> Sanitized options.
 	 */
 	private static function sanitize_controllables( array $options, string $tab ): array {
 		$controllables = array_merge(
@@ -167,10 +167,10 @@ class Sanitize {
 	/**
 	 * Call a sanitization callback.
 	 *
-	 * @param array  $controllable_option Controllable options.
-	 * @param array  $options             Options.
-	 * @param string $tab                 Settings tab.
-	 * @param string $controllable        Controllable element (class name).
+	 * @param array<string, mixed> $controllable_option Controllable options.
+	 * @param array<string, mixed> $options             Options.
+	 * @param string               $tab                 Settings tab.
+	 * @param string               $controllable        Controllable element (class name).
 	 *
 	 * @phpstan-param class-string<Controllable> $controllable
 	 *

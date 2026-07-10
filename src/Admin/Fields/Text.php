@@ -15,13 +15,6 @@ use AntispamBee\Admin\RenderElement;
 class Text extends Field implements RenderElement, InjectableField {
 
 	/**
-	 * Placeholder string.
-	 *
-	 * @var string
-	 */
-	protected $placeholder;
-
-	/**
 	 * Get the HTML.
 	 */
 	public function render(): void {

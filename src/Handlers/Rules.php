@@ -29,14 +29,14 @@ class Rules {
 	/**
 	 * List of spam reasons.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected $spam_reasons = [];
 
 	/**
 	 * List of no-spam reasons.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected $no_spam_reasons = [];
 
@@ -55,7 +55,7 @@ class Rules {
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active items.
 	 *
-	 * @return array A list of suitable controllables.
+	 * @return array<class-string<Controllable>> A list of suitable controllables.
 	 * @throws ReflectionException
 	 */
 	public static function get_controllables( ?string $reaction_type = null, bool $only_active = false ): array {
@@ -71,9 +71,9 @@ class Rules {
 	/**
 	 * Filter items.
 	 *
-	 * @param array $options Filter options.
+	 * @param array<string, mixed> $options Filter options.
 	 *
-	 * @return array A list of filtered elements.
+	 * @return array<class-string<Controllable>> A list of filtered elements.
 	 * @throws ReflectionException
 	 */
 	private static function filter( array $options ): array {
@@ -86,7 +86,7 @@ class Rules {
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active rules.
 	 *
-	 * @return array A list of rules that provide a spam reason.
+	 * @return array<class-string> A list of rules that provide a spam reason.
 	 * @throws ReflectionException
 	 */
 	public static function get_spam_reason_rules( ?string $reaction_type = null, bool $only_active = false ): array {
@@ -102,7 +102,7 @@ class Rules {
 	/**
 	 * Apply rules.
 	 *
-	 * @param array $item Item to apply rules to.
+	 * @param array<string, mixed> $item Item to apply rules to.
 	 *
 	 * @return bool Whether the item was identified as spam.
 	 */
@@ -160,7 +160,7 @@ class Rules {
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active rules.
 	 *
-	 * @return array A list of applicable rules.
+	 * @return array<class-string> A list of applicable rules.
 	 * @throws ReflectionException
 	 */
 	public static function get( ?string $reaction_type = null, bool $only_active = false ): array {
@@ -176,7 +176,7 @@ class Rules {
 	/**
 	 * Get the spam reasons.
 	 *
-	 * @return array The spam reasons.
+	 * @return string[] The spam reasons.
 	 */
 	public function get_spam_reasons(): array {
 		return $this->spam_reasons;
@@ -185,7 +185,7 @@ class Rules {
 	/**
 	 * Get the no-spam reasons.
 	 *
-	 * @return array The no-spam reasons.
+	 * @return string[] The no-spam reasons.
 	 */
 	public function get_no_spam_reasons(): array {
 		return $this->no_spam_reasons;

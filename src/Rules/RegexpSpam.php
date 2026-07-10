@@ -29,7 +29,9 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	 *
 	 * Content fields using pre-defined and custom regular expressions.
 	 *
-	 * @param array{
+	 * @param array<string, mixed> $item Item to verify.
+	 *
+	 * @phpstan-param array{
 	 *     reaction_type: string,
 	 *     comment_author_IP?: string,
 	 *     comment_author_url?: string,
@@ -37,7 +39,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	 *     comment_author_email?: string,
 	 *     comment_author?: string,
 	 *     comment_agent?: string,
-	 * } $item Item to verify.
+	 * } $item
 	 *
 	 * @return int Numeric result.
 	 */
@@ -166,11 +168,16 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			$hits = [];
 
 			foreach ( $pattern as $field => $regexp ) {
-				if ( empty( $field ) || ! in_array( $field, $fields, true ) || empty( $regexp ) ) {
+				if ( empty( $field ) || ! in_array( $field, $fields, true ) || empty( $regexp ) || ! isset( $subject[ $field ] ) ) {
 					continue;
 				}
 
-				$subject[ $field ] = ( function_exists( 'iconv' ) ? iconv( 'utf-8', 'utf-8//TRANSLIT', $subject[ $field ] ) : $subject[ $field ] );
+				if ( function_exists( 'iconv' ) ) {
+					$converted = iconv( 'utf-8', 'utf-8//TRANSLIT', $subject[ $field ] );
+					if ( false !== $converted ) {
+						$subject[ $field ] = $converted;
+					}
+				}
 
 				if ( empty( $subject[ $field ] ) ) {
 					continue;

@@ -40,7 +40,7 @@ abstract class Base implements Verifiable {
 	 * Supported reaction types.
 	 * Defaults to comments and linkbacks.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE, ContentTypeHelper::LINKBACK_TYPE ];
 
@@ -64,9 +64,9 @@ abstract class Base implements Verifiable {
 	/**
 	 * Add the current rule class to the 'antispam_bee_rules' filter.
 	 *
-	 * @param array $rules The currently registered rules.
+	 * @param array<class-string<Verifiable>> $rules The currently registered rules.
 	 *
-	 * @return array The updated list of rules.
+	 * @return array<class-string<Verifiable>> The updated list of rules.
 	 */
 	public static function add_rule( array $rules ): array {
 		$rules[] = static::class;
@@ -77,7 +77,7 @@ abstract class Base implements Verifiable {
 	/**
 	 * Return the types for which this rule can be used.
 	 *
-	 * @return array The supported reaction types.
+	 * @return string[] The supported reaction types.
 	 */
 	public static function get_supported_types(): array {
 		/**

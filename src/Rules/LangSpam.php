@@ -30,7 +30,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 *
 	 * Check for allowed languages.
 	 *
-	 * @param array $item Item to verify.
+	 * @param array<string, mixed> $item Item to verify.
 	 *
 	 * @return int Numeric result.
 	 */
@@ -62,7 +62,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 			return (int) ! in_array( $detected_language, $allowed_languages, true );
 		}
 
-		$text = trim( preg_replace( "/[\n\r\t ]+/", ' ', $comment_text ), ' ' );
+		$text = trim( preg_replace( "/[\n\r\t ]+/", ' ', $comment_text ) ?? '', ' ' );
 
 		if ( function_exists( 'wp_get_word_count_type' ) ) {
 			$word_count_type = wp_get_word_count_type();
@@ -81,12 +81,9 @@ class LangSpam extends ControllableBase implements SpamReason {
 			get_option( 'blog_charset' )
 		) ) {
 			preg_match_all( '/./u', $text, $words_array );
-			$word_count = 0;
-			if ( isset( $words_array[0] ) ) {
-				$word_count = count( $words_array[0] );
-			}
+			$word_count = count( $words_array[0] );
 		} else {
-			$words_array = preg_split( "/[\n\r\t ]+/", $text, -1, PREG_SPLIT_NO_EMPTY );
+			$words_array = preg_split( "/[\n\r\t ]+/", $text, -1, PREG_SPLIT_NO_EMPTY ) ?: [];
 			$word_count  = count( $words_array );
 		}
 
@@ -111,7 +108,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 
 		$response = wp_safe_remote_post(
 			$api_url,
-			[ 'body' => wp_json_encode( [ 'body' => $comment_text ] ) ]
+			[ 'body' => (string) wp_json_encode( [ 'body' => $comment_text ] ) ]
 		);
 
 		if ( is_wp_error( $response )
@@ -160,7 +157,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
 			esc_url(
 				__( 'https://antispambee.pluginkollektiv.org/documentation/#allow-comments-only-in-certain-language', 'antispam-bee' ),
-				'https'
+				[ 'https' ]
 			)
 		);
 
@@ -177,7 +174,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array The rule options.
+	 * @return array<int, array<string, mixed>> The rule options.
 	 */
 	public static function get_options(): array {
 		$languages = [

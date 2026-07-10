@@ -20,8 +20,8 @@ class ComponentsHelper {
 	/**
 	 * Filter a list of components.
 	 *
-	 * @param array $components Components to filter.
-	 * @param array $options {
+	 * @param array<class-string<Controllable>> $components Components to filter.
+	 * @param array<string, mixed>              $options {
 	 *     Filter options.
 	 *
 	 *     @type string       $reaction_type   Reaction type (e.g. "comment").
@@ -29,7 +29,7 @@ class ComponentsHelper {
 	 *     @type bool         $is_controllable Is controllable type.
 	 *     @type string|array $implements      Interface(s) that should be implemented.
 	 * }
-	 * @return array Filtered list.
+	 * @return array<class-string<Controllable>> Filtered list.
 	 * @throws ReflectionException
 	 */
 	public static function filter( array $components, array $options ): array {
@@ -64,16 +64,15 @@ class ComponentsHelper {
 			$conforms_to_controllable = InterfaceHelper::class_implements_interface( $component, Controllable::class );
 
 			// Filters out components that are not active.
-			if ( $only_active ) {
-				if ( $conforms_to_controllable && ! $component::is_active( $reaction_type ) ) {
-					continue;
-				}
+			if ( $only_active && $conforms_to_controllable && null !== $reaction_type && ! $component::is_active( $reaction_type ) ) {
+				continue;
 			}
 
 			$reflection = new ReflectionClass( $component );
+			$file_name  = $reflection->getFileName();
 
 			// Remove third-party components with `asb-` prefix.
-			if ( 0 !== strpos( $reflection->getFileName(), PLUGIN_PATH ) && 0 === strpos( $component::get_slug(), 'asb-' ) ) {
+			if ( false !== $file_name && 0 !== strpos( $file_name, PLUGIN_PATH ) && 0 === strpos( $component::get_slug(), 'asb-' ) ) {
 				_doing_it_wrong(
 					__METHOD__,
 					esc_html__( 'You shall not use `asb-` as slug prefix for your custom rules and post-processors.', 'antispam-bee' ),

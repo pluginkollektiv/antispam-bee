@@ -17,7 +17,7 @@ class SpamReasonTextHelper {
 	/**
 	 * List of spam reasons by rule slug.
 	 *
-	 * @var array
+	 * @var array<string, string>
 	 */
 	protected static $slug_text_array;
 
@@ -54,9 +54,9 @@ class SpamReasonTextHelper {
 	/**
 	 * Get the spam reason texts by an array of slugs.
 	 *
-	 * @param array $slugs A list of rule slugs.
+	 * @param string[] $slugs A list of rule slugs.
 	 *
-	 * @return array Texts for given slugs.
+	 * @return string[] Texts for given slugs.
 	 */
 	public static function get_texts_by_slugs( array $slugs ): array {
 		$texts = [];

@@ -29,9 +29,9 @@ class DashboardWidgets {
 	/**
 	 * Display the spam counts on the dashboard.
 	 *
-	 * @param array $items Initial array with dashboard items.
+	 * @param string[] $items Initial array with dashboard items.
 	 *
-	 * @return  array Merged array with dashboard items.
+	 * @return  string[] Merged array with dashboard items.
 	 */
 	public static function add_dashboard_count( array $items = [] ): array {
 		if ( ! current_user_can( 'manage_options' ) || ! Statistics::is_active() ) {
@@ -83,6 +83,13 @@ class DashboardWidgets {
 	 * Return the number of spam comments.
 	 */
 	private static function get_spam_count(): int {
-		return intval( Settings::get_option( 'spam_count', 0 ) );
+		return intval( Settings::get_option( 'spam_count', '' ) );
+	}
+
+	/**
+	 * Output the number of spam comments.
+	 */
+	public static function the_spam_count(): void {
+		echo esc_html( (string) self::get_spam_count() );
 	}
 }

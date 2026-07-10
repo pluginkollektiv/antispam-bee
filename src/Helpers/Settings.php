@@ -20,7 +20,7 @@ class Settings {
 	/**
 	 * Default options.
 	 *
-	 * @var array[]
+	 * @var array<string, array<string, string>>
 	 */
 	protected static $defaults = [
 		'comment'  => [
@@ -91,7 +91,7 @@ class Settings {
 	/**
 	 * Get all plugin options.
 	 *
-	 * @return array An array with option fields.
+	 * @return array<string, mixed> An array with option fields.
 	 */
 	public static function get_options(): array {
 		PluginUpdate::maybe_run_plugin_updated_logic();
@@ -109,8 +109,8 @@ class Settings {
 	/**
 	 * Get the value from an array by path.
 	 *
-	 * @param string $path  Dot-separated path to the wanted value.
-	 * @param array  $array Options array.
+	 * @param string                  $path  Dot-separated path to the wanted value.
+	 * @param array<array-key, mixed> $array Options array.
 	 *
 	 * @return null|mixed Value at given path, if present.
 	 */
@@ -165,7 +165,7 @@ class Settings {
 	/**
 	 * Update multiple option fields.
 	 *
-	 * @param array $data An array with plugin option fields.
+	 * @param array<string, mixed> $data An array with plugin option fields.
 	 */
 	public static function update_options( array $data ): void {
 		$options = get_option( self::OPTION_NAME );
@@ -185,8 +185,8 @@ class Settings {
 	/**
 	 * Check and return an array key.
 	 *
-	 * @param array  $array An array with values.
-	 * @param string $key   The name of the key.
+	 * @param array<array-key, mixed> $array An array with values.
+	 * @param string                  $key   The name of the key.
 	 *
 	 * @return  mixed The value of the requested key.
 	 */
@@ -201,8 +201,8 @@ class Settings {
 	/**
 	 * Remove array item(s) by key.
 	 *
-	 * @param string $path  Dot-separated path to the wanted value.
-	 * @param array  $array The array to filter.
+	 * @param string               $path  Dot-separated path to the wanted value.
+	 * @param array<string, mixed> $array The array to filter.
 	 *
 	 * @return void
 	 */
@@ -229,9 +229,9 @@ class Settings {
 	/**
 	 * Set an array item at a given path.
 	 *
-	 * @param string $path      Dot-separated path to the wanted value.
-	 * @param mixed  $sanitized Sanitized value.
-	 * @param array  $options   Options array to process.
+	 * @param string               $path      Dot-separated path to the wanted value.
+	 * @param mixed                $sanitized Sanitized value.
+	 * @param array<string, mixed> $options   Options array to process.
 	 *
 	 * @return void
 	 */

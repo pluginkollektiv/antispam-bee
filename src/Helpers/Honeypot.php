@@ -8,6 +8,7 @@
 namespace AntispamBee\Helpers;
 
 use DOMDocument;
+use DOMElement;
 use DOMXPath;
 
 /**
@@ -17,8 +18,8 @@ class Honeypot {
 	/**
 	 * Inject the honeypot field.
 	 *
-	 * @param string $markup     The field markup.
-	 * @param array  $options    {
+	 * @param string                $markup  The field markup.
+	 * @param array<string, string> $options {
 	 *                           The field options.
 	 *
 	 * @type string  $form_id    The form id.
@@ -33,16 +34,23 @@ class Honeypot {
 	public static function inject( string $markup, array $options ): string {
 		$dom = new DOMDocument();
 		$dom->loadHTML( $markup, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
-		$xpath = new DOMXPath( $dom );
-		$input = $xpath->query( '//*[@id="' . $options['field_id'] . '"]' )->item( 0 );
-		if ( ! $input ) {
+		$xpath     = new DOMXPath( $dom );
+		$node_list = $xpath->query( '//*[@id="' . $options['field_id'] . '"]' );
+		$input     = $node_list ? $node_list->item( 0 ) : null;
+		if ( ! $input instanceof DOMElement ) {
 			return '';
 		}
 
 		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$id_attr   = $input->attributes->getNamedItem( 'id' );
+		$name_attr = $input->attributes->getNamedItem( 'name' );
+		if ( null === $id_attr || null === $name_attr ) {
+			return '';
+		}
+
 		$input_type    = $input->nodeName;
-		$honeypot_id   = $input->attributes->getNamedItem( 'id' )->textContent;
-		$honeypot_name = $input->attributes->getNamedItem( 'name' )->textContent;
+		$honeypot_id   = $id_attr->textContent;
+		$honeypot_name = $name_attr->textContent;
 		// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
 		/**
@@ -96,7 +104,7 @@ class Honeypot {
 
 				$markup = preg_replace_callback(
 					$regex,
-					function ( $matches ) use ( $honeypot_id, $attributes_string ) {
+					function ( array $matches ) use ( $honeypot_id, $attributes_string ) {
 						$output = '<textarea autocomplete="new-password" ' . $matches['before1'] . $matches['before2'] . $matches['before3'];
 
 						$id_script = '';
@@ -106,7 +114,7 @@ class Honeypot {
 								$id_script = sprintf(
 									'<script data-noptimize>document.getElementById("%1$s").setAttribute( "id", "a%2$s" );document.getElementById("%3$s").setAttribute( "id", "%1$s" );</script>',
 									$honeypot_id,
-									esc_js( substr( md5( time() ), 0, 31 ) ),
+									esc_js( substr( md5( (string) time() ), 0, 31 ) ),
 									esc_js( self::get_secret_id_for_post() )
 								);
 							}
@@ -123,7 +131,7 @@ class Honeypot {
 						return $output;
 					},
 					$markup
-				);
+				) ?? $markup;
 				break;
 			default:
 				break;
@@ -165,7 +173,7 @@ class Honeypot {
 	public static function ensure_secret_starts_with_letter( string $secret ): string {
 		$first_char = substr( $secret, 0, 1 );
 		if ( is_numeric( $first_char ) ) {
-			return chr( $first_char + 97 ) . substr( $secret, 1 );
+			return chr( ( (int) $first_char % 10 ) + 97 ) . substr( $secret, 1 );
 		}
 
 		return $secret;

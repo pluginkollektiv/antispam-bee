@@ -44,7 +44,7 @@ class Section {
 	/**
 	 * Fields.
 	 *
-	 * @var array
+	 * @var array<int, array<string, mixed>>
 	 */
 	private $rows = [];
 
@@ -59,12 +59,12 @@ class Section {
 	/**
 	 * Initialize the tab.
 	 *
-	 * @param string      $slug          The slug of the tab.
-	 * @param string      $title         Title for the tab.
-	 * @param string      $description   Description of the tab.
-	 * @param string|null $reaction_type Reaction type (e.g. comment, trackback).
+	 * @param string $slug          The slug of the tab.
+	 * @param string $title         Title for the tab.
+	 * @param string $description   Description of the tab.
+	 * @param string $reaction_type Reaction type (e.g. comment, trackback).
 	 */
-	public function __construct( string $slug, string $title, string $description = '', ?string $reaction_type = null ) {
+	public function __construct( string $slug, string $title, string $description = '', string $reaction_type = '' ) {
 		$this->slug          = $slug;
 		$this->title         = $title;
 		$this->description   = $description;
@@ -141,6 +141,9 @@ class Section {
 	 * @param array  $option       Option name.
 	 * @param string $controllable Controllable item (class name).
 	 *
+	 * @phpstan-param array<string, mixed>       $option
+	 * @phpstan-param class-string<Controllable> $controllable
+	 *
 	 * @return Checkbox|CheckboxGroup|Inline|Select|Text|Textarea|null The generated field, or null if the type is missing or invalid.
 	 */
 	private function generate_field( array $option, string $controllable ): ?Field {
@@ -167,8 +170,10 @@ class Section {
 
 	/**
 	 * Print the UI element.
+	 *
+	 * @return void
 	 */
-	public function get_callback() {
+	public function get_callback(): void {
 		if ( ! empty( $this->description ) ) {
 			printf(
 				'<p>%s</p>',
@@ -227,7 +232,7 @@ class Section {
 	/**
 	 * Get the rows.
 	 *
-	 * @return array The rows of the section.
+	 * @return array<int, array<string, mixed>> The rows of the section.
 	 */
 	public function get_rows(): array {
 		return $this->rows;
@@ -236,7 +241,7 @@ class Section {
 	/**
 	 * Render the fields for a row.
 	 *
-	 * @param array $row Row of fields.
+	 * @param array<string, mixed> $row Row of fields.
 	 */
 	protected function render_row_fields( array $row ): void {
 		foreach ( $row['fields'] as $key => $field ) {
