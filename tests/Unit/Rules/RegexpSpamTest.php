@@ -25,25 +25,25 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 			'Unknown reaction type should not be flagged'
 		);
 
-		$spam_author                   = self::make_comment();
-		$spam_author['comment_author'] = 'Buy Viagra';
+		$spam_author           = self::make_comment();
+		$spam_author['author'] = 'Buy Viagra';
 		self::assertSame(
 			1,
 			RegexpSpam::verify( $spam_author ),
 			'Known spam word in the author name should be flagged'
 		);
 
-		$spam_body                         = self::make_comment();
-		$spam_body['comment_content']      = 'this is a pharmacy, why does it work now?.';
-		$spam_body['comment_author_email'] = 'test@yandex.ru';
+		$spam_body          = self::make_comment();
+		$spam_body['body']  = 'this is a pharmacy, why does it work now?.';
+		$spam_body['email'] = 'test@yandex.ru';
 		self::assertSame(
 			1,
 			RegexpSpam::verify( $spam_body ),
 			'Matching body and email pattern combination should be flagged'
 		);
 
-		$partial_match                    = self::make_comment();
-		$partial_match['comment_content'] = 'this is a pharmacy, why does it work now?.';
+		$partial_match         = self::make_comment();
+		$partial_match['body'] = 'this is a pharmacy, why does it work now?.';
 		self::assertSame(
 			0,
 			RegexpSpam::verify( $partial_match ),
@@ -52,8 +52,8 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 	}
 
 	public function test_verify_respects_custom_patterns_filter() {
-		$item                    = self::make_comment();
-		$item['comment_content'] = 'A perfectly harmless custom message.';
+		$item         = self::make_comment();
+		$item['body'] = 'A perfectly harmless custom message.';
 
 		expectApplied( 'antispam_bee_patterns' )
 			->once()

@@ -74,4 +74,26 @@ class Comment extends Reaction {
 
 		return $reaction;
 	}
+
+	/**
+	 * Build the normalized payload from a comment.
+	 *
+	 * @param array<string, mixed> $reaction Raw comment data.
+	 * @return array<string, mixed> Normalized payload.
+	 */
+	protected static function build_payload( array $reaction ): array {
+		$url = $reaction['comment_author_url'] ?? '';
+
+		return [
+			'reaction_type' => static::$reaction_type,
+			'ip'            => $reaction['comment_author_IP'] ?? '',
+			'url'           => $url,
+			'host'          => $url ? DataHelper::parse_url( $url ) : '',
+			'body'          => $reaction['comment_content'] ?? '',
+			'email'         => $reaction['comment_author_email'] ?? '',
+			'author'        => $reaction['comment_author'] ?? '',
+			'useragent'     => $reaction['comment_agent'] ?? '',
+			'post_id'       => $reaction['comment_post_ID'] ?? null,
+		];
+	}
 }

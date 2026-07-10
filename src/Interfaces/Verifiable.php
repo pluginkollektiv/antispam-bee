@@ -15,7 +15,12 @@ interface Verifiable {
 	 * Verify an item.
 	 * Applies logic and returns a numeric value, positive, negative or zero (neutral).
 	 *
-	 * @param array<string, mixed> $item Item to verify.
+	 * Receives the normalized payload built by the reaction (see
+	 * {@see \AntispamBee\Handlers\Reaction::build_payload()}), keyed by generic
+	 * attributes (`reaction_type`, `ip`, `url`, `host`, `body`, `email`,
+	 * `author`, `useragent`, `post_id`) rather than the raw reaction data.
+	 *
+	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @return int Weighted result.
 	 */

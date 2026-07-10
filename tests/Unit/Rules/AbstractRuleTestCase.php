@@ -27,40 +27,6 @@ abstract class AbstractRuleTestCase extends TestCase {
 	}
 
 	/**
-	 * Generate a test comment.
-	 *
-	 * @param int    $id           Comment ID.
-	 * @param string $author       Author name.
-	 * @param string $author_email Author email.
-	 * @param string $author_url   Author URL.
-	 * @param string $author_ip    Author IP address.
-	 * @param string $content      Comment content.
-	 * @param string $agent        User agent.
-	 *
-	 * @return array Comment array.
-	 */
-	protected static function make_comment(
-		int $id = 1,
-		string $author = 'Test Author',
-		string $author_email = 'test.author@example.com',
-		string $author_url = 'www.example.com',
-		string $author_ip = '192.0.2.1',
-		string $content = 'This is the base test comment.',
-		string $agent = 'Mozilla/5.0'
-	): array {
-		return [
-			'reaction_type'        => ContentTypeHelper::COMMENT_TYPE,
-			'comment_ID'           => $id,
-			'comment_author'       => $author,
-			'comment_author_email' => $author_email,
-			'comment_author_url'   => $author_url,
-			'comment_author_IP'    => $author_ip,
-			'comment_content'      => $content,
-			'comment_agent'        => $agent,
-		];
-	}
-
-	/**
 	 * Test for expected slug.
 	 * Might seem redundant, but we might just have forgotten about this...
 	 *
@@ -84,5 +50,39 @@ abstract class AbstractRuleTestCase extends TestCase {
 			has_filter( 'antispam_bee_rules', [ $this->rule, 'add_rule' ] ),
 			'The add_rule filter was not added'
 		);
+	}
+
+	/**
+	 * Generate a normalized test payload for a comment.
+	 *
+	 * @param int    $post_id      Post ID.
+	 * @param string $author       Author name.
+	 * @param string $author_email Author email.
+	 * @param string $author_url   Author URL.
+	 * @param string $author_ip    Author IP address.
+	 * @param string $content      Comment content.
+	 * @param string $agent        User agent.
+	 *
+	 * @return array<string, mixed> Normalized payload.
+	 */
+	protected static function make_comment(
+		int $post_id = 1,
+		string $author = 'Test Author',
+		string $author_email = 'test.author@example.com',
+		string $author_url = 'www.example.com',
+		string $author_ip = '192.0.2.1',
+		string $content = 'This is the base test comment.',
+		string $agent = 'Mozilla/5.0'
+	): array {
+		return [
+			'reaction_type' => ContentTypeHelper::COMMENT_TYPE,
+			'post_id'       => $post_id,
+			'author'        => $author,
+			'email'         => $author_email,
+			'url'           => $author_url,
+			'ip'            => $author_ip,
+			'body'          => $content,
+			'useragent'     => $agent,
+		];
 	}
 }

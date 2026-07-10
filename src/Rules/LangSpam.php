@@ -7,7 +7,6 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\LangHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
@@ -30,19 +29,20 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 *
 	 * Check for allowed languages.
 	 *
-	 * @param array<string, mixed> $item Item to verify.
+	 * Handled payload attributes: `body`, `reaction_type`.
+	 *
+	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
 		$allowed_languages = array_keys( (array) Settings::get_option( static::get_option_name( 'allowed' ), $item['reaction_type'] ) );
 
-		$comment_content = DataHelper::get_values_where_key_contains( [ 'content' ], $item );
+		$comment_content = $item['body'] ?? '';
 		if ( empty( $comment_content ) ) {
 			return 0;
 		}
-		$comment_content = array_shift( $comment_content );
-		$comment_text    = wp_strip_all_tags( $comment_content );
+		$comment_text = wp_strip_all_tags( $comment_content );
 
 		if ( empty( $allowed_languages ) || empty( $comment_text ) ) {
 			return 0;

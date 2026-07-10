@@ -8,7 +8,6 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\ContentTypeHelper;
-use AntispamBee\Helpers\DataHelper;
 
 /**
  * Checks if the email is from an already approved commenter.
@@ -32,17 +31,17 @@ class ApprovedEmail extends ControllableBase {
 	/**
 	 * Verify an item.
 	 *
-	 * @param array<string, mixed> $item Item to verify.
+	 * Handled payload attributes: `email`.
+	 *
+	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
-		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $item );
+		$email = $item['email'] ?? '';
 		if ( empty( $email ) ) {
 			return 0;
 		}
-
-		$email = array_shift( $email );
 
 		$approved_comments_count = get_comments(
 			[
