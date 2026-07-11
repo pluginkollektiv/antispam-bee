@@ -137,7 +137,6 @@ class Honeypot {
 	 * Return the secret of a post used in the textarea id attribute.
 	 *
 	 * @return string
-	 * @since 2.10.0 Modify secret generation because `always_allowed` option no longer exists
 	 */
 	public static function get_secret_id_for_post(): string {
 		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
@@ -188,7 +187,6 @@ class Honeypot {
 	 * Return the secret of a post used in the textarea name attribute.
 	 *
 	 * @return string
-	 * @since 2.10.0 Modify secret generation because `always_allowed` option no longer exists
 	 */
 	public static function get_secret_name_for_post(): string {
 		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );

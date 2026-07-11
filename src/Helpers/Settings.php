@@ -153,9 +153,6 @@ class Settings {
 	 *
 	 * @param string $field Field name.
 	 * @param mixed  $value The field value.
-	 *
-	 * @since  0.1
-	 * @since  2.4
 	 */
 	public static function update_option( string $field, $value ): void {
 		self::update_options(
@@ -169,10 +166,6 @@ class Settings {
 	 * Update multiple option fields.
 	 *
 	 * @param array $data An array with plugin option fields.
-	 *
-	 * @since  0.1
-	 *
-	 * @since  2.6.1
 	 */
 	public static function update_options( array $data ): void {
 		$options = get_option( self::OPTION_NAME );
@@ -196,9 +189,6 @@ class Settings {
 	 * @param string $key   The name of the key.
 	 *
 	 * @return  mixed The value of the requested key.
-	 * @since   2.4.2
-	 *
-	 * @since   2.10.0 Only return `null` if option does not exist.
 	 */
 	public static function get_key( array $array, string $key ) {
 		if ( empty( $array ) || empty( $key ) || ! isset( $array[ $key ] ) ) {

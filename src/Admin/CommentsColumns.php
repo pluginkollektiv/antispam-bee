@@ -55,7 +55,6 @@ class CommentsColumns {
 	 * @param array $columns An array with existing columns.
 	 *
 	 * @return  array An array with extended columns.
-	 * @since   2.6.0
 	 * @change  2.6.0
 	 */
 	public static function register_plugin_columns( array $columns ): array {
@@ -73,7 +72,6 @@ class CommentsColumns {
 	 * @param string  $column     Currently selected column.
 	 * @param integer $comment_id Comment ID.
 	 *
-	 * @since   2.6.0
 	 * @change  2.6.0
 	 */
 	public static function print_plugin_column( string $column, int $comment_id ): void {
@@ -102,7 +100,6 @@ class CommentsColumns {
 	 * @param array $columns Registered columns.
 	 *
 	 * @return  array Columns with AB field.
-	 * @since   2.6.3
 	 * @change  2.6.3
 	 */
 	public static function register_sortable_columns( array $columns ): array {
@@ -116,7 +113,6 @@ class CommentsColumns {
 	 *
 	 * @param WP_Comment_Query $query Current WordPress query.
 	 *
-	 * @since   2.6.3
 	 * @change  2.6.3
 	 */
 	public static function set_orderby_query( WP_Comment_Query $query ): void {
@@ -221,7 +217,6 @@ class CommentsColumns {
 	/**
 	 * Print CSS for the plugin column.
 	 *
-	 * @since   2.6.1
 	 * @change  2.6.1
 	 */
 	public static function print_column_styles(): void {

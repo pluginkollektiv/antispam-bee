@@ -66,7 +66,6 @@ class IpHelper {
 	 * @param string $ip Original IP.
 	 *
 	 * @return  string Anonymous IP.
-	 * @since   2.5.1
 	 */
 	public static function anonymize_ip( string $ip ): string {
 		preg_match( '/\w+([\.:])\w+/', $ip, $matches );

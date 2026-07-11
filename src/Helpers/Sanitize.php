@@ -25,7 +25,6 @@ class Sanitize {
 	 * @param array $valid_options A list of allowed keys.
 	 *
 	 * @return array Intersection of values and valid options.
-	 * @since 3.0.0
 	 */
 	public static function checkbox_group( $values, array $valid_options ): array {
 		if ( ! is_array( $values ) ) {
@@ -41,7 +40,6 @@ class Sanitize {
 	 * @param mixed $codes A list of potential ISO codes to sanitize.
 	 *
 	 * @return array Sanitized ISO codes.
-	 * @since 3.0.0
 	 */
 	public static function iso_codes( $codes ): array {
 		if ( ! is_array( $codes ) ) {

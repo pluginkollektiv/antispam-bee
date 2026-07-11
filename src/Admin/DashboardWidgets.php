@@ -32,8 +32,6 @@ class DashboardWidgets {
 	 * @param array $items Initial array with dashboard items.
 	 *
 	 * @return  array Merged array with dashboard items.
-	 * @since  0.1
-	 * @since  2.6.5
 	 */
 	public static function add_dashboard_count( array $items = array() ): array {
 		if ( ! current_user_can( 'manage_options' ) || ! Statistics::is_active() ) {
@@ -83,9 +81,6 @@ class DashboardWidgets {
 
 	/**
 	 * Return the number of spam comments.
-	 *
-	 * @since  0.1
-	 * @since  2.4
 	 */
 	private static function get_spam_count(): int {
 		return intval( Settings::get_option( 'spam_count', 0 ) );

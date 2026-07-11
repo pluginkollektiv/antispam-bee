@@ -52,7 +52,6 @@ abstract class Base implements Controllable {
 	 * Add setting to the list of general options.
 	 *
 	 * @return void
-	 * @since 3.0.0
 	 */
 	public static function init(): void {
 		add_filter( 'antispam_bee_general_options', [ static::class, 'add_general_option' ] );
@@ -64,7 +63,6 @@ abstract class Base implements Controllable {
 	 * @param array $options Currently registered options.
 	 *
 	 * @return array Updated options.
-	 * @since 3.0.0
 	 */
 	public static function add_general_option( array $options ): array {
 		$options[] = static::class;
