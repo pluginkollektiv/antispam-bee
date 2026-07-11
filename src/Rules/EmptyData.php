@@ -62,7 +62,7 @@ class EmptyData extends Base implements SpamReason {
 	/**
 	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return _x( 'Empty Data', 'spam-reason-form-name', 'antispam-bee' );
@@ -71,7 +71,7 @@ class EmptyData extends Base implements SpamReason {
 	/**
 	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string The human-readable spam reason.
 	 */
 	public static function get_reason_text(): string {
 		return _x( 'Empty Data', 'spam-reason-text', 'antispam-bee' );

@@ -15,14 +15,14 @@ interface InjectableField {
 	/**
 	 * Get the name attribute for the field.
 	 *
-	 * @return string
+	 * @return string The name attribute of the field.
 	 */
 	public function get_name(): string;
 
 	/**
 	 * Get the raw HTML markup for the input element.
 	 *
-	 * @return string
+	 * @return string The raw HTML markup for the input element.
 	 */
 	public function get_injectable_markup(): string;
 }

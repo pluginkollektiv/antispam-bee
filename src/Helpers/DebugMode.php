@@ -44,7 +44,7 @@ class DebugMode {
 	/**
 	 * Is debug mode enabled?
 	 *
-	 * @return bool
+	 * @return bool Whether debug mode is enabled.
 	 */
 	public static function enabled(): bool {
 		if ( null === static::$debug_mode_enabled ) {

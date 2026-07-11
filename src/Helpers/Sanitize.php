@@ -87,7 +87,7 @@ class Sanitize {
 	/**
 	 * Return all valid settings tab slugs derived from registered controllables.
 	 *
-	 * @return string[]
+	 * @return string[] A list of valid settings tab slugs.
 	 */
 	private static function get_tab_slugs(): array {
 		$tabs = [ 'general' ];

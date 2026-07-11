@@ -62,7 +62,7 @@ class PluginUpdate {
 	/**
 	 * Whether the database structure is up-to-date.
 	 *
-	 * @return bool
+	 * @return bool Whether the database structure is up-to-date.
 	 */
 	private static function db_version_is_current(): bool {
 		if ( ! is_null( self::$db_version_is_current ) ) {
@@ -81,7 +81,7 @@ class PluginUpdate {
 	/**
 	 * Get the plugin version.
 	 *
-	 * @return string
+	 * @return string The plugin version.
 	 */
 	private static function get_plugin_version(): string {
 		$meta = get_file_data( MAIN_PLUGIN_FILE, [ 'Version' => 'Version' ] );

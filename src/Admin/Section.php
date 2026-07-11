@@ -141,7 +141,7 @@ class Section {
 	 * @param array  $option       Option name.
 	 * @param string $controllable Controllable item (class name).
 	 *
-	 * @return Checkbox|CheckboxGroup|Inline|Select|Text|Textarea|null
+	 * @return Checkbox|CheckboxGroup|Inline|Select|Text|Textarea|null The generated field, or null if the type is missing or invalid.
 	 */
 	private function generate_field( array $option, string $controllable ): ?Field {
 		switch ( $option['type'] ) {
@@ -227,7 +227,7 @@ class Section {
 	/**
 	 * Get the rows.
 	 *
-	 * @return array
+	 * @return array The rows of the section.
 	 */
 	public function get_rows(): array {
 		return $this->rows;

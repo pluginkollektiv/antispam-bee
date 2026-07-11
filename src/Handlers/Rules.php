@@ -176,7 +176,7 @@ class Rules {
 	/**
 	 * Get the spam reasons.
 	 *
-	 * @return array
+	 * @return array The spam reasons.
 	 */
 	public function get_spam_reasons(): array {
 		return $this->spam_reasons;
@@ -185,7 +185,7 @@ class Rules {
 	/**
 	 * Get the no-spam reasons.
 	 *
-	 * @return array
+	 * @return array The no-spam reasons.
 	 */
 	public function get_no_spam_reasons(): array {
 		return $this->no_spam_reasons;

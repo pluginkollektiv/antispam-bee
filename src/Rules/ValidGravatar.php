@@ -66,7 +66,7 @@ class ValidGravatar extends ControllableBase {
 	/**
 	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Valid Gravatar', 'antispam-bee' );
@@ -75,7 +75,7 @@ class ValidGravatar extends ControllableBase {
 	/**
 	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Trust commenters with a Gravatar', 'antispam-bee' );
@@ -84,7 +84,7 @@ class ValidGravatar extends ControllableBase {
 	/**
 	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
 		$link = sprintf(

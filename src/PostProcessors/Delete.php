@@ -42,7 +42,7 @@ class Delete extends ControllableBase {
 	/**
 	 * Get the element name.
 	 *
-	 * @return string
+	 * @return string The name.
 	 */
 	public static function get_name(): string {
 		return __( 'Delete spam', 'antispam-bee' );
@@ -51,7 +51,7 @@ class Delete extends ControllableBase {
 	/**
 	 * Get the element label (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Delete detected spam instead of marking.', 'antispam-bee' );
@@ -60,7 +60,7 @@ class Delete extends ControllableBase {
 	/**
 	 * Get the element description (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The description, or null.
 	 */
 	public static function get_description(): ?string {
 		return null;

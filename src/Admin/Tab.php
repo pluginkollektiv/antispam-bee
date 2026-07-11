@@ -66,7 +66,7 @@ class Tab {
 	/**
 	 * Get the sections.
 	 *
-	 * @return Section[]
+	 * @return Section[] A list of sections.
 	 */
 	public function get_sections(): array {
 		return $this->sections;

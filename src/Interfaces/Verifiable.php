@@ -39,14 +39,14 @@ interface Verifiable {
 	/**
 	 * Get a list of supported types.
 	 *
-	 * @return string[]
+	 * @return string[] A list of supported types.
 	 */
 	public static function get_supported_types(): array;
 
 	/**
 	 * Is this rule final?
 	 *
-	 * @return bool
+	 * @return bool Whether this rule is final.
 	 */
 	public static function is_final(): bool;
 }

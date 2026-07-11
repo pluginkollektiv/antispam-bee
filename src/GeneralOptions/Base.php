@@ -42,7 +42,7 @@ abstract class Base implements Controllable {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array|null
+	 * @return array|null The option data, or null.
 	 */
 	public static function get_options(): ?array {
 		return null;
@@ -75,7 +75,7 @@ abstract class Base implements Controllable {
 	 *
 	 * @param string $reaction_type One of the supported reaction types (comment, linkback, general).
 	 *
-	 * @return mixed|null
+	 * @return mixed|null The activation state, or null if unset.
 	 */
 	public static function is_active( string $reaction_type = 'general' ) {
 		return Settings::get_option( static::get_option_name( 'active' ), $reaction_type );
@@ -100,7 +100,7 @@ abstract class Base implements Controllable {
 	/**
 	 * Get the component type (rule, post_processor, or general).
 	 *
-	 * @return string
+	 * @return string The component type.
 	 */
 	public static function get_component_type(): string {
 		return static::$component_type;
@@ -109,7 +109,7 @@ abstract class Base implements Controllable {
 	/**
 	 * Get the option slug.
 	 *
-	 * @return string
+	 * @return string The option slug.
 	 */
 	public static function get_slug(): string {
 		return static::$slug;
@@ -119,7 +119,7 @@ abstract class Base implements Controllable {
 	 * Only print custom options?
 	 * If enabled, the default options will not be generated.
 	 *
-	 * @return bool
+	 * @return bool Whether only custom options are printed.
 	 */
 	public static function only_print_custom_options(): bool {
 		return static::$only_custom_options;
@@ -128,7 +128,7 @@ abstract class Base implements Controllable {
 	/**
 	 * Get a list of supported types.
 	 *
-	 * @return string[]
+	 * @return string[] The supported types.
 	 */
 	public static function get_supported_types(): array {
 		return [ 'general' ];

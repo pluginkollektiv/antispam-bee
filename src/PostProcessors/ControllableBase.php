@@ -33,7 +33,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	 *
 	 * @param string $reaction_type One of the supported reaction types (comment, linkback, general).
 	 *
-	 * @return mixed|null
+	 * @return mixed|null The activation state, or null.
 	 */
 	public static function is_active( string $reaction_type ) {
 		return Settings::get_option( static::get_option_name( 'active' ), $reaction_type );
@@ -58,7 +58,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	/**
 	 * Get the component type (rule, post_processor, or general).
 	 *
-	 * @return string
+	 * @return string The component type.
 	 */
 	public static function get_component_type(): string {
 		return static::$component_type;
@@ -69,7 +69,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	 *
 	 * {@inheritDoc} Default: none.
 	 *
-	 * @return array|null
+	 * @return array|null The post-processor options, or null.
 	 */
 	public static function get_options(): ?array {
 		return null;
@@ -79,7 +79,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	 * Only print custom options?
 	 * If enabled, the default options will not be generated.
 	 *
-	 * @return bool
+	 * @return bool Whether only custom options should be printed.
 	 */
 	public static function only_print_custom_options(): bool {
 		return static::$only_print_custom_options;

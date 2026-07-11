@@ -62,7 +62,7 @@ class ApprovedEmail extends ControllableBase {
 	/**
 	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Approved Email', 'antispam-bee' );
@@ -71,7 +71,7 @@ class ApprovedEmail extends ControllableBase {
 	/**
 	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Trust approved commenters', 'antispam-bee' );
@@ -80,7 +80,7 @@ class ApprovedEmail extends ControllableBase {
 	/**
 	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
 		return __( 'No review of already commented users', 'antispam-bee' );

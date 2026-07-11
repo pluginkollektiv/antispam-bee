@@ -42,7 +42,7 @@ class ContentTypeHelper {
 	 * @param array  $reaction_types An array of reaction types to check for.
 	 * @param string $context        Optional context.
 	 *
-	 * @return bool
+	 * @return bool Whether the reaction is one of the given types.
 	 */
 	public static function reaction_is_one_of( array $reaction, array $reaction_types, string $context = '' ): bool {
 		// This `comment_type` is set from WordPress.
@@ -58,7 +58,7 @@ class ContentTypeHelper {
 		 * @param array  $reaction_types An array of reaction types to check for.
 		 * @param string $context        Optional context.
 		 *
-		 * @return bool
+		 * @return bool Whether the reaction is one of the provided types.
 		 */
 		return (bool) apply_filters( 'antispam_bee_reaction_is_one_of', $is_one_of, $reaction, $reaction_types, $context );
 	}

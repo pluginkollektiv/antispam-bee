@@ -23,7 +23,7 @@ class PostProcessors {
 	 * @param array  $item          Item to process.
 	 * @param array  $reasons       A list of reasons.
 	 *
-	 * @return array
+	 * @return array The processed item.
 	 */
 	public static function apply( string $reaction_type, array $item, array $reasons = [] ): array {
 		$post_processors = self::get( $reaction_type, true );

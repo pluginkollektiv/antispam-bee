@@ -104,7 +104,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 		 *
 		 * @param string $api_url The language API URL.
 		 *
-		 * @return string
+		 * @return string The language API URL.
 		 * @since 3.0.0
 		 */
 		$api_url = apply_filters( 'antispam_bee_lang_api_url', 'https://api.pluginkollektiv.org/language/v1/' );
@@ -135,7 +135,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	/**
 	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Language', 'antispam-bee' );
@@ -144,7 +144,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	/**
 	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Allow reactions only in certain language', 'antispam-bee' );
@@ -153,7 +153,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	/**
 	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
 		$link = sprintf(
@@ -177,7 +177,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array
+	 * @return array The rule options.
 	 */
 	public static function get_options(): array {
 		$languages = [
@@ -193,7 +193,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 		 *
 		 * @param (array) $languages The languages.
 		 *
-		 * @return (array)
+		 * @return array The list of allowed languages.
 		 * @since 2.7.1
 		 */
 		$languages = (array) apply_filters( 'antispam_bee_get_allowed_translate_languages', $languages );
@@ -214,7 +214,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	/**
 	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string The human-readable spam reason.
 	 */
 	public static function get_reason_text(): string {
 		return __( 'Language', 'antispam-bee' );

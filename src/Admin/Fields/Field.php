@@ -80,7 +80,7 @@ abstract class Field {
 	/**
 	 * Get the placeholder.
 	 *
-	 * @return string
+	 * @return string The placeholder of the field.
 	 */
 	public function get_placeholder(): string {
 		return $this->option['placeholder'] ?? '';
@@ -105,7 +105,7 @@ abstract class Field {
 	/**
 	 * Get the option payload.
 	 *
-	 * @return array
+	 * @return array The option payload of the field.
 	 */
 	public function get_option(): array {
 		return $this->option;

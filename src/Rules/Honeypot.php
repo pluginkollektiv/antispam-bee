@@ -115,7 +115,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	/**
 	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return _x( 'Honeypot', 'spam-reason-form-name', 'antispam-bee' );
@@ -124,7 +124,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	/**
 	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Inject hidden field', 'antispam-bee' );
@@ -133,7 +133,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	/**
 	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
 		return __( 'No review of already commented users', 'antispam-bee' );
@@ -142,7 +142,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	/**
 	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string The human-readable spam reason.
 	 */
 	public static function get_reason_text(): string {
 		return _x( 'Honeypot', 'spam-reason-text', 'antispam-bee' );

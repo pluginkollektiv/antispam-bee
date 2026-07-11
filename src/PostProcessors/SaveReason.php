@@ -55,7 +55,7 @@ class SaveReason extends ControllableBase {
 	/**
 	 * Get the element name.
 	 *
-	 * @return string
+	 * @return string The name.
 	 */
 	public static function get_name(): string {
 		return __( 'Save reasons', 'antispam-bee' );
@@ -64,7 +64,7 @@ class SaveReason extends ControllableBase {
 	/**
 	 * Get the element label (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Save the spam reasons as comment meta', 'antispam-bee' );
@@ -73,7 +73,7 @@ class SaveReason extends ControllableBase {
 	/**
 	 * Get the element description (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The description, or null.
 	 */
 	public static function get_description(): ?string {
 		return __( 'The reasons are displayed in the spam comments list.', 'antispam-bee' );

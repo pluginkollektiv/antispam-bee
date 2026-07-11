@@ -17,7 +17,7 @@ class DashboardHelper {
 	/**
 	 * Check, if we are on the dashboard page.
 	 *
-	 * @return bool
+	 * @return bool Whether we are on the dashboard page.
 	 */
 	public static function is_dashboard_page(): bool {
 		return empty( $GLOBALS['pagenow'] ) || ( 'index.php' === $GLOBALS['pagenow'] );
@@ -26,7 +26,7 @@ class DashboardHelper {
 	/**
 	 * Check, if we are on the edit comments page on the spam comment status listing.
 	 *
-	 * @return bool
+	 * @return bool Whether we are on the edit comments page showing spam comments.
 	 */
 	public static function is_edit_spam_comments_page(): bool {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -36,7 +36,7 @@ class DashboardHelper {
 	/**
 	 * Check, if we are on the edit comments page.
 	 *
-	 * @return bool
+	 * @return bool Whether we are on the edit comments page.
 	 */
 	public static function is_edit_comments_page(): bool {
 		return ! empty( $GLOBALS['pagenow'] ) && 'edit-comments.php' === $GLOBALS['pagenow'];

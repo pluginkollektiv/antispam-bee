@@ -66,7 +66,7 @@ abstract class Base implements Verifiable {
 	 *
 	 * @param array $rules The currently registered rules.
 	 *
-	 * @return array
+	 * @return array The updated list of rules.
 	 */
 	public static function add_rule( array $rules ): array {
 		$rules[] = static::class;
@@ -77,7 +77,7 @@ abstract class Base implements Verifiable {
 	/**
 	 * Return the types for which this rule can be used.
 	 *
-	 * @return array
+	 * @return array The supported reaction types.
 	 */
 	public static function get_supported_types(): array {
 		/**
@@ -113,7 +113,7 @@ abstract class Base implements Verifiable {
 	/**
 	 * Is this rule final?
 	 *
-	 * @return bool
+	 * @return bool Whether the rule is final.
 	 */
 	public static function is_final(): bool {
 		return static::$is_final;
@@ -122,7 +122,7 @@ abstract class Base implements Verifiable {
 	/**
 	 * Is this rule invisible?
 	 *
-	 * @return bool
+	 * @return bool Whether the rule is invisible.
 	 */
 	public static function is_invisible(): bool {
 		return static::$is_invisible;

@@ -25,7 +25,7 @@ class DeleteOldSpam extends Base {
 	/**
 	 * Get the option name.
 	 *
-	 * @return string
+	 * @return string The option name.
 	 */
 	public static function get_name(): string {
 		return __( 'Delete old spam', 'antispam-bee' );
@@ -34,7 +34,7 @@ class DeleteOldSpam extends Base {
 	/**
 	 * Get the option label.
 	 *
-	 * @return string|null
+	 * @return string|null The option label, or null.
 	 */
 	public static function get_label(): ?string {
 		return null;
@@ -43,7 +43,7 @@ class DeleteOldSpam extends Base {
 	/**
 	 * Get the option description.
 	 *
-	 * @return null
+	 * @return null Always null.
 	 */
 	public static function get_description(): ?string {
 		return null;
@@ -54,7 +54,7 @@ class DeleteOldSpam extends Base {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array
+	 * @return array The option data.
 	 */
 	public static function get_options(): array {
 		return [

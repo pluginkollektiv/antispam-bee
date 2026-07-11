@@ -58,7 +58,7 @@ class DeleteForReasons extends ControllableBase {
 	/**
 	 * Get the element label (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Delete comments by spam reasons', 'antispam-bee' );
@@ -67,7 +67,7 @@ class DeleteForReasons extends ControllableBase {
 	/**
 	 * Get the element description (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The description, or null.
 	 */
 	public static function get_description(): ?string {
 		return null;
@@ -78,7 +78,7 @@ class DeleteForReasons extends ControllableBase {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array
+	 * @return array The post-processor options.
 	 * @throws ReflectionException
 	 */
 	public static function get_options(): array {
@@ -112,7 +112,7 @@ class DeleteForReasons extends ControllableBase {
 	/**
 	 * Get the element name.
 	 *
-	 * @return string
+	 * @return string The name.
 	 */
 	public static function get_name(): string {
 		return __( 'Delete by reasons', 'antispam-bee' );

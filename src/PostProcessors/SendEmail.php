@@ -85,7 +85,7 @@ class SendEmail extends ControllableBase {
 	/**
 	 * Generate email subject.
 	 *
-	 * @return string
+	 * @return string The email subject.
 	 */
 	private static function get_subject(): string {
 		return sprintf(
@@ -108,7 +108,7 @@ class SendEmail extends ControllableBase {
 	 * @param array   $comment The comment.
 	 * @param array   $item    Processed item.
 	 *
-	 * @return string
+	 * @return string The email body.
 	 */
 	protected static function get_body( WP_Post $post, array $comment, array $item ): string {
 		$template_content = self::get_body_template();
@@ -135,7 +135,7 @@ class SendEmail extends ControllableBase {
 	/**
 	 * Get the template for the email body.
 	 *
-	 * @return string
+	 * @return string The email body template.
 	 */
 	private static function get_body_template(): string {
 		$new_spam_comment = sprintf( /* translators: s=post title. */
@@ -193,7 +193,7 @@ EOF;
 	 *
 	 * @param array $comment The comment.
 	 *
-	 * @return string
+	 * @return string The comment content.
 	 */
 	private static function get_content( array $comment ): string {
 		$content = wp_strip_all_tags( stripslashes( $comment['comment_content'] ) );
@@ -208,7 +208,7 @@ EOF;
 	/**
 	 * Get the element name.
 	 *
-	 * @return string
+	 * @return string The name.
 	 */
 	public static function get_name(): string {
 		return __( 'Send email', 'antispam-bee' );
@@ -217,7 +217,7 @@ EOF;
 	/**
 	 * Get the element label (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Spam-Notification by email', 'antispam-bee' );
@@ -226,7 +226,7 @@ EOF;
 	/**
 	 * Get the element description (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The description, or null.
 	 */
 	public static function get_description(): ?string {
 		return __( 'Notify admins by e-mail about incoming spam', 'antispam-bee' );

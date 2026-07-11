@@ -22,7 +22,7 @@ class IgnoreLinkbacks extends Base {
 	/**
 	 * Get the option name.
 	 *
-	 * @return string
+	 * @return string The option name.
 	 */
 	public static function get_name(): string {
 		return __( 'Linkbacks', 'antispam-bee' );
@@ -31,7 +31,7 @@ class IgnoreLinkbacks extends Base {
 	/**
 	 * Get the option label.
 	 *
-	 * @return string|null
+	 * @return string|null The option label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Do not check linkbacks (pingbacks, trackbacks)', 'antispam-bee' );
@@ -40,7 +40,7 @@ class IgnoreLinkbacks extends Base {
 	/**
 	 * Get the option description.
 	 *
-	 * @return string|null
+	 * @return string|null The option description, or null.
 	 */
 	public static function get_description(): ?string {
 		return __( 'No spam check for link notifications', 'antispam-bee' );

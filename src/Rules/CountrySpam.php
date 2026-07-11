@@ -134,7 +134,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	/**
 	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Country Check', 'antispam-bee' );
@@ -143,7 +143,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	/**
 	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Block or allow comments from specific countries', 'antispam-bee' );
@@ -152,7 +152,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	/**
 	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
 		$link = sprintf(
@@ -182,7 +182,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array
+	 * @return array The rule options.
 	 */
 	public static function get_options(): array {
 		$iso_codes_link = 'https://www.iso.org/obp/ui/#search/code/';
@@ -247,7 +247,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	/**
 	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string The human-readable spam reason.
 	 */
 	public static function get_reason_text(): string {
 		return __( 'Country', 'antispam-bee' );

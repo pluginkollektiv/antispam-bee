@@ -39,7 +39,7 @@ class Text extends Field implements RenderElement, InjectableField {
 	/**
 	 * Get the HTML markup for the actual input field.
 	 *
-	 * @return string
+	 * @return string The HTML markup for the input field.
 	 */
 	public function get_injectable_markup(): string {
 		return sprintf(
@@ -55,7 +55,7 @@ class Text extends Field implements RenderElement, InjectableField {
 	/**
 	 * Get the type of the input field.
 	 *
-	 * @return string
+	 * @return string The type of the input field.
 	 */
 	protected function get_type(): string {
 		return $this->option['input_type'] ?? 'text';
@@ -64,7 +64,7 @@ class Text extends Field implements RenderElement, InjectableField {
 	/**
 	 * Get the element class(es).
 	 *
-	 * @return string
+	 * @return string The CSS class(es) of the element.
 	 */
 	protected function get_class(): string {
 		$classes    = [
@@ -83,7 +83,7 @@ class Text extends Field implements RenderElement, InjectableField {
 	/**
 	 * Get the placeholder.
 	 *
-	 * @return string
+	 * @return string The placeholder of the field.
 	 */
 	public function get_placeholder(): string {
 		return $this->placeholder ?? '';

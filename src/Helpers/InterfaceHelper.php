@@ -19,7 +19,7 @@ class InterfaceHelper {
 	 * @param string $class_name     Fully-qualified class name.
 	 * @param string $interface_name Fully-qualified interface name.
 	 *
-	 * @return bool
+	 * @return bool Whether the class implements the interface.
 	 */
 	public static function class_implements_interface( string $class_name, string $interface_name ): bool {
 		return self::class_implements_interfaces( $class_name, [ $interface_name ] );
@@ -31,7 +31,7 @@ class InterfaceHelper {
 	 * @param string $class_name Fully-qualified class name.
 	 * @param array  $interfaces An array of fully-qualified interface names.
 	 *
-	 * @return bool
+	 * @return bool Whether the class implements the interfaces.
 	 */
 	public static function class_implements_interfaces( string $class_name, array $interfaces ): bool {
 		if ( ! class_exists( $class_name ) ) {
