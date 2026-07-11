@@ -74,7 +74,6 @@ class Rules {
 	 * @param array $options Filter options.
 	 *
 	 * @return array A list of filtered elements.
-	 *
 	 * @throws ReflectionException
 	 */
 	private static function filter( array $options ): array {

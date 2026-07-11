@@ -53,7 +53,7 @@ class Text extends Field implements RenderElement, InjectableField {
 	}
 
 	/**
-	 * Get the type of input field.
+	 * Get the type of the input field.
 	 *
 	 * @return string
 	 */

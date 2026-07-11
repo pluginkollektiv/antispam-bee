@@ -118,29 +118,18 @@ class SendEmail extends ControllableBase {
 
 		$spam_reasons = SpamReasonTextHelper::get_texts_by_slugs( $item['asb_reasons'] );
 
-		return str_replace(
-			[
-				'{{post_title}}',
-				'{{comment_author}}',
-				'{{comment_author_url}}',
-				'{{reaction_type}}',
-				'{{comment_author_IP}}',
-				'{{spam_reasons}}',
-				'{{content}}',
-				'{{comment_id}}',
-			],
-			[
-				wp_strip_all_tags( $post->post_title ),
-				( empty( $comment['comment_author'] ) ? '' : wp_strip_all_tags( $comment['comment_author'] ) ),
-				esc_url( $comment['comment_author_url'] ),
-				esc_html( $reaction_type ),
-				$comment['comment_author_IP'],
-				esc_html( implode( ', ', $spam_reasons ) ),
-				$content,
-				$comment['comment_ID'],
-			],
-			$template_content
-		);
+		$replacements = [
+			'{{post_title}}'         => wp_strip_all_tags( $post->post_title ),
+			'{{comment_author}}'     => ( empty( $comment['comment_author'] ) ? '' : wp_strip_all_tags( $comment['comment_author'] ) ),
+			'{{comment_author_url}}' => esc_url( $comment['comment_author_url'] ),
+			'{{reaction_type}}'      => esc_html( $reaction_type ),
+			'{{comment_author_IP}}'  => $comment['comment_author_IP'],
+			'{{spam_reasons}}'       => esc_html( implode( ', ', $spam_reasons ) ),
+			'{{content}}'            => $content,
+			'{{comment_id}}'         => $comment['comment_ID'],
+		];
+
+		return str_replace( array_keys( $replacements ), array_values( $replacements ), $template_content );
 	}
 
 	/**

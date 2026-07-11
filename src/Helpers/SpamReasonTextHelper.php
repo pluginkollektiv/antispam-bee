@@ -74,14 +74,14 @@ class SpamReasonTextHelper {
 
 			if ( array_key_exists( $slug, $legacy_rules ) ) {
 				$texts[] = sprintf(
-				/* translators: s=slug of unknown spam reason */
+					/* translators: s=slug of unknown spam reason */
 					esc_html_x( 'Legacy rule: %s', 'spam-reason-legacy-text', 'antispam-bee' ),
 					$legacy_rules[ $slug ]
 				);
 				continue;
 			}
 			$texts[] = sprintf(
-			/* translators: s=slug of unknown spam reason */
+				/* translators: s=slug of unknown spam reason */
 				esc_html_x( 'Unknown rule: %s', 'spam-reason-unknown-text', 'antispam-bee' ),
 				$slug
 			);

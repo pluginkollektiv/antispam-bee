@@ -20,7 +20,7 @@ class ComponentsHelper {
 	/**
 	 * Filter a list of components.
 	 *
-	 * @param array $components      Components to filter.
+	 * @param array $components Components to filter.
 	 * @param array $options {
 	 *     Filter options.
 	 *
@@ -74,8 +74,11 @@ class ComponentsHelper {
 
 			// Remove third-party components with `asb-` prefix.
 			if ( 0 !== strpos( $reflection->getFileName(), PLUGIN_PATH ) && 0 === strpos( $component::get_slug(), 'asb-' ) ) {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				error_log( __( 'Antispam Bee: You shall not use `asb-` as slug prefix for your custom rules and post-processors.', 'antispam-bee' ) );
+				_doing_it_wrong(
+					__METHOD__,
+					esc_html__( 'You shall not use `asb-` as slug prefix for your custom rules and post-processors.', 'antispam-bee' ),
+					'3.0.0'
+				);
 				continue;
 			}
 

@@ -20,7 +20,7 @@ class DashboardHelper {
 	 * @return bool
 	 */
 	public static function is_dashboard_page(): bool {
-		return ( empty( $GLOBALS['pagenow'] ) || ( 'index.php' === $GLOBALS['pagenow'] ) );
+		return empty( $GLOBALS['pagenow'] ) || ( 'index.php' === $GLOBALS['pagenow'] );
 	}
 
 	/**
@@ -39,6 +39,6 @@ class DashboardHelper {
 	 * @return bool
 	 */
 	public static function is_edit_comments_page(): bool {
-		return ( ! empty( $GLOBALS['pagenow'] ) && 'edit-comments.php' === $GLOBALS['pagenow'] );
+		return ! empty( $GLOBALS['pagenow'] ) && 'edit-comments.php' === $GLOBALS['pagenow'];
 	}
 }
