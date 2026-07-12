@@ -136,7 +136,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		 * `author`, `body` or `host`) to a regular expression. A reaction is flagged
 		 * as spam when all fields of a single pattern match.
 		 *
-		 * @since 2.6.7 - commit hash: d7b500c
+		 * @since 2.5.2
 		 *
 		 * @param array $patterns A list of field-to-regular-expression pattern maps.
 		 */

@@ -63,7 +63,7 @@ class SendEmail extends ControllableBase {
 				 * address. Use this filter to send it to additional or different
 				 * recipients.
 				 *
-				 * @since 2.8.0 - commit hash: f4718d6
+				 * @since 2.8.0
 				 *
 				 * @param array $recipients The list of recipient email addresses.
 				 */
@@ -74,7 +74,7 @@ class SendEmail extends ControllableBase {
 					/**
 					 * Filters the subject of the spam notification email.
 					 *
-					 * @since 2.6.7 - commit hash: d7b500c
+					 * @since 2.5.7
 					 *
 					 * @param string $subject The email subject line.
 					 */

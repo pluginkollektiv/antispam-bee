@@ -25,7 +25,7 @@ class IpHelper {
 		 * value is taken from `REMOTE_ADDR`; use this filter to supply an IP from a
 		 * trusted proxy header instead.
 		 *
-		 * @since 2.6.7 - commit hash: d7b500c
+		 * @since 2.6.1
 		 *
 		 * @param string $client_ip The client IP address. Defaults to REMOTE_ADDR.
 		 */

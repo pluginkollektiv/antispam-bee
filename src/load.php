@@ -88,10 +88,10 @@ function init(): void {
 	/**
 	 * Filters whether Antispam Bee should skip its checks during AJAX requests.
 	 *
-	 * By default the spam checks are not run on AJAX calls. Return false to also
+	 * By default, the spam checks are not run on AJAX calls. Return false to also
 	 * run the checks during AJAX requests.
 	 *
-	 * @since 2.9.4 - commit hash: dc60450
+	 * @since 2.9.4
 	 *
 	 * @param bool $disallow_ajax Whether to skip the checks on AJAX calls. Default true.
 	 */
