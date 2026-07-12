@@ -63,10 +63,9 @@ class SendEmail extends ControllableBase {
 				 * address. Use this filter to send it to additional or different
 				 * recipients.
 				 *
-				 * @param array $recipients The list of recipient email addresses.
-				 *
-				 * @return array The list of recipient email addresses.
 				 * @since 2.8.0 - commit hash: f4718d6
+				 *
+				 * @param array $recipients The list of recipient email addresses.
 				 */
 					apply_filters(
 						'antispam_bee_notification_recipients',
@@ -75,10 +74,9 @@ class SendEmail extends ControllableBase {
 					/**
 					 * Filters the subject of the spam notification email.
 					 *
-					 * @param string $subject The email subject line.
-					 *
-					 * @return string The email subject line.
 					 * @since 2.6.7 - commit hash: d7b500c
+					 *
+					 * @param string $subject The email subject line.
 					 */
 					apply_filters(
 						'antispam_bee_notification_subject',

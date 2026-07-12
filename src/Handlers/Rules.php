@@ -84,10 +84,9 @@ class Rules {
 		 * as spam or ham. Add or remove fully-qualified class names to change which
 		 * rules are available.
 		 *
-		 * @param array $rules A list of rule class names.
-		 *
-		 * @return array The list of rule class names.
 		 * @since 3.0.0
+		 *
+		 * @param array $rules A list of rule class names.
 		 */
 		$rules = apply_filters( 'antispam_bee_rules', [] );
 
@@ -130,10 +129,9 @@ class Rules {
 		 * A reaction whose accumulated rule score is lower than or equal to this
 		 * threshold is treated as ham, regardless of the individual rule results.
 		 *
-		 * @param float $no_spam_threshold The no-spam score threshold. Default 0.0.
-		 *
-		 * @return float The no-spam score threshold.
 		 * @since 3.0.0
+		 *
+		 * @param float $no_spam_threshold The no-spam score threshold. Default 0.0.
 		 */
 		$no_spam_threshold = (float) apply_filters( 'antispam_bee_no_spam_threshold', 0.0 );
 
@@ -143,10 +141,9 @@ class Rules {
 		 * A reaction whose accumulated rule score is higher than or equal to this
 		 * threshold is treated as spam.
 		 *
-		 * @param float $spam_threshold The spam score threshold. Default 0.0.
-		 *
-		 * @return float The spam score threshold.
 		 * @since 3.0.0
+		 *
+		 * @param float $spam_threshold The spam score threshold. Default 0.0.
 		 */
 		$spam_threshold = (float) apply_filters( 'antispam_bee_spam_threshold', 0.0 );
 

@@ -91,10 +91,9 @@ function init(): void {
 	 * By default the spam checks are not run on AJAX calls. Return false to also
 	 * run the checks during AJAX requests.
 	 *
-	 * @param bool $disallow_ajax Whether to skip the checks on AJAX calls. Default true.
-	 *
-	 * @return bool Whether to skip the checks on AJAX calls.
 	 * @since 2.9.4 - commit hash: dc60450
+	 *
+	 * @param bool $disallow_ajax Whether to skip the checks on AJAX calls. Default true.
 	 */
 	$disallow_ajax = apply_filters( 'antispam_bee_disallow_ajax_calls', true );
 

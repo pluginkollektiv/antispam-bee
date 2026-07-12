@@ -42,11 +42,10 @@ class EmptyData extends Base implements SpamReason {
 		 * a truthy value, the empty-data rule does not flag the reaction as spam for
 		 * having no content.
 		 *
+		 * @since 2.11.0 - commit hash: 1aaf8b1
+		 *
 		 * @param bool  $allow_empty_comment Whether to allow an empty reaction. Default false.
 		 * @param array $item                The reaction data being verified.
-		 *
-		 * @return bool Whether to allow an empty reaction.
-		 * @since 2.11.0 - commit hash: 1aaf8b1
 		 */
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$allow_empty_reaction = apply_filters( 'allow_empty_comment', false, $item );

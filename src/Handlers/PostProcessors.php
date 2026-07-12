@@ -85,10 +85,9 @@ class PostProcessors {
 		 * notification). Add or remove fully-qualified class names to change which
 		 * post-processors are available.
 		 *
-		 * @param array $post_processors A list of post-processor class names.
-		 *
-		 * @return array The list of post-processor class names.
 		 * @since 3.0.0
+		 *
+		 * @param array $post_processors A list of post-processor class names.
 		 */
 		$post_processors = apply_filters( 'antispam_bee_post_processors', [] );
 

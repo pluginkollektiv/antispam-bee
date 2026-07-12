@@ -25,10 +25,9 @@ class IpHelper {
 		 * value is taken from `REMOTE_ADDR`; use this filter to supply an IP from a
 		 * trusted proxy header instead.
 		 *
-		 * @param string $client_ip The client IP address. Defaults to REMOTE_ADDR.
-		 *
-		 * @return string The client IP address.
 		 * @since 2.6.7 - commit hash: d7b500c
+		 *
+		 * @param string $client_ip The client IP address. Defaults to REMOTE_ADDR.
 		 */
 		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized

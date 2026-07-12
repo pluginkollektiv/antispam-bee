@@ -83,11 +83,10 @@ abstract class Base implements Verifiable {
 		/**
 		 * Filter the reaction types that are supported by the rule.
 		 *
+		 * @since 3.0.0
+		 *
 		 * @param array  $supported_types The supported types.
 		 * @param string $slug            The rule’s slug.
-		 *
-		 * @return array An array of supported types.
-		 * @since 3.0.0
 		 */
 		return apply_filters( 'antispam_bee_rule_supported_types', static::$supported_types, static::$slug );
 	}

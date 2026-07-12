@@ -37,10 +37,9 @@ class ContentTypeHelper {
 		 * general, comment and linkback types) together with the label shown in the
 		 * backend. The array key is the reaction type slug, the value its label.
 		 *
-		 * @param array $type_names A map of reaction type slugs to readable names.
-		 *
-		 * @return array The map of reaction type slugs to readable names.
 		 * @since 3.0.0
+		 *
+		 * @param array $type_names A map of reaction type slugs to readable names.
 		 */
 		$type_names = array_merge( apply_filters( 'antispam_bee_reaction_types', [] ), $type_names );
 
@@ -65,13 +64,12 @@ class ContentTypeHelper {
 		/**
 		 * Filters if a reaction is from a provided list of reaction types.
 		 *
+		 * @since 3.0.0
+		 *
 		 * @param bool   $is_one_of      Whether the reaction is one of the provided types.
 		 * @param array  $reaction       Reaction data array, reaction type needs to be provided as `comment_type`.
 		 * @param array  $reaction_types An array of reaction types to check for.
 		 * @param string $context        Optional context.
-		 *
-		 * @return bool Whether the reaction is one of the provided types.
-		 * @since 3.0.0
 		 */
 		return (bool) apply_filters( 'antispam_bee_reaction_is_one_of', $is_one_of, $reaction, $reaction_types, $context );
 	}

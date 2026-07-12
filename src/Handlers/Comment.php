@@ -50,10 +50,9 @@ class Comment extends Reaction {
 		 * Reactions whose type is not part of this list are returned unchanged and
 		 * skip the spam verification for comments.
 		 *
-		 * @param array $types A list of comment types to process.
-		 *
-		 * @return array The list of comment types to process.
 		 * @since 3.0.0
+		 *
+		 * @param array $types A list of comment types to process.
 		 */
 		$comment_types = (array) apply_filters( 'antispam_bee_comment_types', [ '', 'comment', 'review' ] );
 

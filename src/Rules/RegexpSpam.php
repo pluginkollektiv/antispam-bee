@@ -136,10 +136,9 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		 * `author`, `body` or `host`) to a regular expression. A reaction is flagged
 		 * as spam when all fields of a single pattern match.
 		 *
-		 * @param array $patterns A list of field-to-regular-expression pattern maps.
-		 *
-		 * @return array The list of field-to-regular-expression pattern maps.
 		 * @since 2.6.7 - commit hash: d7b500c
+		 *
+		 * @param array $patterns A list of field-to-regular-expression pattern maps.
 		 */
 		$patterns = apply_filters(
 			'antispam_bee_patterns',
