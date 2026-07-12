@@ -57,18 +57,28 @@ class SendEmail extends ControllableBase {
 
 				wp_mail(
 				/**
-				 * Filters the recipients of the spam notification.
+				 * Filters the recipients of the spam notification email.
 				 *
-				 * @param array $recipients The recipients array.
+				 * By default the notification is sent to the site’s admin email
+				 * address. Use this filter to send it to additional or different
+				 * recipients.
+				 *
+				 * @param array $recipients The list of recipient email addresses.
+				 *
+				 * @return array The list of recipient email addresses.
+				 * @since 2.8.0 - commit hash: f4718d6
 				 */
 					apply_filters(
 						'antispam_bee_notification_recipients',
 						[ get_bloginfo( 'admin_email' ) ]
 					),
 					/**
-					 * Filters the subject of the spam notification.
+					 * Filters the subject of the spam notification email.
 					 *
-					 * @param string $subject Subject line.
+					 * @param string $subject The email subject line.
+					 *
+					 * @return string The email subject line.
+					 * @since 2.6.7 - commit hash: d7b500c
 					 */
 					apply_filters(
 						'antispam_bee_notification_subject',

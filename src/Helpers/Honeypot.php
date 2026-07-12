@@ -64,6 +64,7 @@ class Honeypot {
 		 * @param string $honeypot_styles The inline styles for the honeypot.
 		 *
 		 * @return string The inline styles for the honeypot.
+		 * @since 3.0.0
 		 */
 		$honeypot_styles = apply_filters( 'antispam_bee_honeypot_styles', 'padding:0 !important;clip:rect(1px, 1px, 1px, 1px) !important;position:absolute !important;white-space:nowrap !important;height:1px !important;width:1px !important;overflow:hidden !important;' );
 

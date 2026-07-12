@@ -30,6 +30,18 @@ class ContentTypeHelper {
 			self::LINKBACK_TYPE => __( 'Linkback', 'antispam-bee' ),
 		];
 
+		/**
+		 * Filters the additional reaction types and their human-readable names.
+		 *
+		 * Use this filter to register custom reaction types (beyond the built-in
+		 * general, comment and linkback types) together with the label shown in the
+		 * backend. The array key is the reaction type slug, the value its label.
+		 *
+		 * @param array $type_names A map of reaction type slugs to readable names.
+		 *
+		 * @return array The map of reaction type slugs to readable names.
+		 * @since 3.0.0
+		 */
 		$type_names = array_merge( apply_filters( 'antispam_bee_reaction_types', [] ), $type_names );
 
 		return $type_names[ $reaction_type ] ?? $reaction_type;
@@ -59,6 +71,7 @@ class ContentTypeHelper {
 		 * @param string $context        Optional context.
 		 *
 		 * @return bool Whether the reaction is one of the provided types.
+		 * @since 3.0.0
 		 */
 		return (bool) apply_filters( 'antispam_bee_reaction_is_one_of', $is_one_of, $reaction, $reaction_types, $context );
 	}

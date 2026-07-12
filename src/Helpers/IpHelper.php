@@ -15,23 +15,30 @@ class IpHelper {
 	/**
 	 * Return real client IP.
 	 *
-	 * By default, only `REMOTE_ADDR` is evaluated. Use the `pre_comment_user_ip`
-	 * filter to supply an IP from a trusted proxy header instead.
-	 *
-	 * @hook    string  pre_comment_user_ip  The client IP, defaults to REMOTE_ADDR.
-	 *
 	 * @return string Client IP.
 	 */
 	public static function get_client_ip(): string {
+		/**
+		 * Filters the IP address of the current client.
+		 *
+		 * This reuses WordPress core’s `pre_comment_user_ip` filter. By default the
+		 * value is taken from `REMOTE_ADDR`; use this filter to supply an IP from a
+		 * trusted proxy header instead.
+		 *
+		 * @param string $client_ip The client IP address. Defaults to REMOTE_ADDR.
+		 *
+		 * @return string The client IP address.
+		 * @since 2.6.7 - commit hash: d7b500c
+		 */
 		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-		return self::sanitize_ip(
-			(string) apply_filters( 'pre_comment_user_ip', wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) )
-		);
+		$client_ip = (string) apply_filters( 'pre_comment_user_ip', wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) );
 		// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+
+		return self::sanitize_ip( $client_ip );
 	}
 
 	/**

@@ -43,9 +43,16 @@ class SpamReasonTextHelper {
 		}
 
 		/**
-		 * Allow adding more reasons.
+		 * Filters the additional spam reasons.
 		 *
-		 * @param array $additional_reasons An array of additional reasons. Key is the reason slug, value the label users see in the backend.
+		 * Use this filter to register spam reasons for custom rules so their label
+		 * is displayed in the backend. The array key is the reason slug, the value
+		 * the label users see in the backend.
+		 *
+		 * @param array $additional_reasons A map of reason slugs to backend labels.
+		 *
+		 * @return array The map of reason slugs to backend labels.
+		 * @since 3.0.0
 		 */
 		$additional_reasons    = (array) apply_filters( 'antispam_bee_additional_spam_reasons', [] );
 		self::$slug_text_array = array_merge( $additional_reasons, self::$slug_text_array );

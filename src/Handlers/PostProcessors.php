@@ -77,7 +77,22 @@ class PostProcessors {
 	 * @throws ReflectionException
 	 */
 	private static function filter( array $options ): array {
-		return ComponentsHelper::filter( apply_filters( 'antispam_bee_post_processors', [] ), $options );
+		/**
+		 * Filters the registered post-processors.
+		 *
+		 * Post-processors are the actions Antispam Bee runs on a reaction after the
+		 * rules have classified it (for example deleting spam or sending a
+		 * notification). Add or remove fully-qualified class names to change which
+		 * post-processors are available.
+		 *
+		 * @param array $post_processors A list of post-processor class names.
+		 *
+		 * @return array The list of post-processor class names.
+		 * @since 3.0.0
+		 */
+		$post_processors = apply_filters( 'antispam_bee_post_processors', [] );
+
+		return ComponentsHelper::filter( $post_processors, $options );
 	}
 
 	/**

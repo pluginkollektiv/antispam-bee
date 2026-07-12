@@ -91,8 +91,21 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 			return 0;
 		}
 
+		/**
+		 * Filters the minimum time (in seconds) a form has to stay open before submission.
+		 *
+		 * A reaction that is submitted faster than this limit after the form was
+		 * rendered is considered spam, as it is likely sent by an automated bot.
+		 *
+		 * @param int $action_time_limit The minimum number of seconds. Default 5.
+		 *
+		 * @return int The minimum number of seconds.
+		 * @since 3.0.0
+		 */
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-		if ( time() - $init_time < apply_filters( 'antispam_bee_action_time_limit', 5 ) ) {
+		$action_time_limit = apply_filters( 'antispam_bee_action_time_limit', 5 );
+
+		if ( time() - $init_time < $action_time_limit ) {
 			return 1;
 		}
 
