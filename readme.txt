@@ -2,7 +2,7 @@
 * Contributors:      pluginkollektiv, websupporter, schlessera, zodiac1978, swissspidy, krafit, kau-boy, florianbrinkmann, pfefferle
 * Tags:              anti-spam, antispam, comments, spam filter, spam protection
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
-* Requires at least: 4.6
+* Requires at least: 4.7
 * Tested up to:      7.0
 * Requires PHP:      7.4
 * Stable tag:        3.0.0-beta.1
