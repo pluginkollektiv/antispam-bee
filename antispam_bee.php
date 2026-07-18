@@ -50,16 +50,19 @@ function pre_init(): void {
 		return;
 	}
 
-	if ( file_exists( PLUGIN_PATH . 'composer.json' ) && ! file_exists( PLUGIN_PATH . 'vendor/autoload.php' ) ) {
+	if ( file_exists( PLUGIN_PATH . 'composer.lock' ) && ! file_exists( PLUGIN_PATH . 'vendor/autoload.php' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\autoloader_missing' );
 
 		// Stop the further processing of the plugin.
 		return;
 	} else {
-		$autoloader = PLUGIN_PATH . 'vendor/autoload.php';
+		$composer_autoloader = PLUGIN_PATH . 'vendor/autoload.php';
+		$classmap_autoloader = PLUGIN_PATH . 'autoload.php';
 
-		if ( is_readable( $autoloader ) ) {
-			include $autoloader;
+		if ( is_readable( $composer_autoloader ) ) {
+			include $composer_autoloader; // dev: Composer PSR-4 (live).
+		} else {
+			include $classmap_autoloader; // dist: static classmap.
 		}
 	}
 

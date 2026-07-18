@@ -22,7 +22,8 @@
   "type": "wordpress-plugin",
   "license": "GPL-v2",
   "require": {
-    "php": ">=7.2"
+    "php": ">=7.2",
+    "composer/class-map-generator": "^1.0"
   },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
@@ -48,6 +49,9 @@
     }
   },
   "scripts": {
+    "generate-classmap": "@php bin/generate-classmap.php",
+    "post-install-cmd": "@generate-classmap",
+    "post-update-cmd": "@generate-classmap",
     "cs": [
       "@lint-php"
     ],
