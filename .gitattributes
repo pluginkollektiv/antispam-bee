@@ -5,6 +5,9 @@
 /bin export-ignore
 /docs export-ignore
 /tests export-ignore
+/vendor/* export-ignore
+/vendor/composer/ export-negate
+/vendor/autoload.php export-negate
 
 # Files
 /.distignore export-ignore
