@@ -121,6 +121,20 @@ jobs:
         ./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
         composer cs
 
+  wp-since:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.5'
+        tools: composer
+    - name: Check for unavailable WordPress functions
+      run: |
+        composer install --ignore-platform-req=php
+        ./vendor/bin/wp-since check .
+
   spelling:
     name: Typos
     runs-on: ubuntu-latest

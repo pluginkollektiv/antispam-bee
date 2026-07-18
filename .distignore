@@ -5,6 +5,9 @@
 /bin
 /docs
 /tests
+/vendor
+!/vendor/autoload.php
+!/vendor/composer/
 
 # Files
 /.distignore
