@@ -120,7 +120,7 @@ class SendEmail extends ControllableBase {
 
 		$replacements = [
 			'{{post_title}}'         => wp_strip_all_tags( $post->post_title ),
-			'{{comment_author}}'     => ( empty( $comment['comment_author'] ) ? '' : wp_strip_all_tags( $comment['comment_author'] ) ),
+			'{{comment_author}}'     => empty( $comment['comment_author'] ) ? '' : wp_strip_all_tags( $comment['comment_author'] ),
 			'{{comment_author_url}}' => esc_url( $comment['comment_author_url'] ),
 			'{{reaction_type}}'      => esc_html( $reaction_type ),
 			'{{comment_author_IP}}'  => $comment['comment_author_IP'],
