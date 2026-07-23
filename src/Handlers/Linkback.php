@@ -64,7 +64,7 @@ class Linkback extends Reaction {
 			'host'          => $url ? DataHelper::parse_url( $url ) : '',
 			'body'          => self::scalar( $reaction['comment_content'] ?? '' ),
 			'email'         => '',
-			'author'        => '',
+			'author'        => self::scalar( $reaction['comment_author'] ?? '' ),
 			'useragent'     => '',
 			'post_id'       => self::scalar( $reaction['comment_post_ID'] ?? null ),
 		];
