@@ -13,7 +13,7 @@ class EmptyDataTest extends AbstractRuleTestCase {
 	}
 
 	public function test_verify_comment() {
-		$item = array( 'reaction_type' => ContentTypeHelper::COMMENT_TYPE );
+		$item = [ 'reaction_type' => ContentTypeHelper::COMMENT_TYPE ];
 		self::assertSame( 999, EmptyData::verify( $item ), 'Unexpected result for empty comment' );
 
 		$item['comment_content'] = 'This is a test.';
@@ -34,7 +34,7 @@ class EmptyDataTest extends AbstractRuleTestCase {
 	}
 
 	public function test_verify_linkback() {
-		$item = array( 'reaction_type' => ContentTypeHelper::LINKBACK_TYPE );
+		$item = [ 'reaction_type' => ContentTypeHelper::LINKBACK_TYPE ];
 		self::assertSame( 999, EmptyData::verify( $item ), 'Unexpected result for empty comment' );
 
 		$item['comment_content'] = 'This is a test.';

@@ -48,7 +48,7 @@ abstract class AbstractRuleTestCase extends TestCase {
 		string $content = 'This is the base test comment.',
 		string $agent = 'Mozilla/5.0'
 	): array {
-		return array(
+		return [
 			'reaction_type'        => ContentTypeHelper::COMMENT_TYPE,
 			'comment_ID'           => $id,
 			'comment_author'       => $author,
@@ -57,7 +57,7 @@ abstract class AbstractRuleTestCase extends TestCase {
 			'comment_author_IP'    => $author_ip,
 			'comment_content'      => $content,
 			'comment_agent'        => $agent,
-		);
+		];
 	}
 
 	/**
@@ -81,7 +81,7 @@ abstract class AbstractRuleTestCase extends TestCase {
 		$this->rule::init();
 
 		self::assertNotFalse(
-			has_filter( 'antispam_bee_rules', array( $this->rule, 'add_rule' ) ),
+			has_filter( 'antispam_bee_rules', [ $this->rule, 'add_rule' ] ),
 			'The add_rule filter was not added'
 		);
 	}

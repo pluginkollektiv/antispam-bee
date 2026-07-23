@@ -11,7 +11,7 @@ class BBCodeTest extends AbstractRuleTestCase {
 	}
 
 	public function test_verify() {
-		$item = array();
+		$item = [];
 		self::assertSame( 0, BBCode::verify( $item ), 'Unexpected result for empty item' );
 
 		$item['comment_content'] = 'No link here.';

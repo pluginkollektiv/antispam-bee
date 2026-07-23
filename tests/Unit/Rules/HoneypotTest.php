@@ -21,7 +21,7 @@ class HoneypotTest extends AbstractRuleTestCase {
 
 		$item = self::make_comment();
 
-		$_POST = array();
+		$_POST = [];
 		self::assertSame( 0, Honeypot::verify( $item ), 'Comment without HP field should be OK' );
 
 		$_POST['ab_spam__hidden_field'] = 1;

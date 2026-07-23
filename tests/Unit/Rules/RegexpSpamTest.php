@@ -21,7 +21,7 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 
 		self::assertSame(
 			0,
-			RegexpSpam::verify( array( 'reaction_type' => 'unknown' ) ),
+			RegexpSpam::verify( [ 'reaction_type' => 'unknown' ] ),
 			'Unknown reaction type should not be flagged'
 		);
 
