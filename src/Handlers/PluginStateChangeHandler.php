@@ -54,12 +54,12 @@ class PluginStateChangeHandler {
 		}
 
 		$site_ids = get_sites(
-			array(
+			[
 				'fields'                 => 'ids',
 				'number'                 => 100,
 				'update_site_cache'      => false,
 				'update_site_meta_cache' => false,
-			)
+			]
 		);
 
 		foreach ( $site_ids as $site_id ) {

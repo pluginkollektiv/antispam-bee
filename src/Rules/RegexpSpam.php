@@ -52,7 +52,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			$email     = $item['comment_author_email'];
 			$author    = $item['comment_author'];
 			$useragent = $item['comment_agent'];
-			$subject   = array(
+			$subject   = [
 				'ip'        => $ip,
 				'rawurl'    => $url,
 				'host'      => DataHelper::parse_url( $url ),
@@ -60,7 +60,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 				'email'     => $email,
 				'author'    => $author,
 				'useragent' => $useragent,
-			);
+			];
 		}
 
 		if ( ContentTypeHelper::LINKBACK_TYPE === $item['reaction_type'] ) {

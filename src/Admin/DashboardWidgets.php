@@ -33,7 +33,7 @@ class DashboardWidgets {
 	 *
 	 * @return  array Merged array with dashboard items.
 	 */
-	public static function add_dashboard_count( array $items = array() ): array {
+	public static function add_dashboard_count( array $items = [] ): array {
 		if ( ! current_user_can( 'manage_options' ) || ! Statistics::is_active() ) {
 			return $items;
 		}
