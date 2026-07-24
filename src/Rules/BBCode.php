@@ -26,12 +26,17 @@ class BBCode extends ControllableBase implements SpamReason {
 	 *
 	 * Check whether any content part contains BBCode links.
 	 *
-	 * @param array<string, mixed> $item Item to verify.
+	 * Iterates over all payload attributes (e.g. `body`, `author`, `url`).
+	 *
+	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
 		foreach ( $item as $value ) {
+			if ( ! is_string( $value ) ) {
+				continue;
+			}
 			if ( true === (bool) preg_match( '/\[url[=\]].*\[\/url\]/is', $value ) ) {
 				return 1;
 			}

@@ -102,24 +102,29 @@ class Rules {
 	/**
 	 * Apply rules.
 	 *
-	 * @param array<string, mixed> $item Item to apply rules to.
+	 * @param array<string, mixed> $item Normalized payload to apply rules to.
 	 *
 	 * @return bool Whether the item was identified as spam.
+	 * @throws ReflectionException
 	 */
 	public function apply( array $item ): bool {
-		$item['reaction_type'] = $this->reaction_type;
-		$rules                 = self::get( $this->reaction_type, true );
+		$rules = self::get( $this->reaction_type, true );
 
 		$no_spam_threshold = (float) apply_filters( 'antispam_bee_no_spam_threshold', 0.0 );
 		$spam_threshold    = (float) apply_filters( 'antispam_bee_spam_threshold', 0.0 );
 
 		$score = 0.0;
 
-		$log_item = $item;
-		unset( $log_item['comment_author_email'] );
-		unset( $log_item['comment_author_IP'] );
-		unset( $log_item['user_id'] );
-		unset( $log_item['user_ID'] );
+		/**
+		 * Filters the payload attributes that are anonymized (removed) before the
+		 * payload is written to the debug log.
+		 *
+		 * @param string[]             $attributes Attribute keys to remove from the log entry.
+		 * @param array<string, mixed> $item       The normalized payload (includes `reaction_type`).
+		 */
+		$anonymized_attributes = (array) apply_filters( 'antispam_bee_log_anonymized_attributes', [ 'ip', 'email' ], $item );
+
+		$log_item = array_diff_key( $item, array_flip( $anonymized_attributes ) );
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		DebugMode::log( 'Looping through spam rules for reaction with the following data: ' . print_r( $log_item, true ) );
 

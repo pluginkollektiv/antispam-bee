@@ -7,8 +7,6 @@
 
 namespace AntispamBee\Rules;
 
-use AntispamBee\Helpers\ContentTypeHelper;
-use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
@@ -29,16 +27,20 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	 *
 	 * Content fields using pre-defined and custom regular expressions.
 	 *
-	 * @param array<string, mixed> $item Item to verify.
+	 * Handled payload attributes: `ip`, `url`, `host`, `body`, `email`,
+	 * `author`, `useragent`.
+	 *
+	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @phpstan-param array{
-	 *     reaction_type: string,
-	 *     comment_author_IP?: string,
-	 *     comment_author_url?: string,
-	 *     comment_content?: string,
-	 *     comment_author_email?: string,
-	 *     comment_author?: string,
-	 *     comment_agent?: string,
+	 *     reaction_type?: string,
+	 *     ip?: string,
+	 *     url?: string,
+	 *     host?: string,
+	 *     body?: string,
+	 *     email?: string,
+	 *     author?: string,
+	 *     useragent?: string,
 	 * } $item
 	 *
 	 * @return int Numeric result.
@@ -53,43 +55,15 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			'useragent',
 		];
 
-		$subject = null;
-
-		if ( ContentTypeHelper::COMMENT_TYPE === $item['reaction_type'] ) {
-			$ip        = $item['comment_author_IP'] ?? '';
-			$url       = $item['comment_author_url'] ?? '';
-			$body      = $item['comment_content'] ?? '';
-			$email     = $item['comment_author_email'] ?? '';
-			$author    = $item['comment_author'] ?? '';
-			$useragent = $item['comment_agent'] ?? '';
-			$subject   = [
-				'ip'        => $ip,
-				'rawurl'    => $url,
-				'host'      => DataHelper::parse_url( $url ),
-				'body'      => $body,
-				'email'     => $email,
-				'author'    => $author,
-				'useragent' => $useragent,
-			];
-		}
-
-		if ( ContentTypeHelper::LINKBACK_TYPE === $item['reaction_type'] ) {
-			$ip      = $item['comment_author_IP'] ?? '';
-			$url     = $item['comment_author_url'] ?? '';
-			$body    = $item['comment_content'] ?? '';
-			$subject = [
-				'ip'     => $ip,
-				'rawurl' => $url,
-				'host'   => DataHelper::parse_url( $url ),
-				'body'   => $body,
-				'email'  => '',
-				'author' => '',
-			];
-		}
-
-		if ( ! $subject ) {
-			return 0;
-		}
+		$subject = [
+			'ip'        => $item['ip'] ?? '',
+			'rawurl'    => $item['url'] ?? '',
+			'host'      => $item['host'] ?? '',
+			'body'      => $item['body'] ?? '',
+			'email'     => $item['email'] ?? '',
+			'author'    => $item['author'] ?? '',
+			'useragent' => $item['useragent'] ?? '',
+		];
 
 		$patterns = [
 			[
@@ -168,7 +142,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			$hits = [];
 
 			foreach ( $pattern as $field => $regexp ) {
-				if ( empty( $field ) || ! in_array( $field, $fields, true ) || empty( $regexp ) || ! isset( $subject[ $field ] ) ) {
+				if ( empty( $field ) || ! in_array( $field, $fields, true ) || empty( $regexp ) ) {
 					continue;
 				}
 

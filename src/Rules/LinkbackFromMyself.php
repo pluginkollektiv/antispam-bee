@@ -41,19 +41,19 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	 *
 	 * Test if a linkback originates from its own target.
 	 *
-	 * @param array<string, mixed> $item Item to verify.
+	 * Handled payload attributes: `url`, `post_id`.
+	 *
+	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
-		$url            = $item['comment_author_url'] ?? null;
-		$target_post_id = $item['comment_post_ID'] ?? null;
+		$url            = $item['url'] ?? null;
+		$target_post_id = $item['post_id'] ?? null;
 		if ( empty( $url ) || empty( $target_post_id ) ) {
 			return 0;
 		}
 
-		$url            = $url[0];
-		$target_post_id = $target_post_id[0];
 		if ( 0 !== strpos( $url, home_url() ) ) {
 			return 0;
 		}

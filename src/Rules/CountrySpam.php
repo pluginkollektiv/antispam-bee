@@ -29,15 +29,17 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 *
 	 * Check whether a reaction originates from an allowed country.
 	 *
-	 * @param array<string, mixed> $item Item to verify.
+	 * Handled payload attributes: `ip`, `reaction_type`.
+	 *
+	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
-		if ( empty( $item['comment_author_IP'] ) ) {
+		if ( empty( $item['ip'] ) ) {
 			return 0;
 		}
-		$ip = $item['comment_author_IP'];
+		$ip = $item['ip'];
 
 		$country_allowed = Settings::get_option( static::get_option_name( 'allowed' ), $item['reaction_type'] ) ?: '';
 		$country_denied  = Settings::get_option( static::get_option_name( 'denied' ), $item['reaction_type'] ) ?: '';

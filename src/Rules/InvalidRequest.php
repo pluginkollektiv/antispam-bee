@@ -26,7 +26,9 @@ class InvalidRequest extends Base implements SpamReason {
 	 *
 	 * Check for invalid request content in POST data.
 	 *
-	 * @param array<string, mixed> $item Item to verify.
+	 * Consumes no payload attributes; reads the request (`$_POST`) directly.
+	 *
+	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @return int Numeric result.
 	 */

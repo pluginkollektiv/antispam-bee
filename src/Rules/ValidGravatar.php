@@ -8,7 +8,6 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\ContentTypeHelper;
-use AntispamBee\Helpers\DataHelper;
 
 /**
  * Rule that is responsible for checking if the commenter has a valid gravatar.
@@ -34,16 +33,17 @@ class ValidGravatar extends ControllableBase {
 	 *
 	 * Test if author's email points to a valid Gravatar.
 	 *
-	 * @param array<string, mixed> $item Item to verify.
+	 * Handled payload attributes: `email`.
+	 *
+	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
-		$email = DataHelper::get_values_where_key_contains( [ 'email' ], $item );
+		$email = $item['email'] ?? '';
 		if ( empty( $email ) ) {
 			return 0;
 		}
-		$email = array_shift( $email );
 
 		$response = wp_safe_remote_get(
 			sprintf(
