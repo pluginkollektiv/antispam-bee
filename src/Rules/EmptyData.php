@@ -27,7 +27,7 @@ class EmptyData extends Base implements SpamReason {
 	 *
 	 * Check for empty content or author.
 	 *
-	 * @param array $item Item to verify.
+	 * @param array<string, mixed> $item Item to verify.
 	 *
 	 * @return int Numeric result.
 	 */

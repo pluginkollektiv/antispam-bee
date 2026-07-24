@@ -38,9 +38,9 @@ class ContentTypeHelper {
 	/**
 	 * Check if a given reaction type matches the types provided in the second parameter.
 	 *
-	 * @param array  $reaction       Reaction data array, reaction type needs to be provided as `reaction_type`.
-	 * @param array  $reaction_types An array of reaction types to check for.
-	 * @param string $context        Optional context.
+	 * @param array<string, mixed> $reaction       Reaction data array, reaction type needs to be provided as `reaction_type`.
+	 * @param string[]             $reaction_types An array of reaction types to check for.
+	 * @param string               $context        Optional context.
 	 *
 	 * @return bool Whether the reaction is one of the given types.
 	 */

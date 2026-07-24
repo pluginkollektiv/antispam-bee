@@ -39,9 +39,9 @@ class Comment extends Reaction {
 	/**
 	 * Process a comment.
 	 *
-	 * @param array $reaction Comment to process.
+	 * @param array<string, mixed> $reaction Comment to process.
 	 *
-	 * @return array Processed comment.
+	 * @return array<string, mixed> Processed comment.
 	 */
 	public static function process( array $reaction ): array {
 		/**

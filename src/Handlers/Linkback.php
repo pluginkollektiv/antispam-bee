@@ -26,9 +26,9 @@ class Linkback extends Reaction {
 	/**
 	 * Process a linkback.
 	 *
-	 * @param array $reaction Linkback to process.
+	 * @param array<string, mixed> $reaction Linkback to process.
 	 *
-	 * @return array Processed linkback.
+	 * @return array<string, mixed> Processed linkback.
 	 */
 	public static function process( array $reaction ): array {
 		if ( ! ContentTypeHelper::reaction_is_one_of( $reaction, [ 'pingback', 'trackback', 'pings' ], 'linkback' ) ) {

@@ -29,7 +29,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 *
 	 * Check whether a reaction originates from an allowed country.
 	 *
-	 * @param array $item Item to verify.
+	 * @param array<string, mixed> $item Item to verify.
 	 *
 	 * @return int Numeric result.
 	 */
@@ -47,13 +47,13 @@ class CountrySpam extends ControllableBase implements SpamReason {
 			$country_allowed,
 			-1,
 			PREG_SPLIT_NO_EMPTY
-		);
+		) ?: [];
 		$denied  = preg_split(
 			'/[\s,;]+/',
 			$country_denied,
 			-1,
 			PREG_SPLIT_NO_EMPTY
-		);
+		) ?: [];
 
 		if ( empty( $allowed ) && empty( $denied ) ) {
 			return 0;
@@ -93,7 +93,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 					IpHelper::anonymize_ip( $ip ),
 					$apikey
 				),
-				'https'
+				[ 'https' ]
 			)
 		);
 
@@ -162,7 +162,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 					'https://antispambee.pluginkollektiv.org/documentation/#block-comments-from-specific-countries',
 					'antispam-bee'
 				),
-				'https'
+				[ 'https' ]
 			)
 		);
 
@@ -182,7 +182,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array The rule options.
+	 * @return array<int, array<string, mixed>> The rule options.
 	 */
 	public static function get_options(): array {
 		$iso_codes_link = 'https://www.iso.org/obp/ui/#search/code/';

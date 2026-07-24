@@ -17,7 +17,7 @@ class PluginUpdate {
 	/**
 	 * Mapping of spam reason keys (key is pre-3.0, value 3.0 and later).
 	 *
-	 * @var array
+	 * @var array<string, string|null>
 	 */
 	public static $spam_reasons_mapping = [
 		'css'           => 'asb-honeypot',
@@ -217,10 +217,10 @@ class PluginUpdate {
 	 * Takes an array of selected keys, applies optional mapping and generates a new array using
 	 * these values as keys and "on" as value.
 	 *
-	 * @param array $values  Selected values.
-	 * @param array $mapping Key mapping (optional).
+	 * @param string[]                   $values  Selected values.
+	 * @param array<string, string|null> $mapping Key mapping (optional).
 	 *
-	 * @return array Converted array of selected options.
+	 * @return array<string, string> Converted array of selected options.
 	 */
 	private static function convert_multiselect_values( array $values, array $mapping = [] ): array {
 		if ( empty( $values ) ) {
@@ -232,6 +232,9 @@ class PluginUpdate {
 		foreach ( $flipped_values as $key => $value ) {
 			if ( ! empty( $mapping ) && array_key_exists( $key, $mapping ) ) {
 				$key = $mapping[ $key ];
+			}
+			if ( null === $key ) {
+				continue;
 			}
 			$new_array[ $key ] = 'on';
 		}

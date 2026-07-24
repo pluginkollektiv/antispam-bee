@@ -54,7 +54,7 @@ interface Controllable {
 	 *   ]
 	 * ]
 	 *
-	 * @return array|null A list of advanced options, or null.
+	 * @return array<int, array<string, mixed>>|null A list of advanced options, or null.
 	 */
 	public static function get_options(): ?array;
 

@@ -19,11 +19,11 @@ class PostProcessors {
 	/**
 	 * Apply post-processors.
 	 *
-	 * @param string $reaction_type One of the supported content types.
-	 * @param array  $item          Item to process.
-	 * @param array  $reasons       A list of reasons.
+	 * @param string               $reaction_type One of the supported content types.
+	 * @param array<string, mixed> $item          Item to process.
+	 * @param string[]             $reasons       A list of reasons.
 	 *
-	 * @return array The processed item.
+	 * @return array<string, mixed> The processed item.
 	 */
 	public static function apply( string $reaction_type, array $item, array $reasons = [] ): array {
 		$post_processors = self::get( $reaction_type, true );
@@ -55,7 +55,7 @@ class PostProcessors {
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active post-processors.
 	 *
-	 * @return array A list of suitable post-processors.
+	 * @return array<class-string> A list of suitable post-processors.
 	 * @throws ReflectionException
 	 */
 	public static function get( ?string $reaction_type = null, bool $only_active = false ): array {
@@ -71,9 +71,9 @@ class PostProcessors {
 	/**
 	 * Filter items.
 	 *
-	 * @param array $options Filter options.
+	 * @param array<string, mixed> $options Filter options.
 	 *
-	 * @return array A list of filtered elements.
+	 * @return array<class-string<Controllable>> A list of filtered elements.
 	 * @throws ReflectionException
 	 */
 	private static function filter( array $options ): array {
@@ -86,7 +86,7 @@ class PostProcessors {
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active items.
 	 *
-	 * @return array A list of suitable controllables.
+	 * @return array<class-string<Controllable>> A list of suitable controllables.
 	 * @throws ReflectionException
 	 */
 	public static function get_controllables( ?string $reaction_type = null, bool $only_active = false ): array {

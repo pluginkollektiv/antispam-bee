@@ -25,14 +25,14 @@ class ApprovedEmail extends ControllableBase {
 	/**
 	 * Only comments are supported.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
 	/**
 	 * Verify an item.
 	 *
-	 * @param array $item Item to verify.
+	 * @param array<string, mixed> $item Item to verify.
 	 *
 	 * @return int Numeric result.
 	 */

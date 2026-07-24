@@ -26,7 +26,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	/**
 	 * Only comments are supported.
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
@@ -73,7 +73,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	 *
 	 * Test for time between page initialization and reaction.
 	 *
-	 * @param array $item Item to verify.
+	 * @param array<string, mixed> $item Item to verify.
 	 *
 	 * @return int Numeric result.
 	 */

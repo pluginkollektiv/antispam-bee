@@ -15,7 +15,7 @@ interface Verifiable {
 	 * Verify an item.
 	 * Applies logic and returns a numeric value, positive, negative or zero (neutral).
 	 *
-	 * @param array $item Item to verify.
+	 * @param array<string, mixed> $item Item to verify.
 	 *
 	 * @return int Weighted result.
 	 */

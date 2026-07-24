@@ -21,7 +21,6 @@ class DashboardWidgets {
 	 */
 	public static function init(): void {
 		if ( DashboardHelper::is_dashboard_page() ) {
-			add_action( 'antispam_bee_count', [ __CLASS__, 'the_spam_count' ] );
 			add_filter( 'dashboard_glance_items', [ __CLASS__, 'add_dashboard_count' ] );
 		}
 	}
@@ -29,9 +28,9 @@ class DashboardWidgets {
 	/**
 	 * Display the spam counts on the dashboard.
 	 *
-	 * @param array $items Initial array with dashboard items.
+	 * @param string[] $items Initial array with dashboard items.
 	 *
-	 * @return  array Merged array with dashboard items.
+	 * @return  string[] Merged array with dashboard items.
 	 */
 	public static function add_dashboard_count( array $items = [] ): array {
 		if ( ! current_user_can( 'manage_options' ) || ! Statistics::is_active() ) {
@@ -83,6 +82,6 @@ class DashboardWidgets {
 	 * Return the number of spam comments.
 	 */
 	private static function get_spam_count(): int {
-		return intval( Settings::get_option( 'spam_count', 0 ) );
+		return intval( Settings::get_option( 'spam_count', '' ) );
 	}
 }

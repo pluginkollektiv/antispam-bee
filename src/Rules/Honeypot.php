@@ -28,7 +28,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	/**
 	 * Only comments are supported.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE ];
 
@@ -58,7 +58,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 	 *
 	 * Check if request contains data from the honeypot field.
 	 *
-	 * @param array $item Item to verify.
+	 * @param array<string, mixed> $item Item to verify.
 	 *
 	 * @return int Numeric result.
 	 */

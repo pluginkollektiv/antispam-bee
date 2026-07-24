@@ -15,10 +15,10 @@ class DataHelper {
 	/**
 	 * Get the values by keys.
 	 *
-	 * @param array $keys A list of keys.
-	 * @param array $data The data to filter.
+	 * @param array<array-key>        $keys A list of keys.
+	 * @param array<array-key, mixed> $data The data to filter.
 	 *
-	 * @return array Data elements with matching keys.
+	 * @return array<array-key, mixed> Data elements with matching keys.
 	 */
 	public static function get_values_by_keys( array $keys, array $data ): array {
 		$results = [];
@@ -34,10 +34,10 @@ class DataHelper {
 	/**
 	 * Get the values with a key containing given values.
 	 *
-	 * @param string[] $substrs The key substrings to filter.
-	 * @param array    $data    The data to filter.
+	 * @param string[]                $substrs The key substrings to filter.
+	 * @param array<array-key, mixed> $data    The data to filter.
 	 *
-	 * @return array Data elements with matching keys.
+	 * @return array<array-key, mixed> Data elements with matching keys.
 	 */
 	public static function get_values_where_key_contains( array $substrs, array $data ): array {
 		$results = [];
@@ -63,6 +63,6 @@ class DataHelper {
 	public static function parse_url( string $url, string $component = 'host' ): string {
 		$parts = wp_parse_url( $url );
 
-		return ( is_array( $parts ) && isset( $parts[ $component ] ) ) ? $parts[ $component ] : '';
+		return ( is_array( $parts ) && isset( $parts[ $component ] ) ) ? (string) $parts[ $component ] : '';
 	}
 }

@@ -27,7 +27,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	 *
 	 * Test item for spam patterns from the database.
 	 *
-	 * @param array $item Item to verify.
+	 * @param array<string, mixed> $item Item to verify.
 	 *
 	 * @return int Numeric result.
 	 */

@@ -27,9 +27,9 @@ class SendEmail extends ControllableBase {
 	 * Process an item.
 	 * Generate an email and send it.
 	 *
-	 * @param array $item Item to process.
+	 * @param array<string, mixed> $item Item to process.
 	 *
-	 * @return array Processed item.
+	 * @return array<string, mixed> Processed item.
 	 */
 	public static function process( array $item ): array {
 		if ( isset( $item['asb_marked_as_delete'] ) && true === $item['asb_marked_as_delete'] ) {
@@ -104,9 +104,9 @@ class SendEmail extends ControllableBase {
 	/**
 	 * Generate email body.
 	 *
-	 * @param WP_Post $post    The post.
-	 * @param array   $comment The comment.
-	 * @param array   $item    Processed item.
+	 * @param WP_Post              $post    The post.
+	 * @param array<string, mixed> $comment The comment.
+	 * @param array<string, mixed> $item    Processed item.
 	 *
 	 * @return string The email body.
 	 */
@@ -191,7 +191,7 @@ EOF;
 	/**
 	 * Extract content from comment.
 	 *
-	 * @param array $comment The comment.
+	 * @param array<string, mixed> $comment The comment.
 	 *
 	 * @return string The comment content.
 	 */

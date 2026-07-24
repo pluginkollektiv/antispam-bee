@@ -42,7 +42,7 @@ abstract class Base implements Controllable {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array|null The option data, or null.
+	 * @return array<int, array<string, mixed>>|null The option data, or null.
 	 */
 	public static function get_options(): ?array {
 		return null;
@@ -60,9 +60,9 @@ abstract class Base implements Controllable {
 	/**
 	 * Add setting to general options.
 	 *
-	 * @param array $options Currently registered options.
+	 * @param array<class-string<Controllable>> $options Currently registered options.
 	 *
-	 * @return array Updated options.
+	 * @return array<class-string<Controllable>> Updated options.
 	 */
 	public static function add_general_option( array $options ): array {
 		$options[] = static::class;

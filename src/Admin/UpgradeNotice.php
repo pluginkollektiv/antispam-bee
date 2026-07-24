@@ -35,8 +35,8 @@ class UpgradeNotice {
 	 * section from readme.txt inline so editors see breaking-change warnings
 	 * without leaving the plugins list.
 	 *
-	 * @param array    $plugin_data Plugin header data from the local plugin file.
-	 * @param stdClass $response    Update response object from the WordPress.org API.
+	 * @param array<string, mixed> $plugin_data Plugin header data from the local plugin file.
+	 * @param stdClass             $response    Update response object from the WordPress.org API.
 	 */
 	public static function render( array $plugin_data, stdClass $response ): void {
 		if ( empty( $response->upgrade_notice ) ) {

@@ -25,7 +25,7 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	/**
 	 * Only linkbacks are supported.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected static $supported_types = [ ContentTypeHelper::LINKBACK_TYPE ];
 
@@ -41,7 +41,7 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	 *
 	 * Test if a linkback originates from its own target.
 	 *
-	 * @param array $item Item to verify.
+	 * @param array<string, mixed> $item Item to verify.
 	 *
 	 * @return int Numeric result.
 	 */

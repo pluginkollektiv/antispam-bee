@@ -14,6 +14,7 @@ use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
+use AntispamBee\Interfaces\Controllable;
 use ReflectionException;
 use const AntispamBee\MAIN_PLUGIN_FILE;
 use const AntispamBee\PLUGIN_VERSION;
@@ -43,13 +44,13 @@ class SettingsPage {
 	/**
 	 * List of controllable rules.
 	 *
-	 * @var Rules[]
+	 * @var array<class-string<Controllable>>
 	 */
 	private $rules = [];
 	/**
 	 * List of controllable post-processors.
 	 *
-	 * @var PostProcessors[]
+	 * @var array<class-string<Controllable>>
 	 */
 	private $post_processors = [];
 
@@ -276,9 +277,9 @@ class SettingsPage {
 	/**
 	 * Add a Settings link to the plugin action links.
 	 *
-	 * @param array $links Existing action links.
+	 * @param array<int|string, string> $links Existing action links.
 	 *
-	 * @return array Modified action links.
+	 * @return array<int|string, string> Modified action links.
 	 */
 	public function add_action_links( array $links ): array {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -296,10 +297,10 @@ class SettingsPage {
 	/**
 	 * Add Donate and Support links to the plugin row meta.
 	 *
-	 * @param array  $links Existing row meta links.
-	 * @param string $file  Plugin basename of the current row.
+	 * @param array<int|string, string> $links Existing row meta links.
+	 * @param string                    $file  Plugin basename of the current row.
 	 *
-	 * @return array Modified row meta links.
+	 * @return array<int|string, string> Modified row meta links.
 	 */
 	public function add_row_meta( array $links, string $file ): array {
 		if ( plugin_basename( MAIN_PLUGIN_FILE ) !== $file ) {

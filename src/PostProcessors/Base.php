@@ -48,9 +48,9 @@ abstract class Base implements PostProcessor {
 	/**
 	 * Add a post-processor class to an array of post-processors.
 	 *
-	 * @param PostProcessor[] $post_processors Currently registered post-processors.
+	 * @param array<class-string<PostProcessor>> $post_processors Currently registered post-processors.
 	 *
-	 * @return PostProcessor[] Updated list of post-processors.
+	 * @return array<class-string<PostProcessor>> Updated list of post-processors.
 	 */
 	public static function add_post_processor( array $post_processors ): array {
 		$post_processors[] = static::class;
