@@ -21,7 +21,6 @@ class DashboardWidgets {
 	 */
 	public static function init(): void {
 		if ( DashboardHelper::is_dashboard_page() ) {
-			add_action( 'antispam_bee_count', [ __CLASS__, 'the_spam_count' ] );
 			add_filter( 'dashboard_glance_items', [ __CLASS__, 'add_dashboard_count' ] );
 		}
 	}
@@ -84,12 +83,5 @@ class DashboardWidgets {
 	 */
 	private static function get_spam_count(): int {
 		return intval( Settings::get_option( 'spam_count', '' ) );
-	}
-
-	/**
-	 * Output the number of spam comments.
-	 */
-	public static function the_spam_count(): void {
-		echo esc_html( (string) self::get_spam_count() );
 	}
 }
