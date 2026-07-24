@@ -39,38 +39,39 @@ class Comment extends Reaction {
 	/**
 	 * Process a comment.
 	 *
-	 * @param array $comment Comment to process.
+	 * @param array $reaction Comment to process.
+	 *
 	 * @return array Processed comment.
 	 */
-	public static function process( array $comment ): array {
+	public static function process( array $reaction ): array {
 		/**
 		 * Filter processable comment types.
 		 *
-		 * @param   array   $types List of comment types
+		 * @param array $types A list of comment types.
 		 */
 		$comment_types = (array) apply_filters( 'antispam_bee_comment_types', [ '', 'comment', 'review' ] );
 
-		if ( ! ContentTypeHelper::reaction_is_one_of( $comment, $comment_types, 'comment' ) ) {
-			return $comment;
+		if ( ! ContentTypeHelper::reaction_is_one_of( $reaction, $comment_types, 'comment' ) ) {
+			return $reaction;
 		}
 
-		$comment['comment_author_IP'] = IpHelper::get_client_ip();
+		$reaction['comment_author_IP'] = IpHelper::get_client_ip();
 
-		$request_uri  = isset( $_SERVER['SCRIPT_NAME'] ) ? esc_url_raw( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) : null;
+		$request_uri  = isset( $_SERVER['SCRIPT_NAME'] ) ? esc_url_raw( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) : '';
 		$request_path = DataHelper::parse_url( $request_uri, 'path' );
 
 		if ( empty( $request_path ) ) {
-			$comment['ab_spam__invalid_request'] = 1;
+			$reaction['ab_spam__invalid_request'] = 1;
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Everybody can post.
 		if ( strpos( $request_path, 'wp-comments-post.php' ) === false || empty( $_POST ) ) {
-			return $comment;
+			return $reaction;
 		}
 
-		parent::process( $comment );
+		parent::process( $reaction );
 
-		return $comment;
+		return $reaction;
 	}
 }

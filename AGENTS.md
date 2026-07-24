@@ -4,7 +4,12 @@ General rules for AI agents contributing to this project.
 
 ## What is project code
 
-Project code lives in `src/`, `tests/`, and the root PHP files (e.g. `antispam_bee.php`). Ignore `vendor/` and `node_modules/` when searching, reviewing, or reasoning about the code — both are gitignored, installed locally by `composer install` / `npm install`, and contain only third-party dependencies you must not modify. The plugin ships **no** runtime dependencies; everything in `vendor/` is a `require-dev` code-quality tool (PHPCS, PHPStan, PHPUnit, WP-CLI, WPCS, …), so treating it as project code produces false findings.
+Project code lives in `src/`, `tests/`, and the root PHP files (e.g. `antispam_bee.php`). Ignore
+`vendor/` and `node_modules/` when searching, reviewing, or reasoning about the code — both are
+gitignored, installed locally by `composer install` / `npm install`, and contain only third-party
+dependencies you must not modify. The plugin ships **no** runtime dependencies; everything in
+`vendor/` is a `require-dev` code-quality tool (PHPCS, PHPStan, PHPUnit, WP-CLI, WPCS, …), so
+treating it as project code produces false findings.
 
 ## Code quality — verify before every commit
 
@@ -17,15 +22,22 @@ Project code lives in `src/`, `tests/`, and the root PHP files (e.g. `antispam_b
 
 Fix code style violations automatically with `composer csfix`.
 
-Target PHP 7.2+. Avoid syntax introduced in PHP 7.4 or later: typed properties, arrow functions (`fn =>`), `match` expressions, null-coalescing assignment (`??=`). The `phpcs.xml` ruleset enforces this via PHPCompatibilityWP.
+Target PHP 7.2+. Avoid syntax introduced in PHP 7.4 or later: typed properties, arrow functions (
+`fn =>`), `match` expressions, null-coalescing assignment (`??=`). The `phpcs.xml` ruleset enforces
+this via PHPCompatibilityWP.
 
 ## WordPress & security conventions
 
-- **Capability checks** — gate every admin action with `current_user_can( 'manage_options' )` before reading `$_GET`/`$_POST` or writing data.
-- **Nonces** — verify with `check_admin_referer()` (form submissions) or `wp_verify_nonce()` (AJAX); generate with `wp_nonce_field()` / `wp_create_nonce()`.
-- **Sanitise input** — use `sanitize_text_field( wp_unslash( $value ) )`, `sanitize_key()`, `absint()`, etc. on all untrusted input at the point of reading.
-- **Escape output** — use `esc_html()`, `esc_attr()`, `esc_url()`, or `wp_kses()` at the point of output; never store pre-escaped values.
-- **Text domain** — always `'antispam-bee'` (matches the plugin slug); do not use a variable or a different string.
+- **Capability checks** — gate every admin action with `current_user_can( 'manage_options' )` before
+  reading `$_GET`/`$_POST` or writing data.
+- **Nonces** — verify with `check_admin_referer()` (form submissions) or `wp_verify_nonce()` (AJAX);
+  generate with `wp_nonce_field()` / `wp_create_nonce()`.
+- **Sanitize input** — use `sanitize_text_field( wp_unslash( $value ) )`, `sanitize_key()`,
+  `absint()`, etc. on all untrusted input at the point of reading.
+- **Escape output** — use `esc_html()`, `esc_attr()`, `esc_url()`, or `wp_kses()` at the point of
+  output; never store pre-escaped values.
+- **Text domain** — always `'antispam-bee'` (matches the plugin slug); do not use a variable or a
+  different string.
 
 ## Git workflow
 
@@ -35,20 +47,24 @@ Target PHP 7.2+. Avoid syntax introduced in PHP 7.4 or later: typed properties, 
 
 ## Ignore / export files
 
-Three files control what is excluded from VCS and distributions. Keep them in sync when adding new dotfiles or dev-only assets.
+Three files control what is excluded from VCS and distributions. Keep them in sync when adding new
+dotfiles or dev-only assets.
 
 ### `.gitignore`
 
 Excludes local artifacts from git tracking.
 
-- Directories use a trailing `/` (e.g. `/build/`) — required to match directories only, not same-named files
+- Directories use a trailing `/` (e.g. `/build/`) — required to match directories only, not
+  same-named files
 - Use `/` prefix for root-level entries (e.g. `/.idea/`)
-- Use `/**/` prefix for entries that must also match in subdirectories (e.g. `/**/node_modules/`, `/**/vendor/`)
+- Use `/**/` prefix for entries that must also match in subdirectories (e.g. `/**/node_modules/`,
+  `/**/vendor/`)
 - Keep each section (`# Directories`, `# Files`) sorted alphabetically
 
 ### `.distignore`
 
-Excludes files from `wp dist-zip` plugin packages. WP-CLI does not support glob syntax — use plain root-relative paths only.
+Excludes files from `wp dist-zip` plugin packages. WP-CLI does not support glob syntax — use plain
+root-relative paths only.
 
 - No trailing `/` on directories (not needed by WP-CLI)
 - Always use `/` prefix (e.g. `/bin`, `/node_modules`)
@@ -58,7 +74,8 @@ Excludes files from `wp dist-zip` plugin packages. WP-CLI does not support glob 
 
 Excludes tracked files from `git archive` exports via `export-ignore`.
 
-- Only tracked files and directories need an entry here — gitignored paths are already absent from archives
+- Only tracked files and directories need an entry here — gitignored paths are already absent from
+  archives
 - Always use `/` prefix (e.g. `/.github export-ignore`)
 - No trailing `/` on directories (not needed)
 - Keep each section (`# Directories`, `# Files`) sorted alphabetically
@@ -67,4 +84,5 @@ Excludes tracked files from `git archive` exports via `export-ignore`.
 
 - Base branch: `v3`
 - Include a short summary of what changed and why
-- Add test steps when the change affects user-facing behavior; pure code style fixes do not need them
+- Add test steps when the change affects user-facing behavior; pure code style fixes do not need
+  them

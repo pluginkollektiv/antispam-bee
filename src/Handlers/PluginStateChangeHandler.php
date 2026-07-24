@@ -12,7 +12,7 @@ use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Helpers\Settings;
 
 /**
- * Class PluginStateChangeHandler
+ * Plugin state change handler.
  */
 class PluginStateChangeHandler {
 
@@ -29,6 +29,13 @@ class PluginStateChangeHandler {
 	}
 
 	/**
+	 * Initialize the cronjobs.
+	 */
+	public static function init_scheduled_hook(): void {
+		DeleteSpamCron::maybe_change_cron_state();
+	}
+
+	/**
 	 * Deactivate callback.
 	 */
 	public static function deactivate(): void {
@@ -42,16 +49,17 @@ class PluginStateChangeHandler {
 	public static function uninstall(): void {
 		if ( ! is_multisite() ) {
 			self::maybe_remove_antispam_bee_data();
+
 			return;
 		}
 
 		$site_ids = get_sites(
-			array(
+			[
 				'fields'                 => 'ids',
 				'number'                 => 100,
 				'update_site_cache'      => false,
 				'update_site_meta_cache' => false,
-			)
+			]
 		);
 
 		foreach ( $site_ids as $site_id ) {
@@ -80,12 +88,5 @@ class PluginStateChangeHandler {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		// $wpdb->query( 'DELETE FROM `' . $wpdb->commentmeta . '`WHERE `meta_key` IN ("antispam_bee_iphash", "antispam_bee_reason")' );
 		// See https://github.com/pluginkollektiv/antispam-bee/issues/744 - enable on stable 3.0 release.
-	}
-
-	/**
-	 * Initialization of the cronjobs.
-	 */
-	public static function init_scheduled_hook(): void {
-		DeleteSpamCron::maybe_change_cron_state();
 	}
 }

@@ -4,20 +4,20 @@
  * The `dashboard_chart` option and `#ab_chart` element were removed in v3.
  * Those two Behat scenarios are skipped here with an explanatory note.
  */
-import { test, expect, adminLogin } from '../fixtures/base';
+import { adminLogin, expect, test } from '../fixtures/base';
 
 const spamComments = [
 	{
 		comment: 'Release the viagra!',
 		author: 'Mr. Burns',
-		email: 'montgomery.c.burns.1866@nuclear-secrets.com',
-		url: 'http://nuclear-secrets.com',
+		email: 'montgomery.c.burns.1866@example.com',
+		url: 'https://example.com',
 	},
 	{
 		comment: 'Release the viagra, again!',
 		author: 'Mr. Burns',
-		email: 'montgomery.c.burns.1866@nuclear-secrets.com',
-		url: 'http://nuclear-secrets.com',
+		email: 'montgomery.c.burns.1866@example.com',
+		url: 'https://example.com',
 	},
 ];
 
@@ -25,7 +25,7 @@ async function submitSpamComment(
 	page: import( '@playwright/test' ).Page,
 	index: number
 ) {
-	const data = spamComments[ index - 1 ];
+	const data = spamComments[index - 1];
 	await page.goto( '/?p=1' );
 	await page.fill( '#comment', data.comment );
 	await page.fill( '#author', data.author );
@@ -35,9 +35,7 @@ async function submitSpamComment(
 }
 
 test.describe( 'Dashboard statistics', () => {
-	test( 'spam counter widget is hidden when disabled', async ( {
-		page,
-	} ) => {
+	test( 'spam counter widget is hidden when disabled', async ( { page } ) => {
 		// Statistics widget is disabled by default; confirm it is absent.
 		await adminLogin( page );
 		await page.goto( '/wp-admin/' );
@@ -46,10 +44,7 @@ test.describe( 'Dashboard statistics', () => {
 		);
 	} );
 
-	test( 'spam counter widget shows when enabled', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'spam counter widget shows when enabled', async ( { page, cli } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.general.general_statistics_on_dashboard_active = 'on';
 		cli.optionUpdate( 'antispam_bee_options', opts );
@@ -59,10 +54,7 @@ test.describe( 'Dashboard statistics', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'blocked' );
 	} );
 
-	test( 'spam counter increments when spam is caught', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'spam counter increments when spam is caught', async ( { page, cli } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.general.general_statistics_on_dashboard_active = 'on';
 		cli.optionUpdate( 'antispam_bee_options', opts );
@@ -78,11 +70,13 @@ test.describe( 'Dashboard statistics', () => {
 
 	test.skip(
 		'dashboard chart enabled — option removed in v3',
-		async () => {}
+		async () => {
+		}
 	);
 
 	test.skip(
 		'dashboard chart disabled — option removed in v3',
-		async () => {}
+		async () => {
+		}
 	);
 } );

@@ -16,12 +16,13 @@ interface Verifiable {
 	 * Applies logic and returns a numeric value, positive, negative or zero (neutral).
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Weighted result.
 	 */
 	public static function verify( array $item ): int;
 
 	/**
-	 * Get rule weight.
+	 * Get the rule weight.
 	 * This value can be used to tweak the overall results. Will be used as a multiplier of the verification result.
 	 *
 	 * @return int Weight factor.
@@ -29,7 +30,7 @@ interface Verifiable {
 	public static function get_weight(): int;
 
 	/**
-	 * Get element slug.
+	 * Get the element slug.
 	 *
 	 * @return string The slug.
 	 */
@@ -38,14 +39,14 @@ interface Verifiable {
 	/**
 	 * Get a list of supported types.
 	 *
-	 * @return string[]
+	 * @return string[] A list of supported types.
 	 */
 	public static function get_supported_types(): array;
 
 	/**
 	 * Is this rule final?
 	 *
-	 * @return bool
+	 * @return bool Whether this rule is final.
 	 */
 	public static function is_final(): bool;
 }

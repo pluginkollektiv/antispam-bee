@@ -36,11 +36,13 @@ abstract class Field {
 	protected $controllable_option_name;
 
 	/**
-	 * Initializing field
+	 * Initialize the field.
 	 *
 	 * @param string $reaction_type Reaction type.
 	 * @param array  $option        Field options.
 	 * @param string $controllable  The related controllable (class name).
+	 *
+	 * @phpstan-param class-string<Controllable> $controllable
 	 */
 	public function __construct( string $reaction_type, array $option, string $controllable ) {
 		$this->reaction_type            = $reaction_type;
@@ -49,9 +51,9 @@ abstract class Field {
 	}
 
 	/**
-	 * Get Name.
+	 * Get the name.
 	 *
-	 * @return string Name of the field.
+	 * @return string The name of the field.
 	 */
 	public function get_name(): string {
 		$option_name = Settings::OPTION_NAME;
@@ -61,9 +63,9 @@ abstract class Field {
 	}
 
 	/**
-	 * Get label.
+	 * Get the label.
 	 *
-	 * @return string Label of the field.
+	 * @return string The label of the field.
 	 */
 	public function get_label(): string {
 		$kses  = $this->option['label_kses'] ?? [];
@@ -71,31 +73,30 @@ abstract class Field {
 		if ( ! $kses ) {
 			return esc_html( $label );
 		}
+
 		return wp_kses( $label, $kses );
 	}
 
 	/**
-	 * Get placeholder.
+	 * Get the placeholder.
 	 *
-	 * @return string
+	 * @return string The placeholder of the field.
 	 */
 	public function get_placeholder(): string {
 		return $this->option['placeholder'] ?? '';
 	}
 
 	/**
-	 * Get Description.
+	 * Get the HTML for the field.
 	 *
-	 * @return string Description of the field.
+	 * @return void
 	 */
-	public function get_description(): string {
-		return $this->option['description'] ?? '';
-	}
+	abstract public function render(): void;
 
 	/**
-	 * Get Value.
+	 * Get the value.
 	 *
-	 * @return mixed Value stored in database.
+	 * @return mixed The value stored in the database.
 	 */
 	protected function get_value() {
 		return Settings::get_option( $this->controllable_option_name, $this->reaction_type );
@@ -104,14 +105,14 @@ abstract class Field {
 	/**
 	 * Get the option payload.
 	 *
-	 * @return array
+	 * @return array The option payload of the field.
 	 */
 	public function get_option(): array {
 		return $this->option;
 	}
 
 	/**
-	 * Show description if not empty.
+	 * Show the description if not empty.
 	 */
 	protected function maybe_show_description(): void {
 		if ( ! empty( $this->get_description() ) ) {
@@ -123,9 +124,11 @@ abstract class Field {
 	}
 
 	/**
-	 * Get HTML for field.
+	 * Get the description.
 	 *
-	 * @return void
+	 * @return string Description of the field.
 	 */
-	abstract public function render(): void;
+	public function get_description(): string {
+		return $this->option['description'] ?? '';
+	}
 }

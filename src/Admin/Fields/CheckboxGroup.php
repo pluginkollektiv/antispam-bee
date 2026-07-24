@@ -15,7 +15,7 @@ use AntispamBee\Helpers\Settings;
  */
 class CheckboxGroup extends Field implements RenderElement {
 	/**
-	 * Render HTML.
+	 * Render the HTML.
 	 */
 	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -43,11 +43,11 @@ class CheckboxGroup extends Field implements RenderElement {
 	}
 
 	/**
-	 * Get Value.
+	 * Get the value.
 	 *
 	 * @param string $key Option key.
 	 *
-	 * @return mixed Value stored in database.
+	 * @return mixed The value stored in the database.
 	 */
 	protected function get_custom_value( string $key ) {
 		$options = Settings::get_option( "{$this->controllable_option_name}", $this->reaction_type );

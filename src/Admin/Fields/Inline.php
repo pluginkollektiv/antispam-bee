@@ -15,7 +15,7 @@ use AntispamBee\Admin\RenderElement;
 class Inline extends Field implements RenderElement {
 
 	/**
-	 * Get HTML for field.
+	 * Get the HTML for the field.
 	 *
 	 * @return void
 	 */

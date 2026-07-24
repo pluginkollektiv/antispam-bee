@@ -30,29 +30,28 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 * Check whether a reaction originates from an allowed country.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
-		if ( ! isset( $item['comment_author_IP'] ) || empty( $item['comment_author_IP'] ) ) {
+		if ( empty( $item['comment_author_IP'] ) ) {
 			return 0;
 		}
 		$ip = $item['comment_author_IP'];
 
-		$country_allowed = Settings::get_option( static::get_option_name( 'allowed' ), $item['reaction_type'] );
-		$country_allowed = $country_allowed ? $country_allowed : '';
-		$country_denied  = Settings::get_option( static::get_option_name( 'denied' ), $item['reaction_type'] );
-		$country_denied  = $country_denied ? $country_denied : '';
+		$country_allowed = Settings::get_option( static::get_option_name( 'allowed' ), $item['reaction_type'] ) ?: '';
+		$country_denied  = Settings::get_option( static::get_option_name( 'denied' ), $item['reaction_type'] ) ?: '';
 
 		$allowed = preg_split(
 			'/[\s,;]+/',
 			$country_allowed,
-			- 1,
+			-1,
 			PREG_SPLIT_NO_EMPTY
 		);
 		$denied  = preg_split(
 			'/[\s,;]+/',
 			$country_denied,
-			- 1,
+			-1,
 			PREG_SPLIT_NO_EMPTY
 		);
 
@@ -61,12 +60,12 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		}
 
 		/**
-		 * Filter to hook into the `Country_Spam::verify` functionality, to implement for example a custom IP check.
+		 * Filter to hook into the `Country_Spam::verify` functionality to implement, for example, a custom IP check.
 		 *
-		 * @param null $is_country_spam The `is_country_spam` result.
-		 * @param string $ip The IP address.
-		 * @param array $allowed The list of allowed country codes.
-		 * @param array $denied The list of denied country codes.
+		 * @param null   $is_country_spam The `is_country_spam` result.
+		 * @param string $ip              The IP address.
+		 * @param array  $allowed         The list of allowed country codes.
+		 * @param array  $denied          The list of denied country codes.
 		 *
 		 * @return null|boolean The `is_country_spam` result or null.
 		 * @since 2.10.0
@@ -106,7 +105,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 			return 0;
 		}
 
-		$body = (string) wp_remote_retrieve_body( $response );
+		$body = wp_remote_retrieve_body( $response );
 
 		$json = json_decode( $body, true );
 
@@ -133,30 +132,30 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Country Check', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Block or allow comments from specific countries', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
-		$link1 = sprintf(
+		$link = sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
 			esc_url(
 				__(
@@ -168,25 +167,26 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		);
 
 		return sprintf(
-		/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
+		/* translators: 1: opening <a> tag with a link to documentation. 2: closing </a> tag. */
 			esc_html__(
 				'Filtering the requests depending on country. Please note the %1$sprivacy notice%2$s for this option.',
 				'antispam-bee'
 			),
-			wp_kses_post( $link1 ),
+			wp_kses_post( $link ),
 			'</a>'
 		);
 	}
 
 	/**
-	 * Get options.
+	 * Get the options.
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array
+	 * @return array The rule options.
 	 */
 	public static function get_options(): array {
 		$iso_codes_link = 'https://www.iso.org/obp/ui/#search/code/';
+
 		return [
 			[
 				'type'        => 'textarea',
@@ -233,7 +233,8 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 * Sanitize ISO code strings.
 	 *
 	 * @param string $value Comma-separated list of potential ISO country codes.
-	 * @return string Comma-separated list if sanitized ISO country codes.
+	 *
+	 * @return string Comma-separated list of sanitized ISO country codes.
 	 */
 	private static function sanitize_iso_codes_string( string $value ): string {
 		$value  = strtoupper( $value );
@@ -244,9 +245,9 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string The human-readable spam reason.
 	 */
 	public static function get_reason_text(): string {
 		return __( 'Country', 'antispam-bee' );

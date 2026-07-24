@@ -9,11 +9,14 @@ namespace AntispamBee\Helpers;
 
 use AntispamBee\Handlers\PluginUpdate;
 
+// phpcs:disable Universal.NamingConventions.NoReservedKeywordParameterNames.arrayFound
+
 /**
  * Settings helper.
  */
 class Settings {
 
+	const OPTION_NAME = 'antispam_bee_options';
 	/**
 	 * Default options.
 	 *
@@ -39,8 +42,6 @@ class Settings {
 		],
 	];
 
-	const OPTION_NAME = 'antispam_bee_options';
-
 	/**
 	 * Initialize.
 	 *
@@ -56,10 +57,11 @@ class Settings {
 	}
 
 	/**
-	 * Update cache.
+	 * Update the cache.
 	 *
 	 * @param mixed $old_value The old option value.
 	 * @param mixed $value     The new option value.
+	 *
 	 * @return void
 	 */
 	public static function update_cache( $old_value, $value ): void {
@@ -67,25 +69,7 @@ class Settings {
 	}
 
 	/**
-	 * Get all plugin options
-	 *
-	 * @return array $options Array with option fields.
-	 */
-	public static function get_options(): array {
-		PluginUpdate::maybe_run_plugin_updated_logic();
-		$options = wp_cache_get( self::OPTION_NAME );
-		if ( $options ) {
-			return $options;
-		}
-
-		$options = get_option( self::OPTION_NAME, self::$defaults );
-		wp_cache_set( self::OPTION_NAME, $options );
-
-		return $options;
-	}
-
-	/**
-	 * Get single option field
+	 * Get a single option field.
 	 *
 	 * @param string $option_name   Option name.
 	 * @param string $reaction_type The reaction type.
@@ -105,7 +89,25 @@ class Settings {
 	}
 
 	/**
-	 * Get value from array by path.
+	 * Get all plugin options.
+	 *
+	 * @return array An array with option fields.
+	 */
+	public static function get_options(): array {
+		PluginUpdate::maybe_run_plugin_updated_logic();
+		$options = wp_cache_get( self::OPTION_NAME );
+		if ( $options ) {
+			return $options;
+		}
+
+		$options = get_option( self::OPTION_NAME, self::$defaults );
+		wp_cache_set( self::OPTION_NAME, $options );
+
+		return $options;
+	}
+
+	/**
+	 * Get the value from an array by path.
 	 *
 	 * @param string $path  Dot-separated path to the wanted value.
 	 * @param array  $array Options array.
@@ -132,13 +134,38 @@ class Settings {
 	}
 
 	/**
-	 * Update multiple option fields
+	 * Get the path parts from a dot-separated notation.
 	 *
-	 * @param array $data Array with plugin option fields.
+	 * @param mixed $path Dot-separated path to the wanted value.
 	 *
-	 * @since  2.6.1
+	 * @return string[] The path parts.
+	 */
+	private static function get_path_parts( $path ): array {
+		if ( ! is_string( $path ) ) {
+			return [];
+		}
+
+		return explode( '.', $path );
+	}
+
+	/**
+	 * Update a single option field.
 	 *
-	 * @since  0.1
+	 * @param string $field Field name.
+	 * @param mixed  $value The field value.
+	 */
+	public static function update_option( string $field, $value ): void {
+		self::update_options(
+			[
+				$field => $value,
+			]
+		);
+	}
+
+	/**
+	 * Update multiple option fields.
+	 *
+	 * @param array $data An array with plugin option fields.
 	 */
 	public static function update_options( array $data ): void {
 		$options = get_option( self::OPTION_NAME );
@@ -156,32 +183,12 @@ class Settings {
 	}
 
 	/**
-	 * Update single option field
+	 * Check and return an array key.
 	 *
-	 * @param string $field Field name.
-	 * @param mixed  $value The Field value.
+	 * @param array  $array An array with values.
+	 * @param string $key   The name of the key.
 	 *
-	 * @since  0.1
-	 * @since  2.4
-	 */
-	public static function update_option( string $field, $value ): void {
-		self::update_options(
-			[
-				$field => $value,
-			]
-		);
-	}
-
-	/**
-	 * Check and return an array key
-	 *
-	 * @param array  $array Array with values.
-	 * @param string $key   Name of the key.
-	 *
-	 * @return  mixed         Value of the requested key.
-	 * @since   2.10.0 Only return `null` if option does not exist.
-	 *
-	 * @since   2.4.2
+	 * @return  mixed The value of the requested key.
 	 */
 	public static function get_key( array $array, string $key ) {
 		if ( empty( $array ) || empty( $key ) || ! isset( $array[ $key ] ) ) {
@@ -195,14 +202,11 @@ class Settings {
 	 * Remove array item(s) by key.
 	 *
 	 * @param string $path  Dot-separated path to the wanted value.
-	 * @param array  $array Array to filter.
+	 * @param array  $array The array to filter.
+	 *
 	 * @return void
 	 */
 	public static function remove_array_key_by_path( string $path, array &$array ): void {
-		if ( ! is_array( $array ) ) {
-			return;
-		}
-
 		$path_parts = self::get_path_parts( $path );
 		if ( empty( $path_parts ) ) {
 			return;
@@ -223,32 +227,15 @@ class Settings {
 	}
 
 	/**
-	 * Get path parts from dot-separated notation.
-	 *
-	 * @param mixed $path Dot-separated path to the wanted value.
-	 * @return string[] Path parts.
-	 */
-	private static function get_path_parts( $path ): array {
-		if ( ! is_string( $path ) ) {
-			return [];
-		}
-
-		return explode( '.', $path );
-	}
-
-	/**
-	 * Set an array item at given path.
+	 * Set an array item at a given path.
 	 *
 	 * @param string $path      Dot-separated path to the wanted value.
 	 * @param mixed  $sanitized Sanitized value.
 	 * @param array  $options   Options array to process.
+	 *
 	 * @return void
 	 */
 	public static function set_array_value_by_path( string $path, $sanitized, array &$options ): void {
-		if ( ! is_array( $options ) ) {
-			return;
-		}
-
 		if ( null === $sanitized ) {
 			return;
 		}

@@ -33,6 +33,7 @@ class ApprovedEmail extends ControllableBase {
 	 * Verify an item.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -59,27 +60,27 @@ class ApprovedEmail extends ControllableBase {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Approved Email', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Trust approved commenters', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
 		return __( 'No review of already commented users', 'antispam-bee' );

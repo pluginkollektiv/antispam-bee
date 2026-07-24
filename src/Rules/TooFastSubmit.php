@@ -11,7 +11,8 @@ use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
- * Rule that is responsible for checking that at least a certain timespan has passed so that the comment won‘t be marked as invalid.
+ * Rule that is responsible for checking that at least a certain
+ * timespan has passed so that the comment won't be marked as invalid.
  */
 class TooFastSubmit extends ControllableBase implements SpamReason {
 
@@ -73,6 +74,7 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	 * Test for time between page initialization and reaction.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -96,36 +98,36 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Comment time', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Consider the comment time', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
 		return __( 'Not recommended when using page caching', 'antispam-bee' );
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string The human-readable spam reason.
 	 */
 	public static function get_reason_text(): string {
 		return _x( 'Created too quickly', 'spam-reason-text', 'antispam-bee' );

@@ -20,27 +20,27 @@ class Statistics extends Base {
 	protected static $slug = 'statistics-on-dashboard';
 
 	/**
-	 * Get option name.
+	 * Get the option name.
 	 *
-	 * @return string
+	 * @return string The option name.
 	 */
 	public static function get_name(): string {
 		return __( 'Statistics', 'antispam-bee' );
 	}
 
 	/**
-	 * Get option label.
+	 * Get the option label.
 	 *
-	 * @return string|null
+	 * @return string|null The option label, or null.
 	 */
 	public static function get_label(): ?string {
 		return esc_html__( 'Spam counter on the dashboard', 'antispam-bee' );
 	}
 
 	/**
-	 * Get option description.
+	 * Get the option description.
 	 *
-	 * @return string|null
+	 * @return string|null The option description, or null.
 	 */
 	public static function get_description(): ?string {
 		return esc_html__( 'Amount of identified spam comments', 'antispam-bee' );

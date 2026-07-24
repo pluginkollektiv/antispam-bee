@@ -7,8 +7,11 @@
 
 namespace AntispamBee\Admin;
 
+use stdClass;
+use const AntispamBee\MAIN_PLUGIN_FILE;
+
 /**
- * Class UpgradeNotice
+ * Upgrade notice handler.
  */
 class UpgradeNotice {
 
@@ -17,7 +20,7 @@ class UpgradeNotice {
 	 */
 	public static function init(): void {
 		add_action(
-			'in_plugin_update_message-' . plugin_basename( \AntispamBee\MAIN_PLUGIN_FILE ),
+			'in_plugin_update_message-' . plugin_basename( MAIN_PLUGIN_FILE ),
 			[ __CLASS__, 'render' ],
 			10,
 			2
@@ -32,12 +35,10 @@ class UpgradeNotice {
 	 * section from readme.txt inline so editors see breaking-change warnings
 	 * without leaving the plugins list.
 	 *
-	 * @param array     $plugin_data Plugin header data from the local plugin file.
-	 * @param \stdClass $response    Update response object from the WordPress.org API.
-	 *
-	 * @since 3.0.0
+	 * @param array    $plugin_data Plugin header data from the local plugin file.
+	 * @param stdClass $response    Update response object from the WordPress.org API.
 	 */
-	public static function render( array $plugin_data, \stdClass $response ): void {
+	public static function render( array $plugin_data, stdClass $response ): void {
 		if ( empty( $response->upgrade_notice ) ) {
 			return;
 		}

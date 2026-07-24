@@ -27,6 +27,7 @@ class BBCode extends ControllableBase implements SpamReason {
 	 * Check whether any content part contains BBCode links.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -40,36 +41,36 @@ class BBCode extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return _x( 'BBCode', 'spam-reason-form-name', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'BBCode links are spam', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
 		return __( 'Review the comment contents for BBCode links', 'antispam-bee' );
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string The human-readable spam reason.
 	 */
 	public static function get_reason_text(): string {
 		return _x( 'BBCode', 'spam-reason-text', 'antispam-bee' );

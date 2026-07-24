@@ -12,7 +12,7 @@ namespace AntispamBee\Admin;
  */
 interface RenderElement {
 	/**
-	 * Render function.
+	 * Render the element.
 	 *
 	 * @return void
 	 */

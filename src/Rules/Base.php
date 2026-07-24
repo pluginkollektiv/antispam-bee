@@ -45,7 +45,7 @@ abstract class Base implements Verifiable {
 	protected static $supported_types = [ ContentTypeHelper::COMMENT_TYPE, ContentTypeHelper::LINKBACK_TYPE ];
 
 	/**
-	 * Set to `true`, if the rule should not be displayed anywhere,
+	 * Set to `true` if the rule should not be displayed anywhere,
 	 * like in the reasons list for the DeleteForReasons rule.
 	 *
 	 * @var bool
@@ -66,7 +66,7 @@ abstract class Base implements Verifiable {
 	 *
 	 * @param array $rules The currently registered rules.
 	 *
-	 * @return array
+	 * @return array The updated list of rules.
 	 */
 	public static function add_rule( array $rules ): array {
 		$rules[] = static::class;
@@ -75,24 +75,24 @@ abstract class Base implements Verifiable {
 	}
 
 	/**
-	 * Returns the types for which this rule can be used.
+	 * Return the types for which this rule can be used.
 	 *
-	 * @return array
+	 * @return array The supported reaction types.
 	 */
 	public static function get_supported_types(): array {
 		/**
 		 * Filter the reaction types that are supported by the rule.
 		 *
-		 * @param array $supported_types The supported types.
-		 * @param string $slug The rule’s slug.
+		 * @param array  $supported_types The supported types.
+		 * @param string $slug            The rule’s slug.
 		 *
-		 * @return array Array of supported types.
+		 * @return array An array of supported types.
 		 */
 		return apply_filters( 'antispam_bee_rule_supported_types', static::$supported_types, static::$slug );
 	}
 
 	/**
-	 * Get rule weight.
+	 * Get the rule weight.
 	 * This value can be used to tweak the overall results. Will be used as a multiplier of the verification result.
 	 *
 	 * @return int Weight factor.
@@ -102,7 +102,7 @@ abstract class Base implements Verifiable {
 	}
 
 	/**
-	 * Get element slug.
+	 * Get the element slug.
 	 *
 	 * @return string The slug.
 	 */
@@ -113,7 +113,7 @@ abstract class Base implements Verifiable {
 	/**
 	 * Is this rule final?
 	 *
-	 * @return bool
+	 * @return bool Whether the rule is final.
 	 */
 	public static function is_final(): bool {
 		return static::$is_final;
@@ -122,7 +122,7 @@ abstract class Base implements Verifiable {
 	/**
 	 * Is this rule invisible?
 	 *
-	 * @return bool
+	 * @return bool Whether the rule is invisible.
 	 */
 	public static function is_invisible(): bool {
 		return static::$is_invisible;

@@ -31,6 +31,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 	 * Check for allowed languages.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -50,8 +51,8 @@ class LangSpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filters the detected language. With this filter, other detection methods can skip in and detect the language.
 		 *
-		 * @param null $detected_language The detected language.
-		 * @param string $comment_text The text, to detect the language.
+		 * @param null   $detected_language The detected language.
+		 * @param string $comment_text      The text, to detect the language.
 		 *
 		 * @return null|string The detected language or null.
 		 * @since 2.8.2
@@ -85,7 +86,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 				$word_count = count( $words_array[0] );
 			}
 		} else {
-			$words_array = preg_split( "/[\n\r\t ]+/", $text, - 1, PREG_SPLIT_NO_EMPTY );
+			$words_array = preg_split( "/[\n\r\t ]+/", $text, -1, PREG_SPLIT_NO_EMPTY );
 			$word_count  = count( $words_array );
 		}
 
@@ -103,14 +104,14 @@ class LangSpam extends ControllableBase implements SpamReason {
 		 *
 		 * @param string $api_url The language API URL.
 		 *
-		 * @return string
+		 * @return string The language API URL.
 		 * @since 3.0.0
 		 */
 		$api_url = apply_filters( 'antispam_bee_lang_api_url', 'https://api.pluginkollektiv.org/language/v1/' );
 
 		$response = wp_safe_remote_post(
 			$api_url,
-			array( 'body' => wp_json_encode( [ 'body' => $comment_text ] ) )
+			[ 'body' => wp_json_encode( [ 'body' => $comment_text ] ) ]
 		);
 
 		if ( is_wp_error( $response )
@@ -132,30 +133,30 @@ class LangSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Language', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Allow reactions only in certain language', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
-		$link1 = sprintf(
+		$link = sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
 			esc_url(
 				__( 'https://antispambee.pluginkollektiv.org/documentation/#allow-comments-only-in-certain-language', 'antispam-bee' ),
@@ -164,19 +165,19 @@ class LangSpam extends ControllableBase implements SpamReason {
 		);
 
 		return sprintf(
-		/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag. */
+		/* translators: 1: opening <a> tag with a link to documentation. 2: closing </a> tag. */
 			esc_html__( 'Detect and approve only the specified language. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
-			wp_kses_post( $link1 ),
+			wp_kses_post( $link ),
 			'</a>'
 		);
 	}
 
 	/**
-	 * Get options.
+	 * Get the options.
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array
+	 * @return array The rule options.
 	 */
 	public static function get_options(): array {
 		$languages = [
@@ -188,11 +189,11 @@ class LangSpam extends ControllableBase implements SpamReason {
 		];
 
 		/**
-		 * Filter the possible languages for the language spam test
+		 * Filter the possible languages for the language spam test.
 		 *
-		 * @param (array) $languages The languages
+		 * @param (array) $languages The languages.
 		 *
-		 * @return (array)
+		 * @return array The list of allowed languages.
 		 * @since 2.7.1
 		 */
 		$languages = (array) apply_filters( 'antispam_bee_get_allowed_translate_languages', $languages );
@@ -211,9 +212,9 @@ class LangSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string The human-readable spam reason.
 	 */
 	public static function get_reason_text(): string {
 		return __( 'Language', 'antispam-bee' );

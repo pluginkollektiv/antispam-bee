@@ -23,38 +23,38 @@ class DeleteOldSpam extends Base {
 	protected static $slug = 'delete-spam-cronjob-enabled';
 
 	/**
-	 * Get option name.
+	 * Get the option name.
 	 *
-	 * @return string
+	 * @return string The option name.
 	 */
 	public static function get_name(): string {
 		return __( 'Delete old spam', 'antispam-bee' );
 	}
 
 	/**
-	 * Get option label.
+	 * Get the option label.
 	 *
-	 * @return string|null
+	 * @return string|null The option label, or null.
 	 */
 	public static function get_label(): ?string {
 		return null;
 	}
 
 	/**
-	 * Get option description.
+	 * Get the option description.
 	 *
-	 * @return null
+	 * @return null Always null.
 	 */
 	public static function get_description(): ?string {
 		return null;
 	}
 
 	/**
-	 * Get options.
+	 * Get the options.
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array
+	 * @return array The option data.
 	 */
 	public static function get_options(): array {
 		return [

@@ -13,7 +13,7 @@ export async function sendTrackback(
 	postId: number,
 	params: TrackbackParams,
 	retries = 1
-): Promise< void > {
+): Promise<void> {
 	try {
 		return await sendTrackbackOnce( baseUrl, postId, params );
 	} catch ( err: any ) {
@@ -29,7 +29,7 @@ function sendTrackbackOnce(
 	baseUrl: string,
 	postId: number,
 	params: TrackbackParams
-): Promise< void > {
+): Promise<void> {
 	const body = new URLSearchParams( Object.entries( params ) ).toString();
 	const endpoint = new URL( `/wp-trackback.php?p=${ postId }`, baseUrl );
 	const client = endpoint.protocol === 'https:' ? https : http;
@@ -46,7 +46,7 @@ function sendTrackbackOnce(
 			},
 			( res ) => {
 				let data = '';
-				res.on( 'data', ( chunk ) => ( data += chunk ) );
+				res.on( 'data', ( chunk ) => (data += chunk) );
 				res.on( 'end', () => {
 					if ( data.includes( '<error>0</error>' ) ) {
 						resolve();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Save Reasons Post Processor.
+ * SaveReasons Post-Processor.
  *
  * @package AntispamBee\PostProcessors
  */
@@ -8,12 +8,12 @@
 namespace AntispamBee\PostProcessors;
 
 /**
- * Post processor that is responsible for persisting the reason why something was marked as spam.
+ * Post-processor that is responsible for persisting the reason why something was marked as spam.
  */
 class SaveReason extends ControllableBase {
 
 	/**
-	 * Post processor slug.
+	 * Post-processor slug.
 	 *
 	 * @var string
 	 */
@@ -24,6 +24,7 @@ class SaveReason extends ControllableBase {
 	 * Save spam reasons.
 	 *
 	 * @param array $item Item to process.
+	 *
 	 * @return array Processed item.
 	 */
 	public static function process( array $item ): array {
@@ -33,6 +34,7 @@ class SaveReason extends ControllableBase {
 
 		if ( ! isset( $item['asb_reasons'] ) ) {
 			$item['asb_post_processors_failed'][] = self::get_slug();
+
 			return $item;
 		}
 
@@ -51,27 +53,27 @@ class SaveReason extends ControllableBase {
 	}
 
 	/**
-	 * Get element name.
+	 * Get the element name.
 	 *
-	 * @return string
+	 * @return string The name.
 	 */
 	public static function get_name(): string {
 		return __( 'Save reasons', 'antispam-bee' );
 	}
 
 	/**
-	 * Get element label (optional).
+	 * Get the element label (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Save the spam reasons as comment meta', 'antispam-bee' );
 	}
 
 	/**
-	 * Get element description (optional).
+	 * Get the element description (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The description, or null.
 	 */
 	public static function get_description(): ?string {
 		return __( 'The reasons are displayed in the spam comments list.', 'antispam-bee' );

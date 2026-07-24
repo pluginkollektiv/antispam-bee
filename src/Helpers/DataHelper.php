@@ -13,10 +13,11 @@ namespace AntispamBee\Helpers;
 class DataHelper {
 
 	/**
-	 * Get values by keys.
+	 * Get the values by keys.
 	 *
-	 * @param array $keys List of keys.
-	 * @param array $data Data to filter.
+	 * @param array $keys A list of keys.
+	 * @param array $data The data to filter.
+	 *
 	 * @return array Data elements with matching keys.
 	 */
 	public static function get_values_by_keys( array $keys, array $data ): array {
@@ -31,10 +32,11 @@ class DataHelper {
 	}
 
 	/**
-	 * Get values with key containing given values.
+	 * Get the values with a key containing given values.
 	 *
-	 * @param string[] $substrs Key substrings to filters.
-	 * @param array    $data    Data to filter.
+	 * @param string[] $substrs The key substrings to filter.
+	 * @param array    $data    The data to filter.
+	 *
 	 * @return array Data elements with matching keys.
 	 */
 	public static function get_values_where_key_contains( array $substrs, array $data ): array {
@@ -55,7 +57,8 @@ class DataHelper {
 	 *
 	 * @param string $url       URL to parse.
 	 * @param string $component URL component (default: "host").
-	 * @return string URL component.
+	 *
+	 * @return string The URL component.
 	 */
 	public static function parse_url( string $url, string $component = 'host' ): string {
 		$parts = wp_parse_url( $url );

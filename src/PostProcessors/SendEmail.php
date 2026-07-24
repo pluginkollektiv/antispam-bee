@@ -1,6 +1,6 @@
 <?php
 /**
- * Send Email Post Processor.
+ * SendEmail Post-Processor.
  *
  * @package AntispamBee\PostProcessors
  */
@@ -12,12 +12,12 @@ use AntispamBee\Helpers\SpamReasonTextHelper;
 use WP_Post;
 
 /**
- * Post processor that is responsible for sending emails to the user.
+ * Post-processor that is responsible for sending emails to the user.
  */
 class SendEmail extends ControllableBase {
 
 	/**
-	 * Post processor slug.
+	 * Post-processor slug.
 	 *
 	 * @var string
 	 */
@@ -28,6 +28,7 @@ class SendEmail extends ControllableBase {
 	 * Generate an email and send it.
 	 *
 	 * @param array $item Item to process.
+	 *
 	 * @return array Processed item.
 	 */
 	public static function process( array $item ): array {
@@ -67,7 +68,7 @@ class SendEmail extends ControllableBase {
 					/**
 					 * Filters the subject of the spam notification.
 					 *
-					 * @param string $subject subject line.
+					 * @param string $subject Subject line.
 					 */
 					apply_filters(
 						'antispam_bee_notification_subject',
@@ -82,36 +83,9 @@ class SendEmail extends ControllableBase {
 	}
 
 	/**
-	 * Get element name.
-	 *
-	 * @return string
-	 */
-	public static function get_name(): string {
-		return __( 'Send email', 'antispam-bee' );
-	}
-
-	/**
-	 * Get element label (optional).
-	 *
-	 * @return string|null
-	 */
-	public static function get_label(): ?string {
-		return __( 'Spam-Notification by email', 'antispam-bee' );
-	}
-
-	/**
-	 * Get element description (optional).
-	 *
-	 * @return string|null
-	 */
-	public static function get_description(): ?string {
-		return __( 'Notify admins by e-mail about incoming spam', 'antispam-bee' );
-	}
-
-	/**
 	 * Generate email subject.
 	 *
-	 * @return string
+	 * @return string The email subject.
 	 */
 	private static function get_subject(): string {
 		return sprintf(
@@ -128,25 +102,40 @@ class SendEmail extends ControllableBase {
 	}
 
 	/**
-	 * Extract content from comment.
+	 * Generate email body.
 	 *
-	 * @param array $comment The comment.
-	 * @return string
+	 * @param WP_Post $post    The post.
+	 * @param array   $comment The comment.
+	 * @param array   $item    Processed item.
+	 *
+	 * @return string The email body.
 	 */
-	private static function get_content( array $comment ): string {
-		$content = strip_tags( stripslashes( $comment['comment_content'] ) );
+	protected static function get_body( WP_Post $post, array $comment, array $item ): string {
+		$template_content = self::get_body_template();
 
-		if ( $content ) {
-			return $content;
-		}
+		$content       = self::get_content( $comment );
+		$reaction_type = ContentTypeHelper::get_reaction_type_name( $item['reaction_type'] );
 
-		return sprintf( '-- %s --', esc_html__( 'Content removed by Antispam Bee', 'antispam-bee' ) );
+		$spam_reasons = SpamReasonTextHelper::get_texts_by_slugs( $item['asb_reasons'] );
+
+		$replacements = [
+			'{{post_title}}'         => wp_strip_all_tags( $post->post_title ),
+			'{{comment_author}}'     => empty( $comment['comment_author'] ) ? '' : wp_strip_all_tags( $comment['comment_author'] ),
+			'{{comment_author_url}}' => esc_url( $comment['comment_author_url'] ),
+			'{{reaction_type}}'      => esc_html( $reaction_type ),
+			'{{comment_author_IP}}'  => $comment['comment_author_IP'],
+			'{{spam_reasons}}'       => esc_html( implode( ', ', $spam_reasons ) ),
+			'{{content}}'            => $content,
+			'{{comment_id}}'         => $comment['comment_ID'],
+		];
+
+		return str_replace( array_keys( $replacements ), array_values( $replacements ), $template_content );
 	}
 
 	/**
-	 * Get template for email body.
+	 * Get the template for the email body.
 	 *
-	 * @return string
+	 * @return string The email body template.
 	 */
 	private static function get_body_template(): string {
 		$new_spam_comment = sprintf( /* translators: s=post title. */
@@ -179,7 +168,7 @@ $new_spam_comment
 $author: {{comment_author}}
 $url: {{comment_author_url}}
 $type: {{reaction_type}}
-Whois: http://whois.arin.net/rest/ip/{{comment_author_IP}}
+Whois: https://whois.arin.net/rest/ip/{{comment_author_IP}}
 $spam_reasons: {{spam_reasons}}
 
 {{content}}
@@ -200,43 +189,46 @@ EOF;
 	}
 
 	/**
-	 * Generate email body.
+	 * Extract content from comment.
 	 *
-	 * @param WP_Post $post    The post.
-	 * @param array   $comment The comment.
-	 * @param array   $item    Processed item.
-	 * @return string
+	 * @param array $comment The comment.
+	 *
+	 * @return string The comment content.
 	 */
-	protected static function get_body( WP_Post $post, array $comment, array $item ): string {
-		$template_content = self::get_body_template();
+	private static function get_content( array $comment ): string {
+		$content = wp_strip_all_tags( stripslashes( $comment['comment_content'] ) );
 
-		$content       = self::get_content( $comment );
-		$reaction_type = ContentTypeHelper::get_reaction_type_name( $item['reaction_type'] );
+		if ( $content ) {
+			return $content;
+		}
 
-		$spam_reasons = SpamReasonTextHelper::get_texts_by_slugs( $item['asb_reasons'] );
+		return sprintf( '-- %s --', esc_html__( 'Content removed by Antispam Bee', 'antispam-bee' ) );
+	}
 
-		return str_replace(
-			[
-				'{{post_title}}',
-				'{{comment_author}}',
-				'{{comment_author_url}}',
-				'{{reaction_type}}',
-				'{{comment_author_IP}}',
-				'{{spam_reasons}}',
-				'{{content}}',
-				'{{comment_id}}',
-			],
-			[
-				strip_tags( $post->post_title ),
-				( empty( $comment['comment_author'] ) ? '' : strip_tags( $comment['comment_author'] ) ),
-				esc_url( $comment['comment_author_url'] ),
-				esc_html( $reaction_type ),
-				$comment['comment_author_IP'],
-				esc_html( implode( ', ', $spam_reasons ) ),
-				$content,
-				$comment['comment_ID'],
-			],
-			$template_content
-		);
+	/**
+	 * Get the element name.
+	 *
+	 * @return string The name.
+	 */
+	public static function get_name(): string {
+		return __( 'Send email', 'antispam-bee' );
+	}
+
+	/**
+	 * Get the element label (optional).
+	 *
+	 * @return string|null The label, or null.
+	 */
+	public static function get_label(): ?string {
+		return __( 'Spam-Notification by email', 'antispam-bee' );
+	}
+
+	/**
+	 * Get the element description (optional).
+	 *
+	 * @return string|null The description, or null.
+	 */
+	public static function get_description(): ?string {
+		return __( 'Notify admins by e-mail about incoming spam', 'antispam-bee' );
 	}
 }

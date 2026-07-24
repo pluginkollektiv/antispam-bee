@@ -39,9 +39,10 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	/**
 	 * Verify an item.
 	 *
-	 * Test if a linkback originals from its own target.
+	 * Test if a linkback originates from its own target.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -82,18 +83,18 @@ class LinkbackFromMyself extends Base implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Linkback from myself', 'antispam-bee' );
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string The human-readable spam reason.
 	 */
 	public static function get_reason_text(): string {
 		return _x( 'Linkback from myself', 'spam-reason-text', 'antispam-bee' );

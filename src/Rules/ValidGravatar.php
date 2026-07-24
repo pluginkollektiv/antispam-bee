@@ -1,6 +1,6 @@
 <?php
 /**
- * Valid Gravator Rule.
+ * Valid Gravatar Rule.
  *
  * @package AntispamBee\Rules
  */
@@ -35,6 +35,7 @@ class ValidGravatar extends ControllableBase {
 	 * Test if author's email points to a valid Gravatar.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -56,37 +57,37 @@ class ValidGravatar extends ControllableBase {
 		}
 
 		if ( wp_remote_retrieve_response_code( $response ) === 200 ) {
-			return - 1;
+			return -1;
 		}
 
 		return 0;
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Valid Gravatar', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Trust commenters with a Gravatar', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
-		$link1 = sprintf(
+		$link = sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">',
 			esc_url(
 				__( 'https://antispambee.pluginkollektiv.org/documentation/#trust-commenters-with-a-gravatar', 'antispam-bee' ),
@@ -95,9 +96,9 @@ class ValidGravatar extends ControllableBase {
 		);
 
 		return sprintf(
-		/* translators: 1: opening <a> tag with link to documentation. 2: closing </a> tag */
+		/* translators: 1: opening <a> tag with a link to documentation. 2: closing </a> tag */
 			esc_html__( 'Check if commenter has a Gravatar image. Please note the %1$sprivacy notice%2$s for this option.', 'antispam-bee' ),
-			wp_kses_post( $link1 ),
+			wp_kses_post( $link ),
 			'</a>'
 		);
 	}

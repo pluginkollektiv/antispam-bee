@@ -3,10 +3,10 @@
 namespace AntispamBee\Tests\Unit\Helpers;
 
 use AntispamBee\Helpers\IpHelper;
+use Brain\Monkey\Expectation\Exception\ExpectationArgsRequired;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
-
-use function Brain\Monkey\Functions\when;
 use function Brain\Monkey\Filters\expectApplied;
+use function Brain\Monkey\Functions\when;
 
 /**
  * Unit tests for {@see IpHelper}.
@@ -26,6 +26,9 @@ class IpHelperTest extends TestCase {
 		self::assertSame( '192.0.2.1', IpHelper::get_client_ip(), 'REMOTE_ADDR should be the default IP source' );
 	}
 
+	/**
+	 * @throws ExpectationArgsRequired
+	 */
 	public function test_get_client_ip_filter_can_override(): void {
 		global $_SERVER;
 

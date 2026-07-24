@@ -1,6 +1,6 @@
 <?php
 /**
- * Post processors.
+ * Post-processors.
  *
  * @package AntispamBee\Handlers
  */
@@ -10,19 +10,20 @@ namespace AntispamBee\Handlers;
 use AntispamBee\Helpers\ComponentsHelper;
 use AntispamBee\Interfaces\Controllable;
 use AntispamBee\Interfaces\PostProcessor;
+use ReflectionException;
 
 /**
- * Post processors.
+ * Post-processors.
  */
 class PostProcessors {
 	/**
-	 * Apply post processors.
+	 * Apply post-processors.
 	 *
 	 * @param string $reaction_type One of the supported content types.
 	 * @param array  $item          Item to process.
-	 * @param array  $reasons       List of reasons.
+	 * @param array  $reasons       A list of reasons.
 	 *
-	 * @return array
+	 * @return array The processed item.
 	 */
 	public static function apply( string $reaction_type, array $item, array $reasons = [] ): array {
 		$post_processors = self::get( $reaction_type, true );
@@ -30,7 +31,7 @@ class PostProcessors {
 		$item['asb_reasons']   = $reasons;
 		$item['reaction_type'] = $reaction_type;
 
-		// Move the post processors that mark an item as to delete to front,
+		// Move the post-processors that mark an item as to delete to front,
 		// so that following processors know if they handle an item that will be deleted.
 		$pp_count = count( $post_processors );
 		for ( $i = 0; $i < $pp_count; $i++ ) {
@@ -49,11 +50,13 @@ class PostProcessors {
 	}
 
 	/**
-	 * Get a post processor.
+	 * Get a post-processor.
 	 *
 	 * @param string|null $reaction_type Reaction type.
-	 * @param bool        $only_active   Get only active post processors.
-	 * @return array List of suitable post processors.
+	 * @param bool        $only_active   Get only active post-processors.
+	 *
+	 * @return array A list of suitable post-processors.
+	 * @throws ReflectionException
 	 */
 	public static function get( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
@@ -66,11 +69,25 @@ class PostProcessors {
 	}
 
 	/**
-	 * Get controllable items.
+	 * Filter items.
+	 *
+	 * @param array $options Filter options.
+	 *
+	 * @return array A list of filtered elements.
+	 * @throws ReflectionException
+	 */
+	private static function filter( array $options ): array {
+		return ComponentsHelper::filter( apply_filters( 'antispam_bee_post_processors', [] ), $options );
+	}
+
+	/**
+	 * Get the controllable items.
 	 *
 	 * @param string|null $reaction_type Reaction type.
 	 * @param bool        $only_active   Get only active items.
-	 * @return array List of suitable controllables.
+	 *
+	 * @return array A list of suitable controllables.
+	 * @throws ReflectionException
 	 */
 	public static function get_controllables( ?string $reaction_type = null, bool $only_active = false ): array {
 		return self::filter(
@@ -80,15 +97,5 @@ class PostProcessors {
 				'implements'    => [ PostProcessor::class, Controllable::class ],
 			]
 		);
-	}
-
-	/**
-	 * Filter items.
-	 *
-	 * @param array $options Filter options.
-	 * @return array List of filtered elements.
-	 */
-	private static function filter( array $options ): array {
-		return ComponentsHelper::filter( apply_filters( 'antispam_bee_post_processors', [] ), $options );
 	}
 }

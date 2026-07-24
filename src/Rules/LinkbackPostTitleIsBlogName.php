@@ -35,6 +35,7 @@ class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
 	 * Test if a linkback title is blog name.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -49,18 +50,18 @@ class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Linkback post title is blog name', 'antispam-bee' );
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string The human-readable spam reason.
 	 */
 	public static function get_reason_text(): string {
 		return _x( 'Linkback Post Title', 'spam-reason-text', 'antispam-bee' );

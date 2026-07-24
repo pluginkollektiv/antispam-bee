@@ -26,20 +26,21 @@ class Linkback extends Reaction {
 	/**
 	 * Process a linkback.
 	 *
-	 * @param array $linkback Linkback to process.
+	 * @param array $reaction Linkback to process.
+	 *
 	 * @return array Processed linkback.
 	 */
-	public static function process( array $linkback ): array {
-		if ( ! ContentTypeHelper::reaction_is_one_of( $linkback, [ 'pingback', 'trackback', 'pings' ], 'linkback' ) ) {
-			return $linkback;
+	public static function process( array $reaction ): array {
+		if ( ! ContentTypeHelper::reaction_is_one_of( $reaction, [ 'pingback', 'trackback', 'pings' ], 'linkback' ) ) {
+			return $reaction;
 		}
 
 		if ( IgnoreLinkbacks::is_active() ) {
-			return $linkback;
+			return $reaction;
 		}
 
-		$linkback['comment_author_IP'] = IpHelper::get_client_ip();
+		$reaction['comment_author_IP'] = IpHelper::get_client_ip();
 
-		return parent::process( $linkback );
+		return parent::process( $reaction );
 	}
 }

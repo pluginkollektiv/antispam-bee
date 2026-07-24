@@ -27,9 +27,10 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	/**
 	 * Verify an item.
 	 *
-	 * Content fields using pre-defined and custom regular expressions
+	 * Content fields using pre-defined and custom regular expressions.
 	 *
 	 * @param array $item Item to verify.
+	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
@@ -51,15 +52,15 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			$email     = $item['comment_author_email'];
 			$author    = $item['comment_author'];
 			$useragent = $item['comment_agent'];
-			$subject   = array(
+			$subject   = [
 				'ip'        => $ip,
 				'rawurl'    => $url,
-				'host'      => DataHelper::parse_url( $url, 'host' ),
+				'host'      => DataHelper::parse_url( $url ),
 				'body'      => $body,
 				'email'     => $email,
 				'author'    => $author,
 				'useragent' => $useragent,
-			);
+			];
 		}
 
 		if ( ContentTypeHelper::LINKBACK_TYPE === $item['reaction_type'] ) {
@@ -69,7 +70,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			$subject = [
 				'ip'     => $ip,
 				'rawurl' => $url,
-				'host'   => DataHelper::parse_url( $url, 'host' ),
+				'host'   => DataHelper::parse_url( $url ),
 				'body'   => $body,
 				'email'  => '',
 				'author' => '',
@@ -181,36 +182,36 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get rule name.
+	 * Get the rule name.
 	 *
-	 * @return string
+	 * @return string The rule name.
 	 */
 	public static function get_name(): string {
 		return __( 'Regular Expression', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule label.
+	 * Get the rule label.
 	 *
-	 * @return string|null
+	 * @return string|null The rule label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Use regular expressions', 'antispam-bee' );
 	}
 
 	/**
-	 * Get rule description.
+	 * Get the rule description.
 	 *
-	 * @return string|null
+	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
 		return __( 'Predefined and custom patterns by plugin hook', 'antispam-bee' );
 	}
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string The human-readable spam reason.
 	 */
 	public static function get_reason_text(): string {
 		return _x( 'RegExp match', 'spam-reason-text', 'antispam-bee' );

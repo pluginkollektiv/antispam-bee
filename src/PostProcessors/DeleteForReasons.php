@@ -1,6 +1,6 @@
 <?php
 /**
- * Delete For Reasons Post Processor.
+ * DeleteForReasons Post-Processor.
  *
  * @package AntispamBee\PostProcessors
  */
@@ -10,6 +10,7 @@ namespace AntispamBee\PostProcessors;
 use AntispamBee\Handlers\Rules;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
+use ReflectionException;
 
 /**
  * Marks spam comments for deletion if they have a specific reason.
@@ -17,14 +18,14 @@ use AntispamBee\Helpers\Settings;
 class DeleteForReasons extends ControllableBase {
 
 	/**
-	 * Post processor slug.
+	 * Post-processor slug.
 	 *
 	 * @var string
 	 */
 	protected static $slug = 'asb-delete-for-reasons';
 
 	/**
-	 * This post processor marks items for deletion.
+	 * This post-processor marks items for deletion.
 	 *
 	 * @var bool
 	 */
@@ -34,6 +35,7 @@ class DeleteForReasons extends ControllableBase {
 	 * Process an item, i.e. mark it for deletion.
 	 *
 	 * @param array $item Item to process.
+	 *
 	 * @return array Processed item.
 	 */
 	public static function process( array $item ): array {
@@ -54,39 +56,30 @@ class DeleteForReasons extends ControllableBase {
 	}
 
 	/**
-	 * Get element name.
+	 * Get the element label (optional).
 	 *
-	 * @return string
-	 */
-	public static function get_name(): string {
-		return __( 'Delete by reasons', 'antispam-bee' );
-	}
-
-	/**
-	 * Get element label (optional).
-	 *
-	 * @return string|null
+	 * @return string|null The label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Delete comments by spam reasons', 'antispam-bee' );
 	}
 
 	/**
-	 * Get element description (optional).
+	 * Get the element description (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The description, or null.
 	 */
 	public static function get_description(): ?string {
 		return null;
 	}
 
-
 	/**
-	 * Get post processor options.
+	 * Get the post-processor options.
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array
+	 * @return array The post-processor options.
+	 * @throws ReflectionException
 	 */
 	public static function get_options(): array {
 		$options = [];
@@ -114,5 +107,14 @@ class DeleteForReasons extends ControllableBase {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Get the element name.
+	 *
+	 * @return string The name.
+	 */
+	public static function get_name(): string {
+		return __( 'Delete by reasons', 'antispam-bee' );
 	}
 }

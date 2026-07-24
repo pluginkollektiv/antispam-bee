@@ -38,6 +38,7 @@ abstract class Reaction {
 			'antispam_bee_additional_spam_reasons',
 			function ( $reasons ) {
 				$reasons['asb-marked-manually'] = __( 'Manually', 'antispam-bee' );
+
 				return $reasons;
 			}
 		);
@@ -56,6 +57,7 @@ abstract class Reaction {
 	 * Process a reaction.
 	 *
 	 * @param array $reaction Reaction to process.
+	 *
 	 * @return array Processed reaction.
 	 */
 	public static function process( array $reaction ): array {
@@ -75,7 +77,8 @@ abstract class Reaction {
 	 *
 	 * @param array $reaction Reaction to handle.
 	 * @param Rules $rules    Ruleset to apply.
-	 * @return array|never-return Handled reaction (or die, if item was deleted)
+	 *
+	 * @return array|never-return Handled reaction (or die, if item was deleted).
 	 */
 	protected static function handle_spam( array $reaction, Rules $rules ) {
 		$item = PostProcessors::apply( static::$reaction_type, $reaction, $rules->get_spam_reasons() );
@@ -104,6 +107,7 @@ abstract class Reaction {
 	public static function handle_comment_status_changes( $new_status, $old_status, WP_Comment $comment ): void {
 		if ( 'spam' === $new_status && 'spam' !== $old_status ) {
 			update_comment_meta( $comment->comment_ID, 'antispam_bee_reason', 'asb-marked-manually' );
+
 			return;
 		}
 

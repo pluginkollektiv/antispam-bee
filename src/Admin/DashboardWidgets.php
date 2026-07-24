@@ -10,8 +10,9 @@ namespace AntispamBee\Admin;
 use AntispamBee\GeneralOptions\Statistics;
 use AntispamBee\Helpers\DashboardHelper;
 use AntispamBee\Helpers\Settings;
+
 /**
- * Class DashboardWidgets
+ * Dashboard widgets handler.
  */
 class DashboardWidgets {
 
@@ -26,15 +27,13 @@ class DashboardWidgets {
 	}
 
 	/**
-	 * Display the spam counts on the dashboard
+	 * Display the spam counts on the dashboard.
 	 *
 	 * @param array $items Initial array with dashboard items.
 	 *
-	 * @return  array $items  Merged array with dashboard items.
-	 * @since  0.1
-	 * @since  2.6.5
+	 * @return  array Merged array with dashboard items.
 	 */
-	public static function add_dashboard_count( array $items = array() ): array {
+	public static function add_dashboard_count( array $items = [] ): array {
 		if ( ! current_user_can( 'manage_options' ) || ! Statistics::is_active() ) {
 			return $items;
 		}
@@ -81,10 +80,7 @@ class DashboardWidgets {
 	}
 
 	/**
-	 * Return the number of spam comments
-	 *
-	 * @since  0.1
-	 * @since  2.4
+	 * Return the number of spam comments.
 	 */
 	private static function get_spam_count(): int {
 		return intval( Settings::get_option( 'spam_count', 0 ) );

@@ -9,10 +9,10 @@
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Sophisticated antispam plugin for effective daily comment and trackback spam-fighting. Built with data protection and privacy in mind.
+Sophisticated antispam plugin for effective daily comment and linkback spam-fighting. Built with data protection and privacy in mind.
 
 ## Description ##
-Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and trackbacks effectively, without captchas and without sending personal information to third party services. It is free of charge, ad-free and 100% GDPR compliant.
+Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* blocks spam comments and linkbacks effectively, without captchas and without sending personal information to third-party services. It is free of charge, ad-free and 100% GDPR-compliant.
 
 ### Feature/Settings Overview ###
 * Trust approved commenters.
@@ -22,7 +22,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * Block or allow commenters from certain countries.
 * Treat BBCode links as spam.
 * Use regular expressions.
-* Search local spam database for commenters previously marked as spammers.
+* Search the local spam database for commenters previously marked as spammers.
 * Notify admins by e-mail about incoming spam.
 * Delete existing spam after n days.
 * Limit approval to comments/pings (will delete other comment types).
@@ -34,13 +34,13 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 ### Support ###
 * Community support via the [support forums on wordpress.org](https://wordpress.org/support/plugin/antispam-bee)
 * Read [the documentation](https://antispambee.pluginkollektiv.org/documentation/)
-* We don’t handle support via e-mail, Twitter, GitHub issues etc.
+* We don’t handle support via e-mail, Twitter, GitHub issues, etc.
 
 ### Contribute ###
 * Active development of this plugin is handled [on GitHub](https://github.com/pluginkollektiv/antispam-bee).
 * Pull requests for documented bugs are highly appreciated.
-* If you think you’ve found a bug (e.g. you’re experiencing unexpected behavior), please post at the [support forums](https://wordpress.org/support/plugin/antispam-bee) first.
-* If you want to help us translate this plugin you can do so [on WordPress Translate](https://translate.wordpress.org/projects/wp-plugins/antispam-bee).
+* If you think you’ve found a bug (e.g., you’re experiencing unexpected behavior), please post at the [support forums](https://wordpress.org/support/plugin/antispam-bee) first.
+* If you want to help us translate this plugin, you can do so [on WordPress Translate](https://translate.wordpress.org/projects/wp-plugins/antispam-bee).
 
 ### Credits ###
 * Author: [Sergej Müller](https://sergejmueller.github.io/)
@@ -54,17 +54,17 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * WordPress 4.6 or greater
 
 ### Settings ###
-After you have activated *Antispam Bee* the plugin will block spam comments out of the box. However, you may want to visit *Settings → Antispam Bee* to configure your custom set of anti-spam options that works best for your site.
+After you have activated *Antispam Bee*, the plugin will block spam comments out of the box. However, you may want to visit *Settings → Antispam Bee* to configure your custom set of antispam options that works best for your site.
 
 ## Frequently Asked Questions ##
 
-### Does Antispam Bee prevents spam registrations or protects form plugins? ###
-Antispam Bee works best with default WordPress comments. It does not help to protect form plugins and does not prevent spam registrations. Hopefully we can provide better hooks for third party plugins to use Antispam Bee to fill this gap in the forthcoming new major version.
+### Does Antispam Bee prevent spam registrations or protect form plugins? ###
+Antispam Bee works best with default WordPress comments. It does not help to protect form plugins and does not prevent spam registrations. Hopefully, we can provide better hooks for third-party plugins to use Antispam Bee to fill this gap in the forthcoming new major version.
 
-### Does Antispam Bee work with Jetpack, wpDiscuz, Disqus Comments and similar comment plugins?
-Antispam Bee works best with default WordPress comments. It is not compatible with Jetpack, wpDiscuz or Disqus Comments as those plugins load a new comment form within an iframe. Thus Antispam Bee can not access the comment form directly.
+### Does Antispam Bee work with Jetpack, wpDiscuz, Disqus Comments and similar comment plugins? ###
+Antispam Bee works best with default WordPress comments. It is not compatible with Jetpack, wpDiscuz or Disqus Comments as those plugins load a new comment form within an iframe. Thus, Antispam Bee cannot access the comment form directly.
 
-### Does Antispam Bee work with AJAX comment plugins or similar theme features?
+### Does Antispam Bee work with AJAX comment plugins or similar theme features? ###
 Whether Antispam Bee works with a comment form submitted via AJAX depends on how the AJAX request is made. If the request goes to the file that usually also receives the comments, Antispam Bee could work with it out of the box (the [WP Ajaxify Comments](https://wordpress.org/plugins/wp-ajaxify-comments/) plugin does this, for example).
 
 If the comments are sent to the `admin-ajax.php`, the `antispam_bee_disallow_ajax_calls` filter must be used to run ASB for requests to that file as well. If the script does not send all form data to the file, but only some selected ones, further customization is probably necessary, as [exemplified in this post by Torsten Landsiedel](https://torstenlandsiedel.de/2020/10/04/ajaxifizierte-kommentare-und-antispam-bee/) (in German).
@@ -76,13 +76,13 @@ Antispam Bee is developed in Europe. You might have heard we can be a bit nitpic
 No, the plugin works as is. You may want to configure your favorite settings, though.
 
 ### Does Antispam Bee work with shortened IPs? ###
-Generally yes. However, commissioning the Antispam Bee plugin for canceled or shortened IP addresses in comment metadata is not recommended. Because the name and the e-mail address of the comments are not unique, an IP address is the only reliable measure. The more complete the stored IP addresses, the more reliable the assignment or detection of spam.
+Generally yes. However, running Antispam Bee with truncated or shortened IP addresses in comment metadata is not recommended. Because the name and the e-mail address of a comment are not unique, the IP address is the only reliable measure. The more complete the stored IP addresses, the more reliable the assignment or detection of spam.
 
 ### How can I submit undetected spam? ###
-If the antispam plugin has passed some spam comments, these comments can be reported for analysis. A [Google table](http://goo.gl/forms/ITzVHXkLVL) was created for this purpose.
+If the antispam plugin has let some spam comments through, these comments can be reported for analysis. A [Google Form](http://goo.gl/forms/ITzVHXkLVL) was created for this purpose.
 
 ### Antispam Bee with Varnish? ###
-If WordPress is operated with Apache + Varnish, the actual IP address of the visitors does not appear in WordPress. Accordingly the Antispam-Plugin lacks the base for the correct functionality. An adaptation in the Varnish configuration file /etc/varnish/default.vcl provides a remedy and forwards the original (not from Apache) IP address in the HTTP header X-Forwarded-For:
+If WordPress is operated with Apache + Varnish, the actual IP address of the visitors does not appear in WordPress. Accordingly, Antispam Bee lacks the basis it needs to function correctly. An adaptation in the Varnish configuration file /etc/varnish/default.vcl provides a remedy and forwards the original (not from Apache) IP address in the HTTP header X-Forwarded-For:
 
 > if (req.restarts == 0) {
 >     set req.http.X-Forwarded-For = client.ip;
@@ -91,7 +91,7 @@ If WordPress is operated with Apache + Varnish, the actual IP address of the vis
 ### Are there some paid services or limitations? ###
 No, Antispam Bee is free forever, for both private and commercial projects. You can use it on as many sites as you want. There is no limitation to the number of sites you use the plugin on.
 
-A complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
+Complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ### How can I report security bugs? ###
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/445425e4-f5dd-4404-80a7-690999f5bcb3)
@@ -100,17 +100,17 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 ### 3.0.0 ###
     * Complete code rewrite and backend UI overhaul
-    * Allows to extend Antispam Bee with own rules
-    * Allows to use Antispam Bee rules for other reactions than comments, for example, forms
+    * Allows extending Antispam Bee with your own rules
+    * Allows using Antispam Bee rules for other reactions than comments, for example, forms
 
 ### 2.11.12 ###
   * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)
 
 ### 2.11.11 ###
-  * Enhancement: Add shorturl.fm spam pattern
+  * Enhancement: Add a shorturl.fm spam pattern
 
 ### 2.11.10 ###
-  * Fix: remove build-tool warnings from minified Javascript and CSS resources
+  * Fix: remove build-tool warnings from minified JavaScript and CSS resources
 
 ### 2.11.9 ###
   * Tweak: Improved compatibility with unquoted HTML attributes in comment forms
@@ -118,16 +118,16 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 ### 2.11.8 ###
   * Tweak: Minor code changes and housekeeping
-  * Tweak: Add link to Patchstack in readme
+  * Tweak: Add a link to Patchstack in readme
   * Maintenance: Tested up to WordPress 6.8
 
 ### 2.11.7 ###
-  * Tweak: Use SCRIPT_NAME instead of REQUEST_URI to check path
+  * Tweak: Use SCRIPT_NAME instead of REQUEST_URI to check the path
   * Fix: Remove `add_reasons_to_defaults()` from general initialization for better WordPress 6.7 compatibility
   * Maintenance: Tested up to WordPress 6.7
 
 ### 2.11.6 ###
-  * Fix: Delete missed out option on uninstall (Thanks @okvee!)
+  * Fix: Delete a missed out option on uninstallation (Thanks @okvee!)
   * Tweak: Minor i18n improvements (Thanks Pedro!)
   * Tweak: Minor code changes and housekeeping
   * Tweak: Updated dependencies
@@ -141,27 +141,27 @@ IMPORTANT: If you use the country check and are behind a proxy or similar, you n
 IMPORTANT: If you use the country check and are behind a proxy or similar, you need to use the `pre_comment_user_ip` filter to get the correct IP from a header like `HTTP_X_FORWARDED`.
 
   * Fix: Read client IP for country check from `REMOTE_ADDR` only (filterable via `pre_comment_user_ip`)
-  * Fix: No spam reason in spam notification email, and related PHP warning
+  * Fix: No spam reason in spam notification email and related PHP warning
   * Fix: Remove outdated info from readme
-  * Enhancement: Show upgrade notice on plugin overview page
+  * Enhancement: Show the upgrade notice on the plugin overview page
   * Maintenance: Tested up to WordPress 6.3
 
 ### 2.11.3 ###
   * Fix: Multiselect for "Delete comments by spam reasons" was not saving values
-  * Fix: Fix broken link for ISO country codes
+  * Fix: Fix a broken link for ISO country codes
   * Maintenance: Added test for PHP 8.2
   * Maintenance: Tested up to WordPress 6.2
 
 ### 2.11.2 ###
   * Tweak: remove superfluous translations
-  * Tweak: make FAQ link an anchor link
+  * Tweak: make an FAQ link an anchor link
   * Fix: spam counter no longer raises a warning with PHP 8.1 if no spam is present yet
   * Fix: spam reasons are now localized correctly
   * Fix: Translations were loaded twice on some admin pages
   * Maintenance: Tested up to WordPress 6.1
 
 ### 2.11.1 ###
-  * Tweak: remove superfluous type attribute from inline script tag
+  * Tweak: remove superfluous type attribute from the inline script tag
   * Maintenance: Tested up to WordPress 6.0
 
 ### 2.11.0 ###
@@ -173,12 +173,12 @@ IMPORTANT: If you use the country check and are behind a proxy or similar, you n
 
 ### 2.10.0 ###
   * Fix: Switch from ip2country.info to iplocate.io for country check
-  * Enhancement: Use filter to add the honeypot field instead of output buffering for new installations and added option to switch between the both ways
+  * Enhancement: Use filter to add the honeypot field instead of output buffering for new installations and added an option to switch between the both ways
   * Tweak: Added comment user agent to regex pattern check
   * Tweak: Make the ping detection filterable to support new comment types
   * Tweak: Updated internal documentation links
   * Tweak: Several updates and optimizations in the testing process
-  * Tweak: Adjust color palette to recent WP version
+  * Tweak: Adjust color palette to a recent WP version
   * Tweak: Adjust wording in variables and option names
   * Readme: Add new contributor and clean up unused code
 
@@ -191,18 +191,18 @@ IMPORTANT: If you use the country check and are behind a proxy or similar, you n
 
 ### 2.9.3 ###
   * Fixed: Compatibility with WordPress 5.5
-  * Fixed: Undefined index on spam list page
-  * Tweak: Better wording on settings page
+  * Fixed: Undefined index on the spam list page
+  * Tweak: Better wording on the settings page
   * Tweak: AMP compatibility
-  * Tweak: Protect CSS from overwrite through bad themes
+  * Tweak: Protect CSS from overwriting through bad themes
 
 ### 2.9.2 ###
   * Fix: Delete comment meta for deleted old spam. For the cleanup of older orphaned comment meta we suggest the usage of [WP Sweep](https://wordpress.org/plugins/wp-sweep/)
-  * Fix: Statistic in dashboard showed wrong value
+  * Fix: Statistics in the dashboard showed the wrong value
   * Tweak: Change autocomplete attribute to "new-password"
   * Tweak: Autoptimize compatibility improved
   * Tweak: Renamed blacklist/whitelist to a better phrase
-  * Tweak: Added new pattern
+  * Tweak: Added a new pattern
   * Tweak: UI and text optimizations
   * Tweak: Better compatibility with some server configurations
   * Tweak: Make spam reason sortable and filterable
@@ -219,22 +219,22 @@ IMPORTANT: If you use the country check and are behind a proxy or similar, you n
   * Compatible with the AMP plugin (https://wordpress.org/plugins/amp/)
   * Improved dashboard tooltips
   * Improvements for the language detection API
-  * Scalable IP look up for local spam database
+  * Scalable IP look up for a local spam database
 
 ### 2.9.0 ###
   * Introduction of coding standards.
   * Switch to franc language detection API for the language check.
-  * Do not longer overwrite the IP address WordPress saves with the comment by using `pre_comment_user_ip`.
+  * Do no longer overwrite the IP address WordPress saves with the comment by using `pre_comment_user_ip`.
   * Do not show "Trust commenters with a Gravatar" if the "Show Gravatar" option is not set.
-  * Skip the checks, when I ping myself.
+  * Skip the checks when I ping myself.
   * Fixes some wrong usages of the translation functions.
   * Use the regular expressions check also for trackbacks.
-  * Add option to delete Antispam Bee related data when plugin gets deleted via the admin interface.
+  * Add an option to delete Antispam Bee related data when the plugin gets deleted via the admin interface.
   * Save a hashed + salted IP for every comment
   * New check for incoming trackbacks.
   * Introduction of behat tests.
   * Updates the used JavaScript library for the statistics widget.
-  * Bugfix in the "Comment form used outside of posts" option.
+  * Bugfix in the "Comment form used outside posts" option.
 
 ### 2.8.1 ###
   * PHP 5.3 compatibility
@@ -248,7 +248,7 @@ IMPORTANT: If you use the country check and are behind a proxy or similar, you n
    * Fixes small bug on mobile views
    * Allow more than one language in language check
    * Minor interface improvements
-   * Remove old russian and Dutch translation files
+   * Remove old Russian and Dutch translation files
    * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/4?closed=1
 
 ### 2.7.1 ###
@@ -266,13 +266,13 @@ IMPORTANT: If you use the country check and are behind a proxy or similar, you n
    * More default Regexes
    * Unit Test Framework
    * Accessibility and GUI improvements
-   * An [english documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now available, too. Some corrections in the german documentation.
+   * An [english documentation](https://github.com/pluginkollektiv/antispam-bee/wiki) is now available, too. Some corrections in the German documentation.
    * Some bugfixes - Among other things for WPML compatibility
    * For more details see https://github.com/pluginkollektiv/antispam-bee/milestone/3?closed=1
 
 ### 2.6.9 ###
    * Updates donation links throughout the plugin
-   * Fixes an error were JavaScript on the dashboard was erroneously being enqueued
+   * Fixes an error where JavaScript on the dashboard was erroneously being enqueued
    * Ensures compatibility with the latest WordPress version
 
 ### 2.6.8 ###
@@ -330,7 +330,7 @@ Instead of pre_comment_user_ip you need to use our new filter antispam_bee_trust
 The multiselect field for "Delete comments by spam reasons" did not store any values in the last version - please check the setting after the update!
 
 = 2.8.0 =
-This update makes sure your spam check is GDPR compliant, no matter the options you choose. Please make sure to update before May 25th!
+This update makes sure your spam check is GDPR-compliant, no matter the options you choose. Please make sure to update before May 25th!
 
 ## Screenshots ##
 1. Block or allow comments from specific countries.

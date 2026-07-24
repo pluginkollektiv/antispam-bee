@@ -12,5 +12,5 @@ extend-ignore-re = [
 extend-glob = ["*.md"]
 extend-ignore-re = [
     '(?s)\*\*Deutsch\*\*.*?(\n\n|\z)',
-    '(?m)^WICHTIG:.*',
+    '(?s)WICHTIG:.*?(\n\n|\z)',
 ]

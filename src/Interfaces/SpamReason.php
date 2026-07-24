@@ -13,9 +13,9 @@ namespace AntispamBee\Interfaces;
 interface SpamReason {
 
 	/**
-	 * Get human-readable spam reason.
+	 * Get a human-readable spam reason.
 	 *
-	 * @return string
+	 * @return string A human-readable spam reason.
 	 */
 	public static function get_reason_text(): string;
 }

@@ -4,7 +4,7 @@
  * Honeypot detection is the spam trigger throughout; the honeypot textarea
  * has aria-hidden="true" and name="comment" after v3's DOM injection.
  */
-import { test, expect, adminLogin, DEFAULT_OPTIONS } from '../fixtures/base';
+import { adminLogin, expect, test } from '../fixtures/base';
 
 async function fillHoneypotComment(
 	page: import( '@playwright/test' ).Page,
@@ -28,15 +28,12 @@ async function fillHoneypotComment(
 }
 
 test.describe( 'Advanced spam settings', () => {
-	test( 'spam is saved in database (flag_spam on)', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'spam is saved in database (flag_spam on)', async ( { page } ) => {
 		// Default options keep spam flagged (delete processor is off).
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'montgomery.c.burns.1866@example.com',
+			url: 'https://example.com',
 		} );
 
 		await adminLogin( page );
@@ -45,18 +42,15 @@ test.describe( 'Advanced spam settings', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Honeypot' );
 	} );
 
-	test( 'spam is deleted and not saved (flag_spam off)', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'spam is deleted and not saved (flag_spam off)', async ( { page, cli } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.post_processor_asb_delete_spam_active = 'on';
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
-			url: 'http://nuclear-secrets.com',
+			email: 'montgomery.c.burns.1866@example.com',
+			url: 'https://example.com',
 		} );
 
 		await expect( page.locator( 'body' ) ).toContainText( 'Spam deleted.' );
@@ -66,14 +60,11 @@ test.describe( 'Advanced spam settings', () => {
 		await expect( page.locator( 'body' ) ).not.toContainText( 'Mr. Burns' );
 	} );
 
-	test( 'spam reason is saved and visible (save_reason on)', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'spam reason is saved and visible (save_reason on)', async ( { page } ) => {
 		// Default options already have save_reason enabled.
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
+			email: 'montgomery.c.burns.1866@example.com',
 		} );
 
 		await adminLogin( page );
@@ -81,17 +72,14 @@ test.describe( 'Advanced spam settings', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Honeypot' );
 	} );
 
-	test( 'spam reason is not visible (save_reason off)', async ( {
-		page,
-		cli,
-	} ) => {
+	test( 'spam reason is not visible (save_reason off)', async ( { page, cli } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.post_processor_asb_save_reason_active = '';
 		cli.optionUpdate( 'antispam_bee_options', opts );
 
 		await fillHoneypotComment( page, {
 			author: 'Mr. Burns',
-			email: 'montgomery.c.burns.1866@nuclear-secrets.com',
+			email: 'montgomery.c.burns.1866@example.com',
 		} );
 
 		await adminLogin( page );

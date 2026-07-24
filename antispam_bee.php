@@ -25,11 +25,11 @@ define( __NAMESPACE__ . '\MAIN_PLUGIN_FILE', __FILE__ );
 define( __NAMESPACE__ . '\PLUGIN_PATH', plugin_dir_path( MAIN_PLUGIN_FILE ) );
 define( __NAMESPACE__ . '\PLUGIN_VERSION', '3.0.0-beta.1' );
 
-// The pre_init functions check the compatibility of the plugin and calls the init function, if check were successful.
+// The pre_init function checks the plugin's compatibility and calls the init function if the check was successful.
 pre_init();
 
 /**
- * Pre init function to check the plugins' compatibility.
+ * Pre init function to check the plugin's compatibility.
  *
  * @return void
  */
@@ -45,6 +45,22 @@ function pre_init(): void {
 	// Check if the `DOMDocument` class exists.
 	if ( ! class_exists( 'DOMDocument' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\domdocument_class_error' );
+
+		// Stop the further processing of the plugin.
+		return;
+	}
+
+	// Check if the `LibXML` PHP extension is available.
+	if ( ! extension_loaded( 'libxml' ) ) {
+		add_action( 'admin_notices', __NAMESPACE__ . '\libxml_extension_missing' );
+
+		// Stop the further processing of the plugin.
+		return;
+	}
+
+	// Check if the `JSON` PHP extension is available.
+	if ( ! extension_loaded( 'json' ) ) {
+		add_action( 'admin_notices', __NAMESPACE__ . '\json_extension_missing' );
 
 		// Stop the further processing of the plugin.
 		return;
@@ -68,7 +84,7 @@ function pre_init(): void {
 }
 
 /**
- * Show an admin notice error message if the PHP version is too low
+ * Show an admin notice error message if the PHP version is too low.
  *
  * @return void
  */
@@ -79,7 +95,7 @@ function min_php_version_error(): void {
 }
 
 /**
- * Show an admin notice error message if the `DOMDocument` class is missing
+ * Show an admin notice error message if the `DOMDocument` class is missing.
  *
  * @return void
  */
@@ -90,7 +106,29 @@ function domdocument_class_error(): void {
 }
 
 /**
- * Show an admin notice error message if the Composer autoloader is missing
+ * Show an admin notice error message if the `LibXML` extension is missing.
+ *
+ * @return void
+ */
+function libxml_extension_missing(): void {
+	echo '<div class="error"><p>';
+	esc_html_e( 'Antispam Bee requires the LibXML PHP extension. Please install the PHP LibXML extension.', 'antispam-bee' );
+	echo '</p></div>';
+}
+
+/**
+ * Show an admin notice error message if the `JSON` extension is missing.
+ *
+ * @return void
+ */
+function json_extension_missing(): void {
+	echo '<div class="error"><p>';
+	esc_html_e( 'Antispam Bee requires the JSON PHP extension. Please install the PHP JSON extension.', 'antispam-bee' );
+	echo '</p></div>';
+}
+
+/**
+ * Show an admin notice error message if the Composer autoloader is missing.
  *
  * @return void
  */

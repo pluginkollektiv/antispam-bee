@@ -1,6 +1,6 @@
 <?php
 /**
- * Delete Post Processor.
+ * Delete Post-Processor.
  *
  * @package AntispamBee\PostProcessors
  */
@@ -8,19 +8,19 @@
 namespace AntispamBee\PostProcessors;
 
 /**
- * Post processor that marks spam comments so that they are deleted in the end.
+ * Post-processor that marks spam comments so that they are deleted in the end.
  */
 class Delete extends ControllableBase {
 
 	/**
-	 * Post processor slug.
+	 * Post-processor slug.
 	 *
 	 * @var string
 	 */
 	protected static $slug = 'asb-delete-spam';
 
 	/**
-	 * This post processor marks items for deletion.
+	 * This post-processor marks items for deletion.
 	 *
 	 * @var bool
 	 */
@@ -30,6 +30,7 @@ class Delete extends ControllableBase {
 	 * Process an item, i.e. mark it for deletion.
 	 *
 	 * @param array $item Item to process.
+	 *
 	 * @return array Processed item.
 	 */
 	public static function process( array $item ): array {
@@ -39,27 +40,27 @@ class Delete extends ControllableBase {
 	}
 
 	/**
-	 * Get element name.
+	 * Get the element name.
 	 *
-	 * @return string
+	 * @return string The name.
 	 */
 	public static function get_name(): string {
 		return __( 'Delete spam', 'antispam-bee' );
 	}
 
 	/**
-	 * Get element label (optional).
+	 * Get the element label (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The label, or null.
 	 */
 	public static function get_label(): ?string {
 		return __( 'Delete detected spam instead of marking.', 'antispam-bee' );
 	}
 
 	/**
-	 * Get element description (optional).
+	 * Get the element description (optional).
 	 *
-	 * @return string|null
+	 * @return string|null The description, or null.
 	 */
 	public static function get_description(): ?string {
 		return null;

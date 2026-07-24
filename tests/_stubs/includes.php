@@ -4,13 +4,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', dirname( __DIR__ ) );
 }
 
-function register_activation_hook() { }
+function register_activation_hook( $file, $callback ) { }
 
-function register_deactivation_hook() { }
+function register_deactivation_hook( $file, $callback ) { }
 
-function register_uninstall_hook() { }
+function register_uninstall_hook( $file, $callback ) { }
 
-function wp_cache_get() { return false; }
+function wp_cache_get( $key ) { return false; }
 
 function wp_cache_set( $key, $data ) { return true; }
 
@@ -30,7 +30,7 @@ function wp_parse_args( $args, $defaults = '' ) {
 	return $r;
 }
 
-function plugin_basename() { return dirname( dirname( __DIR__ ) ); }
+function plugin_basename( $file ) { return dirname( dirname( __DIR__ ) ); }
 
 function __( $text, $domain ) { return $text; }
 function esc_attr__( $text, $domain ) { return $text; }

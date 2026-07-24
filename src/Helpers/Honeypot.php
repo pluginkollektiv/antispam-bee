@@ -15,27 +15,20 @@ use DOMXPath;
  */
 class Honeypot {
 	/**
-	 * The salt used for the dynamic field name.
-	 *
-	 * @var string
-	 */
-	protected $salt;
-
-	/**
 	 * Inject the honeypot field.
 	 *
-	 * @param string $markup The field markup.
-	 * @param array  $options {
-	 *       The field options.
+	 * @param string $markup     The field markup.
+	 * @param array  $options    {
+	 *                           The field options.
 	 *
-	 * @type string $form_id The form id.
-	 * @type string $form_name The form name.
-	 * @type string $field_type The field type.
-	 * @type string $field_id The field id.
-	 * @type string $field_name The field name.
-	 * }
+	 * @type string  $form_id    The form id.
+	 * @type string  $form_name  The form name.
+	 * @type string  $field_type The field type.
+	 * @type string  $field_id   The field id.
+	 * @type string  $field_name The field name.
+	 *                           }
 	 *
-	 * @return string
+	 * @return string The markup with the injected honeypot field.
 	 */
 	public static function inject( string $markup, array $options ): string {
 		$dom = new DOMDocument();
@@ -141,10 +134,9 @@ class Honeypot {
 
 
 	/**
-	 * Returns the secret of a post used in the textarea id attribute.
+	 * Return the secret of a post used in the textarea id attribute.
 	 *
-	 * @return string
-	 * @since 2.10.0 Modify secret generation because `always_allowed` option no longer exists
+	 * @return string The secret used in the textarea id attribute.
 	 */
 	public static function get_secret_id_for_post(): string {
 		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
@@ -153,23 +145,22 @@ class Honeypot {
 	}
 
 	/**
-	 * Returns the secret of a post used in the textarea name attribute.
+	 * Get the current salt.
 	 *
-	 * @return string
-	 * @since 2.10.0 Modify secret generation because `always_allowed` option no longer exists
+	 * @return string The current salt.
 	 */
-	public static function get_secret_name_for_post(): string {
-		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
+	private static function get_salt(): string {
+		$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
 
-		return self::ensure_secret_starts_with_letter( $secret );
+		return substr( sha1( $salt ), 0, 10 );
 	}
 
 	/**
-	 * Ensures that the secret starts with a letter.
+	 * Ensure that the secret starts with a letter.
 	 *
 	 * @param string $secret The secret.
 	 *
-	 * @return string
+	 * @return string The secret starting with a letter.
 	 */
 	public static function ensure_secret_starts_with_letter( string $secret ): string {
 		$first_char = substr( $secret, 0, 1 );
@@ -181,25 +172,25 @@ class Honeypot {
 	}
 
 	/**
-	 * Testing if we are on an AMP site.
+	 * Test if we are on an AMP site.
 	 *
 	 * Starting with v2.0, amp_is_request() is the preferred method to check,
 	 * but we fall back to the then deprecated is_amp_endpoint() as needed.
 	 *
-	 * @return bool
+	 * @return bool Whether we are on an AMP site.
 	 */
 	private static function is_amp(): bool {
 		return ( function_exists( 'amp_is_request' ) && amp_is_request() ) || ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() );
 	}
 
 	/**
-	 * Get the current salt.
+	 * Return the secret of a post used in the textarea name attribute.
 	 *
-	 * @return string
+	 * @return string The secret used in the textarea name attribute.
 	 */
-	private static function get_salt(): string {
-		$salt = defined( 'NONCE_SALT' ) ? NONCE_SALT : ABSPATH;
+	public static function get_secret_name_for_post(): string {
+		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
 
-		return substr( sha1( $salt ), 0, 10 );
+		return self::ensure_secret_starts_with_letter( $secret );
 	}
 }

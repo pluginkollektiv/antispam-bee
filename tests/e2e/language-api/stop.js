@@ -7,4 +7,5 @@ import { execSync } from 'child_process';
 
 try {
 	execSync( 'docker rm -f asb-lang-api', { stdio: 'inherit' } );
-} catch {}
+} catch {
+}

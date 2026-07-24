@@ -22,16 +22,7 @@ class Text extends Field implements RenderElement, InjectableField {
 	protected $placeholder;
 
 	/**
-	 * Get placeholder.
-	 *
-	 * @return string
-	 */
-	public function get_placeholder(): string {
-		return $this->placeholder ?? '';
-	}
-
-	/**
-	 * Get HTML.
+	 * Get the HTML.
 	 */
 	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -46,9 +37,9 @@ class Text extends Field implements RenderElement, InjectableField {
 	}
 
 	/**
-	 * Get HTML markup for the actual input field.
+	 * Get the HTML markup for the actual input field.
 	 *
-	 * @return string
+	 * @return string The HTML markup for the input field.
 	 */
 	public function get_injectable_markup(): string {
 		return sprintf(
@@ -62,9 +53,18 @@ class Text extends Field implements RenderElement, InjectableField {
 	}
 
 	/**
-	 * Get element class(es).
+	 * Get the type of the input field.
 	 *
-	 * @return string
+	 * @return string The type of the input field.
+	 */
+	protected function get_type(): string {
+		return $this->option['input_type'] ?? 'text';
+	}
+
+	/**
+	 * Get the element class(es).
+	 *
+	 * @return string The CSS class(es) of the element.
 	 */
 	protected function get_class(): string {
 		$classes    = [
@@ -81,11 +81,11 @@ class Text extends Field implements RenderElement, InjectableField {
 	}
 
 	/**
-	 * Get type of input field.
+	 * Get the placeholder.
 	 *
-	 * @return string
+	 * @return string The placeholder of the field.
 	 */
-	protected function get_type(): string {
-		return $this->option['input_type'] ?? 'text';
+	public function get_placeholder(): string {
+		return $this->placeholder ?? '';
 	}
 }

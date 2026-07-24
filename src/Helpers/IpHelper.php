@@ -20,7 +20,7 @@ class IpHelper {
 	 *
 	 * @hook    string  pre_comment_user_ip  The client IP, defaults to REMOTE_ADDR.
 	 *
-	 * @return string Client IP
+	 * @return string Client IP.
 	 */
 	public static function get_client_ip(): string {
 		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
@@ -54,19 +54,18 @@ class IpHelper {
 		}
 
 		return (string) preg_replace(
-			'/[^0-9a-f:. ]/si',
+			'/[^0-9a-f:. ]/i',
 			'',
 			$raw_ip
 		);
 	}
 
 	/**
-	 * Anonymize the IP addresses
+	 * Anonymize an IP address.
 	 *
 	 * @param string $ip Original IP.
 	 *
-	 * @return  string     Anonymous IP.
-	 * @since   2.5.1
+	 * @return  string Anonymous IP.
 	 */
 	public static function anonymize_ip( string $ip ): string {
 		preg_match( '/\w+([\.:])\w+/', $ip, $matches );

@@ -1,4 +1,4 @@
-import { test as base, expect, Page } from '@playwright/test';
+import { expect, Page, test as base } from '@playwright/test';
 import { WpCli } from './wp-cli';
 
 // Default v3 plugin options — matches src/Helpers/Settings.php::$defaults.
@@ -26,7 +26,7 @@ type Fixtures = {
 	cli: WpCli;
 };
 
-export const test = base.extend< Fixtures >( {
+export const test = base.extend<Fixtures>( {
 	cli: async ( {}, use ) => {
 		await use( new WpCli() );
 	},
@@ -44,7 +44,7 @@ export { expect };
  * Log in to wp-admin and return a Page in the admin context.
  * Uses a fresh browser context so it doesn't affect the front-end `page` fixture.
  */
-export async function adminLogin( page: Page ): Promise< Page > {
+export async function adminLogin( page: Page ): Promise<Page> {
 	await page.goto( '/wp-login.php' );
 	await page.fill( '#user_login', 'admin' );
 	await page.fill( '#user_pass', 'password' );

@@ -14,18 +14,17 @@ use AntispamBee\Handlers\Rules;
 use AntispamBee\Interfaces\Controllable;
 
 /**
- * Helps by providing reusable sanitizing functions
+ * Helps by providing reusable sanitizing functions.
  */
 class Sanitize {
 
 	/**
-	 * Sanitizes a checkbox group based on the given values and the valid ones.
+	 * Sanitize a checkbox group based on the given values and the valid ones.
 	 *
 	 * @param mixed $values        Values to sanitize.
-	 * @param array $valid_options List of allowed keys.
+	 * @param array $valid_options A list of allowed keys.
 	 *
 	 * @return array Intersection of values and valid options.
-	 * @since 3.0.0
 	 */
 	public static function checkbox_group( $values, array $valid_options ): array {
 		if ( ! is_array( $values ) ) {
@@ -36,12 +35,11 @@ class Sanitize {
 	}
 
 	/**
-	 * Sanitizes an array of strings to match ISO format.
+	 * Sanitize an array of strings to match ISO format.
 	 *
-	 * @param mixed $codes List of potential ISO codes to sanitize.
+	 * @param mixed $codes A list of potential ISO codes to sanitize.
 	 *
 	 * @return array Sanitized ISO codes.
-	 * @since 3.0.0
 	 */
 	public static function iso_codes( $codes ): array {
 		if ( ! is_array( $codes ) ) {
@@ -63,24 +61,10 @@ class Sanitize {
 	}
 
 	/**
-	 * Sanitize a checkbox value.
-	 * Valid values are "on" or null.
-
-	 * @param mixed $value Raw checkbox value.
-	 * @return string|null Sanitized value.
-	 */
-	public static function checkbox( $value ): ?string {
-		if ( 'on' === $value ) {
-			return $value;
-		}
-
-		return null;
-	}
-
-	/**
-	 * Sanitize options.
+	 * Sanitize the options.
 	 *
 	 * @param array $options Options to sanitize.
+	 *
 	 * @return array Sanitized options.
 	 */
 	public static function sanitize_options( array $options ): array {
@@ -103,7 +87,7 @@ class Sanitize {
 	/**
 	 * Return all valid settings tab slugs derived from registered controllables.
 	 *
-	 * @return string[]
+	 * @return string[] A list of valid settings tab slugs.
 	 */
 	private static function get_tab_slugs(): array {
 		$tabs = [ 'general' ];
@@ -122,6 +106,7 @@ class Sanitize {
 	 *
 	 * @param array  $options Options.
 	 * @param string $tab     Settings tab.
+	 *
 	 * @return array Sanitized options.
 	 */
 	private static function sanitize_controllables( array $options, string $tab ): array {
@@ -164,12 +149,31 @@ class Sanitize {
 	}
 
 	/**
+	 * Sanitize a checkbox value.
+	 * Valid values are "on" or null.
+	 *
+	 * @param mixed $value Raw checkbox value.
+	 *
+	 * @return string|null Sanitized value.
+	 */
+	public static function checkbox( $value ): ?string {
+		if ( 'on' === $value ) {
+			return $value;
+		}
+
+		return null;
+	}
+
+	/**
 	 * Call a sanitization callback.
 	 *
 	 * @param array  $controllable_option Controllable options.
 	 * @param array  $options             Options.
 	 * @param string $tab                 Settings tab.
 	 * @param string $controllable        Controllable element (class name).
+	 *
+	 * @phpstan-param class-string<Controllable> $controllable
+	 *
 	 * @return void
 	 */
 	private static function call_sanitize_callback( array $controllable_option, array &$options, string $tab, string $controllable ): void {
@@ -182,18 +186,18 @@ class Sanitize {
 		}
 
 		$option_name = $controllable::get_option_name( $controllable_option['option_name'] );
-		$path        = str_replace( '-', '_', "$tab.$option_name" );
-		$new_value   = Settings::get_array_value_by_path( $path, $options );
+		$option_path = str_replace( '-', '_', "$tab.$option_name" );
+		$new_value   = Settings::get_array_value_by_path( $option_path, $options );
 
 		if ( is_callable( $controllable_option['sanitize'] ) ) {
 			$sanitized = call_user_func( $controllable_option['sanitize'], $new_value );
 			if ( null === $sanitized ) {
-				Settings::remove_array_key_by_path( $path, $options );
+				Settings::remove_array_key_by_path( $option_path, $options );
 
 				return;
 			}
 
-			Settings::set_array_value_by_path( $path, $sanitized, $options );
+			Settings::set_array_value_by_path( $option_path, $sanitized, $options );
 		}
 	}
 }

@@ -7,7 +7,6 @@
 
 namespace AntispamBee\Helpers;
 
-use AntispamBee\Handlers\PluginUpdate;
 use AntispamBee\Handlers\Rules;
 
 /**
@@ -53,9 +52,9 @@ class SpamReasonTextHelper {
 	}
 
 	/**
-	 * Gets the spam reason texts by an array of slugs
+	 * Get the spam reason texts by an array of slugs.
 	 *
-	 * @param array $slugs List of rule slugs.
+	 * @param array $slugs A list of rule slugs.
 	 *
 	 * @return array Texts for given slugs.
 	 */

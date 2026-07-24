@@ -49,7 +49,7 @@ class PluginUpdate {
 	private static $db_version_is_current = null;
 
 	/**
-	 * Runs after Antispam Bee was upgraded.
+	 * Run after Antispam Bee was upgraded.
 	 */
 	public static function maybe_run_plugin_updated_logic(): void {
 		if ( self::db_version_is_current() || self::$db_update_triggered ) {
@@ -60,7 +60,37 @@ class PluginUpdate {
 	}
 
 	/**
-	 * Makes database changes, if needed.
+	 * Whether the database structure is up-to-date.
+	 *
+	 * @return bool Whether the database structure is up-to-date.
+	 */
+	private static function db_version_is_current(): bool {
+		if ( ! is_null( self::$db_version_is_current ) ) {
+			return self::$db_version_is_current;
+		}
+
+		self::$db_version_is_current = (bool) version_compare(
+			get_option( 'antispambee_db_version', '1.0' ),
+			self::get_plugin_version(),
+			'=='
+		);
+
+		return self::$db_version_is_current;
+	}
+
+	/**
+	 * Get the plugin version.
+	 *
+	 * @return string The plugin version.
+	 */
+	private static function get_plugin_version(): string {
+		$meta = get_file_data( MAIN_PLUGIN_FILE, [ 'Version' => 'Version' ] );
+
+		return $meta['Version'];
+	}
+
+	/**
+	 * Make database changes, if needed.
 	 */
 	private static function maybe_update_database(): void {
 		// Prevent further update triggers during the same request that run before the DB version is updated.
@@ -79,9 +109,11 @@ class PluginUpdate {
 
 			// In Version 2.9 the IP of the commenter was saved as a hash. We reverted this solution.
 			// Therefore, we need to delete this unused data.
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery
 			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-			$sql = 'delete from `' . $wpdb->commentmeta . '` where `meta_key` IN ("antispam_bee_iphash")';
+			$sql = 'DELETE FROM `' . $wpdb->commentmeta . '` WHERE `meta_key` IN ("antispam_bee_iphash")';
 			$wpdb->query( $sql );
+			// phpcs:enable WordPress.DB.DirectDatabaseQuery
 			// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 		}
 
@@ -182,7 +214,7 @@ class PluginUpdate {
 
 	/**
 	 * Convert multiselect values.
-	 * Takes an array of selected keys, applies optional mapping and generated a new array using
+	 * Takes an array of selected keys, applies optional mapping and generates a new array using
 	 * these values as keys and "on" as value.
 	 *
 	 * @param array $values  Selected values.
@@ -191,7 +223,7 @@ class PluginUpdate {
 	 * @return array Converted array of selected options.
 	 */
 	private static function convert_multiselect_values( array $values, array $mapping = [] ): array {
-		if ( ! is_array( $values ) || empty( $values ) ) {
+		if ( empty( $values ) ) {
 			return $values;
 		}
 
@@ -205,35 +237,5 @@ class PluginUpdate {
 		}
 
 		return $new_array;
-	}
-
-	/**
-	 * Get plugin version.
-	 *
-	 * @return string
-	 */
-	private static function get_plugin_version(): string {
-		$meta = get_file_data( MAIN_PLUGIN_FILE, [ 'Version' => 'Version' ] );
-
-		return $meta['Version'];
-	}
-
-	/**
-	 * Whether the database structure is up-to-date.
-	 *
-	 * @return bool
-	 */
-	private static function db_version_is_current(): bool {
-		if ( ! is_null( self::$db_version_is_current ) ) {
-			return self::$db_version_is_current;
-		}
-
-		self::$db_version_is_current = (bool) version_compare(
-			get_option( 'antispambee_db_version', '1.0' ),
-			self::get_plugin_version(),
-			'=='
-		);
-
-		return self::$db_version_is_current;
 	}
 }
