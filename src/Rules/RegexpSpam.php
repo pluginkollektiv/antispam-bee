@@ -49,6 +49,7 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		$fields = [
 			'ip',
 			'host',
+			'rawurl',
 			'body',
 			'email',
 			'author',

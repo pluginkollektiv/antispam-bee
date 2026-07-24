@@ -73,6 +73,41 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 	}
 
 	/**
+	 * The `porn`/`pornstar`/`20bet` author terms must be detected.
+	 */
+	public function test_verify_author_terms() {
+		$porn           = self::make_comment();
+		$porn['author'] = 'freehdporn';
+		self::assertSame( 1, RegexpSpam::verify( $porn ), 'A porn author term should be flagged' );
+
+		$bet           = self::make_comment();
+		$bet['author'] = '20bet';
+		self::assertSame( 1, RegexpSpam::verify( $bet ), 'The 20bet author term should be flagged' );
+	}
+
+	/**
+	 * A Binance referral registration URL must be detected via the `rawurl`
+	 * pattern.
+	 *
+	 * Regression test: the rule declares a `rawurl` subject and pattern, but the
+	 * field was missing from the `$fields` allow-list, so the pattern never fired.
+	 */
+	public function test_verify_binance_rawurl() {
+		$item        = self::make_comment();
+		$item['url'] = 'https://accounts.binance.com/en/register?ref=ABCDE123';
+		self::assertSame( 1, RegexpSpam::verify( $item ), 'A Binance referral URL should be flagged via rawurl' );
+	}
+
+	/**
+	 * A non-referral Binance URL must not match, guarding the pattern's specificity.
+	 */
+	public function test_verify_binance_non_referral() {
+		$item        = self::make_comment();
+		$item['url'] = 'https://www.binance.com/en/support';
+		self::assertSame( 0, RegexpSpam::verify( $item ), 'A non-referral Binance URL should not be flagged' );
+	}
+
+	/**
 	 * Set up the test environment.
 	 *
 	 * @return void
