@@ -39,6 +39,24 @@ this via PHPCompatibilityWP.
 - **Text domain** — always `'antispam-bee'` (matches the plugin slug); do not use a variable or a
   different string.
 
+## Inline documentation
+
+Document every hook (`apply_filters()` / `do_action()`) following the
+[WordPress PHP inline documentation standards](https://developer.wordpress.org/coding-standards/inline-documentation-standards/php/).
+
+- **Placement** — put the DocBlock on the line immediately preceding the `apply_filters()` /
+  `do_action()` call. If the call is embedded in an expression or condition, extract it into a
+  variable so the DocBlock attaches directly to the call.
+- **Tag order** — summary, then optional description, then `@since`, then `@param` (one per hook
+  argument, aligned).
+- **No `@return`** — hook DocBlocks never use `@return`. Action hooks return nothing, and filter
+  hooks always return their first parameter.
+- **`@since`** — use the three-digit version in which the hook was introduced (e.g. `@since 2.9.4`).
+  For a hook that already exists on `master`, trace the introducing commit and its release version;
+  for a hook new to `v3`, use `@since 3.0.0`.
+- Reuse of a WordPress core hook (e.g. `pre_comment_user_ip`, `allow_empty_comment`) is documented
+  the same way, with the `@since` reflecting when this plugin started applying it.
+
 ## Git workflow
 
 - Always work on a **feature branch** based on `v3`

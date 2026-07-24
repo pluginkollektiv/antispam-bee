@@ -64,13 +64,12 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filter to hook into the `Country_Spam::verify` functionality to implement, for example, a custom IP check.
 		 *
+		 * @since 2.10.0
+		 *
 		 * @param null   $is_country_spam The `is_country_spam` result.
 		 * @param string $ip              The IP address.
 		 * @param array  $allowed         The list of allowed country codes.
 		 * @param array  $denied          The list of denied country codes.
-		 *
-		 * @return null|boolean The `is_country_spam` result or null.
-		 * @since 2.10.0
 		 */
 		$is_country_spam = apply_filters( 'antispam_bee_is_country_spam', null, $ip, $allowed, $denied );
 
@@ -81,10 +80,9 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filters the IPLocate API key. With this filter, you can add your own IPLocate API key.
 		 *
-		 * @param string $apikey The current IPLocate API key. Default is empty string.
-		 *
-		 * @return string The changed IPLocate API key.
 		 * @since 2.10.0
+		 *
+		 * @param string $apikey The current IPLocate API key. Default is empty string.
 		 */
 		$apikey = apply_filters( 'antispam_bee_country_spam_apikey', '' );
 

@@ -51,11 +51,10 @@ class LangSpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filters the detected language. With this filter, other detection methods can skip in and detect the language.
 		 *
+		 * @since 2.8.2
+		 *
 		 * @param null   $detected_language The detected language.
 		 * @param string $comment_text      The text, to detect the language.
-		 *
-		 * @return null|string The detected language or null.
-		 * @since 2.8.2
 		 */
 		$detected_language = apply_filters( 'antispam_bee_detected_lang', null, $comment_text );
 		if ( null !== $detected_language ) {
@@ -99,10 +98,9 @@ class LangSpam extends ControllableBase implements SpamReason {
 		 * To use a local service for testing, hook antispam_bee_detected_lang
 		 * instead and make the HTTP call with wp_remote_post() directly.
 		 *
-		 * @param string $api_url The language API URL.
-		 *
-		 * @return string The language API URL.
 		 * @since 3.0.0
+		 *
+		 * @param string $api_url The language API URL.
 		 */
 		$api_url = apply_filters( 'antispam_bee_lang_api_url', 'https://api.pluginkollektiv.org/language/v1/' );
 
@@ -188,10 +186,9 @@ class LangSpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filter the possible languages for the language spam test.
 		 *
-		 * @param (array) $languages The languages.
-		 *
-		 * @return array The list of allowed languages.
 		 * @since 2.7.1
+		 *
+		 * @param (array) $languages The languages.
 		 */
 		$languages = (array) apply_filters( 'antispam_bee_get_allowed_translate_languages', $languages );
 

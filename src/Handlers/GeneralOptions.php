@@ -42,6 +42,16 @@ class GeneralOptions {
 			return [];
 		}
 
+		/**
+		 * Filters the controllable general options.
+		 *
+		 * Use this filter to register additional option controls that are rendered
+		 * on the plugin’s general settings tab.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param array $options A list of controllable general options.
+		 */
 		return apply_filters( 'antispam_bee_general_options', [] );
 	}
 }
