@@ -1,0 +1,62 @@
+# Compare Antispam Bee spam detection between the current code and a baseline
+# release, so decision regressions are caught before a release.
+#
+# It replays a corpus of comments through both builds and diffs the spam/ham
+# verdict (and reason) via the reusable action
+# https://github.com/2ndkauboy/asb-detection-compare. Two tiers:
+#
+#   • Pull requests            -> fast smoke check against a small bundled
+#                                 fixture, compared to the PR's base branch.
+#   • prepare-* / release push -> thorough check against the FULL corpus dump
+#                                 downloaded from a secret, compared to the
+#                                 semver-resolved baseline release.
+#
+# Security: pull_request runs (including from forks) never receive secrets, so
+# they always fall back to the bundled fixture. Only trusted pushes to prepare-*
+# branches use the private dump. If the secrets are unset, prepare pushes fall
+# back to the fixture too.
+#
+# Secrets (optional, for the release tier): ASB_CORPUS_URL (URL of a .sql/.sql.gz
+# dump) and ASB_CORPUS_AUTH (e.g. "Bearer <token>" for a private asset).
+
+name: Spam-detection comparison
+
+on:
+  pull_request:
+    branches: [ v3, master ]
+  push:
+    branches:
+      - 'prepare-*'
+      - 'chore/prepare-*'
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mariadb:10.6
+        env:
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # full history/tags for baseline resolution
+
+      - name: Compare spam detection
+        uses: 2ndkauboy/asb-detection-compare@v1
+        with:
+          # PR: compare against the PR's base branch. Prepare push: leave empty
+          # so the baseline is resolved from the branch name (semver).
+          baseline-ref: ${{ github.event_name == 'pull_request' && github.base_ref || '' }}
+          # PR: bundled fixture. Prepare push: full dump from the secret.
+          corpus-url: ${{ github.event_name == 'push' && secrets.ASB_CORPUS_URL || '' }}
+          corpus-auth: ${{ github.event_name == 'push' && secrets.ASB_CORPUS_AUTH || '' }}
+          fail-on-flips: 'true'
