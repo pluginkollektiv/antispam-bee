@@ -110,7 +110,7 @@ class TextHelperTest extends TestCase {
 
 		self::assertSame(
 			0,
-			TextHelper::count_spaceless_script_letters( 'Ein völlig normaler Kommentar.' ),
+			TextHelper::count_spaceless_script_letters( 'Ein völlig normaler Kommentar.' ), // spellchecker:disable-line
 			'A latin text should have no letters of a script without word delimiters'
 		);
 
@@ -130,7 +130,7 @@ class TextHelperTest extends TestCase {
 	public function test_count_letters(): void {
 		self::assertSame(
 			26,
-			TextHelper::count_letters( 'Ein völlig normaler Kommentar.' ),
+			TextHelper::count_letters( 'Ein völlig normaler Kommentar.' ), // spellchecker:disable-line
 			'Umlauts should be counted, spaces and punctuation should not'
 		);
 
