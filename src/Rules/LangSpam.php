@@ -10,6 +10,7 @@ namespace AntispamBee\Rules;
 use AntispamBee\Helpers\LangHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
+use AntispamBee\Helpers\TextHelper;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
@@ -61,32 +62,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 			return (int) ! in_array( $detected_language, $allowed_languages, true );
 		}
 
-		$text = trim( preg_replace( "/[\n\r\t ]+/", ' ', $comment_text ) ?? '', ' ' );
-
-		if ( function_exists( 'wp_get_word_count_type' ) ) {
-			$word_count_type = wp_get_word_count_type();
-		} else {
-			/*
-			 * translators: If your word count is based on single characters (e.g. East Asian characters),
-			 * enter 'characters_excluding_spaces' or 'characters_including_spaces'. Otherwise, enter 'words'.
-			 * Do not translate into your own language.
-			 */
-			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
-			$word_count_type = _x( 'words', 'Word count type. Do not translate!' );
-		}
-
-		if ( strpos( $word_count_type, 'characters' ) === 0 && preg_match(
-			'/^utf\-?8$/i',
-			get_option( 'blog_charset' )
-		) ) {
-			preg_match_all( '/./u', $text, $words_array );
-			$word_count = count( $words_array[0] );
-		} else {
-			$words_array = preg_split( "/[\n\r\t ]+/", $text, -1, PREG_SPLIT_NO_EMPTY ) ?: [];
-			$word_count  = count( $words_array );
-		}
-
-		if ( $word_count < 10 ) {
+		if ( ! self::has_enough_text_for_detection( $comment_text ) ) {
 			return 0;
 		}
 
@@ -120,11 +96,75 @@ class LangSpam extends ControllableBase implements SpamReason {
 		}
 
 		$detected_language = json_decode( $detected_language );
-		if ( ! $detected_language || ! isset( $detected_language->code ) ) {
+		if ( ! $detected_language || ! isset( $detected_language->code ) || ! is_string( $detected_language->code ) ) {
+			return 0;
+		}
+
+		/*
+		 * The service returns the ISO 639-3 code "und" (undetermined) if it could not
+		 * identify the language. A language we do not know is no reason to assume spam.
+		 */
+		if ( '' === $detected_language->code || 'und' === $detected_language->code ) {
 			return 0;
 		}
 
 		return (int) ! in_array( LangHelper::map( $detected_language->code ), $allowed_languages, true );
+	}
+
+	/**
+	 * Check whether a text contains enough content to detect its language.
+	 *
+	 * The detection service needs a certain amount of text, because it compares
+	 * character sequences and is unreliable for short texts.
+	 *
+	 * Languages that delimit their words with spaces are measured in words. Scripts
+	 * that do not use spaces to delimit words, for example the Chinese, Japanese,
+	 * Korean or Thai script, are measured in characters instead, because such a text
+	 * would otherwise be counted as a single, far too short word.
+	 *
+	 * @param string $text The text to check.
+	 *
+	 * @return bool Whether the text contains enough content.
+	 */
+	private static function has_enough_text_for_detection( string $text ): bool {
+		$text = TextHelper::normalize_whitespace( $text );
+		if ( '' === $text ) {
+			return false;
+		}
+
+		$spaceless_script_letters = TextHelper::count_spaceless_script_letters( $text );
+		if ( $spaceless_script_letters > 0 ) {
+			/**
+			 * Filters the minimum number of characters needed to detect the language of a
+			 * text written in a script that does not use spaces to delimit words.
+			 *
+			 * @since 3.0.0
+			 *
+			 * @param int $min_characters The minimum number of characters.
+			 */
+			$min_characters = (int) apply_filters( 'antispam_bee_lang_min_characters', 10 );
+
+			/*
+			 * Such a script has to account for at least half of all letters. Otherwise, the
+			 * service would detect the language of the dominant, space delimited part of the
+			 * text, for which those few characters are just noise.
+			 */
+			if ( TextHelper::count_characters( $text ) >= $min_characters
+				&& ( $spaceless_script_letters * 2 ) >= TextHelper::count_letters( $text ) ) {
+				return true;
+			}
+		}
+
+		/**
+		 * Filters the minimum number of words needed to detect the language of a text.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param int $min_words The minimum number of words.
+		 */
+		$min_words = (int) apply_filters( 'antispam_bee_lang_min_words', 10 );
+
+		return TextHelper::count_words( $text ) >= $min_words;
 	}
 
 	/**

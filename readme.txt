@@ -102,6 +102,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
     * Complete code rewrite and backend UI overhaul
     * Allows extending Antispam Bee with your own rules
     * Allows using Antispam Bee rules for other reactions than comments, for example, forms
+    * Fix: The language rule now also checks comments written in a script that does not delimit its words with spaces, for example Chinese, Japanese, Korean or Thai
+    * Fix: The language rule no longer marks a comment as spam if the language could not be determined at all
 
 ### 2.11.12 ###
   * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)

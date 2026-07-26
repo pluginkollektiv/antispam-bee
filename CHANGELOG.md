@@ -6,12 +6,20 @@
     * Complete code rewrite and backend UI overhaul
     * Allows extending Antispam Bee with your own rules
     * Allows using Antispam Bee rules for other reactions than comments, for example, forms
+    * Fix: The language rule now also checks comments written in a script that does not delimit
+      its words with spaces, for example Chinese, Japanese, Korean or Thai
+    * Fix: The language rule no longer marks a comment as spam if the language could not be
+      determined at all
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
     * Möglichkeit der Erweiterung von Antispam Bee um eigene Spam-Regeln
     * Erlaubt die Nutzung von Antispam Bee für andere Reaktionen als Kommentare, beispielsweise
       Formulare
+    * Fix: Die Sprach-Regel prüft nun auch Kommentare in einer Schrift, die ihre Wörter nicht
+      durch Leerzeichen trennt, beispielsweise Chinesisch, Japanisch, Koreanisch oder Thai
+    * Fix: Die Sprach-Regel markiert einen Kommentar nicht mehr als Spam, wenn die Sprache
+      überhaupt nicht bestimmt werden konnte
 
 ### 2.11.12 ###
 
