@@ -8,16 +8,20 @@
 #   • Pull requests            -> fast smoke check against a small bundled
 #                                 fixture, compared to the PR's base branch.
 #   • prepare-* / release push -> thorough check against the FULL corpus dump
-#                                 downloaded from a secret, compared to the
+#                                 (decrypted in-workflow), compared to the
 #                                 semver-resolved baseline release.
 #
-# Security: pull_request runs (including from forks) never receive secrets, so
-# they always fall back to the bundled fixture. Only trusted pushes to prepare-*
-# branches use the private dump. If the secrets are unset, prepare pushes fall
-# back to the fixture too.
+# The full corpus is real (PII) comments, so it is never public in the clear:
+# an encrypted blob is fetched from a public URL and decrypted with a passphrase
+# secret. pull_request runs (including forks) never receive secrets and fall
+# back to the bundled fixture; only trusted pushes to prepare-* branches decrypt
+# the dump. If the corpus is not configured, prepare pushes fall back too.
 #
-# Secrets (optional, for the release tier): ASB_CORPUS_URL (URL of a .sql/.sql.gz
-# dump) and ASB_CORPUS_AUTH (e.g. "Bearer <token>" for a private asset).
+# Configure (for the release tier):
+#   • variable ASB_CORPUS_ENC_URL -> public URL of corpus.sql.gz.gpg
+#   • secret   ASB_CORPUS_KEY     -> the gpg passphrase
+# Encrypt with: gpg --batch --symmetric --cipher-algo AES256 \
+#   --passphrase "<pass>" -o corpus.sql.gz.gpg corpus.sql.gz
 
 name: Spam-detection comparison
 
@@ -50,13 +54,26 @@ jobs:
         with:
           fetch-depth: 0        # full history/tags for baseline resolution
 
+      # Release tier only: download the encrypted full corpus (public ciphertext,
+      # useless without the key) and decrypt it with the passphrase secret.
+      # Skipped when the corpus is not configured, so PRs use the bundled fixture.
+      - name: Fetch & decrypt the release corpus
+        if: github.event_name == 'push' && vars.ASB_CORPUS_ENC_URL != ''
+        env:
+          ASB_CORPUS_ENC_URL: ${{ vars.ASB_CORPUS_ENC_URL }}
+          ASB_CORPUS_KEY: ${{ secrets.ASB_CORPUS_KEY }}
+        run: |
+          curl -fSL --retry 3 -o corpus.sql.gz.gpg "$ASB_CORPUS_ENC_URL"
+          gpg --batch --quiet --yes --passphrase "$ASB_CORPUS_KEY" \
+            -o corpus.sql.gz -d corpus.sql.gz.gpg
+
       - name: Compare spam detection
         uses: 2ndkauboy/asb-detection-compare@v1
         with:
           # PR: compare against the PR's base branch. Prepare push: leave empty
           # so the baseline is resolved from the branch name (semver).
           baseline-ref: ${{ github.event_name == 'pull_request' && github.base_ref || '' }}
-          # PR: bundled fixture. Prepare push: full dump from the secret.
-          corpus-url: ${{ github.event_name == 'push' && secrets.ASB_CORPUS_URL || '' }}
-          corpus-auth: ${{ github.event_name == 'push' && secrets.ASB_CORPUS_AUTH || '' }}
+          # Release tier: the decrypted full corpus. PRs (or unconfigured): empty
+          # -> the action's bundled fixture.
+          corpus-file: ${{ (github.event_name == 'push' && vars.ASB_CORPUS_ENC_URL != '') && format('{0}/corpus.sql.gz', github.workspace) || '' }}
           fail-on-flips: 'true'
