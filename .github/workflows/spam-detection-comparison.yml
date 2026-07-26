@@ -3,21 +3,23 @@
 #
 # It replays a corpus of comments through both builds and diffs the spam/ham
 # verdict (and reason) via the reusable action
-# https://github.com/2ndkauboy/asb-detection-compare. Two tiers:
+# https://github.com/2ndkauboy/asb-detection-compare. Three tiers:
 #
-#   • Pull requests            -> fast smoke check against a small bundled
-#                                 fixture, compared to the PR's base branch.
-#   • prepare-* / release push -> thorough check against the FULL corpus dump
-#                                 (decrypted in-workflow), compared to the
-#                                 semver-resolved baseline release.
+#   • Pull requests             -> fast smoke check against a small bundled
+#                                  fixture, compared to the PR's base branch.
+#   • prepare-* / release push  -> thorough check against the FULL corpus dump
+#                                  (decrypted in-workflow), compared to the
+#                                  semver-resolved baseline release.
+#   • Manual (workflow_dispatch)-> run on ANY branch on demand, choosing the
+#                                  baseline and whether to use the full corpus.
 #
 # The full corpus is real (PII) comments, so it is never public in the clear:
 # an encrypted blob is fetched from a public URL and decrypted with a passphrase
 # secret. pull_request runs (including forks) never receive secrets and fall
-# back to the bundled fixture; only trusted pushes to prepare-* branches decrypt
-# the dump. If the corpus is not configured, prepare pushes fall back too.
+# back to the bundled fixture; only trusted events (prepare-* pushes, manual
+# runs) decrypt the dump. If the corpus is not configured, they fall back too.
 #
-# Configure (for the release tier):
+# Configure (for the full-corpus tiers):
 #   • variable ASB_CORPUS_ENC_URL -> public URL of corpus.sql.gz.gpg
 #   • secret   ASB_CORPUS_KEY     -> the gpg passphrase
 # Encrypt with: gpg --batch --symmetric --cipher-algo AES256 \
@@ -32,10 +34,28 @@ on:
     branches:
       - 'prepare-*'
       - 'chore/prepare-*'
+  workflow_dispatch:
+    inputs:
+      baseline_ref:
+        description: 'Baseline tag or branch to compare the current branch against.'
+        required: true
+        default: 'v3'
+      full_corpus:
+        description: 'Use the full encrypted corpus (otherwise the small bundled fixture).'
+        type: boolean
+        default: true
+      fail_on_flips:
+        description: 'Fail the run if any spam/ham verdict flips.'
+        type: boolean
+        default: true
 
 jobs:
   compare:
     runs-on: ubuntu-latest
+    env:
+      # Full corpus for prepare-* pushes and manual runs that ask for it, when
+      # the corpus is configured; otherwise the bundled fixture. PRs never use it.
+      ASB_USE_FULL: ${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.full_corpus)) && vars.ASB_CORPUS_ENC_URL != '' }}
     services:
       mysql:
         image: mariadb:10.6
@@ -54,11 +74,8 @@ jobs:
         with:
           fetch-depth: 0        # full history/tags for baseline resolution
 
-      # Release tier only: download the encrypted full corpus (public ciphertext,
-      # useless without the key) and decrypt it with the passphrase secret.
-      # Skipped when the corpus is not configured, so PRs use the bundled fixture.
       - name: Fetch & decrypt the release corpus
-        if: github.event_name == 'push' && vars.ASB_CORPUS_ENC_URL != ''
+        if: env.ASB_USE_FULL == 'true'
         env:
           ASB_CORPUS_ENC_URL: ${{ vars.ASB_CORPUS_ENC_URL }}
           ASB_CORPUS_KEY: ${{ secrets.ASB_CORPUS_KEY }}
@@ -70,10 +87,8 @@ jobs:
       - name: Compare spam detection
         uses: 2ndkauboy/asb-detection-compare@v1
         with:
-          # PR: compare against the PR's base branch. Prepare push: leave empty
-          # so the baseline is resolved from the branch name (semver).
-          baseline-ref: ${{ github.event_name == 'pull_request' && github.base_ref || '' }}
-          # Release tier: the decrypted full corpus. PRs (or unconfigured): empty
-          # -> the action's bundled fixture.
-          corpus-file: ${{ (github.event_name == 'push' && vars.ASB_CORPUS_ENC_URL != '') && format('{0}/corpus.sql.gz', github.workspace) || '' }}
-          fail-on-flips: 'true'
+          # PR -> the PR's base branch. Manual -> the chosen baseline. Prepare
+          # push -> empty, so the baseline is resolved from the branch name.
+          baseline-ref: ${{ (github.event_name == 'pull_request' && github.base_ref) || (github.event_name == 'workflow_dispatch' && inputs.baseline_ref) || '' }}
+          corpus-file: ${{ env.ASB_USE_FULL == 'true' && format('{0}/corpus.sql.gz', github.workspace) || '' }}
+          fail-on-flips: ${{ (github.event_name == 'workflow_dispatch' && inputs.fail_on_flips == false) && 'false' || 'true' }}
