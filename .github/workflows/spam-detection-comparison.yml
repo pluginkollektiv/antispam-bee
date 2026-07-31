@@ -123,3 +123,15 @@ jobs:
           path: ${{ steps.compare.outputs.snapshot-file }}
           retention-days: 90
           if-no-files-found: error
+
+      # When the baseline had to be classified, its verdicts describe a released
+      # tag and are just as publishable. Attach this one to that release and the
+      # next comparison against it needs only a single pass.
+      - name: Upload the baseline verdict snapshot
+        if: env.ASB_USE_FULL == 'true' && steps.compare.outputs.baseline-snapshot-file != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: asb-detection-baseline-snapshot
+          path: ${{ steps.compare.outputs.baseline-snapshot-file }}
+          retention-days: 90
+          if-no-files-found: error
