@@ -72,6 +72,115 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 		);
 	}
 
+	public function test_verify_allows_removing_a_default_pattern() {
+		$item           = self::make_comment();
+		$item['author'] = 'Buy Viagra';
+
+		expectApplied( 'antispam_bee_patterns' )
+			->once()
+			->andReturnUsing(
+				static function ( $patterns ) {
+					unset( $patterns['asb-spam-keywords-author'] );
+
+					return $patterns;
+				}
+			);
+
+		self::assertSame(
+			0,
+			RegexpSpam::verify( $item ),
+			'A default pattern removed by its identifier should no longer be applied'
+		);
+	}
+
+	public function test_verify_allows_modifying_a_default_pattern() {
+		expectApplied( 'antispam_bee_patterns' )
+			->twice()
+			->andReturnUsing(
+				static function ( $patterns ) {
+					$patterns['asb-spam-keywords-author']['author'] .= '|customspamword';
+
+					return $patterns;
+				}
+			);
+
+		$custom_match           = self::make_comment();
+		$custom_match['author'] = 'A customspamword author';
+		self::assertSame(
+			1,
+			RegexpSpam::verify( $custom_match ),
+			'A default pattern extended by its identifier should match the added keyword'
+		);
+
+		$default_match           = self::make_comment();
+		$default_match['author'] = 'Buy Viagra';
+		self::assertSame(
+			1,
+			RegexpSpam::verify( $default_match ),
+			'Extending a default pattern should keep its original keywords working'
+		);
+	}
+
+	public function test_verify_passes_all_documented_pattern_keys_to_the_filter() {
+		$expected_keys = [
+			'asb-gmail-numeric-domain',
+			'asb-gibberish-strings',
+			'asb-mfunc-injection',
+			'asb-spam-keywords-author',
+			'asb-known-spam-hosts',
+			'asb-traffic-and-pharma-body',
+			'asb-luxury-brand-sale-body',
+			'asb-adult-pharma-russian-email',
+			'asb-shorturl-fm-link-only-body',
+			'asb-binance-referral-url',
+			'asb-author-name-as-link-text',
+			'asb-author-name-followed-by-url',
+			'asb-author-name-as-host',
+		];
+
+		$filtered_keys = [];
+		expectApplied( 'antispam_bee_patterns' )
+			->once()
+			->andReturnUsing(
+				static function ( $patterns ) use ( &$filtered_keys ) {
+					$filtered_keys = array_keys( $patterns );
+
+					return $patterns;
+				}
+			);
+
+		RegexpSpam::verify( self::make_comment() );
+
+		self::assertSame(
+			$expected_keys,
+			$filtered_keys,
+			'The filter should receive all built-in patterns under their documented identifiers'
+		);
+	}
+
+	public function test_verify_still_supports_appended_patterns_without_a_key() {
+		$item         = self::make_comment();
+		$item['body'] = 'A perfectly harmless custom message.';
+
+		expectApplied( 'antispam_bee_patterns' )
+			->once()
+			->andReturnUsing(
+				static function ( $patterns ) {
+					$patterns[] = [
+						'body' => 'harmless custom message',
+					];
+
+					return $patterns;
+				}
+			);
+
+		self::assertSame(
+			1,
+			RegexpSpam::verify( $item ),
+			'Patterns appended without an identifier should still be applied'
+		);
+	}
+
 	/**
 	 * The `porn`/`pornstar`/`20bet` author terms must be detected.
 	 */

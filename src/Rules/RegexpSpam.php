@@ -76,60 +76,60 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		);
 
 		$patterns = [
-			[
+			'asb-gmail-numeric-domain'       => [
 				'host'  => '^(www\.)?\d+\w+\.com$',
 				'body'  => '^\w+\s\d+$',
 				'email' => '@gmail.com$',
 			],
-			[
+			'asb-gibberish-strings'          => [
 				'body'   => '\b[a-z]{30}\b',
 				'author' => '\b[a-z]{10}\b',
 				'host'   => '\b[a-z]{10}\b',
 			],
-			[
+			'asb-mfunc-injection'            => [
 				'body' => '\<\!.+?mfunc.+?\>',
 			],
-			[
+			'asb-spam-keywords-author'       => [
 				'author' => 'moncler|north face|vuitton|handbag|burberry|outlet|prada|cialis|viagra|maillot|oakley|ralph lauren|ray ban|iphone|プラダ|[^\w]?porn[o]?[s]?[^\w]?|[^\w]?pornstar[^\w]?|^20bet$',
 			],
-			[
+			'asb-known-spam-hosts'           => [
 				'host' => '^(www\.)?fkbook\.co\.uk$|^(www\.)?nsru\.net$|^(www\.)?goo\.gl$|^(www\.)?bit\.ly$',
 			],
-			[
+			'asb-traffic-and-pharma-body'    => [
 				'body' => 'target[t]?ed (visitors|traffic)|viagra|cialis',
 			],
-			[
+			'asb-luxury-brand-sale-body'     => [
 				'body' => 'purchase amazing|buy amazing|luxurybrandsale',
 			],
-			[
+			'asb-adult-pharma-russian-email' => [
 				'body'  => 'dating|sex|lotto|pharmacy',
 				'email' => '@mail\.ru|@yandex\.',
 			],
-			[
+			'asb-shorturl-fm-link-only-body' => [
 				'body'   => '^https?:\/\/shorturl\.fm\/[a-zA-Z0-9]{5}$',
 				'email'  => '@gmail\.com',
 				'author' => '^[A-Z][a-z]+\d{3,4}$',
 			],
-			[
+			'asb-binance-referral-url'       => [
 				'rawurl' => '^http[s]?:\/\/(accounts\.)?binance\.com\/[a-zA-Z-]+\/register(-person)?\?ref=[\w]+',
 			],
 		];
 
 		$quoted_author = preg_quote( $subject['author'], '/' );
 		if ( $quoted_author ) {
-			$patterns[] = [
+			$patterns['asb-author-name-as-link-text']    = [
 				'body' => sprintf(
 					'<a.+?>%s<\/a>$',
 					$quoted_author
 				),
 			];
-			$patterns[] = [
+			$patterns['asb-author-name-followed-by-url'] = [
 				'body' => sprintf(
 					'%s https?:.+?$',
 					$quoted_author
 				),
 			];
-			$patterns[] = [
+			$patterns['asb-author-name-as-host']         = [
 				'email'  => '@gmail.com$',
 				'author' => '^[a-z0-9-\.]+\.[a-z]{2,6}$',
 				'host'   => sprintf(
@@ -142,13 +142,18 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filters the regular expression patterns used to detect spam.
 		 *
-		 * Each pattern is an array that maps a reaction field (for example `email`,
-		 * `author`, `body` or `host`) to a regular expression. A reaction is flagged
-		 * as spam when all fields of a single pattern match.
+		 * Each entry is a map of subject field (`ip`, `host`, `rawurl`, `body`, `email`,
+		 * `author`, `useragent`) to a regular expression without delimiters. All fields of
+		 * an entry must match for the reaction to be flagged as spam. Array keys are stable
+		 * identifiers, so single default patterns can be modified or removed. The built-in
+		 * ones are prefixed with `asb-`.
 		 *
 		 * @since 2.5.2
+		 * @since 3.0.0 Patterns are keyed by a stable identifier instead of a numeric index.
 		 *
-		 * @param array $patterns A list of field-to-regular-expression pattern maps.
+		 * @param array<string, array<string, string>> $patterns Patterns, keyed by identifier.
+		 *
+		 * @return array<string, array<string, string>> Filtered patterns.
 		 */
 		$patterns = apply_filters(
 			'antispam_bee_patterns',
