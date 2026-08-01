@@ -23,6 +23,13 @@ class EmptyData extends Base implements SpamReason {
 	protected static $slug = 'asb-empty';
 
 	/**
+	 * Missing required data is a definitive spam signal.
+	 *
+	 * @var bool
+	 */
+	protected static $is_final = true;
+
+	/**
 	 * Verify an item.
 	 *
 	 * Check for empty content or author.

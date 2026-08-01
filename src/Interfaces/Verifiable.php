@@ -51,6 +51,10 @@ interface Verifiable {
 	/**
 	 * Is this rule final?
 	 *
+	 * Final rules are checked before all other rules. If a final rule returns
+	 * a positive result, the item is marked as spam right away and the
+	 * remaining rules are not evaluated.
+	 *
 	 * @return bool Whether this rule is final.
 	 */
 	public static function is_final(): bool;
