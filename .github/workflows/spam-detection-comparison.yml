@@ -55,6 +55,10 @@ on:
         description: 'Fail the run if any spam/ham verdict flips.'
         type: boolean
         default: true
+      comment_pr:
+        description: 'Post the full-corpus result as a comment on this PR number (optional).'
+        required: false
+        default: ''
 
 jobs:
   compare:
@@ -64,6 +68,7 @@ jobs:
     timeout-minutes: 330
     permissions:
       contents: read        # look up the baseline snapshot on the release
+      pull-requests: write  # post the full-corpus result on a PR (manual runs)
     env:
       # Full corpus for prepare-* pushes and manual runs that ask for it, when
       # the corpus is configured; otherwise the bundled fixture. PRs never use it.
@@ -135,3 +140,39 @@ jobs:
           path: ${{ steps.compare.outputs.baseline-snapshot-file }}
           retention-days: 90
           if-no-files-found: error
+
+      # Post the result on a PR — only for full-corpus runs, since a PR-event run
+      # sees just the small bundled fixture and would report almost nothing.
+      # Updates its own comment in place instead of adding one per run.
+      #
+      # `always()` so a failing check (flips found) still reports: that is exactly
+      # the case someone needs the table for.
+      - name: Comment the result on the PR
+        if: always() && env.ASB_USE_FULL == 'true' && inputs.comment_pr != '' && steps.compare.outputs.report-markdown != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ inputs.comment_pr }}
+          REPORT: ${{ steps.compare.outputs.report-markdown }}
+        run: |
+          set -euo pipefail
+
+          # Fork PRs get a read-only token and cannot be commented on. Say so
+          # rather than failing the run with an opaque 403.
+          is_fork="$(gh pr view "$PR" --json isCrossRepository --jq .isCrossRepository)"
+          if [ "$is_fork" = "true" ]; then
+            echo "::notice::PR #$PR comes from a fork; skipping the comment (see the job summary instead)."
+            exit 0
+          fi
+
+          # Reuse our own previous comment when there is one.
+          existing="$(gh api "repos/${{ github.repository }}/issues/$PR/comments" --paginate \
+            --jq 'map(select(.body | contains("<!-- asb-detection-compare -->"))) | last | .id // empty')"
+
+          if [ -n "$existing" ]; then
+            gh api --method PATCH "repos/${{ github.repository }}/issues/comments/$existing" \
+              -F body=@"$REPORT" >/dev/null
+            echo "Updated comment $existing on PR #$PR."
+          else
+            gh pr comment "$PR" --body-file "$REPORT"
+            echo "Posted a new comment on PR #$PR."
+          fi
