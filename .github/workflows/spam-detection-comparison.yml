@@ -1,0 +1,137 @@
+# Compare Antispam Bee spam detection between the current code and a baseline
+# release, so decision regressions are caught before a release.
+#
+# It replays a corpus of comments through both builds and diffs the spam/ham
+# verdict (and reason) via the reusable action
+# https://github.com/2ndkauboy/asb-detection-compare. Three tiers:
+#
+#   • Pull requests             -> fast smoke check against a small bundled
+#                                  fixture, compared to the PR's base branch.
+#   • prepare-* / release push  -> thorough check against the FULL corpus dump
+#                                  (decrypted in-workflow), compared to the
+#                                  semver-resolved baseline release.
+#   • Manual (workflow_dispatch)-> run on ANY branch on demand, choosing the
+#                                  baseline and whether to use the full corpus.
+#
+# The full corpus is real (PII) comments, so it is never public in the clear:
+# an encrypted blob is fetched from a public URL and decrypted with a passphrase
+# secret. pull_request runs (including forks) never receive secrets and fall
+# back to the bundled fixture; only trusted events (prepare-* pushes, manual
+# runs) decrypt the dump. If the corpus is not configured, they fall back too.
+#
+# Classifying the full corpus takes hours, and half of every run would re-derive
+# how the *baseline release* classifies it — which never changes. So a run
+# publishes its verdicts as an artifact, attach-snapshot.yml attaches that to the
+# release, and the next prepare run reuses it and skips the baseline pass. The
+# snapshot holds no personal data: per comment only a salted pseudonym of the
+# corpus row id, the spam/ham status and the matched rule slugs.
+#
+# Configure (for the full-corpus tiers):
+#   • variable ASB_CORPUS_ENC_URL -> public URL of corpus.sql.gz.gpg
+#   • secret   ASB_CORPUS_KEY     -> the gpg passphrase
+# Encrypt with: gpg --batch --symmetric --cipher-algo AES256 \
+#   --passphrase "<pass>" -o corpus.sql.gz.gpg corpus.sql.gz
+
+name: Spam-detection comparison
+
+on:
+  pull_request:
+    branches: [ v3, master ]
+  push:
+    branches:
+      - 'prepare-*'
+      - 'chore/prepare-*'
+  workflow_dispatch:
+    inputs:
+      baseline_ref:
+        description: 'Baseline tag or branch to compare the current branch against.'
+        required: true
+        default: 'v3'
+      full_corpus:
+        description: 'Use the full encrypted corpus (otherwise the small bundled fixture).'
+        type: boolean
+        default: true
+      fail_on_flips:
+        description: 'Fail the run if any spam/ham verdict flips.'
+        type: boolean
+        default: true
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    # A full-corpus pass is long; the baseline half is skipped whenever the
+    # baseline release already carries a verdict snapshot (see below).
+    timeout-minutes: 330
+    permissions:
+      contents: read        # look up the baseline snapshot on the release
+    env:
+      # Full corpus for prepare-* pushes and manual runs that ask for it, when
+      # the corpus is configured; otherwise the bundled fixture. PRs never use it.
+      ASB_USE_FULL: ${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.full_corpus)) && vars.ASB_CORPUS_ENC_URL != '' }}
+    services:
+      mysql:
+        image: mariadb:10.6
+        env:
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # full history/tags for baseline resolution
+
+      - name: Fetch & decrypt the release corpus
+        if: env.ASB_USE_FULL == 'true'
+        env:
+          ASB_CORPUS_ENC_URL: ${{ vars.ASB_CORPUS_ENC_URL }}
+          ASB_CORPUS_KEY: ${{ secrets.ASB_CORPUS_KEY }}
+        run: |
+          curl -fSL --retry 3 -o corpus.sql.gz.gpg "$ASB_CORPUS_ENC_URL"
+          gpg --batch --quiet --yes --passphrase "$ASB_CORPUS_KEY" \
+            -o corpus.sql.gz -d corpus.sql.gz.gpg
+
+      - name: Compare spam detection
+        id: compare
+        uses: 2ndkauboy/asb-detection-compare@v1
+        with:
+          # PR -> the PR's base branch. Manual -> the chosen baseline. Prepare
+          # push -> empty, so the baseline is resolved from the branch name.
+          baseline-ref: ${{ (github.event_name == 'pull_request' && github.base_ref) || (github.event_name == 'workflow_dispatch' && inputs.baseline_ref) || '' }}
+          corpus-file: ${{ env.ASB_USE_FULL == 'true' && format('{0}/corpus.sql.gz', github.workspace) || '' }}
+          fail-on-flips: ${{ (github.event_name == 'workflow_dispatch' && inputs.fail_on_flips == false) && 'false' || 'true' }}
+          workers: '4'
+          # Pinned so published verdict snapshots stay valid across WordPress
+          # releases; bumping it deliberately invalidates every snapshot.
+          wp-version: '6.8.2'
+
+      # Keep this run's verdict snapshot. When this version is released,
+      # attach-snapshot.yml attaches it to the release, and the next prepare run
+      # reuses it as its baseline instead of classifying the corpus twice.
+      # Only full-corpus runs are worth keeping — a fixture snapshot is cheap to
+      # recompute and would only shadow the real one.
+      - name: Upload the verdict snapshot
+        if: env.ASB_USE_FULL == 'true' && steps.compare.outputs.snapshot-file != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: asb-detection-snapshot
+          path: ${{ steps.compare.outputs.snapshot-file }}
+          retention-days: 90
+          if-no-files-found: error
+
+      # When the baseline had to be classified, its verdicts describe a released
+      # tag and are just as publishable. Attach this one to that release and the
+      # next comparison against it needs only a single pass.
+      - name: Upload the baseline verdict snapshot
+        if: env.ASB_USE_FULL == 'true' && steps.compare.outputs.baseline-snapshot-file != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: asb-detection-baseline-snapshot
+          path: ${{ steps.compare.outputs.baseline-snapshot-file }}
+          retention-days: 90
+          if-no-files-found: error
