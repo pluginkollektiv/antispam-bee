@@ -69,6 +69,28 @@ Whether Antispam Bee works with a comment form submitted via AJAX depends on how
 
 If the comments are sent to the `admin-ajax.php`, the `antispam_bee_disallow_ajax_calls` filter must be used to run ASB for requests to that file as well. If the script does not send all form data to the file, but only some selected ones, further customization is probably necessary, as [exemplified in this post by Torsten Landsiedel](https://torstenlandsiedel.de/2020/10/04/ajaxifizierte-kommentare-und-antispam-bee/) (in German).
 
+### How can I customize the regular expressions used for spam detection? ###
+The "Regular Expression" rule ships with a set of built-in patterns that can be adjusted via the `antispam_bee_patterns` filter. Every pattern is an array of subject fields (`ip`, `host`, `rawurl`, `body`, `email`, `author`, `useragent`) mapped to a regular expression without delimiters. All fields of a pattern must match for a reaction to be flagged as spam.
+
+Each built-in pattern has a stable identifier as its array key (prefixed with `asb-`), so single patterns can be removed or modified without touching the others:
+
+`
+add_filter( 'antispam_bee_patterns', function ( $patterns ) {
+    // Remove a built-in pattern.
+    unset( $patterns['asb-spam-keywords-author'] );
+
+    // Extend a built-in pattern.
+    $patterns['asb-known-spam-hosts']['host'] .= '|^(www\.)?example\.com$';
+
+    // Add your own pattern.
+    $patterns['my-plugin-crypto-body'] = [
+        'body' => 'crypto giveaway|free bitcoin',
+    ];
+
+    return $patterns;
+} );
+`
+
 ### Does Antispam Bee store any private user data, and is it compliant with GDPR? ###
 Antispam Bee is developed in Europe. You might have heard we can be a bit nitpicky over here when it comes to privacy. The plugin does not save private user data and is 100% compliant with GDPR.
 

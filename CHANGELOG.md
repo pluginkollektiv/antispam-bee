@@ -6,6 +6,8 @@
     * Complete code rewrite and backend UI overhaul
     * Allows extending Antispam Bee with your own rules
     * Allows using Antispam Bee rules for other reactions than comments, for example, forms
+    * The built-in patterns of the regular expression rule now have stable identifiers as array keys,
+      so single patterns can be removed or modified via the `antispam_bee_patterns` filter
     * Fix: The language rule now also checks comments written in a script that does not delimit
       its words with spaces, for example Chinese, Japanese, Korean or Thai
     * Fix: The language rule no longer marks a comment as spam if the language could not be
@@ -16,6 +18,9 @@
     * Möglichkeit der Erweiterung von Antispam Bee um eigene Spam-Regeln
     * Erlaubt die Nutzung von Antispam Bee für andere Reaktionen als Kommentare, beispielsweise
       Formulare
+    * Die eingebauten Patterns der Regular-Expression-Regel haben nun feste Bezeichner als Array-Keys,
+      sodass einzelne Patterns über den Filter `antispam_bee_patterns` entfernt oder angepasst werden
+      können
     * Fix: Die Sprach-Regel prüft nun auch Kommentare in einer Schrift, die ihre Wörter nicht
       durch Leerzeichen trennt, beispielsweise Chinesisch, Japanisch, Koreanisch oder Thai
     * Fix: Die Sprach-Regel markiert einen Kommentar nicht mehr als Spam, wenn die Sprache
