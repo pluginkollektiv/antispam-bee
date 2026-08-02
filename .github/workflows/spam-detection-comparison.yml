@@ -59,6 +59,20 @@ on:
         description: 'Post the full-corpus result as a comment on this PR number (optional).'
         required: false
         default: ''
+      lang_api:
+        description: >-
+          Also compare the language rule, using a local franc service instead of
+          the public API. Off by default: it adds ~205k local requests per build.
+        type: boolean
+        default: false
+      workers:
+        description: 'Parallel classifier processes (the language service matches this).'
+        required: false
+        default: '4'
+      buffer_pool:
+        description: 'InnoDB buffer pool to request. Below ~1G a full-corpus run slows down badly.'
+        required: false
+        default: '1G'
 
 jobs:
   compare:
@@ -110,7 +124,16 @@ jobs:
           baseline-ref: ${{ (github.event_name == 'pull_request' && github.base_ref) || (github.event_name == 'workflow_dispatch' && inputs.baseline_ref) || '' }}
           corpus-file: ${{ env.ASB_USE_FULL == 'true' && format('{0}/corpus.sql.gz', github.workspace) || '' }}
           fail-on-flips: ${{ (github.event_name == 'workflow_dispatch' && inputs.fail_on_flips == false) && 'false' || 'true' }}
-          workers: '4'
+          # Manual runs can tune these; every other event takes the defaults.
+          workers: ${{ (github.event_name == 'workflow_dispatch' && inputs.workers) || '4' }}
+          # A stock container's 128 MB pool is far below this workload's ~570 MB
+          # working set, which collapses throughput part-way through a full run.
+          buffer-pool: ${{ (github.event_name == 'workflow_dispatch' && inputs.buffer_pool) || '1G' }}
+          # Off unless a manual run asks for it. Enabling it selects the option
+          # fixture that turns the language rule on, which is a different
+          # experiment: those snapshots are fingerprinted separately, so such a
+          # run neither reuses nor produces a baseline for ordinary runs.
+          lang-api: ${{ (github.event_name == 'workflow_dispatch' && inputs.lang_api) && 'true' || 'false' }}
           # Pinned so published verdict snapshots stay valid across WordPress
           # releases; bumping it deliberately invalidates every snapshot.
           wp-version: '6.8.2'
