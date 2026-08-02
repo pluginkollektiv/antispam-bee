@@ -72,13 +72,4 @@ class Text extends Field implements RenderElement, InjectableField {
 
 		return 'regular-text';
 	}
-
-	/**
-	 * Get the placeholder.
-	 *
-	 * @return string The placeholder of the field.
-	 */
-	public function get_placeholder(): string {
-		return $this->placeholder ?? '';
-	}
 }

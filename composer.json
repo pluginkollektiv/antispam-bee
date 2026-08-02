@@ -22,7 +22,7 @@
 	"type": "wordpress-plugin",
 	"license": "GPL-v2",
 	"require": {
-		"php": ">=7.2",
+		"php": ">=7.4",
 		"ext-libxml": "*",
 		"ext-dom": "*",
 		"ext-json": "*"

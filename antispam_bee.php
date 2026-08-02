@@ -35,7 +35,7 @@ pre_init();
  */
 function pre_init(): void {
 	// Check if the min. required PHP version is available and if not, show an admin notice.
-	if ( version_compare( PHP_VERSION, '7.2', '<' ) ) {
+	if ( version_compare( PHP_VERSION, '7.4', '<' ) ) {
 		add_action( 'admin_notices', __NAMESPACE__ . '\min_php_version_error' );
 
 		// Stop the further processing of the plugin.
@@ -90,7 +90,7 @@ function pre_init(): void {
  */
 function min_php_version_error(): void {
 	echo '<div class="error"><p>';
-	esc_html_e( 'Antispam Bee requires PHP version 7.2 or higher to function properly. Please upgrade PHP or deactivate Antispam Bee.', 'antispam-bee' );
+	esc_html_e( 'Antispam Bee requires PHP version 7.4 or higher to function properly. Please upgrade PHP or deactivate Antispam Bee.', 'antispam-bee' );
 	echo '</p></div>';
 }
 

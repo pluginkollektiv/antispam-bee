@@ -36,9 +36,24 @@ class DebugMode {
 		$date        = date( 'Y-m-d' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$time        = date( 'H-i-s' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$content_dir = WP_CONTENT_DIR;
+		$suffix      = self::get_log_file_suffix();
 
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug use.
-		error_log( "[{$date} {$time}] {$message}\n", 3, "{$content_dir}/asb-debug.{$date}.log" );
+		error_log( "[{$date} {$time}] {$message}\n", 3, "{$content_dir}/asb-debug.{$date}.{$suffix}.log" );
+	}
+
+	/**
+	 * Get the salted log file suffix.
+	 *
+	 * The log contains comment data and `WP_CONTENT_DIR` is usually served
+	 * publicly, so the file name must not be guessable.
+	 *
+	 * @return string
+	 */
+	private static function get_log_file_suffix(): string {
+		$salt = defined( 'NONCE_SALT' ) ? \NONCE_SALT : \ABSPATH;
+
+		return substr( sha1( 'asb-debug' . $salt ), 0, 12 );
 	}
 
 	/**
