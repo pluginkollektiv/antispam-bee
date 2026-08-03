@@ -6,7 +6,8 @@
 # https://github.com/2ndkauboy/asb-detection-compare. Three tiers:
 #
 #   • Pull requests             -> the SMALL corpus (~10k comments, ~25 s per
-#                                  pass), compared to the PR's base branch.
+#                                  pass), compared to the PR's base branch, with
+#                                  the language rule included.
 #                                  Forks get the bundled fixture instead.
 #   • prepare-* / release push  -> thorough check against the FULL corpus dump
 #                                  (~333k comments), compared to the
@@ -72,7 +73,8 @@ on:
       lang_api:
         description: >-
           Also compare the language rule, using a local franc service instead of
-          the public API. Off by default: it adds ~205k local requests per build.
+          the public API. Already on for the small corpus; ticking this adds it to
+          a full-corpus run too, at ~205k local requests.
         type: boolean
         default: false
       workers:
@@ -162,11 +164,27 @@ jobs:
           # A stock container's 128 MB pool is far below this workload's ~570 MB
           # working set, which collapses throughput part-way through a full run.
           buffer-pool: ${{ (github.event_name == 'workflow_dispatch' && inputs.buffer_pool) || '1G' }}
-          # Off unless a manual run asks for it. Enabling it selects the option
-          # fixture that turns the language rule on, which is a different
-          # experiment: those snapshots are fingerprinted separately, so such a
-          # run neither reuses nor produces a baseline for ordinary runs.
-          lang-api: ${{ (github.event_name == 'workflow_dispatch' && inputs.lang_api) && 'true' || 'false' }}
+          # On for the small corpus, off for the full one, and a manual run can
+          # switch it on for either.
+          #
+          # Without it the option fixture leaves the language rule disabled, so the
+          # comparison has no coverage of it at all — and the small corpus keeps the
+          # delimiter-less-script strata precisely because they are its material.
+          # On ~10k comments the cost is negligible (a whole two-pass comparison
+          # runs in ~80 s); on the full corpus it adds ~205k local requests, which
+          # is why it stays off there.
+          #
+          # It cannot disturb the snapshot chain. Enabling it selects a different
+          # option fixture, so its snapshots are fingerprinted separately — but
+          # reuse only applies to prepare-* runs against a release tag, and those
+          # use the full corpus with this off. Pull requests compare against their
+          # base *branch*, which never publishes or reuses a snapshot.
+          #
+          # Caveat: franc is a local stand-in, not api.pluginkollektiv.org. This
+          # compares the plugin's logic around detection — length guards, script
+          # awareness, "und" handling, macrolanguage mapping — not that the
+          # production service returns the same codes.
+          lang-api: ${{ ((env.ASB_CORPUS == 'small' && env.ASB_CORPUS_READY == 'true') || (github.event_name == 'workflow_dispatch' && inputs.lang_api)) && 'true' || 'false' }}
           # Pinned so published verdict snapshots stay valid across WordPress
           # releases; bumping it deliberately invalidates every snapshot.
           wp-version: '6.8.2'
