@@ -5,19 +5,28 @@
 # verdict (and reason) via the reusable action
 # https://github.com/2ndkauboy/asb-detection-compare. Three tiers:
 #
-#   • Pull requests             -> fast smoke check against a small bundled
-#                                  fixture, compared to the PR's base branch.
+#   • Pull requests             -> the SMALL corpus (~10k comments, ~25 s per
+#                                  pass), compared to the PR's base branch, with
+#                                  the language rule included.
+#                                  Forks get the bundled fixture instead.
 #   • prepare-* / release push  -> thorough check against the FULL corpus dump
-#                                  (decrypted in-workflow), compared to the
+#                                  (~333k comments), compared to the
 #                                  semver-resolved baseline release.
 #   • Manual (workflow_dispatch)-> run on ANY branch on demand, choosing the
-#                                  baseline and whether to use the full corpus.
+#                                  baseline and which corpus to use.
 #
-# The full corpus is real (PII) comments, so it is never public in the clear:
-# an encrypted blob is fetched from a public URL and decrypted with a passphrase
-# secret. pull_request runs (including forks) never receive secrets and fall
-# back to the bundled fixture; only trusted events (prepare-* pushes, manual
-# runs) decrypt the dump. If the corpus is not configured, they fall back too.
+# The small corpus exists because the full one is 97.6 % honeypot-caught spam,
+# and those comments short-circuit in Rules::apply() before the content rules run
+# — so the content rules only ever see about 2 % of it. The small corpus keeps
+# every comment where a non-final rule can still run, including all 6,755 ham
+# comments (the false-positive check), and caps the honeypot-caught strata.
+# Detecting a change that touches only a few dozen comments still needs the full
+# corpus, which stays authoritative for prepare-* runs.
+#
+# Both real corpora are real (PII) comments, so neither is ever public in the
+# clear: an encrypted blob is fetched from a public URL and decrypted with a
+# passphrase secret. Fork pull requests never receive secrets and fall back to
+# the bundled fixture; if a corpus is not configured, runs fall back too.
 #
 # Classifying the full corpus takes hours, and half of every run would re-derive
 # how the *baseline release* classifies it — which never changes. So a run
@@ -26,9 +35,10 @@
 # snapshot holds no personal data: per comment only a salted pseudonym of the
 # corpus row id, the spam/ham status and the matched rule slugs.
 #
-# Configure (for the full-corpus tiers):
-#   • variable ASB_CORPUS_ENC_URL -> public URL of corpus.sql.gz.gpg
-#   • secret   ASB_CORPUS_KEY     -> the gpg passphrase
+# Configure (for the encrypted-corpus tiers):
+#   • variable ASB_CORPUS_ENC_URL       -> public URL of corpus.sql.gz.gpg
+#   • variable ASB_CORPUS_SMALL_ENC_URL -> public URL of small-corpus.sql.gz.gpg
+#   • secret   ASB_CORPUS_KEY           -> the gpg passphrase (shared by both)
 # Encrypt with: gpg --batch --symmetric --cipher-algo AES256 \
 #   --passphrase "<pass>" -o corpus.sql.gz.gpg corpus.sql.gz
 
@@ -47,10 +57,11 @@ on:
         description: 'Baseline tag or branch to compare the current branch against.'
         required: true
         default: 'v3'
-      full_corpus:
-        description: 'Use the full encrypted corpus (otherwise the small bundled fixture).'
-        type: boolean
-        default: true
+      corpus:
+        description: 'Which corpus to classify.'
+        type: choice
+        options: [ full, small, fixture ]
+        default: small
       fail_on_flips:
         description: 'Fail the run if any spam/ham verdict flips.'
         type: boolean
@@ -62,7 +73,8 @@ on:
       lang_api:
         description: >-
           Also compare the language rule, using a local franc service instead of
-          the public API. Off by default: it adds ~205k local requests per build.
+          the public API. Already on for the small corpus; ticking this adds it to
+          a full-corpus run too, at ~205k local requests.
         type: boolean
         default: false
       workers:
@@ -84,9 +96,16 @@ jobs:
       contents: read        # look up the baseline snapshot on the release
       pull-requests: write  # post the full-corpus result on a PR (manual runs)
     env:
-      # Full corpus for prepare-* pushes and manual runs that ask for it, when
-      # the corpus is configured; otherwise the bundled fixture. PRs never use it.
-      ASB_USE_FULL: ${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.full_corpus)) && vars.ASB_CORPUS_ENC_URL != '' }}
+      # Which corpus this run uses. Forks never get secrets, so they always fall
+      # back to the fixture. Pushes to prepare-* use the full corpus, same-repo
+      # pull requests the small one, manual runs choose. The fetch step degrades
+      # to the fixture when the corresponding URL is not configured.
+      ASB_CORPUS: >-
+        ${{ github.event.pull_request.head.repo.fork && 'fixture'
+         || (github.event_name == 'workflow_dispatch' && inputs.corpus)
+         || (github.event_name == 'push' && 'full')
+         || (github.event_name == 'pull_request' && 'small')
+         || 'fixture' }}
     services:
       mysql:
         image: mariadb:10.6
@@ -105,15 +124,26 @@ jobs:
         with:
           fetch-depth: 0        # full history/tags for baseline resolution
 
+      # Sets ASB_CORPUS_READY so a missing URL degrades to the bundled fixture
+      # instead of failing the run.
       - name: Fetch & decrypt the release corpus
-        if: env.ASB_USE_FULL == 'true'
+        if: env.ASB_CORPUS != 'fixture'
         env:
-          ASB_CORPUS_ENC_URL: ${{ vars.ASB_CORPUS_ENC_URL }}
           ASB_CORPUS_KEY: ${{ secrets.ASB_CORPUS_KEY }}
+          ENC_URL: >-
+            ${{ env.ASB_CORPUS == 'full' && vars.ASB_CORPUS_ENC_URL
+             || vars.ASB_CORPUS_SMALL_ENC_URL }}
         run: |
-          curl -fSL --retry 3 -o corpus.sql.gz.gpg "$ASB_CORPUS_ENC_URL"
+          set -euo pipefail
+          if [ -z "${ENC_URL:-}" ] || [ -z "${ASB_CORPUS_KEY:-}" ]; then
+            echo "::notice::No '${{ env.ASB_CORPUS }}' corpus configured; using the bundled fixture."
+            echo "ASB_CORPUS_READY=false" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          curl -fSL --retry 3 -o corpus.sql.gz.gpg "$ENC_URL"
           gpg --batch --quiet --yes --passphrase "$ASB_CORPUS_KEY" \
             -o corpus.sql.gz -d corpus.sql.gz.gpg
+          echo "ASB_CORPUS_READY=true" >> "$GITHUB_ENV"
 
       - name: Compare spam detection
         id: compare
@@ -122,18 +152,39 @@ jobs:
           # PR -> the PR's base branch. Manual -> the chosen baseline. Prepare
           # push -> empty, so the baseline is resolved from the branch name.
           baseline-ref: ${{ (github.event_name == 'pull_request' && github.base_ref) || (github.event_name == 'workflow_dispatch' && inputs.baseline_ref) || '' }}
-          corpus-file: ${{ env.ASB_USE_FULL == 'true' && format('{0}/corpus.sql.gz', github.workspace) || '' }}
+          # The decrypted corpus when one was fetched, else the bundled fixture.
+          corpus-file: ${{ env.ASB_CORPUS_READY == 'true' && format('{0}/corpus.sql.gz', github.workspace) || '' }}
+          # Names the snapshot asset, e.g. asb-snapshot-small-4eb1dc68.tsv.gz.
+          # Each corpus has its own fingerprint, so their snapshots never collide
+          # and a run only ever finds the baseline matching its own corpus.
+          corpus-label: ${{ env.ASB_CORPUS_READY == 'true' && env.ASB_CORPUS || 'fixture' }}
           fail-on-flips: ${{ (github.event_name == 'workflow_dispatch' && inputs.fail_on_flips == false) && 'false' || 'true' }}
           # Manual runs can tune these; every other event takes the defaults.
           workers: ${{ (github.event_name == 'workflow_dispatch' && inputs.workers) || '4' }}
           # A stock container's 128 MB pool is far below this workload's ~570 MB
           # working set, which collapses throughput part-way through a full run.
           buffer-pool: ${{ (github.event_name == 'workflow_dispatch' && inputs.buffer_pool) || '1G' }}
-          # Off unless a manual run asks for it. Enabling it selects the option
-          # fixture that turns the language rule on, which is a different
-          # experiment: those snapshots are fingerprinted separately, so such a
-          # run neither reuses nor produces a baseline for ordinary runs.
-          lang-api: ${{ (github.event_name == 'workflow_dispatch' && inputs.lang_api) && 'true' || 'false' }}
+          # On for the small corpus, off for the full one, and a manual run can
+          # switch it on for either.
+          #
+          # Without it the option fixture leaves the language rule disabled, so the
+          # comparison has no coverage of it at all — and the small corpus keeps the
+          # delimiter-less-script strata precisely because they are its material.
+          # On ~10k comments the cost is negligible (a whole two-pass comparison
+          # runs in ~80 s); on the full corpus it adds ~205k local requests, which
+          # is why it stays off there.
+          #
+          # It cannot disturb the snapshot chain. Enabling it selects a different
+          # option fixture, so its snapshots are fingerprinted separately — but
+          # reuse only applies to prepare-* runs against a release tag, and those
+          # use the full corpus with this off. Pull requests compare against their
+          # base *branch*, which never publishes or reuses a snapshot.
+          #
+          # Caveat: franc is a local stand-in, not api.pluginkollektiv.org. This
+          # compares the plugin's logic around detection — length guards, script
+          # awareness, "und" handling, macrolanguage mapping — not that the
+          # production service returns the same codes.
+          lang-api: ${{ ((env.ASB_CORPUS == 'small' && env.ASB_CORPUS_READY == 'true') || (github.event_name == 'workflow_dispatch' && inputs.lang_api)) && 'true' || 'false' }}
           # Pinned so published verdict snapshots stay valid across WordPress
           # releases; bumping it deliberately invalidates every snapshot.
           wp-version: '6.8.2'
@@ -141,13 +192,18 @@ jobs:
       # Keep this run's verdict snapshot. When this version is released,
       # attach-snapshot.yml attaches it to the release, and the next prepare run
       # reuses it as its baseline instead of classifying the corpus twice.
-      # Only full-corpus runs are worth keeping — a fixture snapshot is cheap to
-      # recompute and would only shadow the real one.
+      # Fixture snapshots are not worth keeping — cheap to recompute, and they
+      # would shadow a real one.
+      #
+      # The corpus label is part of the artifact name: with two corpora in play, a
+      # single fixed name would let attach-snapshot.yml attach one corpus's
+      # snapshot to a release under the other's token, where no later run would
+      # ever match it.
       - name: Upload the verdict snapshot
-        if: env.ASB_USE_FULL == 'true' && steps.compare.outputs.snapshot-file != ''
+        if: env.ASB_CORPUS_READY == 'true' && steps.compare.outputs.snapshot-file != ''
         uses: actions/upload-artifact@v4
         with:
-          name: asb-detection-snapshot
+          name: asb-detection-snapshot-${{ env.ASB_CORPUS }}
           path: ${{ steps.compare.outputs.snapshot-file }}
           retention-days: 90
           if-no-files-found: error
@@ -156,22 +212,22 @@ jobs:
       # tag and are just as publishable. Attach this one to that release and the
       # next comparison against it needs only a single pass.
       - name: Upload the baseline verdict snapshot
-        if: env.ASB_USE_FULL == 'true' && steps.compare.outputs.baseline-snapshot-file != ''
+        if: env.ASB_CORPUS_READY == 'true' && steps.compare.outputs.baseline-snapshot-file != ''
         uses: actions/upload-artifact@v4
         with:
-          name: asb-detection-baseline-snapshot
+          name: asb-detection-baseline-snapshot-${{ env.ASB_CORPUS }}
           path: ${{ steps.compare.outputs.baseline-snapshot-file }}
           retention-days: 90
           if-no-files-found: error
 
-      # Post the result on a PR — only for full-corpus runs, since a PR-event run
-      # sees just the small bundled fixture and would report almost nothing.
-      # Updates its own comment in place instead of adding one per run.
+      # Post the result on a PR. Skipped for fixture runs, which compare 112
+      # synthetic comments and would report almost nothing. Updates its own
+      # comment in place instead of adding one per run.
       #
       # `always()` so a failing check (flips found) still reports: that is exactly
       # the case someone needs the table for.
       - name: Comment the result on the PR
-        if: always() && env.ASB_USE_FULL == 'true' && inputs.comment_pr != '' && steps.compare.outputs.report-markdown != ''
+        if: always() && env.ASB_CORPUS_READY == 'true' && inputs.comment_pr != '' && steps.compare.outputs.report-markdown != ''
         env:
           GH_TOKEN: ${{ github.token }}
           PR: ${{ inputs.comment_pr }}
