@@ -22,6 +22,13 @@ class InvalidRequest extends Base implements SpamReason {
 	protected static $slug = 'asb-invalid-request';
 
 	/**
+	 * An invalid request is a definitive spam signal.
+	 *
+	 * @var bool
+	 */
+	protected static $is_final = true;
+
+	/**
 	 * Verify an item.
 	 *
 	 * Check for invalid request content in POST data.

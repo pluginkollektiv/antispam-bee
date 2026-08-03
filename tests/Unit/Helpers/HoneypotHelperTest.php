@@ -19,13 +19,37 @@ class HoneypotHelperTest extends TestCase {
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_inject_returns_empty_when_field_not_found(): void {
-		$result = Honeypot::inject(
-			'<textarea id="other" name="other"></textarea>',
-			[ 'field_id' => 'comment' ]
-		);
+	public function test_inject_returns_markup_unchanged_when_field_not_found(): void {
+		$markup = '<textarea id="other" name="other"></textarea>';
 
-		self::assertSame( '', $result, 'inject() should return empty string when field id is not found' );
+		$result = Honeypot::inject( $markup, [ 'field_id' => 'comment' ] );
+
+		self::assertSame( $markup, $result, 'inject() should return the markup unchanged when field id is not found' );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_returns_markup_unchanged_when_name_attribute_is_missing(): void {
+		$markup = '<textarea id="comment"></textarea>';
+
+		$result = Honeypot::inject( $markup, [ 'field_id' => 'comment' ] );
+
+		self::assertSame( $markup, $result, 'inject() should return the markup unchanged when the field has no name attribute' );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_does_not_emit_warnings_for_html5_markup(): void {
+		$markup = '<article><textarea id="comment" name="comment" required>My Content</textarea></article>';
+
+		$result = Honeypot::inject( $markup, [ 'field_id' => 'comment' ] );
+
+		self::assertNotEmpty( $result, 'inject() should handle HTML5 markup' );
+		self::assertEmpty( libxml_get_errors(), 'inject() should not leave libxml errors behind' );
 	}
 
 	/**

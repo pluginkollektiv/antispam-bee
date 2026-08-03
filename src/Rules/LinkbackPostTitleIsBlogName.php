@@ -23,6 +23,13 @@ class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
 	protected static $slug = 'asb-linkback-post-title-is-blogname';
 
 	/**
+	 * A linkback titled like the blog name is a definitive spam signal.
+	 *
+	 * @var bool
+	 */
+	protected static $is_final = true;
+
+	/**
 	 * Only linkbacks are supported.
 	 *
 	 * @var string[]

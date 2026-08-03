@@ -22,9 +22,9 @@ treating it as project code produces false findings.
 
 Fix code style violations automatically with `composer csfix`.
 
-Target PHP 7.2+. Avoid syntax introduced in PHP 7.4 or later: typed properties, arrow functions (
-`fn =>`), `match` expressions, null-coalescing assignment (`??=`). The `phpcs.xml` ruleset enforces
-this via PHPCompatibilityWP.
+Target PHP 7.4+. Avoid syntax introduced in PHP 8.0 or later: `match` expressions, constructor
+property promotion, named arguments, nullsafe operator (`?->`), union types. The `phpcs.xml` ruleset
+enforces this via PHPCompatibilityWP.
 
 ## WordPress & security conventions
 

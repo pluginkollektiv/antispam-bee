@@ -4,7 +4,7 @@
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.6
 * Tested up to:      7.0
-* Requires PHP:      7.2
+* Requires PHP:      7.4
 * Stable tag:        3.0.0-beta.1
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -50,7 +50,7 @@ Say Goodbye to comment spam on your WordPress blog or website. *Antispam Bee* bl
 * If you don’t know how to install a plugin for WordPress, [here’s how](https://wordpress.org/documentation/article/manage-plugins/#automatic-plugin-installation-1).
 
 ### Requirements ###
-* PHP 7.2 or greater
+* PHP 7.4 or greater
 * WordPress 4.6 or greater
 
 ### Settings ###

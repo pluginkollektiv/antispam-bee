@@ -1,0 +1,137 @@
+# The second half of the baseline-snapshot chain that spam-detection-comparison.yml
+# starts.
+#
+# The comparison workflow already classifies the prepared version against the
+# full corpus and uploads the resulting verdict snapshot as a workflow artifact.
+# When that version is released, this workflow attaches that snapshot to the
+# release — where the *next* prepare run will find it and skip classifying the
+# baseline entirely.
+#
+# The snapshot contains no personal data: per comment only a salted pseudonym of
+# the corpus row id, the spam/ham status, and the matched rule slugs. See
+# "Baseline snapshots" in https://github.com/2ndkauboy/asb-detection-compare.
+#
+# If no comparison run exists for the released commit at all (e.g. the release was
+# cut without a prepare run), this fails loudly. Nothing breaks downstream — the
+# next comparison simply classifies its baseline as it always did — but the
+# failure is the signal that the chain was interrupted.
+#
+# A run may legitimately carry a snapshot for only one corpus, though: a version
+# prepared with the full corpus has no small-corpus artifact and vice versa. That
+# is not a broken chain, so a corpus with no artifact is reported and skipped.
+
+name: Attach detection snapshot to release
+
+on:
+  release:
+    types: [ published ]
+
+permissions:
+  contents: write        # needed to upload a release asset
+  actions: read          # needed to list runs and download their artifacts
+
+jobs:
+  attach:
+    runs-on: ubuntu-latest
+    # Each corpus produces its own snapshot, named after that corpus's
+    # fingerprint, so a release can carry one per corpus and a later run only ever
+    # finds the baseline matching the corpus it is classifying.
+    strategy:
+      fail-fast: false
+      matrix:
+        corpus: [ full, small ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Find the run that classified this commit
+        id: find
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          tag_sha="$(git rev-list -n 1 "$TAG")"
+          echo "Release $TAG is commit $tag_sha"
+
+          # The newest successful comparison run for exactly this commit.
+          run_id="$(gh run list \
+            --workflow 'Spam-detection comparison' \
+            --status success --limit 100 \
+            --json databaseId,headSha \
+            --jq "[.[] | select(.headSha == \"$tag_sha\")] | .[0].databaseId // empty")"
+
+          if [ -z "$run_id" ]; then
+            echo "::error::No successful spam-detection comparison run found for $tag_sha."
+            echo "The baseline-snapshot chain is broken for this release; the next" \
+                 "comparison will classify its baseline from scratch."
+            exit 1
+          fi
+          echo "run-id=$run_id" >> "$GITHUB_OUTPUT"
+          echo "tag-sha=$tag_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Download the snapshot artifact
+        id: download
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # Not every release has a snapshot for every corpus — a version prepared
+          # with only the full corpus has no small-corpus artifact. That is not a
+          # failure; there is simply nothing to attach.
+          if gh run download "${{ steps.find.outputs.run-id }}" \
+              --name "asb-detection-snapshot-${{ matrix.corpus }}" --dir snapshot 2>/dev/null; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::No ${{ matrix.corpus }}-corpus snapshot in that run; nothing to attach."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verify it describes this release
+        if: steps.download.outputs.found == 'true'
+        env:
+          TAG_SHA: ${{ steps.find.outputs.tag-sha }}
+        run: |
+          set -euo pipefail
+          file="$(find snapshot -name 'asb-snapshot-*.tsv.gz' -type f | head -1)"
+          [ -n "$file" ] || { echo "::error::No snapshot file in the artifact."; exit 1; }
+
+          # The manifest is the second line of the (gzipped) snapshot.
+          manifest="$(zcat "$file" | sed -n '2p' | cut -f2-)"
+          echo "$manifest" | jq .
+
+          commit="$(echo "$manifest" | jq -r '.commit_sha')"
+          publishable="$(echo "$manifest" | jq -r '.publishable')"
+          token="$(echo "$manifest" | jq -r '.corpus_token')"
+
+          if [ "$commit" != "$TAG_SHA" ]; then
+            echo "::error::Snapshot describes $commit, but the release is $TAG_SHA."
+            exit 1
+          fi
+          if [ "$publishable" != "true" ]; then
+            echo "::error::Snapshot is not marked publishable (unsalted, or not from a reproducible shard mode)."
+            exit 1
+          fi
+
+          # The asset filename carries the corpus token, and a later run looks the
+          # asset up by its own token. If the artifact were mislabelled the wrong
+          # corpus's snapshot would be attached and silently never matched — so
+          # check that the filename and the manifest agree.
+          case "$(basename "$file")" in
+            *"-$token.tsv.gz") ;;
+            *) echo "::error::Filename $(basename "$file") does not carry the manifest's corpus token $token."; exit 1 ;;
+          esac
+          echo "Corpus token $token, commit ${commit:0:12} — matches this release."
+          echo "SNAPSHOT_FILE=$file" >> "$GITHUB_ENV"
+
+      - name: Attach to the release
+        if: steps.download.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release upload "${{ github.event.release.tag_name }}" \
+            "$SNAPSHOT_FILE" --clobber
+          echo "Attached $(basename "$SNAPSHOT_FILE") to ${{ github.event.release.tag_name }}."

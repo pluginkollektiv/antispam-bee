@@ -33,19 +33,24 @@ class Honeypot {
 	 */
 	public static function inject( string $markup, array $options ): string {
 		$dom = new DOMDocument();
+		// Malformed or HTML5-only markup must not bubble up as PHP warnings.
+		$use_internal_errors = libxml_use_internal_errors( true );
 		$dom->loadHTML( $markup, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+		libxml_clear_errors();
+		libxml_use_internal_errors( $use_internal_errors );
+
 		$xpath     = new DOMXPath( $dom );
 		$node_list = $xpath->query( '//*[@id="' . $options['field_id'] . '"]' );
 		$input     = $node_list ? $node_list->item( 0 ) : null;
 		if ( ! $input instanceof DOMElement ) {
-			return '';
+			return $markup;
 		}
 
 		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$id_attr   = $input->attributes->getNamedItem( 'id' );
 		$name_attr = $input->attributes->getNamedItem( 'name' );
 		if ( null === $id_attr || null === $name_attr ) {
-			return '';
+			return $markup;
 		}
 
 		$input_type    = $input->nodeName;

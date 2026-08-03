@@ -75,8 +75,9 @@ class IpHelper {
 	 */
 	public static function anonymize_ip( string $ip ): string {
 		if ( ! preg_match( '/\w+([\.:])\w+/', $ip, $matches ) ) {
-			return $ip;
+			return '';
 		}
+
 		$ip_start = $matches[0];
 		if ( '.' === $matches[1] ) {
 			return $ip_start . '.0.0';

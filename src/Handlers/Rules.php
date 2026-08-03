@@ -115,6 +115,10 @@ class Rules {
 	/**
 	 * Apply rules.
 	 *
+	 * Final rules are checked before all other rules. A positive result of a
+	 * final rule is definitive: the item is marked as spam without evaluating
+	 * the remaining (potentially expensive) rules.
+	 *
 	 * @param array<string, mixed> $item Normalized payload to apply rules to.
 	 *
 	 * @return bool Whether the item was identified as spam.
@@ -162,7 +166,7 @@ class Rules {
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		DebugMode::log( 'Looping through spam rules for reaction with the following data: ' . print_r( $log_item, true ) );
 
-		foreach ( $rules as $rule ) {
+		foreach ( $this->sort_rules( $rules ) as $rule ) {
 			DebugMode::log( "Checking »{$rule::get_name()}« rule" );
 
 			$rule_score = $rule::verify( $item ) * $rule::get_weight();
@@ -171,6 +175,12 @@ class Rules {
 
 			if ( $rule_score > 0.0 ) {
 				$this->spam_reasons[] = $rule::get_slug();
+
+				if ( $rule::is_final() ) {
+					DebugMode::log( "»{$rule::get_name()}« is a final rule with a positive score — marking as spam without checking the remaining rules" );
+
+					return true;
+				}
 			} else {
 				$this->no_spam_reasons[] = $rule::get_slug();
 			}
@@ -191,6 +201,44 @@ class Rules {
 		}
 
 		return $score > 0.0;
+	}
+
+	/**
+	 * Sort the rules so that final rules are checked first.
+	 *
+	 * The sorting can be disabled with the `antispam_bee_sort_final_rules_first`
+	 * filter, in which case the rules are checked in their registered order.
+	 *
+	 * @param array<class-string> $rules Rules to sort.
+	 *
+	 * @return array<class-string> Sorted rules.
+	 */
+	private function sort_rules( array $rules ): array {
+		/**
+		 * Filter whether final rules should be checked before all other rules.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param bool   $sort_final_first Whether to check final rules first. Default true.
+		 * @param string $reaction_type    The reaction type (e.g. "comment").
+		 */
+		$sort_final_first = (bool) apply_filters( 'antispam_bee_sort_final_rules_first', true, $this->reaction_type );
+
+		if ( ! $sort_final_first ) {
+			return $rules;
+		}
+
+		$final_rules     = [];
+		$non_final_rules = [];
+		foreach ( $rules as $rule ) {
+			if ( $rule::is_final() ) {
+				$final_rules[] = $rule;
+			} else {
+				$non_final_rules[] = $rule;
+			}
+		}
+
+		return array_merge( $final_rules, $non_final_rules );
 	}
 
 	/**
