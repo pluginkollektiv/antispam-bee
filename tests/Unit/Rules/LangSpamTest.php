@@ -79,6 +79,22 @@ class LangSpamTest extends AbstractRuleTestCase {
 		);
 	}
 
+	public function test_verify_measures_a_dominantly_latin_text_in_words(): void {
+		$this->expect_request( '{"code":"eng"}' );
+
+		// The handful of Chinese characters does not carry the text, so the character
+		// threshold does not apply and the word count decides - and this text has
+		// enough words. Guards the fall-through out of the spaceless-script branch:
+		// returning early there instead would stop such a text being checked at all.
+		self::assertSame(
+			1,
+			LangSpam::verify(
+				self::make_comment_with( 'Great article thanks for sharing this with all of us here 中文垃圾评论' )
+			),
+			'A long latin text with a few characters of another script should be sent to the service'
+		);
+	}
+
 	public function test_verify_does_not_flag_an_undetermined_language(): void {
 		$this->expect_request( '{"code":"und"}' );
 
