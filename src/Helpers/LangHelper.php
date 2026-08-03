@@ -26,6 +26,16 @@ class LangHelper {
 		$codes = [
 			'zha' => 'za',
 			'zho' => 'zh',
+
+			/*
+			 * Members of the Chinese macrolanguage the service reports individually. They
+			 * have no ISO 639-1 code of their own, so they are all mapped to Chinese.
+			 */
+			'cmn' => 'zh',
+			'yue' => 'zh',
+			'wuu' => 'zh',
+			'nan' => 'zh',
+			'hak' => 'zh',
 			'zul' => 'zu',
 			'yid' => 'yi',
 			'yor' => 'yo',

@@ -345,6 +345,90 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).not.toContainText( 'Language' );
 	} );
 
+	test( 'language rule blocks comment in a script without word delimiters', async ( {
+		                                                                                  page,
+		                                                                                  cli
+	                                                                                  } ) => {
+		const opts = cli.optionGet( 'antispam_bee_options' );
+		opts.comment.rule_asb_lang_spam_active = 'on';
+		opts.comment.rule_asb_lang_spam_allowed = { de: 'on' };
+		opts.comment.rule_asb_regexp_active = '';
+		opts.comment.rule_asb_db_spam_active = '';
+		opts.comment.rule_asb_honeypot_active = '';
+		opts.comment.rule_asb_bbcode_active = '';
+		opts.comment.rule_asb_approved_email_active = '';
+		cli.optionUpdate( 'antispam_bee_options', opts );
+
+		await fillComment( page, {
+			// Chinese uses hardly any spaces, so this is a single word but plenty of characters.
+			// Keep it free of URLs: the local API mock, unlike the real service, does not strip them.
+			comment:
+				'致力于为开发者提供快速、便捷的企业级AI接口调用方案，打造稳定且易于使用的 API 接口平台，一站式集成几乎所有 AI 大模型。',
+			author: 'Monty',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
+		} );
+
+		await adminLogin( page );
+		await page.goto( '/wp-admin/edit-comments.php?comment_status=spam' );
+		await expect( page.locator( 'body' ) ).toContainText( 'Language' );
+	} );
+
+	test( 'language rule skips very short comments in a script without word delimiters', async ( {
+		                                                                                             page,
+		                                                                                             cli
+	                                                                                             } ) => {
+		const opts = cli.optionGet( 'antispam_bee_options' );
+		opts.comment.rule_asb_lang_spam_active = 'on';
+		opts.comment.rule_asb_lang_spam_allowed = { de: 'on' };
+		opts.comment.rule_asb_regexp_active = '';
+		opts.comment.rule_asb_db_spam_active = '';
+		opts.comment.rule_asb_honeypot_active = '';
+		opts.comment.rule_asb_bbcode_active = '';
+		opts.comment.rule_asb_approved_email_active = '';
+		cli.optionUpdate( 'antispam_bee_options', opts );
+
+		await fillComment( page, {
+			// Too few characters for a reliable detection, the service would answer "undetermined".
+			comment: '中文垃圾',
+			author: 'Monty',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
+		} );
+
+		await adminLogin( page );
+		await page.goto( '/wp-admin/edit-comments.php?comment_status=spam' );
+		await expect( page.locator( 'body' ) ).not.toContainText( 'Language' );
+	} );
+
+	test( 'language rule skips a latin comment with a few foreign characters', async ( {
+		                                                                                  page,
+		                                                                                  cli
+	                                                                                  } ) => {
+		const opts = cli.optionGet( 'antispam_bee_options' );
+		opts.comment.rule_asb_lang_spam_active = 'on';
+		opts.comment.rule_asb_lang_spam_allowed = { de: 'on' };
+		opts.comment.rule_asb_regexp_active = '';
+		opts.comment.rule_asb_db_spam_active = '';
+		opts.comment.rule_asb_honeypot_active = '';
+		opts.comment.rule_asb_bbcode_active = '';
+		opts.comment.rule_asb_approved_email_active = '';
+		cli.optionUpdate( 'antispam_bee_options', opts );
+
+		await fillComment( page, {
+			// The few Chinese characters must not trigger the character based check: the text is
+			// too short for the word based one, and the service detects Danish for it.
+			comment: 'Great article thanks for sharing 中文垃圾评论',
+			author: 'Monty',
+			email: 'monty.1983@example.com',
+			url: 'https://example.com',
+		} );
+
+		await adminLogin( page );
+		await page.goto( '/wp-admin/edit-comments.php?comment_status=spam' );
+		await expect( page.locator( 'body' ) ).not.toContainText( 'Language' );
+	} );
+
 	test( 'language rule allows comment in the allowed language', async ( { page, cli } ) => {
 		const opts = cli.optionGet( 'antispam_bee_options' );
 		opts.comment.rule_asb_lang_spam_active = 'on';
