@@ -13,6 +13,9 @@
     * Fix: IP addresses are now anonymized by masking the host portion of the address: a /24 for
       IPv4, the same network WordPress itself keeps, as in Antispam Bee 2.x, and a /48 for IPv6
       instead of only its first two groups
+    * Fix: The country rule no longer asks the geolocation service about loopback, link-local and
+      private addresses, which have no country anyway — a local installation and a site behind a
+      reverse proxy without a `pre_comment_user_ip` filter stop sending requests altogether
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -26,6 +29,9 @@
     * Fix: IP-Adressen werden nun anonymisiert, indem der Host-Teil der Adresse maskiert wird: ein
       /24 für IPv4, dasselbe Netz, das auch WordPress selbst behält, wie in Antispam Bee 2.x, und
       ein /48 für IPv6 statt nur der ersten zwei Blöcke
+    * Fix: Die Länder-Regel fragt den Geolokalisierungs-Dienst nicht mehr zu Loopback-, Link-Local-
+      und privaten Adressen, die ohnehin kein Land haben – eine lokale Installation und eine Seite
+      hinter einem Reverse-Proxy ohne `pre_comment_user_ip`-Filter senden gar keine Anfragen mehr
 
 ### 2.11.12 ###
 

@@ -51,6 +51,34 @@ class IpHelperTest extends TestCase {
 		self::assertSame( $expected, IpHelper::anonymize_ip( $ip ), $message );
 	}
 
+	/**
+	 * @dataProvider is_global_ip_provider
+	 */
+	public function test_is_global_ip( string $ip, bool $expected, string $message ): void {
+		self::assertSame( $expected, IpHelper::is_global_ip( $ip ), $message );
+	}
+
+	public function is_global_ip_provider(): array {
+		return [
+			[ '198.51.100.42', true, 'a global IPv4 address should be global' ],
+			[ '2001:db8:85a3:1234::5', true, 'a global IPv6 address should be global' ],
+			// `FILTER_FLAG_NO_RES_RANGE` rejects all of `::ffff:0:0/96`, so the mapped
+			// IPv4 address has to be unwrapped before it is checked.
+			[ '::ffff:198.51.100.42', true, 'an IPv4-mapped global address should be global' ],
+			[ '127.0.0.1', false, 'the IPv4 loopback address should not be global' ],
+			[ '::1', false, 'the IPv6 loopback address should not be global' ],
+			[ '10.11.12.13', false, 'a private IPv4 address should not be global' ],
+			[ '172.16.0.1', false, 'another private IPv4 address should not be global' ],
+			[ '192.168.1.50', false, 'a third private IPv4 address should not be global' ],
+			[ '169.254.1.1', false, 'a link-local IPv4 address should not be global' ],
+			[ 'fe80::1', false, 'a link-local IPv6 address should not be global' ],
+			[ 'fc00::1', false, 'a unique local IPv6 address should not be global' ],
+			[ '::ffff:10.0.0.1', false, 'an IPv4-mapped private address should not be global' ],
+			[ '', false, 'empty input should not be global' ],
+			[ 'no-ip-at-all', false, 'non-IP input should not be global' ],
+		];
+	}
+
 	public function anonymize_ip_provider(): array {
 		return [
 			[ '198.51.100.42', '198.51.100.0', 'IPv4 address should be truncated to a /24 network' ],
