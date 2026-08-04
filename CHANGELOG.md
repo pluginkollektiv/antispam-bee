@@ -18,6 +18,9 @@
       reverse proxy without a `pre_comment_user_ip` filter stop sending requests altogether
     * Fix: The regular expression rule no longer raises a PHP warning when the author or the
       content of a comment is not valid UTF-8
+    * Enhancement: New `antispam_bee_country_spam_ip` filter to change which address the country
+      rule looks up — mask it differently, send the original one for a more precise country, or
+      return an empty string to skip the lookup
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -36,6 +39,9 @@
       hinter einem Reverse-Proxy ohne `pre_comment_user_ip`-Filter senden gar keine Anfragen mehr
     * Fix: Die Regex-Regel löst keine PHP-Warnung mehr aus, wenn der Autor oder der Inhalt eines
       Kommentars kein gültiges UTF-8 ist
+    * Verbesserung: Neuer Filter `antispam_bee_country_spam_ip`, um die Adresse zu ändern, die die
+      Länder-Regel abfragt – anders maskieren, die ursprüngliche Adresse für ein genaueres Land
+      senden oder mit einem leeren String die Abfrage ganz überspringen
 
 ### 2.11.12 ###
 
