@@ -10,6 +10,9 @@
       its words with spaces, for example Chinese, Japanese, Korean or Thai
     * Fix: The language rule no longer marks a comment as spam if the language could not be
       determined at all
+    * Fix: IP addresses are now anonymized by masking the host portion of the address, using the
+      same networks as WordPress itself: a /24 for IPv4, as in Antispam Bee 2.x, and a /64 for
+      IPv6 instead of only its first two groups
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -20,6 +23,9 @@
       durch Leerzeichen trennt, beispielsweise Chinesisch, Japanisch, Koreanisch oder Thai
     * Fix: Die Sprach-Regel markiert einen Kommentar nicht mehr als Spam, wenn die Sprache
       überhaupt nicht bestimmt werden konnte
+    * Fix: IP-Adressen werden nun anonymisiert, indem der Host-Teil der Adresse maskiert wird, und
+      zwar mit denselben Netzen wie in WordPress selbst: ein /24 für IPv4, wie in Antispam Bee 2.x,
+      und ein /64 für IPv6 statt nur der ersten zwei Blöcke
 
 ### 2.11.12 ###
 

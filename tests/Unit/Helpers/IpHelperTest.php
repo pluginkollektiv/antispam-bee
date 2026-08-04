@@ -53,10 +53,16 @@ class IpHelperTest extends TestCase {
 
 	public function anonymize_ip_provider(): array {
 		return [
-			[ '192.0.2.123', '192.0.0.0', 'IPv4 address should be truncated' ],
-			[ '2001:db8:85a3::8a2e:370:7334', '2001:db8::', 'IPv6 address should be truncated' ],
+			[ '198.51.100.42', '198.51.100.0', 'IPv4 address should be truncated to a /24 network' ],
+			[ '10.11.12.13', '10.11.12.0', 'IPv4 host bits should be zeroed out' ],
+			[ '2001:db8:85a3:8d3:1319:8a2e:370:7348', '2001:db8:85a3:8d3::', 'IPv6 address should be truncated to a /64 network' ],
+			[ '2001:db8:85a3::8a2e:370:7334', '2001:db8:85a3::', 'compressed IPv6 address should be truncated to a /64 network' ],
+			[ '2001:db8::1', '2001:db8::', 'IPv6 address shorter than the mask should only lose its host bits' ],
+			[ '::1', '::', 'the IPv6 loopback address should be masked, not rejected' ],
+			[ '0:0:0:0:0:0:0:1', '::', 'the result should not depend on the notation of the address' ],
+			[ 'fe80::1', 'fe80::', 'a link-local IPv6 address should be masked, not rejected' ],
+			[ '::ffff:192.0.2.123', '::ffff:192.0.2.0', 'an IPv4-mapped IPv6 address should be masked like an IPv4 address' ],
 			[ '', '', 'empty input should result in an empty string' ],
-			[ '::1', '', 'unmatchable input should result in an empty string' ],
 			[ 'no-ip-at-all', '', 'non-IP input should result in an empty string' ],
 		];
 	}

@@ -69,20 +69,38 @@ class IpHelper {
 	/**
 	 * Anonymize an IP address.
 	 *
+	 * Only the network portion is kept, the host portion is zeroed out: the
+	 * first three octets of an IPv4 address (a `/24` network) and the first four
+	 * groups of an IPv6 address (a `/64` network). These are the same masks that
+	 * WordPress core applies in `wp_privacy_anonymize_ip()`, coarse enough to
+	 * drop the host and fine enough for a reliable country lookup. An
+	 * IPv4-mapped IPv6 address is masked like the IPv4 address it carries.
+	 *
+	 * Addresses that cannot be parsed result in an empty string.
+	 *
 	 * @param string $ip Original IP.
 	 *
 	 * @return  string Anonymous IP.
 	 */
 	public static function anonymize_ip( string $ip ): string {
-		if ( ! preg_match( '/\w+([\.:])\w+/', $ip, $matches ) ) {
+		$packed = inet_pton( $ip );
+
+		if ( false === $packed ) {
 			return '';
 		}
 
-		$ip_start = $matches[0];
-		if ( '.' === $matches[1] ) {
-			return $ip_start . '.0.0';
+		// IPv4 addresses pack into four bytes, IPv6 addresses into sixteen.
+		if ( 4 === strlen( $packed ) ) {
+			$netmask = '255.255.255.0';
+		} elseif ( 0 === strncmp( $packed, str_repeat( "\0", 10 ) . "\xff\xff", 12 ) ) {
+			// An IPv4-mapped IPv6 address carries an IPv4 address, mask that one.
+			$netmask = '::ffff:255.255.255.0';
+		} else {
+			$netmask = 'ffff:ffff:ffff:ffff::';
 		}
 
-		return $ip_start . '::';
+		$anonymized = inet_ntop( $packed & (string) inet_pton( $netmask ) );
+
+		return false === $anonymized ? '' : $anonymized;
 	}
 }
