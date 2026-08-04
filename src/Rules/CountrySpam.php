@@ -77,6 +77,24 @@ class CountrySpam extends ControllableBase implements SpamReason {
 			return (int) $is_country_spam;
 		}
 
+		/*
+		 * Loopback, link-local and private addresses have no country, which is a
+		 * common setup: a local install reports `127.0.0.1` or `::1`, and a site
+		 * behind a reverse proxy without a `pre_comment_user_ip` filter sees the
+		 * address of the proxy. Asking the service anyway would only tell it that
+		 * this site exists.
+		 */
+		if ( ! IpHelper::is_global_ip( $ip ) ) {
+			return 0;
+		}
+
+		$anonymized_ip = IpHelper::anonymize_ip( $ip );
+
+		// Never look up an address that anonymization could not preserve.
+		if ( '' === $anonymized_ip ) {
+			return 0;
+		}
+
 		/**
 		 * Filters the IPLocate API key. With this filter, you can add your own IPLocate API key.
 		 *
@@ -90,7 +108,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 			esc_url_raw(
 				sprintf(
 					'https://www.iplocate.io/api/lookup/%s?apikey=%s',
-					IpHelper::anonymize_ip( $ip ),
+					$anonymized_ip,
 					$apikey
 				),
 				[ 'https' ]

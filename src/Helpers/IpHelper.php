@@ -97,7 +97,7 @@ class IpHelper {
 		// IPv4 addresses pack into four bytes, IPv6 addresses into sixteen.
 		if ( 4 === strlen( $packed ) ) {
 			$netmask = '255.255.255.0';
-		} elseif ( 0 === strncmp( $packed, str_repeat( "\0", 10 ) . "\xff\xff", 12 ) ) {
+		} elseif ( self::is_ipv4_mapped( $packed ) ) {
 			// An IPv4-mapped IPv6 address carries an IPv4 address, mask that one.
 			$netmask = '::ffff:255.255.255.0';
 		} else {
@@ -107,5 +107,50 @@ class IpHelper {
 		$anonymized = inet_ntop( $packed & (string) inet_pton( $netmask ) );
 
 		return false === $anonymized ? '' : $anonymized;
+	}
+
+	/**
+	 * Check whether an IP address is globally routable.
+	 *
+	 * Loopback, link-local, private and other reserved addresses have no country,
+	 * so there is no point in asking a geolocation service about them. Anything
+	 * that is not an IP address at all is not global either.
+	 *
+	 * @param string $ip The IP address to check.
+	 *
+	 * @return bool Whether the address is a global one.
+	 */
+	public static function is_global_ip( string $ip ): bool {
+		$packed = inet_pton( $ip );
+
+		if ( false === $packed ) {
+			return false;
+		}
+
+		/*
+		 * `FILTER_FLAG_NO_RES_RANGE` rejects the whole `::ffff:0:0/96` block, which
+		 * would discard the global address an IPv4-mapped IPv6 address carries, so
+		 * check that IPv4 address instead of the mapped form.
+		 */
+		if ( self::is_ipv4_mapped( $packed ) ) {
+			$ip = (string) inet_ntop( substr( $packed, 12 ) );
+		}
+
+		return false !== filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE );
+	}
+
+	/**
+	 * Check whether a packed address is an IPv4-mapped IPv6 address.
+	 *
+	 * Such an address carries an IPv4 address in its last four bytes and can show
+	 * up in `REMOTE_ADDR` on a dual-stack host.
+	 *
+	 * @param string $packed The packed address, as returned by `inet_pton()`.
+	 *
+	 * @return bool Whether the address is an IPv4-mapped one.
+	 */
+	private static function is_ipv4_mapped( string $packed ): bool {
+		return 16 === strlen( $packed )
+			&& 0 === strncmp( $packed, str_repeat( "\0", 10 ) . "\xff\xff", 12 );
 	}
 }
