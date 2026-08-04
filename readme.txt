@@ -107,6 +107,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
     * Fix: IP addresses are now anonymized by masking the host portion of the address: a /24 for IPv4, the same network WordPress itself keeps, as in Antispam Bee 2.x, and a /48 for IPv6 instead of only its first two groups
     * Fix: The country rule no longer asks the geolocation service about loopback, link-local and private addresses, which have no country anyway
     * Fix: The regular expression rule no longer raises a PHP warning when the author or the content of a comment is not valid UTF-8
+    * Enhancement: New `antispam_bee_country_spam_ip` filter to change which address the country rule looks up — mask it differently, send the original one for a more precise country, or return an empty string to skip the lookup
 
 ### 2.11.12 ###
   * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)

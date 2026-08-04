@@ -3,6 +3,7 @@
 namespace AntispamBee\Tests\Unit\Rules;
 
 use AntispamBee\Rules\CountrySpam;
+use function Brain\Monkey\Filters\expectApplied;
 use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\when;
 
@@ -70,6 +71,47 @@ class CountrySpamTest extends AbstractRuleTestCase {
 				"A $description address should not be sent to the service"
 			);
 		}
+	}
+
+	/**
+	 * The filter can return an empty string to decline an address, which must not
+	 * result in a lookup for no address at all.
+	 */
+	public function test_verify_does_not_call_the_service_for_an_empty_filtered_ip(): void {
+		$this->expect_no_request();
+
+		expectApplied( 'antispam_bee_country_spam_ip' )
+			->once()
+			->andReturn( '' );
+
+		self::assertSame(
+			0,
+			CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ),
+			'An address the filter declined should not be sent to the service'
+		);
+	}
+
+	/**
+	 * A site that would rather trade privacy for a more precise country can return
+	 * the original address from the filter. It receives the anonymized address and
+	 * the original one to choose from.
+	 */
+	public function test_verify_looks_up_the_address_the_filter_returns(): void {
+		$this->expect_request(
+			'{"country_code":"DE"}',
+			'https://www.iplocate.io/api/lookup/198.51.100.42?apikey='
+		);
+
+		expectApplied( 'antispam_bee_country_spam_ip' )
+			->once()
+			->with( '198.51.100.0', '198.51.100.42' )
+			->andReturn( '198.51.100.42' );
+
+		self::assertSame(
+			1,
+			CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ),
+			'The address returned by the filter should be used for the lookup'
+		);
 	}
 
 	public function test_verify_flags_a_reaction_from_a_denied_country(): void {
@@ -152,12 +194,19 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	/**
 	 * Expect a single request to the geolocation service.
 	 *
-	 * @param string $body The response body to return.
+	 * @param string      $body The response body to return.
+	 * @param string|null $url  The URL the request is expected to go to, if it matters.
 	 *
 	 * @return void
 	 */
-	private function expect_request( string $body ): void {
-		expect( 'wp_safe_remote_get' )->once()->andReturn( [ 'body' => $body ] );
+	private function expect_request( string $body, ?string $url = null ): void {
+		$expectation = expect( 'wp_safe_remote_get' )->once();
+
+		if ( null !== $url ) {
+			$expectation = $expectation->with( $url );
+		}
+
+		$expectation->andReturn( [ 'body' => $body ] );
 		when( 'wp_remote_retrieve_body' )->justReturn( $body );
 	}
 
