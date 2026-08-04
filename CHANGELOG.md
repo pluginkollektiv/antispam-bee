@@ -16,6 +16,9 @@
     * Fix: The country rule no longer asks the geolocation service about loopback, link-local and
       private addresses, which have no country anyway — a local installation and a site behind a
       reverse proxy without a `pre_comment_user_ip` filter stop sending requests altogether
+    * Enhancement: New `antispam_bee_country_spam_ip` filter to change which address the country
+      rule looks up — mask it differently, send the original one for a more precise country, or
+      return an empty string to skip the lookup
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -32,6 +35,9 @@
     * Fix: Die Länder-Regel fragt den Geolokalisierungs-Dienst nicht mehr zu Loopback-, Link-Local-
       und privaten Adressen, die ohnehin kein Land haben – eine lokale Installation und eine Seite
       hinter einem Reverse-Proxy ohne `pre_comment_user_ip`-Filter senden gar keine Anfragen mehr
+    * Verbesserung: Neuer Filter `antispam_bee_country_spam_ip`, um die Adresse zu ändern, die die
+      Länder-Regel abfragt – anders maskieren, die ursprüngliche Adresse für ein genaueres Land
+      senden oder mit einem leeren String die Abfrage ganz überspringen
 
 ### 2.11.12 ###
 

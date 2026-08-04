@@ -88,10 +88,22 @@ class CountrySpam extends ControllableBase implements SpamReason {
 			return 0;
 		}
 
-		$anonymized_ip = IpHelper::anonymize_ip( $ip );
+		/**
+		 * Filters the IP address the country is looked up for.
+		 *
+		 * By default only the anonymized address is sent to the service. Return the
+		 * original address to trade privacy for a more precise country, mask it
+		 * differently, or return an empty string to skip the lookup altogether.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string $lookup_ip The anonymized IP address.
+		 * @param string $ip        The original IP address.
+		 */
+		$lookup_ip = (string) apply_filters( 'antispam_bee_country_spam_ip', IpHelper::anonymize_ip( $ip ), $ip );
 
-		// Never look up an address that anonymization could not preserve.
-		if ( '' === $anonymized_ip ) {
+		// Anonymization can fail, and the filter can decline an address on purpose.
+		if ( '' === $lookup_ip ) {
 			return 0;
 		}
 
@@ -108,7 +120,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 			esc_url_raw(
 				sprintf(
 					'https://www.iplocate.io/api/lookup/%s?apikey=%s',
-					$anonymized_ip,
+					$lookup_ip,
 					$apikey
 				),
 				[ 'https' ]
