@@ -65,6 +65,9 @@
 		"test:unit": [
 			"phpunit -c phpunit.xml.dist --testsuite unit"
 		],
+		"test:integration": [
+			"phpunit -c phpunit-integration.xml.dist --testsuite integration"
+		],
 		"phpstan": [
 			"phpstan analyse --memory-limit=1G"
 		]
