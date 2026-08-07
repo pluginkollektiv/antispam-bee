@@ -162,13 +162,15 @@ affected by this at all.
 If you enable the [debug mode](https://antispambee.pluginkollektiv.org/documentation/), Antispam Bee
 logs when it finds no active rule for a reaction type, which makes both of these cases visible.
 
-## Reacting to spam the way Antispam Bee does
+## Reacting to spam
 
-`check()` only classifies. It does not count the item, store a reason, notify anybody, or delete
-anything. If you handle storage and notification yourself, that is all you need.
+`check()` only classifies. It does not store anything, notify anybody, or delete anything. Deciding
+what happens to a spam submission is your plugin’s job, and for most integrations doing that directly
+is all you need.
 
-To have Antispam Bee react as it does to its own spam — updating the spam counter and the statistics,
-sending notifications — pass the result to the post-processors:
+If you want that handling to be pluggable — so that site owners or add-ons can change it, and so it
+can be switched on and off from the Antispam Bee settings page — write it as a post-processor and run
+the post-processors for your reaction type:
 
 ```php
 if ( $result->is_spam() ) {
@@ -180,8 +182,57 @@ if ( $result->is_spam() ) {
 }
 ```
 
-Without this, the spam your integration catches will not show up in Antispam Bee’s spam count or
-dashboard widget.
+Note that `post_process()` runs the post-processors registered for **your** reaction type. Out of the
+box that is none, so the call does nothing until you register one — see below.
+
+### Antispam Bee’s own post-processors are comment-specific
+
+The post-processors that ship with Antispam Bee support the `comment` and `linkback` reaction types
+only, and that is deliberate rather than an omission: they are implementations for WordPress comments,
+not generic hooks. Saving a spam reason writes comment meta, the notification email is built from a
+stored comment and worded for one, and deletion is carried out by the comment handler. The spam
+counter is shown in WordPress’ *At a Glance* dashboard widget next to the comment counts, and is
+labelled as a number of spam comments.
+
+So please do not opt them into a custom reaction type with
+`antispam_bee_post_processor_supported_types`. They would either do nothing or produce results that
+are wrong for your content — and the count of blocked spam comments would no longer be a count of
+comments. Write your own instead.
+
+### Registering your own post-processor
+
+A post-processor implements `\AntispamBee\Interfaces\PostProcessor`, or extends
+`\AntispamBee\PostProcessors\Base` (or `ControllableBase`, if it should be switchable on your settings
+tab) and is registered on the `antispam_bee_post_processors` filter. As with rules, extending the base
+class gives you an `init()` method that does the registration:
+
+```php
+namespace My_Plugin\PostProcessors;
+
+class Store_Submission extends \AntispamBee\PostProcessors\Base {
+
+    protected static $slug = 'my-plugin-store-submission';
+
+    protected static $supported_types = [ 'my_plugin_form' ];
+
+    public static function process( array $item ): array {
+        // $item['asb_reasons'] holds the rule slugs that flagged the submission.
+        return $item;
+    }
+}
+```
+
+`process()` receives the item you passed to `post_process()`, with `asb_reasons` and `reaction_type`
+added, and returns it for the next post-processor. Set `$marks_as_delete` to `true` if your
+post-processor decides an item should not be stored; those run first, and they signal the decision by
+setting `asb_marked_as_delete` on the item — acting on that flag is up to the caller.
+
+Extending `ControllableBase` instead gives the post-processor a checkbox on the settings tab of its
+reaction type. It then also needs `get_name()` and `get_label()` from the `Controllable` interface, and
+it only runs when it is active — so give it a default, the same way rules need one.
+
+The `asb-` slug prefix is reserved for the post-processors that ship with Antispam Bee, so pick a
+prefix of your own.
 
 ## Adding your own rules
 
