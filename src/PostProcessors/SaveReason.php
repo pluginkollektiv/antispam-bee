@@ -20,16 +20,6 @@ class SaveReason extends ControllableBase {
 	protected static $slug = 'asb-save-reason';
 
 	/**
-	 * The spam reasons to persist once the comment has been saved.
-	 *
-	 * Carried between `process()` and `save_reasons()`, because `wp_insert_comment`
-	 * hands the callback nothing but the comment ID.
-	 *
-	 * @var array<int, string>
-	 */
-	private static $reasons = [];
-
-	/**
 	 * Process an item.
 	 * Save spam reasons.
 	 *
@@ -42,34 +32,31 @@ class SaveReason extends ControllableBase {
 			return $item;
 		}
 
+		// The reason is stored as comment meta, so the item has to become a comment.
+		if ( ! isset( $item['comment_post_ID'] ) ) {
+			$item['asb_post_processors_failed'][] = self::get_slug();
+
+			return $item;
+		}
+
 		if ( ! isset( $item['asb_reasons'] ) ) {
 			$item['asb_post_processors_failed'][] = self::get_slug();
 
 			return $item;
 		}
 
-		self::$reasons = (array) $item['asb_reasons'];
-
-		add_action( 'wp_insert_comment', [ self::class, 'save_reasons' ] );
+		add_action(
+			'comment_post',
+			function ( $comment_id ) use ( $item ) {
+				add_comment_meta(
+					$comment_id,
+					'antispam_bee_reason',
+					implode( ',', (array) $item['asb_reasons'] )
+				);
+			}
+		);
 
 		return $item;
-	}
-
-	/**
-	 * Persist the spam reasons as comment meta.
-	 *
-	 * @param int $comment_id ID of the comment that was just saved.
-	 *
-	 * @return void
-	 */
-	public static function save_reasons( $comment_id ) {
-		remove_action( 'wp_insert_comment', [ self::class, 'save_reasons' ] );
-
-		add_comment_meta(
-			$comment_id,
-			'antispam_bee_reason',
-			implode( ',', self::$reasons )
-		);
 	}
 
 	/**

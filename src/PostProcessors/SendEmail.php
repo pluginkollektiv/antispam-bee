@@ -24,16 +24,6 @@ class SendEmail extends ControllableBase {
 	protected static $slug = 'asb-send-email';
 
 	/**
-	 * The processed item the notification is built from.
-	 *
-	 * Carried between `process()` and `send_notification()`, because
-	 * `wp_insert_comment` hands the callback nothing but the comment ID.
-	 *
-	 * @var array<string, mixed>
-	 */
-	private static $item = [];
-
-	/**
 	 * Process an item.
 	 * Generate an email and send it.
 	 *
@@ -46,68 +36,65 @@ class SendEmail extends ControllableBase {
 			return $item;
 		}
 
-		self::$item = $item;
+		// The notification is built from the stored comment, so the item has to become one.
+		if ( ! isset( $item['comment_post_ID'] ) ) {
+			$item['asb_post_processors_failed'][] = self::get_slug();
 
-		add_action( 'wp_insert_comment', [ self::class, 'send_notification' ] );
+			return $item;
+		}
+
+		add_action(
+			'comment_post',
+			function ( $id ) use ( $item ) {
+				$comment = get_comment( $id, ARRAY_A );
+
+				if ( empty( $comment ) ) {
+					return;
+				}
+
+				$post = get_post( $comment['comment_post_ID'] );
+				if ( ! $post ) {
+					return;
+				}
+
+				$subject = self::get_subject();
+
+				// Body.
+				$body = self::get_body( $post, $comment, $item );
+
+				wp_mail(
+				/**
+				 * Filters the recipients of the spam notification email.
+				 *
+				 * By default the notification is sent to the site’s admin email
+				 * address. Use this filter to send it to additional or different
+				 * recipients.
+				 *
+				 * @since 2.8.0
+				 *
+				 * @param array $recipients The list of recipient email addresses.
+				 */
+					apply_filters(
+						'antispam_bee_notification_recipients',
+						[ get_bloginfo( 'admin_email' ) ]
+					),
+					/**
+					 * Filters the subject of the spam notification email.
+					 *
+					 * @since 2.5.7
+					 *
+					 * @param string $subject The email subject line.
+					 */
+					apply_filters(
+						'antispam_bee_notification_subject',
+						$subject
+					),
+					$body
+				);
+			}
+		);
 
 		return $item;
-	}
-
-	/**
-	 * Send the spam notification for a comment that was just saved.
-	 *
-	 * @param int $id ID of the comment that was just saved.
-	 *
-	 * @return void
-	 */
-	public static function send_notification( $id ) {
-		remove_action( 'wp_insert_comment', [ self::class, 'send_notification' ] );
-
-		$comment = get_comment( $id, ARRAY_A );
-
-		if ( empty( $comment ) ) {
-			return;
-		}
-
-		$post = get_post( $comment['comment_post_ID'] );
-		if ( ! $post ) {
-			return;
-		}
-
-		$subject = self::get_subject();
-
-		// Body.
-		$body = self::get_body( $post, $comment, self::$item );
-
-		wp_mail(
-		/**
-		 * Filters the recipients of the spam notification email.
-		 *
-		 * By default the notification is sent to the site’s admin email
-		 * address. Use this filter to send it to additional or different
-		 * recipients.
-		 *
-		 * @since 2.8.0
-		 *
-		 * @param array $recipients The list of recipient email addresses.
-		 */
-			apply_filters(
-				'antispam_bee_notification_recipients',
-				[ get_bloginfo( 'admin_email' ) ]
-			),
-			/**
-			 * Filters the subject of the spam notification email.
-			 *
-			 * @since 2.5.7
-			 *
-			 * @param string $subject The email subject line.
-			 */
-			apply_filters(
-				'antispam_bee_notification_subject',
-				$subject
-			),
-			$body
-		);
 	}
 
 	/**
