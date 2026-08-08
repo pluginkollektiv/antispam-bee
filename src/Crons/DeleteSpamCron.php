@@ -7,6 +7,7 @@
 
 namespace AntispamBee\Crons;
 
+use AntispamBee\GeneralOptions\DeleteOldSpam;
 use AntispamBee\Helpers\Settings;
 
 /**
@@ -27,6 +28,15 @@ class DeleteSpamCron {
 			[ __CLASS__, 'maybe_change_cron_state' ]
 		);
 
+		// Saving the settings is not the only way the option can change: a site upgraded from v2
+		// has its configuration written by the migration, and the activation hook does not fire on
+		// every update path. Reconciling on `init` makes the schedule converge on the setting
+		// without the user having to re-save the settings page.
+		add_action(
+			'init',
+			[ __CLASS__, 'maybe_change_cron_state' ]
+		);
+
 		add_action(
 			self::CRONJOB_NAME,
 			[ __CLASS__, 'run' ]
@@ -39,7 +49,7 @@ class DeleteSpamCron {
 	 * @return void
 	 */
 	public static function maybe_change_cron_state(): void {
-		if ( ! Settings::get_option( 'delete_spam_cronjob_enabled' ) ) {
+		if ( ! DeleteOldSpam::is_active() ) {
 			self::unregister();
 
 			return;
@@ -85,11 +95,11 @@ class DeleteSpamCron {
 			return;
 		}
 
-		if ( ! Settings::get_option( 'delete_spam_cronjob_enabled' ) ) {
+		if ( ! DeleteOldSpam::is_active() ) {
 			return;
 		}
 
-		$days = (int) Settings::get_option( 'delete_spam_cronjob_days' );
+		$days = (int) Settings::get_option( DeleteOldSpam::get_option_name( 'delete_spam_cronjob_days' ) );
 		if ( empty( $days ) ) {
 			return;
 		}
