@@ -7,7 +7,7 @@
 	"scripts": {
 		"env:start": "wp-env start",
 		"env:stop": "wp-env stop",
-		"env:clean": "wp-env clean tests",
+		"env:clean": "wp-env reset tests",
 		"env:destroy": "wp-env destroy",
 		"test:e2e": "wp-scripts test-playwright",
 		"test:e2e:ui": "wp-scripts test-playwright --ui",
