@@ -104,3 +104,9 @@ Excludes tracked files from `git archive` exports via `export-ignore`.
 - Include a short summary of what changed and why
 - Add test steps when the change affects user-facing behavior; pure code style fixes do not need
   them
+- **Close the issue manually.** GitHub only acts on closing keywords such as `Fixes #123` when a
+  pull request is merged into the repository's *default* branch, which is currently `master`. A
+  pull request merged into `v3` leaves its issue open, however the description is worded — close
+  it by hand with a short comment naming the pull request that fixed it. Still write the keyword,
+  so the issue and the pull request stay linked. This stops applying once `v3` becomes the default
+  branch.
