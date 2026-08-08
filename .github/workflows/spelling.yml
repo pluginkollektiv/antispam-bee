@@ -1,0 +1,30 @@
+# Split out of the former `tests.yml`. Keep the job name `spelling` and its display name
+# `Typos`, since that is what the status checks on existing pull requests are called.
+#
+# Deliberately has no path filter. It is the only check that validates prose, so it is the
+# one that must still run on a documentation-only change — which is exactly the kind of
+# pull request the other workflows now skip.
+
+name: Spelling
+
+on:
+  push:
+    branches:
+      - master
+      - v3
+  pull_request:
+  # Allow forcing a full run by hand, for example before cutting a release.
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  spelling:
+    name: Typos
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: crate-ci/typos@master

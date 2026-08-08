@@ -1,0 +1,56 @@
+# Split out of the former `tests.yml` so each kind of check has its own workflow, its own
+# path filter and its own concurrency group. Keep the job name `test-unit`, since that is
+# what the status checks on existing pull requests are called.
+#
+# Every filter includes this workflow file, so a change to the setup always runs the thing
+# it is setting up.
+#
+# Only `pull_request` is filtered — `push` to a major branch deliberately runs everything.
+# A merge carries the same diff the pull request carried, so a filter that is too narrow
+# would skip the check on the pull request *and* on the merge, and the gap would never
+# surface. The push run is also the only one that tests the code as it actually landed:
+# pull request checks run against a merge commit computed when they started, which goes
+# stale once the base branch moves on.
+
+name: Unit tests
+
+on:
+  push:
+    branches:
+      - master
+      - v3
+  pull_request:
+    paths:
+      - '**.php'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpunit.xml.dist'
+      - '.github/workflows/unit.yml'
+  # Allow forcing a full run by hand, for example before cutting a release.
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-unit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['8.5', '7.4']
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: mbstring, intl
+        ini-values: post_max_size=256M, short_open_tag=On
+        tools: composer
+    - name: Install
+      run: |
+        composer install
+    - name: Run tests
+      run: |
+        composer test:unit

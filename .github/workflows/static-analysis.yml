@@ -1,0 +1,84 @@
+# Split out of the former `tests.yml`. Keep the job names `phpstan`, `quality` and
+# `wp-since`, since that is what the status checks on existing pull requests are called.
+#
+# The jobs share a workflow because they share a trigger: all of them are static checks
+# over the source, none starts an environment. They still report as separate status checks.
+#
+# Only `pull_request` is filtered — `push` to a major branch deliberately runs everything.
+# A merge carries the same diff the pull request carried, so a filter that is too narrow
+# would skip the check on the pull request *and* on the merge, and the gap would never
+# surface. The push run is also the only one that tests the code as it actually landed:
+# pull request checks run against a merge commit computed when they started, which goes
+# stale once the base branch moves on.
+
+name: Static analysis
+
+on:
+  push:
+    branches:
+      - master
+      - v3
+  pull_request:
+    paths:
+      - '**.php'
+      - '**.js'
+      - '**.css'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpcs.xml'
+      - 'phpstan.neon'
+      # `wp-since` resolves the minimum supported WordPress version from the
+      # `Requires at least` header in `readme.txt`, so lowering it there alone changes
+      # the outcome of the check.
+      - 'readme.txt'
+      - '.github/workflows/static-analysis.yml'
+  # Allow forcing a full run by hand, for example before cutting a release.
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phpstan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          tools: composer
+      - name: Install Composer dependencies
+        run: composer install --ignore-platform-req=php
+      - name: Run PHPStan
+        run: composer phpstan
+
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.5'
+        tools: composer
+    - name: Run code style checks for CSS, JavaScript and PHP
+      run: |
+        composer install --ignore-platform-req=php
+        ./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
+        composer cs
+
+  wp-since:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.5'
+        tools: composer
+    - name: Check for unavailable WordPress functions
+      run: |
+        composer install --ignore-platform-req=php
+        ./vendor/bin/wp-since check .

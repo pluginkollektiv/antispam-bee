@@ -1,32 +1,50 @@
-name: Tests, Coding Standards
+# Split out of the former `tests.yml`. Keep the job name `test-e2e`, since that is what the
+# status checks on existing pull requests are called.
+#
+# This is by far the most expensive workflow — nine matrix entries, each starting a
+# WordPress environment and a browser — so it is the one that benefits most from both the
+# path filter and the concurrency group.
+#
+# Only `pull_request` is filtered — `push` to a major branch deliberately runs everything.
+# A merge carries the same diff the pull request carried, so a filter that is too narrow
+# would skip the check on the pull request *and* on the merge, and the gap would never
+# surface. The push run is also the only one that tests the code as it actually landed:
+# pull request checks run against a merge commit computed when they started, which goes
+# stale once the base branch moves on. Pull requests are where the volume is — many pushes
+# per review — so the filter still saves nearly everything it did before.
+
+name: E2E tests
+
 on:
   push:
     branches:
       - master
       - v3
   pull_request:
-jobs:
-  test-unit:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-versions: ['8.5', '7.4']
-    steps:
-    - uses: actions/checkout@v7
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-versions }}
-        extensions: mbstring, intl
-        ini-values: post_max_size=256M, short_open_tag=On
-        tools: composer
-    - name: Install
-      run: |
-        composer install
-    - name: Run tests
-      run: |
-        composer test:unit
+    paths:
+      - '**.php'
+      # The unit suite and its stubs cannot affect an end-to-end run, and this workflow is
+      # nine environments wide, so exclude them from the `**.php` match above.
+      - '!tests/Unit/**'
+      - '!tests/_stubs/**'
+      - '**.js'
+      - '**.css'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'playwright.config.ts'
+      - 'tests/e2e/**'
+      - '.wp-env.json'
+      - '.github/workflows/e2e.yml'
+  # Allow forcing a full run by hand, for example before cutting a release.
+  workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
   test-e2e:
     runs-on: ubuntu-latest
     strategy:
@@ -91,54 +109,3 @@ jobs:
     - name: Stop wp-env
       if: always()
       run: npm run env:stop
-
-  phpstan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.5'
-          tools: composer
-      - name: Install Composer dependencies
-        run: composer install --ignore-platform-req=php
-      - name: Run PHPStan
-        run: composer phpstan
-
-  quality:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v7
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.5'
-        tools: composer
-    - name: Run code style checks for CSS, JavaScript and PHP
-      run: |
-        composer install --ignore-platform-req=php
-        ./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
-        composer cs
-
-  wp-since:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v7
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.5'
-        tools: composer
-    - name: Check for unavailable WordPress functions
-      run: |
-        composer install --ignore-platform-req=php
-        ./vendor/bin/wp-since check .
-
-  spelling:
-    name: Typos
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: crate-ci/typos@master

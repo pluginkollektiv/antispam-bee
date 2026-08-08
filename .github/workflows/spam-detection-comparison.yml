@@ -47,6 +47,12 @@ name: Spam-detection comparison
 on:
   pull_request:
     branches: [ v3, master ]
+    # Only meaningful when the detection logic itself changes.
+    paths:
+      - 'src/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - '.github/workflows/spam-detection-comparison.yml'
   push:
     branches:
       - 'prepare-*'
