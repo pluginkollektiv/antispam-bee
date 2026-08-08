@@ -5,10 +5,32 @@ namespace AntispamBee\Tests\Unit\Helpers;
 use AntispamBee\Helpers\DebugMode;
 use ReflectionProperty;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
-use function Brain\Monkey\Functions\when;
 
-if ( ! defined( 'WP_CONTENT_DIR' ) ) {
-	define( 'WP_CONTENT_DIR', sys_get_temp_dir() . '/asb-debug-mode-test' );
+/**
+ * A {@see DebugMode} whose log path is injected rather than resolved from a constant.
+ *
+ * The real resolution goes through constants, which cannot be undefined again and would
+ * therefore leak into every other test file in the run — enabling debug logging for tests
+ * that never asked for it. Where the path comes from is {@see LogPathTest}'s subject; what
+ * gets written to it is this one's.
+ */
+class InjectedDebugMode extends DebugMode {
+
+	/**
+	 * Path returned instead of resolving one, or null for "no log configured".
+	 *
+	 * @var string|null
+	 */
+	public static $path = null;
+
+	/**
+	 * Get the debug log file path.
+	 *
+	 * @return string|null The injected path.
+	 */
+	public static function get_log_file(): ?string {
+		return self::$path;
+	}
 }
 
 /**
@@ -17,18 +39,18 @@ if ( ! defined( 'WP_CONTENT_DIR' ) ) {
 class DebugModeTest extends TestCase {
 
 	/**
-	 * The salt `wp_salt()` returns.
+	 * Path the injected log writes to.
 	 *
 	 * @var string
 	 */
-	private $salt = 'test-salt';
+	private $log_file;
 
 	public function test_log_writes_a_single_line_per_entry(): void {
 		self::force_debug_mode( true );
 
-		DebugMode::log( "first\nsecond\r\nthird" );
+		InjectedDebugMode::log( "first\nsecond\r\nthird" );
 
-		$contents = self::read_log();
+		$contents = (string) file_get_contents( $this->log_file );
 
 		self::assertCount(
 			1,
@@ -45,50 +67,28 @@ class DebugModeTest extends TestCase {
 	public function test_log_writes_nothing_when_debug_mode_is_disabled(): void {
 		self::force_debug_mode( false );
 
-		DebugMode::log( 'should not be written' );
+		InjectedDebugMode::log( 'should not be written' );
 
-		self::assertSame(
-			[],
-			self::log_files(),
+		self::assertFileDoesNotExist(
+			$this->log_file,
 			'Nothing should be logged while debug mode is off'
 		);
 	}
 
 	/**
-	 * The file name is derived from the salt, so without one there is nothing to
-	 * make the name unguessable and nothing may be written. `wp_salt()` normally
-	 * always returns a secret, so this is a safety net rather than a case that is
-	 * expected to occur.
+	 * Without a resolvable path there is nothing to write to, so logging is skipped. That
+	 * happens when no log constant is defined, and also when no secret salt is available to
+	 * make a generated file name unguessable — see {@see LogPathTest}.
 	 */
-	public function test_log_writes_nothing_without_a_secret_salt(): void {
-		$this->salt = '';
+	public function test_log_writes_nothing_without_a_log_file(): void {
 		self::force_debug_mode( true );
+		InjectedDebugMode::$path = null;
 
-		DebugMode::log( 'should not be written' );
+		InjectedDebugMode::log( 'should not be written' );
 
-		self::assertSame(
-			[],
-			self::log_files(),
-			'Without a salt the file name would be guessable, so nothing may be logged'
-		);
-	}
-
-	public function test_log_file_name_is_derived_from_the_salt(): void {
-		self::force_debug_mode( true );
-
-		DebugMode::log( 'first entry' );
-		$first = self::log_files();
-
-		self::remove_log_files();
-		$this->salt = 'another-salt';
-
-		DebugMode::log( 'second entry' );
-		$second = self::log_files();
-
-		self::assertNotSame(
-			$first,
-			$second,
-			'A different salt must produce a different, unguessable file name'
+		self::assertFileDoesNotExist(
+			$this->log_file,
+			'Without a log file path nothing may be written'
 		);
 	}
 
@@ -100,17 +100,8 @@ class DebugModeTest extends TestCase {
 	protected function set_up() {
 		parent::set_up();
 
-		when( 'wp_salt' )->alias(
-			function () {
-				return $this->salt;
-			}
-		);
-
-		if ( ! is_dir( WP_CONTENT_DIR ) ) {
-			mkdir( WP_CONTENT_DIR, 0777, true );
-		}
-
-		self::remove_log_files();
+		$this->log_file          = sys_get_temp_dir() . '/asb-debug-mode-test-' . uniqid() . '.log';
+		InjectedDebugMode::$path = $this->log_file;
 	}
 
 	/**
@@ -119,14 +110,18 @@ class DebugModeTest extends TestCase {
 	 * @return void
 	 */
 	protected function tear_down() {
-		self::remove_log_files();
+		if ( file_exists( $this->log_file ) ) {
+			unlink( $this->log_file );
+		}
+
+		InjectedDebugMode::$path = null;
 		self::force_debug_mode( null );
 
 		parent::tear_down();
 	}
 
 	/**
-	 * Override the cached debug mode state, which is otherwise read from a constant.
+	 * Override the cached debug mode state, which is otherwise derived from the log path.
 	 *
 	 * @param bool|null $enabled Whether debug mode is enabled, or null to reset.
 	 *
@@ -136,38 +131,5 @@ class DebugModeTest extends TestCase {
 		$property = new ReflectionProperty( DebugMode::class, 'debug_mode_enabled' );
 		$property->setAccessible( true );
 		$property->setValue( null, $enabled );
-	}
-
-	/**
-	 * All log files the helper may have written.
-	 *
-	 * @return string[] List of file paths.
-	 */
-	private static function log_files(): array {
-		return glob( WP_CONTENT_DIR . '/asb-debug.*.log' ) ?: [];
-	}
-
-	/**
-	 * Read the single log file that was written.
-	 *
-	 * @return string The log file contents.
-	 */
-	private static function read_log(): string {
-		$files = self::log_files();
-
-		self::assertCount( 1, $files, 'Exactly one log file should have been written' );
-
-		return (string) file_get_contents( $files[0] );
-	}
-
-	/**
-	 * Remove any log files left behind.
-	 *
-	 * @return void
-	 */
-	private static function remove_log_files(): void {
-		foreach ( self::log_files() as $file ) {
-			unlink( $file );
-		}
 	}
 }

@@ -7,10 +7,19 @@
 
 namespace AntispamBee\PostProcessors;
 
+use AntispamBee\Helpers\LogPath;
+
 /**
  * Post-processor that is responsible for updating the spam log file.
  */
 class UpdateSpamLog extends Base {
+	/**
+	 * File name prefix of the spam log.
+	 *
+	 * @var string
+	 */
+	const LOG_PREFIX = 'asb-spam';
+
 
 	/**
 	 * Post-processor slug.
@@ -37,17 +46,11 @@ class UpdateSpamLog extends Base {
 			return $item;
 		}
 
-		// Read through constant(), not the bare constant name: the latter is declared
-		// as a literal string for static analysis (see phpstan-bootstrap.php), which
-		// would make the is_string() check below a tautology there, masking the real,
-		// dynamic wp-config.php value this is actually guarding against.
-		$log_file = defined( 'ANTISPAM_BEE_LOG_FILE' ) ? constant( 'ANTISPAM_BEE_LOG_FILE' ) : null;
+		$log_file = self::get_log_file();
 
 		if (
-			! is_string( $log_file )
-			|| '' === $log_file
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- WP_Filesystem cannot perform an atomic FILE_APPEND | LOCK_EX write to the log file.
-			|| ! is_writable( $log_file )
+			null === $log_file
+			|| ! LogPath::is_writable( $log_file )
 		) {
 			return $item;
 		}
@@ -272,5 +275,37 @@ class UpdateSpamLog extends Base {
 		$sanitized = preg_replace( '/[^a-zA-Z0-9_\-]/', '', (string) $token );
 
 		return empty( $sanitized ) ? 'unknown' : $sanitized;
+	}
+	/**
+	 * Get the spam log file path.
+	 *
+	 * Unlike the debug log the generated name carries no date. A Fail2Ban jail expands
+	 * `logpath` globs when it starts, so a file name that changes daily would stop being
+	 * matched until the jail is reloaded.
+	 *
+	 * @return string|null Path, or null when spam logging is off.
+	 */
+	public static function get_log_file(): ?string {
+		$log_file = LogPath::resolve( 'ANTISPAM_BEE_SPAM_LOG', 'ANTISPAM_BEE_SPAM_LOG_DIR', self::LOG_PREFIX );
+
+		if ( null !== $log_file ) {
+			return $log_file;
+		}
+
+		// Deprecated since 3.0.0, use `ANTISPAM_BEE_SPAM_LOG` instead.
+		//
+		// Read through constant(), not the bare name: the latter is declared as a
+		// literal string for static analysis (see phpstan-bootstrap.php), which would
+		// make the is_string() check below a tautology there. A bare truthiness check
+		// would accept the constant defined as boolean `true`, and (string) true is
+		// "1" — a relative path that resolves to the current working directory,
+		// writing a guessable, IP-carrying log file to the web root on a normal request.
+		$legacy = defined( 'ANTISPAM_BEE_LOG_FILE' ) ? constant( 'ANTISPAM_BEE_LOG_FILE' ) : null;
+
+		if ( is_string( $legacy ) && '' !== $legacy ) {
+			return $legacy;
+		}
+
+		return null;
 	}
 }
