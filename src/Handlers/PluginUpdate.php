@@ -149,53 +149,65 @@ class PluginUpdate {
 		) ) {
 			// Update options (we migrate to a new option name `antispam_bee_options` in this release).
 			$options = get_option( 'antispam_bee', [] );
+			if ( ! is_array( $options ) ) {
+				$options = [];
+			}
 
 			$allowed_languages = self::convert_multiselect_values( $options['translate_lang'] ?? [] );
 
 			$delete_reasons = self::convert_multiselect_values( $options['ignore_reasons'] ?? [], self::$spam_reasons_mapping );
 
+			/*
+			 * Every legacy flag is read through `empty()`, because the legacy option array grew
+			 * over the lifetime of Antispam Bee 2.x and a site that never re-saved its settings
+			 * after an upgrade can hold an array that predates any given key. Reading such a key
+			 * directly emits an `Undefined array key` warning, which aborts the whole migration on
+			 * installs that promote warnings to exceptions — and since the database version is
+			 * raised before the migration runs, it is then never retried. A missing key means the
+			 * feature did not exist yet, so it is migrated as disabled.
+			 */
 			$new_options = [
 				'comment'    => [
 					'post_processor_asb_delete_spam_active' => isset( $options['flag_spam'] ) && ! $options['flag_spam'] ? 'on' : '',
-					'post_processor_asb_send_email_active' => $options['email_notify'] ? 'on' : '',
+					'post_processor_asb_send_email_active' => empty( $options['email_notify'] ) ? '' : 'on',
 					'post_processor_asb_save_reason_active' => isset( $options['no_notice'] ) && ! $options['no_notice'] ? 'on' : '',
-					'rule_asb_regexp_active'               => $options['regexp_check'] ? 'on' : '',
+					'rule_asb_regexp_active'               => empty( $options['regexp_check'] ) ? '' : 'on',
 					'rule_asb_honeypot_active'             => 'on',
-					'rule_asb_db_spam_active'              => $options['spam_ip'] ? 'on' : '',
-					'rule_asb_approved_email_active'       => $options['already_commented'] ? 'on' : '',
-					'rule_asb_too_fast_submit_active'      => $options['time_check'] ? 'on' : '',
-					'post_processor_asb_delete_for_reasons_active' => $options['reasons_enable'] ? 'on' : '',
+					'rule_asb_db_spam_active'              => empty( $options['spam_ip'] ) ? '' : 'on',
+					'rule_asb_approved_email_active'       => empty( $options['already_commented'] ) ? '' : 'on',
+					'rule_asb_too_fast_submit_active'      => empty( $options['time_check'] ) ? '' : 'on',
+					'post_processor_asb_delete_for_reasons_active' => empty( $options['reasons_enable'] ) ? '' : 'on',
 					'post_processor_asb_delete_for_reasons_reasons' => $delete_reasons,
-					'rule_asb_bbcode_active'               => $options['bbcode_check'] ? 'on' : '',
-					'rule_asb_valid_gravatar_active'       => $options['gravatar_check'] ? 'on' : '',
-					'rule_asb_country_spam_active'         => $options['country_code'] ? 'on' : '',
+					'rule_asb_bbcode_active'               => empty( $options['bbcode_check'] ) ? '' : 'on',
+					'rule_asb_valid_gravatar_active'       => empty( $options['gravatar_check'] ) ? '' : 'on',
+					'rule_asb_country_spam_active'         => empty( $options['country_code'] ) ? '' : 'on',
 					'rule_asb_country_spam_denied'         => $options['country_denied'] ?? '',
 					'rule_asb_country_spam_allowed'        => $options['country_allowed'] ?? '',
-					'rule_asb_lang_spam_active'            => $options['translate_api'] ? 'on' : '',
+					'rule_asb_lang_spam_active'            => empty( $options['translate_api'] ) ? '' : 'on',
 					'rule_asb_lang_spam_allowed'           => $allowed_languages,
 				],
 				'linkback'   => [
 					'post_processor_asb_delete_spam_active' => isset( $options['flag_spam'] ) && ! $options['flag_spam'] ? 'on' : '',
-					'post_processor_asb_send_email_active' => $options['email_notify'] ? 'on' : '',
+					'post_processor_asb_send_email_active' => empty( $options['email_notify'] ) ? '' : 'on',
 					'post_processor_asb_save_reason_active' => isset( $options['no_notice'] ) && ! $options['no_notice'] ? 'on' : '',
-					'rule_asb_regexp_active'               => $options['regexp_check'] ? 'on' : '',
-					'rule_asb_db_spam_active'              => $options['spam_ip'] ? 'on' : '',
-					'post_processor_asb_delete_for_reasons_active' => $options['reasons_enable'] ? 'on' : '',
+					'rule_asb_regexp_active'               => empty( $options['regexp_check'] ) ? '' : 'on',
+					'rule_asb_db_spam_active'              => empty( $options['spam_ip'] ) ? '' : 'on',
+					'post_processor_asb_delete_for_reasons_active' => empty( $options['reasons_enable'] ) ? '' : 'on',
 					'post_processor_asb_delete_for_reasons_reasons' => $delete_reasons,
-					'rule_asb_bbcode_active'               => $options['bbcode_check'] ? 'on' : '',
-					'rule_asb_valid_gravatar_active'       => $options['gravatar_check'] ? 'on' : '',
-					'rule_asb_country_spam_active'         => $options['country_code'] ? 'on' : '',
+					'rule_asb_bbcode_active'               => empty( $options['bbcode_check'] ) ? '' : 'on',
+					'rule_asb_valid_gravatar_active'       => empty( $options['gravatar_check'] ) ? '' : 'on',
+					'rule_asb_country_spam_active'         => empty( $options['country_code'] ) ? '' : 'on',
 					'rule_asb_country_spam_denied'         => $options['country_denied'] ?? '',
 					'rule_asb_country_spam_allowed'        => $options['country_allowed'] ?? '',
-					'rule_asb_lang_spam_active'            => $options['translate_api'] ? 'on' : '',
+					'rule_asb_lang_spam_active'            => empty( $options['translate_api'] ) ? '' : 'on',
 					'rule_asb_lang_spam_allowed'           => $allowed_languages,
 				],
 				'general'    => [
-					'general_delete_spam_cronjob_enabled_active' => $options['cronjob_enable'] ? 'on' : '',
+					'general_delete_spam_cronjob_enabled_active' => empty( $options['cronjob_enable'] ) ? '' : 'on',
 					'general_delete_spam_cronjob_enabled_delete_spam_cronjob_days' => $options['cronjob_interval'] ?? 30,
-					'general_statistics_on_dashboard_active' => $options['dashboard_count'] ? 'on' : '',
-					'general_ignore_linkbacks_active' => $options['ignore_pings'] ? 'on' : '',
-					'general_delete_data_on_uninstall_active' => $options['delete_data_on_uninstall'] ? 'on' : '',
+					'general_statistics_on_dashboard_active' => empty( $options['dashboard_count'] ) ? '' : 'on',
+					'general_ignore_linkbacks_active' => empty( $options['ignore_pings'] ) ? '' : 'on',
+					'general_delete_data_on_uninstall_active' => empty( $options['delete_data_on_uninstall'] ) ? '' : 'on',
 				],
 				'spam_count' => $options['spam_count'] ?? 0,
 			];
