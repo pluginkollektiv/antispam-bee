@@ -116,7 +116,7 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 Complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ### Can I log detected spam for Fail2Ban? ###
-Yes. Define the constant `ANTISPAM_BEE_LOG_FILE` in your `wp-config.php` with the path to a writable file. Antispam Bee then appends one line per detected spam item:
+Yes. Define the constant `ANTISPAM_BEE_SPAM_LOG` in your `wp-config.php`. Set it to the path of a writable file to choose the name yourself, which is what a Fail2Ban jail needs, or to `true` to let Antispam Bee pick one. Antispam Bee then appends one line per detected spam item:
 
 > 2026-01-15T10:23:45+01:00 ip=192.0.2.42 type=comment post=474 reasons=asb-honeypot
 
@@ -137,6 +137,10 @@ Two things to know when writing your own. Fail2Ban removes the timestamp from th
 To add a field of your own, use the `antispam_bee_spam_log_fields` filter: it receives the fields as an associative array, and anything you append becomes another `key=value` pair at the end of the line. Keys and values are cleaned up afterwards, so an added field cannot break the format.
 
 To replace the line wholesale — with CSV, JSON or anything else — use the `antispam_bee_spam_log_entry` filter, or return an empty string from it to skip an item.
+
+With `true`, the file is written to the directory in `ANTISPAM_BEE_SPAM_LOG_DIR`, or to `wp-content` when that is unset, under a name ending in a site-specific suffix — the log holds IP addresses, and `wp-content` is usually reachable from the web, so the name must not be guessable. The suffix does not change, so a Fail2Ban `logpath` keeps matching it.
+
+The older `ANTISPAM_BEE_LOG_FILE` still works and is read as a file path. It will be removed in 4.0.
 
 ### How can I report security bugs? ###
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/445425e4-f5dd-4404-80a7-690999f5bcb3)
