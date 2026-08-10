@@ -11,4 +11,5 @@ parameters:
   dynamicConstantNames:
     - ANTISPAM_BEE_DEBUG_MODE_ENABLED
     - ANTISPAM_BEE_LOG_FILE
+    - ANTISPAM_BEE_IPLOCATE_API_KEY
   treatPhpDocTypesAsCertain: false

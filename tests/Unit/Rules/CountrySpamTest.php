@@ -3,6 +3,7 @@
 namespace AntispamBee\Tests\Unit\Rules;
 
 use AntispamBee\Rules\CountrySpam;
+use ReflectionMethod;
 use function Brain\Monkey\Filters\expectApplied;
 use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\when;
@@ -274,6 +275,23 @@ class CountrySpamTest extends AbstractRuleTestCase {
 		);
 	}
 
+	public function test_api_key_defaults_to_empty_string() {
+		expectApplied( 'antispam_bee_country_spam_apikey' )
+			->once()
+			->with( '' )
+			->andReturnFirstArg();
+
+		self::assertSame( '', self::get_api_key(), 'Without a key configured the result should be an empty string' );
+	}
+
+	public function test_api_key_falls_back_to_the_filter() {
+		expectApplied( 'antispam_bee_country_spam_apikey' )
+			->once()
+			->andReturn( 'from-filter' );
+
+		self::assertSame( 'from-filter', self::get_api_key(), 'The filtered key should be used when no constant is set' );
+	}
+
 	/**
 	 * The `sanitize` callbacks are handed the posted value as it arrived. The two
 	 * country lists are textareas, but a request can post an array for them, and
@@ -379,5 +397,17 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	 */
 	private function expect_no_request(): void {
 		expect( 'wp_safe_remote_get' )->never();
+	}
+
+	/**
+	 * Call the private `get_api_key` method.
+	 *
+	 * @return string The resolved API key.
+	 */
+	private static function get_api_key(): string {
+		$method = new ReflectionMethod( CountrySpam::class, 'get_api_key' );
+		$method->setAccessible( true );
+
+		return $method->invoke( null );
 	}
 }
