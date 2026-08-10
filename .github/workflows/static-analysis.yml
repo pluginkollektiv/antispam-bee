@@ -32,6 +32,9 @@ on:
       # the outcome of the check.
       - 'readme.txt'
       - '.github/workflows/static-analysis.yml'
+      # The shared PHP setup is part of this workflow's setup, so a change to it has to run
+      # this workflow as well.
+      - '.github/actions/setup-php/**'
   # Allow forcing a full run by hand, for example before cutting a release.
   workflow_dispatch:
 
