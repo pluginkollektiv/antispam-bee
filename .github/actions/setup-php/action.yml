@@ -1,0 +1,44 @@
+# Sets up PHP with Composer and installs the Composer dependencies.
+#
+# Every job that touches PHP starts with these two steps, and only three things ever
+# differ: the PHP version, the extensions and ini values the unit suite needs, and the
+# flags for `composer install` (`--ignore-platform-req=php` for the static checks,
+# `--no-dev --optimize-autoloader` for the end-to-end build, nothing for the unit suite).
+# So the steps live here once instead of five times across the workflows.
+#
+# Used with a local path (`uses: ./.github/actions/setup-php`), so the calling job has to
+# check the repository out first.
+
+name: Setup PHP
+description: Set up PHP with Composer and install the Composer dependencies.
+
+inputs:
+  php-version:
+    description: The PHP version to set up.
+    required: true
+  extensions:
+    description: Additional PHP extensions to enable, as a comma-separated list.
+    required: false
+    default: ''
+  ini-values:
+    description: Additional `php.ini` values to set, as a comma-separated list.
+    required: false
+    default: ''
+  composer-flags:
+    description: Extra flags to pass to `composer install`.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ inputs.php-version }}
+        extensions: ${{ inputs.extensions }}
+        ini-values: ${{ inputs.ini-values }}
+        tools: composer
+    - name: Install Composer dependencies
+      shell: bash
+      run: composer install ${{ inputs.composer-flags }}

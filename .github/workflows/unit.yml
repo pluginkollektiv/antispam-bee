@@ -41,16 +41,12 @@ jobs:
         php-versions: ['8.5', '7.4']
     steps:
     - uses: actions/checkout@v7
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
+    - name: Setup PHP and install dependencies
+      uses: ./.github/actions/setup-php
       with:
         php-version: ${{ matrix.php-versions }}
         extensions: mbstring, intl
         ini-values: post_max_size=256M, short_open_tag=On
-        tools: composer
-    - name: Install
-      run: |
-        composer install
     - name: Run tests
       run: |
         composer test:unit

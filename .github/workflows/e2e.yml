@@ -80,13 +80,11 @@ jobs:
       run: npm ci
     - name: Install Playwright browsers
       run: npx playwright install chromium --with-deps
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
+    - name: Setup PHP and install dependencies
+      uses: ./.github/actions/setup-php
       with:
         php-version: ${{ matrix.php }}
-        tools: composer
-    - name: Install Composer dependencies
-      run: composer install --no-dev --optimize-autoloader
+        composer-flags: '--no-dev --optimize-autoloader'
     - name: Configure wp-env for matrix
       run: |
         case "${{ matrix.wordpress }}" in

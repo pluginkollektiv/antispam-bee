@@ -44,13 +44,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Setup PHP and install dependencies
+        uses: ./.github/actions/setup-php
         with:
           php-version: '8.5'
-          tools: composer
-      - name: Install Composer dependencies
-        run: composer install --ignore-platform-req=php
+          composer-flags: '--ignore-platform-req=php'
       - name: Run PHPStan
         run: composer phpstan
 
@@ -58,14 +56,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v7
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
+    - name: Setup PHP and install dependencies
+      uses: ./.github/actions/setup-php
       with:
         php-version: '8.5'
-        tools: composer
+        composer-flags: '--ignore-platform-req=php'
     - name: Run code style checks for CSS, JavaScript and PHP
       run: |
-        composer install --ignore-platform-req=php
         ./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
         composer cs
 
@@ -73,12 +70,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v7
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
+    - name: Setup PHP and install dependencies
+      uses: ./.github/actions/setup-php
       with:
         php-version: '8.5'
-        tools: composer
+        composer-flags: '--ignore-platform-req=php'
     - name: Check for unavailable WordPress functions
-      run: |
-        composer install --ignore-platform-req=php
-        ./vendor/bin/wp-since check .
+      run: ./vendor/bin/wp-since check .
