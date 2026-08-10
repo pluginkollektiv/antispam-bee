@@ -170,28 +170,34 @@ class SendEmail extends ControllableBase {
 		$asb_message = esc_html__( 'Notify message by Antispam Bee', 'antispam-bee' );
 		$asb_url     = esc_html__( 'https://antispambee.pluginkollektiv.org/', 'antispam-bee' );
 
-		$body = <<<EOF
-$new_spam_comment
-
-$author: {{comment_author}}
-$url: {{comment_author_url}}
-$type: {{reaction_type}}
-Whois: https://whois.arin.net/rest/ip/{{comment_author_IP}}
-$spam_reasons: {{spam_reasons}}
-
-{{content}}
-
-
-$remove_label: $remove_url
-
-$approve_label: $approve_url
-
-$spam_list_label: $spam_list_url
-
-$asb_message
-$asb_url
-
-EOF;
+		// Heredoc syntax is not allowed by the WordPress.org plugin review, so the
+		// template is assembled line by line. The trailing empty element keeps the
+		// closing newline the template has always ended with.
+		$body = implode(
+			PHP_EOL,
+			[
+				$new_spam_comment,
+				'',
+				"$author: {{comment_author}}",
+				"$url: {{comment_author_url}}",
+				"$type: {{reaction_type}}",
+				'Whois: https://whois.arin.net/rest/ip/{{comment_author_IP}}',
+				"$spam_reasons: {{spam_reasons}}",
+				'',
+				'{{content}}',
+				'',
+				'',
+				"$remove_label: $remove_url",
+				'',
+				"$approve_label: $approve_url",
+				'',
+				"$spam_list_label: $spam_list_url",
+				'',
+				$asb_message,
+				$asb_url,
+				'',
+			]
+		);
 
 		return str_replace( PHP_EOL, "\r\n", $body );
 	}

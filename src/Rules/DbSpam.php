@@ -62,6 +62,9 @@ class DbSpam extends ControllableBase implements SpamReason {
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery
 		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+		// $filter_sql is assembled from the hard-coded fragments above only; every
+		// value reaches the query as a %s placeholder handled by $wpdb->prepare().
+		// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$filter_sql = implode( ' OR ', $filter );
 
 		global $wpdb;
@@ -78,6 +81,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery
 		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+		// phpcs:enable PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		return (int) ! empty( $result );
 	}

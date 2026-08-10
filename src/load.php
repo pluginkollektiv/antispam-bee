@@ -41,6 +41,10 @@ use AntispamBee\Rules\RegexpSpam;
 use AntispamBee\Rules\TooFastSubmit;
 use AntispamBee\Rules\ValidGravatar;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Init function of the plugin.
  */
