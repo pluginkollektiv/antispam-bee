@@ -33,7 +33,14 @@ runs:
   using: composite
   steps:
     - name: Setup PHP
-      uses: shivammathur/setup-php@v2
+      # Pinned to a commit rather than to `v2`, because a tag can be moved: whoever
+      # controls the upstream repository can point `v2` at different code, and this action
+      # runs with access to the job. The trailing comment records which release the hash
+      # is, since a bare hash says nothing about how old the pin is.
+      #
+      # Note there is no Dependabot coverage for GitHub Actions in this repository yet, so
+      # this pin has to be advanced by hand until there is.
+      uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
       with:
         php-version: ${{ inputs.php-version }}
         extensions: ${{ inputs.extensions }}
