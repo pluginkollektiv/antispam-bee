@@ -111,10 +111,13 @@ class PluginUpdate {
 			// Therefore, we need to delete this unused data.
 			// phpcs:disable WordPress.DB.DirectDatabaseQuery
 			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+			// The statement is a constant string; the only interpolated value is the table name from $wpdb.
+			// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter
 			$sql = 'DELETE FROM `' . $wpdb->commentmeta . '` WHERE `meta_key` IN ("antispam_bee_iphash")';
 			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.DirectDatabaseQuery
 			// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
+			// phpcs:enable PluginCheck.Security.DirectDB.UnescapedDBParameter
 		}
 
 		// DB version was raised in ASB 2.10.0 to 1.02.

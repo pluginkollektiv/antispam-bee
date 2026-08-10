@@ -14,12 +14,15 @@
  * Author: pluginkollektiv
  * Author URI: https://pluginkollektiv.org
  * Text Domain: antispam-bee
- * Domain Path: /lang
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 namespace AntispamBee;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 define( __NAMESPACE__ . '\MAIN_PLUGIN_FILE', __FILE__ );
 define( __NAMESPACE__ . '\PLUGIN_PATH', plugin_dir_path( MAIN_PLUGIN_FILE ) );
