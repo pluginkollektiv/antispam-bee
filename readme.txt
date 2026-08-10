@@ -108,7 +108,7 @@ Yes. The country rule looks the visitor's country up at IPLocate, which rate-lim
 
 > define( 'ANTISPAM_BEE_IPLOCATE_API_KEY', getenv( 'IPLOCATE_API_KEY' ) );
 
-Reading it from the environment like this keeps the key out of your code and out of version control. The `antispam_bee_country_spam_apikey` filter still works and is used when the constant is undefined or empty, so the constant wins wherever both are set.
+Reading it from the environment like this keeps the key out of your code and out of version control. The `antispam_bee_country_spam_apikey` filter still works and now receives the value of the constant, so a filter can still override it.
 
 ### Antispam Bee with Varnish? ###
 If WordPress is operated with Apache + Varnish, the actual IP address of the visitors does not appear in WordPress. Accordingly, Antispam Bee lacks the basis it needs to function correctly. An adaptation in the Varnish configuration file /etc/varnish/default.vcl provides a remedy and forwards the original (not from Apache) IP address in the HTTP header X-Forwarded-For:

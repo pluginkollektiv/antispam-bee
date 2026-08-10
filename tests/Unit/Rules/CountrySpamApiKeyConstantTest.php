@@ -32,27 +32,31 @@ class CountrySpamApiKeyConstantTest extends TestCase {
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_constant_takes_precedence_over_the_filter() {
+	public function test_constant_is_used_as_the_key() {
 		define( 'ANTISPAM_BEE_IPLOCATE_API_KEY', 'from-constant' );
 
-		expectApplied( 'antispam_bee_country_spam_apikey' )->never();
+		expectApplied( 'antispam_bee_country_spam_apikey' )
+			->once()
+			->with( 'from-constant' )
+			->andReturnFirstArg();
 
-		self::assertSame( 'from-constant', self::get_api_key(), 'The constant should win over the filter' );
+		self::assertSame( 'from-constant', self::get_api_key(), 'The constant should provide the key' );
 	}
 
 	/**
-	 * An empty constant is treated as unset, so a filtered key still applies.
+	 * The constant is only the default handed to the filter, so a filter still wins.
 	 *
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_empty_constant_falls_through_to_the_filter() {
-		define( 'ANTISPAM_BEE_IPLOCATE_API_KEY', '' );
+	public function test_filter_overrides_the_constant() {
+		define( 'ANTISPAM_BEE_IPLOCATE_API_KEY', 'from-constant' );
 
 		expectApplied( 'antispam_bee_country_spam_apikey' )
 			->once()
+			->with( 'from-constant' )
 			->andReturn( 'from-filter' );
 
-		self::assertSame( 'from-filter', self::get_api_key(), 'An empty constant should fall through to the filter' );
+		self::assertSame( 'from-filter', self::get_api_key(), 'The filter should win over the constant' );
 	}
 }
