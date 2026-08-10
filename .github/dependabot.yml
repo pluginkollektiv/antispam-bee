@@ -13,3 +13,11 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+  # The workflows pin every action to a commit hash, which stops a moved tag from
+  # changing what we run — but it also means a pin stays where it is until someone
+  # moves it. Dependabot advances the hash and the release comment for us. Weekly,
+  # because actions release far less often than the Composer and npm dependencies.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
