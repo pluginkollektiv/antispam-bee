@@ -226,4 +226,65 @@ class LangSpamTest extends AbstractRuleTestCase {
 	private function expect_no_request(): void {
 		expect( 'wp_safe_remote_post' )->never();
 	}
+
+	/**
+	 * Pull the language list out of the checkbox group the rule builds.
+	 *
+	 * @return array<string, string> The offered languages.
+	 */
+	private static function get_offered_languages(): array {
+		foreach ( LangSpam::get_options() as $option ) {
+			if ( 'allowed' === ( $option['option_name'] ?? '' ) ) {
+				return $option['options'];
+			}
+		}
+
+		self::fail( 'The rule did not offer an "allowed" checkbox group' );
+	}
+
+	public function test_allowed_languages_filter_can_change_the_offered_languages(): void {
+		expectApplied( 'antispam_bee_allowed_languages' )
+			->once()
+			->andReturn( [ 'nl' => 'Dutch' ] );
+
+		self::assertSame(
+			[ 'nl' => 'Dutch' ],
+			self::get_offered_languages(),
+			'The filter should replace the offered languages'
+		);
+	}
+
+	/**
+	 * The pre-3.0.0 name still works and its value is handed on to the new filter.
+	 *
+	 * Core only runs the deprecated hook, and only emits the notice, when something is
+	 * hooked to it; that guard lives in `apply_filters_deprecated()`, which Brain
+	 * Monkey models as a plain `apply_filters()`.
+	 */
+	public function test_deprecated_filter_still_applies(): void {
+		expectApplied( 'antispam_bee_get_allowed_translate_languages' )
+			->once()
+			->andReturn( [ 'nl' => 'Dutch' ] );
+
+		expectApplied( 'antispam_bee_allowed_languages' )
+			->once()
+			->with( [ 'nl' => 'Dutch' ] )
+			->andReturnFirstArg();
+
+		self::assertSame(
+			[ 'nl' => 'Dutch' ],
+			self::get_offered_languages(),
+			'The deprecated filter should still be honoured'
+		);
+	}
+
+	public function test_default_languages_are_offered_without_a_filter(): void {
+		expectApplied( 'antispam_bee_allowed_languages' )->once()->andReturnFirstArg();
+
+		self::assertSame(
+			[ 'de', 'en', 'fr', 'it', 'es' ],
+			array_keys( self::get_offered_languages() ),
+			'The five bundled languages should be offered by default'
+		);
+	}
 }

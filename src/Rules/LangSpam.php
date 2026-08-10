@@ -226,11 +226,26 @@ class LangSpam extends ControllableBase implements SpamReason {
 		/**
 		 * Filter the possible languages for the language spam test.
 		 *
-		 * @since 2.7.1
+		 * @since      2.7.1
+		 * @deprecated 3.0.0 Use `antispam_bee_allowed_languages` instead.
 		 *
-		 * @param (array) $languages The languages.
+		 * @param array<string, string> $languages The languages.
 		 */
-		$languages = (array) apply_filters( 'antispam_bee_get_allowed_translate_languages', $languages );
+		$languages = apply_filters_deprecated(
+			'antispam_bee_get_allowed_translate_languages',
+			[ $languages ],
+			'3.0.0',
+			'antispam_bee_allowed_languages'
+		);
+
+		/**
+		 * Filter the possible languages for the language spam test.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param array<string, string> $languages The languages.
+		 */
+		$languages = (array) apply_filters( 'antispam_bee_allowed_languages', $languages );
 
 		return [
 			[
