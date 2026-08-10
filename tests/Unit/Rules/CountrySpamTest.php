@@ -257,7 +257,7 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	}
 
 	public function test_verify_sends_a_configured_api_key_as_a_header(): void {
-		expectApplied( 'antispam_bee_country_spam_apikey' )->once()->andReturn( ' secret-key ' );
+		expectApplied( 'antispam_bee_iplocate_api_key' )->once()->andReturn( ' secret-key ' );
 
 		$this->expect_request( '{"country_code":"DE"}' );
 
@@ -276,7 +276,7 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	}
 
 	public function test_api_key_defaults_to_empty_string() {
-		expectApplied( 'antispam_bee_country_spam_apikey' )
+		expectApplied( 'antispam_bee_iplocate_api_key' )
 			->once()
 			->with( '' )
 			->andReturnFirstArg();
@@ -284,12 +284,35 @@ class CountrySpamTest extends AbstractRuleTestCase {
 		self::assertSame( '', self::get_api_key(), 'Without a key configured the result should be an empty string' );
 	}
 
-	public function test_api_key_falls_back_to_the_filter() {
-		expectApplied( 'antispam_bee_country_spam_apikey' )
+	public function test_api_key_comes_from_the_filter() {
+		expectApplied( 'antispam_bee_iplocate_api_key' )
 			->once()
 			->andReturn( 'from-filter' );
 
-		self::assertSame( 'from-filter', self::get_api_key(), 'The filtered key should be used when no constant is set' );
+		self::assertSame( 'from-filter', self::get_api_key(), 'The filtered key should be used' );
+	}
+
+	/**
+	 * A site still using the old hook keeps working, and its value is handed on to
+	 * the new one.
+	 *
+	 * Core only runs the deprecated hook, and only emits the notice, when something
+	 * is actually hooked to it. That guard lives in `apply_filters_deprecated()`
+	 * itself, which Brain Monkey models as a plain `apply_filters()`, so it is core's
+	 * contract rather than something asserted here.
+	 */
+	public function test_deprecated_filter_still_applies() {
+		expectApplied( 'antispam_bee_country_spam_apikey' )
+			->once()
+			->with( '' )
+			->andReturn( 'from-deprecated' );
+
+		expectApplied( 'antispam_bee_iplocate_api_key' )
+			->once()
+			->with( 'from-deprecated' )
+			->andReturnFirstArg();
+
+		self::assertSame( 'from-deprecated', self::get_api_key(), 'The deprecated filter should still be honoured' );
 	}
 
 	/**

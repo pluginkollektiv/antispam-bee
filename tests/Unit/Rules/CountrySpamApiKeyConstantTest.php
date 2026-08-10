@@ -35,7 +35,7 @@ class CountrySpamApiKeyConstantTest extends TestCase {
 	public function test_constant_is_used_as_the_key() {
 		define( 'ANTISPAM_BEE_IPLOCATE_API_KEY', 'from-constant' );
 
-		expectApplied( 'antispam_bee_country_spam_apikey' )
+		expectApplied( 'antispam_bee_iplocate_api_key' )
 			->once()
 			->with( 'from-constant' )
 			->andReturnFirstArg();
@@ -52,7 +52,7 @@ class CountrySpamApiKeyConstantTest extends TestCase {
 	public function test_filter_overrides_the_constant() {
 		define( 'ANTISPAM_BEE_IPLOCATE_API_KEY', 'from-constant' );
 
-		expectApplied( 'antispam_bee_country_spam_apikey' )
+		expectApplied( 'antispam_bee_iplocate_api_key' )
 			->once()
 			->with( 'from-constant' )
 			->andReturn( 'from-filter' );

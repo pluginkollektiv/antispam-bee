@@ -308,19 +308,33 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	 * @return string The API key, or an empty string when none is configured.
 	 */
 	private static function get_api_key(): string {
+		$apikey = defined( 'ANTISPAM_BEE_IPLOCATE_API_KEY' ) ? (string) ANTISPAM_BEE_IPLOCATE_API_KEY : '';
+
+		/**
+		 * Filters the IPLocate API key.
+		 *
+		 * @since      2.10.0
+		 * @deprecated 3.0.0 Use `antispam_bee_iplocate_api_key` instead.
+		 *
+		 * @param string $apikey The current IPLocate API key.
+		 */
+		$apikey = apply_filters_deprecated(
+			'antispam_bee_country_spam_apikey',
+			[ $apikey ],
+			'3.0.0',
+			'antispam_bee_iplocate_api_key'
+		);
+
 		/**
 		 * Filters the IPLocate API key. With this filter, you can add your own IPLocate API key.
 		 *
-		 * @since 2.10.0
+		 * @since 3.0.0
 		 *
 		 * @param string $apikey The current IPLocate API key. Defaults to the
 		 *                       `ANTISPAM_BEE_IPLOCATE_API_KEY` constant when it is
 		 *                       defined, an empty string otherwise.
 		 */
-		return (string) apply_filters(
-			'antispam_bee_country_spam_apikey',
-			defined( 'ANTISPAM_BEE_IPLOCATE_API_KEY' ) ? (string) ANTISPAM_BEE_IPLOCATE_API_KEY : ''
-		);
+		return (string) apply_filters( 'antispam_bee_iplocate_api_key', $apikey );
 	}
 
 	/**
