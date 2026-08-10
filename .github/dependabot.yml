@@ -21,3 +21,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # A floating major tag like `@v7` only produces a pull request for `v7` -> `v8`,
+    # but a commit pin produces one for every patch release — and `actions/checkout`
+    # alone is referenced ten times. Group them so all action updates arrive in a
+    # single weekly pull request instead of one per action.
+    groups:
+      github-actions:
+        patterns:
+          - "*"
