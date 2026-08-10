@@ -1,0 +1,68 @@
+# Runs the official WordPress Plugin Check against the archive we would actually
+# publish, not against the repository.
+#
+# That distinction matters: the repository carries tooling, tests and dev
+# dependencies that never reach wordpress.org, and several plugin-check rules
+# (hidden files, a `/vendor` directory without `composer.json`, direct file
+# access protection) only make sense for the shipped set of files. So the job
+# builds the release zip with `wp dist-archive` — the same `.distignore`-driven
+# build the deploy workflow uses — unpacks it, and points the check at that.
+
+name: Plugin Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - v3
+  release:
+    types: [ published ]
+
+permissions:
+  contents: read
+  pull-requests: write # the action reports its findings as a pull request comment
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+          tools: wp-cli
+
+      - name: Install production dependencies
+        # The archive ships `vendor/autoload.php` and `vendor/composer/`, so the
+        # autoloader inside it has to be the production one.
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Install the dist-archive command
+        # `setup-php` seeds Composer's auth with a github-oauth token that
+        # Composer itself rejects as malformed, and `wp package install`
+        # registers the package as a GitHub VCS repository, which forces that
+        # token to be used. Isolate Composer from the ambient auth: a fresh
+        # COMPOSER_HOME (no seeded auth.json), an empty COMPOSER_AUTH and no
+        # GITHUB_TOKEN. The package is public, so anonymous access suffices.
+        env:
+          COMPOSER_HOME: ${{ runner.temp }}/composer-home
+          COMPOSER_AUTH: '{}'
+        run: |
+          unset GITHUB_TOKEN
+          wp package install wp-cli/dist-archive-command:^3.1
+
+      - name: Build the plugin archive
+        run: |
+          wp dist-archive . ./${{ github.event.repository.name }}.zip
+          mkdir tmp-build
+          unzip -q ${{ github.event.repository.name }}.zip -d tmp-build
+
+      - name: Run plugin check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: ./tmp-build/${{ github.event.repository.name }}
