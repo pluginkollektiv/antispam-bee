@@ -104,7 +104,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
     * Allows using Antispam Bee rules for other reactions than comments, for example, forms
     * Fix: The language rule now also checks comments written in a script that does not delimit its words with spaces, for example Chinese, Japanese, Korean or Thai
     * Fix: The language rule no longer marks a comment as spam if the language could not be determined at all
-    * Fix: IP addresses are now anonymized by masking the host portion of the address, using the same networks as WordPress itself: a /24 for IPv4, as in Antispam Bee 2.x, and a /64 for IPv6 instead of only its first two groups
+    * Fix: IP addresses are now anonymized by masking the host portion of the address: a /24 for IPv4, the same network WordPress itself keeps, as in Antispam Bee 2.x, and a /48 for IPv6 instead of only its first two groups
 
 ### 2.11.12 ###
   * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)
