@@ -78,10 +78,8 @@ class IpHelper {
 	 * The IPv4 mask is the one WordPress core applies in
 	 * `wp_privacy_anonymize_ip()`. For IPv6 core keeps a `/64`, one step finer than
 	 * this. A `/64` is a single subscriber LAN, while country data is never keyed
-	 * below `/48`: across 1388 addresses taken from real comments, no announced BGP
-	 * prefix was longer than `/48`, and the country IPLocate reports was identical
-	 * at `/64`, `/56` and `/48` for every one of them. The first mask that changes
-	 * the answer is `/40`. See #761 for the measurements.
+	 * below `/48`, so the extra group would identify the visitor without improving
+	 * the lookup.
 	 *
 	 * Addresses that cannot be parsed result in an empty string.
 	 *
