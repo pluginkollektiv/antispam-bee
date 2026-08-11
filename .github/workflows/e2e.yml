@@ -1,0 +1,112 @@
+# Split out of the former `tests.yml`. Keep the job name `test-e2e`, since that is what the
+# status checks on existing pull requests are called.
+#
+# This is by far the most expensive workflow — nine matrix entries, each starting a
+# WordPress environment and a browser — so it is the one that benefits most from both the
+# path filter and the concurrency group.
+#
+# Only `pull_request` is filtered — `push` to a major branch deliberately runs everything.
+# A merge carries the same diff the pull request carried, so a filter that is too narrow
+# would skip the check on the pull request *and* on the merge, and the gap would never
+# surface. The push run is also the only one that tests the code as it actually landed:
+# pull request checks run against a merge commit computed when they started, which goes
+# stale once the base branch moves on. Pull requests are where the volume is — many pushes
+# per review — so the filter still saves nearly everything it did before.
+
+name: E2E tests
+
+on:
+  push:
+    branches:
+      - master
+      - v3
+  pull_request:
+    paths:
+      - '**.php'
+      # The unit suite and its stubs cannot affect an end-to-end run, and this workflow is
+      # nine environments wide, so exclude them from the `**.php` match above.
+      - '!tests/Unit/**'
+      - '!tests/_stubs/**'
+      - '**.js'
+      - '**.css'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'playwright.config.ts'
+      - 'tests/e2e/**'
+      - '.wp-env.json'
+      - '.github/workflows/e2e.yml'
+      # The shared PHP setup is part of this workflow's setup, so a change to it has to run
+      # this workflow as well.
+      - '.github/actions/setup-php/**'
+  # Allow forcing a full run by hand, for example before cutting a release.
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '8.5'
+            wordpress: 'nightly'
+          - php: '8.5'
+            wordpress: 'latest'
+          - php: '8.5'
+            wordpress: '7.0'
+          - php: '8.4'
+            wordpress: '6.9'
+          - php: '8.3'
+            wordpress: '6.8'
+          - php: '8.2'
+            wordpress: '6.7'
+          - php: '8.1'
+            wordpress: '6.6'
+          - php: '8.0'
+            wordpress: '6.0'
+          - php: '7.4'
+            wordpress: '5.6'
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: '22'
+        cache: 'npm'
+    - name: Install npm dependencies
+      run: npm ci
+    - name: Install Playwright browsers
+      run: npx playwright install chromium --with-deps
+    - name: Setup PHP and install dependencies
+      uses: ./.github/actions/setup-php
+      with:
+        php-version: ${{ matrix.php }}
+        composer-flags: '--no-dev --optimize-autoloader'
+    - name: Configure wp-env for matrix
+      run: |
+        case "${{ matrix.wordpress }}" in
+          nightly) CORE="WordPress/WordPress" ;;
+          latest)  CORE="https://wordpress.org/latest.zip" ;;
+          *)       CORE="https://wordpress.org/wordpress-${{ matrix.wordpress }}.zip" ;;
+        esac
+        echo "{\"core\":\"${CORE}\",\"phpVersion\":\"${{ matrix.php }}\"}" | tee .wp-env.override.json
+    - name: Start wp-env
+      run: npm run env:start
+    - name: Run E2E tests
+      run: npm run test:e2e
+    - name: Upload test report on failure
+      if: failure()
+      uses: actions/upload-artifact@v7
+      with:
+        name: playwright-report-php${{ matrix.php }}-wp${{ matrix.wordpress }}
+        path: tests/e2e/report/
+        retention-days: 7
+    - name: Stop wp-env
+      if: always()
+      run: npm run env:stop
