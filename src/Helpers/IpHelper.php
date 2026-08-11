@@ -70,11 +70,18 @@ class IpHelper {
 	 * Anonymize an IP address.
 	 *
 	 * Only the network portion is kept, the host portion is zeroed out: the
-	 * first three octets of an IPv4 address (a `/24` network) and the first four
-	 * groups of an IPv6 address (a `/64` network). These are the same masks that
-	 * WordPress core applies in `wp_privacy_anonymize_ip()`, coarse enough to
-	 * drop the host and fine enough for a reliable country lookup. An
-	 * IPv4-mapped IPv6 address is masked like the IPv4 address it carries.
+	 * first three octets of an IPv4 address (a `/24` network) and the first three
+	 * groups of an IPv6 address (a `/48` network). Both are coarse enough to drop
+	 * the host and fine enough for a reliable country lookup. An IPv4-mapped IPv6
+	 * address is masked like the IPv4 address it carries.
+	 *
+	 * The IPv4 mask is the one WordPress core applies in
+	 * `wp_privacy_anonymize_ip()`. For IPv6 core keeps a `/64`, one step finer than
+	 * this. A `/64` is a single subscriber LAN, while country data is never keyed
+	 * below `/48`: across 1388 addresses taken from real comments, no announced BGP
+	 * prefix was longer than `/48`, and the country IPLocate reports was identical
+	 * at `/64`, `/56` and `/48` for every one of them. The first mask that changes
+	 * the answer is `/40`. See #761 for the measurements.
 	 *
 	 * Addresses that cannot be parsed result in an empty string.
 	 *
@@ -96,7 +103,7 @@ class IpHelper {
 			// An IPv4-mapped IPv6 address carries an IPv4 address, mask that one.
 			$netmask = '::ffff:255.255.255.0';
 		} else {
-			$netmask = 'ffff:ffff:ffff:ffff::';
+			$netmask = 'ffff:ffff:ffff::';
 		}
 
 		$anonymized = inet_ntop( $packed & (string) inet_pton( $netmask ) );
