@@ -56,15 +56,24 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 			'useragent',
 		];
 
-		$subject = [
-			'ip'        => $item['ip'] ?? '',
-			'rawurl'    => $item['url'] ?? '',
-			'host'      => $item['host'] ?? '',
-			'body'      => $item['body'] ?? '',
-			'email'     => $item['email'] ?? '',
-			'author'    => $item['author'] ?? '',
-			'useragent' => $item['useragent'] ?? '',
-		];
+		/*
+		 * Repair the payload up front, before anything is built from it. The author
+		 * is spliced into the patterns below, and a pattern that is not valid UTF-8
+		 * makes the `u` modifier fail to compile — which raises a warning instead of
+		 * simply not matching.
+		 */
+		$subject = array_map(
+			[ self::class, 'repair_utf8' ],
+			[
+				'ip'        => $item['ip'] ?? '',
+				'rawurl'    => $item['url'] ?? '',
+				'host'      => $item['host'] ?? '',
+				'body'      => $item['body'] ?? '',
+				'email'     => $item['email'] ?? '',
+				'author'    => $item['author'] ?? '',
+				'useragent' => $item['useragent'] ?? '',
+			]
+		);
 
 		$patterns = [
 			[
@@ -158,11 +167,13 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 					continue;
 				}
 
-				if ( function_exists( 'iconv' ) ) {
-					$converted = iconv( 'utf-8', 'utf-8//TRANSLIT', $subject[ $field ] );
-					if ( false !== $converted ) {
-						$subject[ $field ] = $converted;
-					}
+				/*
+				 * Patterns reach this point through the `antispam_bee_patterns` filter
+				 * as well, so a third party can supply one that is not valid UTF-8.
+				 * Skip it rather than let the compilation warning through.
+				 */
+				if ( ! self::is_valid_utf8( (string) $regexp ) ) {
+					continue;
 				}
 
 				if ( empty( $subject[ $field ] ) ) {
@@ -180,6 +191,57 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Check whether a string is well-formed UTF-8.
+	 *
+	 * An empty pattern with the `u` modifier reports malformed input through its
+	 * return value instead of a warning, which is what makes it usable as a guard
+	 * in front of the patterns that would otherwise fail to compile.
+	 *
+	 * @param string $value Value to check.
+	 *
+	 * @return bool Whether the value is valid UTF-8.
+	 */
+	private static function is_valid_utf8( string $value ): bool {
+		return '' === $value || 1 === preg_match( '//u', $value );
+	}
+
+	/**
+	 * Drop byte sequences that are not valid UTF-8.
+	 *
+	 * Comment payloads are not guaranteed to be well-formed: a client can post an
+	 * overlong encoding or a truncated multibyte character, and that value then
+	 * travels into both the subjects and the patterns built from them.
+	 *
+	 * `iconv()` with `//TRANSLIT` is deliberately not used, because it raises a
+	 * warning of its own and returns `false` for exactly this input.
+	 *
+	 * @param mixed $value Value to repair.
+	 *
+	 * @return string Repaired value, or an empty string when it cannot be repaired.
+	 */
+	private static function repair_utf8( $value ): string {
+		$value = is_scalar( $value ) ? (string) $value : '';
+
+		if ( self::is_valid_utf8( $value ) ) {
+			return $value;
+		}
+
+		if ( function_exists( 'mb_convert_encoding' ) ) {
+			$repaired = mb_convert_encoding( $value, 'UTF-8', 'UTF-8' );
+		} elseif ( function_exists( 'iconv' ) ) {
+			$repaired = iconv( 'utf-8', 'utf-8//IGNORE', $value );
+		} else {
+			$repaired = false;
+		}
+
+		if ( ! is_string( $repaired ) || ! self::is_valid_utf8( $repaired ) ) {
+			return '';
+		}
+
+		return $repaired;
 	}
 
 	/**
