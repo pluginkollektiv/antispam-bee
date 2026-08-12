@@ -16,6 +16,8 @@
     * Fix: The country rule no longer asks the geolocation service about loopback, link-local and
       private addresses, which have no country anyway — a local installation and a site behind a
       reverse proxy without a `pre_comment_user_ip` filter stop sending requests altogether
+    * Fix: The regular expression rule no longer raises a PHP warning when the author or the
+      content of a comment is not valid UTF-8
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -32,6 +34,8 @@
     * Fix: Die Länder-Regel fragt den Geolokalisierungs-Dienst nicht mehr zu Loopback-, Link-Local-
       und privaten Adressen, die ohnehin kein Land haben – eine lokale Installation und eine Seite
       hinter einem Reverse-Proxy ohne `pre_comment_user_ip`-Filter senden gar keine Anfragen mehr
+    * Fix: Die Regex-Regel löst keine PHP-Warnung mehr aus, wenn der Autor oder der Inhalt eines
+      Kommentars kein gültiges UTF-8 ist
 
 ### 2.11.12 ###
 

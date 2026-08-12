@@ -108,6 +108,82 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 	}
 
 	/**
+	 * An author that is not valid UTF-8 must not raise a warning.
+	 *
+	 * Regression test for #587: the author is spliced into three of the patterns,
+	 * so malformed bytes travel into the pattern rather than the subject, and the
+	 * `u` modifier then fails to *compile* it — which warns instead of not matching.
+	 * `\xC0\xAF` is an overlong encoding of `/`, the sequence class from the report.
+	 */
+	public function test_verify_author_with_invalid_utf8() {
+		$item           = self::make_comment();
+		$item['author'] = "Spam\xC0\xAFName";
+
+		self::assertSame(
+			0,
+			RegexpSpam::verify( $item ),
+			'An author that is not valid UTF-8 should be handled without a warning'
+		);
+	}
+
+	/**
+	 * A body that is not valid UTF-8 must not raise a warning either.
+	 *
+	 * The former `iconv( 'utf-8', 'utf-8//TRANSLIT', … )` sanitisation warned on
+	 * exactly this input and returned `false`, so it never sanitised anything.
+	 */
+	public function test_verify_body_with_invalid_utf8() {
+		$item         = self::make_comment();
+		$item['body'] = "Harmless \xE2\x28\xA1 text";
+
+		self::assertSame(
+			0,
+			RegexpSpam::verify( $item ),
+			'A body that is not valid UTF-8 should be handled without a warning'
+		);
+	}
+
+	/**
+	 * Repairing the author must not cost detection: a spam term next to malformed
+	 * bytes still has to be flagged.
+	 */
+	public function test_verify_still_detects_spam_author_with_invalid_utf8() {
+		$item           = self::make_comment();
+		$item['author'] = "Buy Viagra\xC0\xAF";
+
+		self::assertSame(
+			1,
+			RegexpSpam::verify( $item ),
+			'A known spam term should still be flagged when the author also carries malformed bytes'
+		);
+	}
+
+	/**
+	 * A pattern supplied through the filter can be malformed too, and must be
+	 * skipped rather than allowed to fail compilation.
+	 */
+	public function test_verify_skips_custom_patterns_that_are_not_valid_utf8() {
+		$item         = self::make_comment();
+		$item['body'] = 'A perfectly harmless custom message.';
+
+		expectApplied( 'antispam_bee_patterns' )
+			->once()
+			->andReturn(
+				[
+					[
+						'body' => "harmless\xC0\xAF custom message",
+					],
+				]
+			);
+
+		self::assertSame(
+			0,
+			RegexpSpam::verify( $item ),
+			'A custom pattern that is not valid UTF-8 should be skipped without a warning'
+		);
+	}
+
+	/**
 	 * Set up the test environment.
 	 *
 	 * @return void
