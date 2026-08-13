@@ -114,17 +114,25 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		 *
 		 * @param string $apikey The current IPLocate API key. Default is empty string.
 		 */
-		$apikey = apply_filters( 'antispam_bee_country_spam_apikey', '' );
+		$apikey = trim( (string) apply_filters( 'antispam_bee_country_spam_apikey', '' ) );
+
+		/*
+		 * The service answers anonymous lookups within its free tier, but rejects
+		 * an empty `apikey` parameter with `401 Invalid API key`. Only send the key
+		 * when there is one, and send it as a header so that it stays out of the
+		 * URL, and with it out of proxy and server logs.
+		 */
+		$args = '' === $apikey ? [] : [ 'headers' => [ 'X-Api-Key' => $apikey ] ];
 
 		$response = wp_safe_remote_get(
 			esc_url_raw(
 				sprintf(
-					'https://www.iplocate.io/api/lookup/%s?apikey=%s',
-					$lookup_ip,
-					$apikey
+					'https://www.iplocate.io/api/lookup/%s',
+					$lookup_ip
 				),
 				[ 'https' ]
-			)
+			),
+			$args
 		);
 
 		if ( is_wp_error( $response ) ) {

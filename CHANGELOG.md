@@ -18,6 +18,10 @@
       reverse proxy without a `pre_comment_user_ip` filter stop sending requests altogether
     * Fix: The regular expression rule no longer raises a PHP warning when the author or the
       content of a comment is not valid UTF-8
+    * Fix: The country rule works again without an IPLocate API key — an empty `apikey` parameter
+      made the geolocation service reject every lookup. A key set through the
+      `antispam_bee_country_spam_apikey` filter is now sent as a request header, which also keeps
+      it out of proxy and server logs
     * Enhancement: New `antispam_bee_country_spam_ip` filter to change which address the country
       rule looks up — mask it differently, send the original one for a more precise country, or
       return an empty string to skip the lookup
@@ -39,6 +43,10 @@
       hinter einem Reverse-Proxy ohne `pre_comment_user_ip`-Filter senden gar keine Anfragen mehr
     * Fix: Die Regex-Regel löst keine PHP-Warnung mehr aus, wenn der Autor oder der Inhalt eines
       Kommentars kein gültiges UTF-8 ist
+    * Fix: Die Länder-Regel funktioniert wieder ohne IPLocate-API-Key – ein leerer
+      `apikey`-Parameter führte dazu, dass der Geolokalisierungs-Dienst jede Abfrage ablehnte. Ein
+      über den Filter `antispam_bee_country_spam_apikey` gesetzter Key wird nun als Request-Header
+      gesendet, was ihn zugleich aus Proxy- und Server-Logs heraushält
     * Verbesserung: Neuer Filter `antispam_bee_country_spam_ip`, um die Adresse zu ändern, die die
       Länder-Regel abfragt – anders maskieren, die ursprüngliche Adresse für ein genaueres Land
       senden oder mit einem leeren String die Abfrage ganz überspringen

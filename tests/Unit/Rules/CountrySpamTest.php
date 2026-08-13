@@ -19,6 +19,20 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	 */
 	private $denied_countries = '';
 
+	/**
+	 * The URL the last expected request went to.
+	 *
+	 * @var string
+	 */
+	private $request_url = '';
+
+	/**
+	 * The arguments the last expected request was made with.
+	 *
+	 * @var array<string, mixed>
+	 */
+	private $request_args = [];
+
 	public function __construct() {
 		parent::__construct( CountrySpam::class, 'asb-country-spam' );
 	}
@@ -97,10 +111,7 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	 * the original one to choose from.
 	 */
 	public function test_verify_looks_up_the_address_the_filter_returns(): void {
-		$this->expect_request(
-			'{"country_code":"DE"}',
-			'https://www.iplocate.io/api/lookup/198.51.100.42?apikey='
-		);
+		$this->expect_request( '{"country_code":"DE"}' );
 
 		expectApplied( 'antispam_bee_country_spam_ip' )
 			->once()
@@ -111,6 +122,11 @@ class CountrySpamTest extends AbstractRuleTestCase {
 			1,
 			CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ),
 			'The address returned by the filter should be used for the lookup'
+		);
+		self::assertSame(
+			'https://www.iplocate.io/api/lookup/198.51.100.42',
+			$this->request_url,
+			'The address returned by the filter should be the one in the lookup URL'
 		);
 	}
 
@@ -141,6 +157,48 @@ class CountrySpamTest extends AbstractRuleTestCase {
 			0,
 			CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ),
 			'A response without a country code should not be flagged'
+		);
+	}
+
+	/**
+	 * Without a key, the service answers anonymous lookups, but rejects an empty
+	 * `apikey` parameter with `401 Invalid API key`.
+	 *
+	 * @see https://github.com/pluginkollektiv/antispam-bee/issues/819
+	 */
+	public function test_verify_does_not_send_an_empty_api_key(): void {
+		$this->expect_request( '{"country_code":"DE"}' );
+
+		self::assertSame( 1, CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ) );
+
+		self::assertStringNotContainsString(
+			'apikey',
+			$this->request_url,
+			'Without a key, the lookup URL should not carry an `apikey` parameter'
+		);
+		self::assertSame(
+			[],
+			$this->request_args,
+			'Without a key, the request should not carry any headers'
+		);
+	}
+
+	public function test_verify_sends_a_configured_api_key_as_a_header(): void {
+		expectApplied( 'antispam_bee_country_spam_apikey' )->once()->andReturn( ' secret-key ' );
+
+		$this->expect_request( '{"country_code":"DE"}' );
+
+		self::assertSame( 1, CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ) );
+
+		self::assertStringNotContainsString(
+			'secret-key',
+			$this->request_url,
+			'The key should stay out of the URL, and with it out of proxy and server logs'
+		);
+		self::assertSame(
+			[ 'headers' => [ 'X-Api-Key' => 'secret-key' ] ],
+			$this->request_args,
+			'The key should be sent as a header, trimmed'
 		);
 	}
 
@@ -194,19 +252,21 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	/**
 	 * Expect a single request to the geolocation service.
 	 *
-	 * @param string      $body The response body to return.
-	 * @param string|null $url  The URL the request is expected to go to, if it matters.
+	 * @param string $body The response body to return.
 	 *
 	 * @return void
 	 */
-	private function expect_request( string $body, ?string $url = null ): void {
-		$expectation = expect( 'wp_safe_remote_get' )->once();
+	private function expect_request( string $body ): void {
+		expect( 'wp_safe_remote_get' )
+			->once()
+			->andReturnUsing(
+				function ( string $url, array $args = [] ) use ( $body ) {
+					$this->request_url  = $url;
+					$this->request_args = $args;
 
-		if ( null !== $url ) {
-			$expectation = $expectation->with( $url );
-		}
-
-		$expectation->andReturn( [ 'body' => $body ] );
+					return [ 'body' => $body ];
+				}
+			);
 		when( 'wp_remote_retrieve_body' )->justReturn( $body );
 	}
 
