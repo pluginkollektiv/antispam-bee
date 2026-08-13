@@ -89,7 +89,7 @@ class SpamReasonTextHelper {
 			$texts[] = sprintf(
 				/* translators: s=slug of unknown spam reason */
 				esc_html_x( 'Unknown rule: %s', 'spam-reason-unknown-text', 'antispam-bee' ),
-				$slug
+				esc_html( $slug )
 			);
 		}
 
