@@ -130,8 +130,9 @@ jobs:
         if: steps.download.outputs.found == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
         run: |
           set -euo pipefail
-          gh release upload "${{ github.event.release.tag_name }}" \
+          gh release upload "$TAG" \
             "$SNAPSHOT_FILE" --clobber
-          echo "Attached $(basename "$SNAPSHOT_FILE") to ${{ github.event.release.tag_name }}."
+          echo "Attached $(basename "$SNAPSHOT_FILE") to $TAG."
