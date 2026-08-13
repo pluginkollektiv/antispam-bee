@@ -8,6 +8,7 @@ node_modules/
 data/*/files/
 data/*/runs/
 data/*/reports/
+data/*/debug/
 data/*/project.json
 data/*/tech.json
 data/*/setup/
