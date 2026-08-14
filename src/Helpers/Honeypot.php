@@ -16,6 +16,20 @@ use DOMXPath;
  */
 class Honeypot {
 	/**
+	 * Option that holds the salt the field names are derived from.
+	 *
+	 * @var string
+	 */
+	public const SALT_OPTION = 'antispam_bee_honeypot_salt';
+
+	/**
+	 * Shortest configured salt still treated as generated.
+	 *
+	 * @var int
+	 */
+	private const MIN_SALT_LENGTH = 32;
+
+	/**
 	 * Inject the honeypot field.
 	 *
 	 * @param string                $markup  The field markup.
@@ -160,15 +174,102 @@ class Honeypot {
 	/**
 	 * Get the current salt.
 	 *
-	 * The honeypot field names are derived from this, so it must not be
-	 * predictable. `wp_salt()` prefers the `NONCE_*` constants from
-	 * `wp-config.php` and otherwise generates random values and stores them, so
-	 * there is always a secret to derive from.
+	 * The honeypot field names are derived from this, and they are rendered into
+	 * the comment form. A page cache serving a form whose field name no longer
+	 * matches makes the plugin treat a genuine comment as an invalid request, so
+	 * the salt is stored rather than derived on every call: deriving it from the
+	 * `wp-config.php` salts would change every field name whenever those are
+	 * rotated or the site is migrated.
 	 *
 	 * @return string The current salt.
 	 */
 	private static function get_salt(): string {
-		return substr( sha1( wp_salt( 'nonce' ) ), 0, 10 );
+		$salt = get_option( self::SALT_OPTION );
+
+		if ( ! is_string( $salt ) || '' === $salt ) {
+			$salt = self::store_salt();
+		}
+
+		/**
+		 * Filters the salt the honeypot field names are derived from.
+		 *
+		 * The stored salt never changes on its own, which is what keeps cached
+		 * comment forms valid. Filtering it rotates every field name, so a form
+		 * already sitting in a page cache stops matching until that cache is
+		 * cleared.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string $salt The stored salt.
+		 */
+		return (string) apply_filters( 'antispam_bee_honeypot_salt', $salt );
+	}
+
+	/**
+	 * Create and store the salt.
+	 *
+	 * @return string The stored salt.
+	 */
+	private static function store_salt(): string {
+		$salt = self::initial_salt();
+
+		// A concurrent request may have stored one first; that one wins.
+		if ( ! add_option( self::SALT_OPTION, $salt ) ) {
+			$stored = get_option( self::SALT_OPTION );
+
+			if ( is_string( $stored ) && '' !== $stored ) {
+				return $stored;
+			}
+		}
+
+		return $salt;
+	}
+
+	/**
+	 * The value to seed the stored salt with.
+	 *
+	 * Seeding from `NONCE_SALT` reproduces the field names a site is already
+	 * serving, so storing the salt does not invalidate forms that are already in
+	 * a page cache. A configured salt is only used when it looks generated; a
+	 * random value is generated otherwise, which is the case where the previous
+	 * derivation was predictable.
+	 *
+	 * @return string The initial salt.
+	 */
+	private static function initial_salt(): string {
+		if ( defined( 'NONCE_SALT' ) && is_string( \NONCE_SALT ) && self::is_generated_salt( \NONCE_SALT ) ) {
+			return substr( sha1( \NONCE_SALT ), 0, 10 );
+		}
+
+		return substr( sha1( wp_generate_password( 64, true, true ) ), 0, 10 );
+	}
+
+	/**
+	 * Whether a configured salt looks like a generated one.
+	 *
+	 * The placeholders `wp-config-sample.php` ships are natural-language phrases,
+	 * and localised WordPress packages translate them, so comparing against the
+	 * English `put your unique phrase here` would miss a German or French install
+	 * that was never configured. Core's own `wp_salt()` has that same blind spot:
+	 * it seeds its list of non-secrets with the English phrase only, so it hashes
+	 * a translated placeholder as if it were a secret.
+	 *
+	 * Generated salts — both the ones api.wordpress.org hands out and the ones
+	 * `wp_generate_password( 64, true, true )` produces — are 64 characters of
+	 * printable ASCII containing no whitespace. Requiring some length and
+	 * rejecting whitespace therefore recognises a real salt whatever the locale,
+	 * and rejects a placeholder phrase in any language.
+	 *
+	 * A hand-written passphrase is rejected too. That is deliberate: such a value
+	 * is not guessable, but replacing it with a generated one is no worse, and the
+	 * check only runs once, when the salt is first stored.
+	 *
+	 * @param string $salt The configured salt.
+	 *
+	 * @return bool Whether the salt looks generated.
+	 */
+	private static function is_generated_salt( string $salt ): bool {
+		return strlen( $salt ) >= self::MIN_SALT_LENGTH && ! preg_match( '/\s/', $salt );
 	}
 
 	/**

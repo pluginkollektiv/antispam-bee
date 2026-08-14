@@ -4,12 +4,80 @@ namespace AntispamBee\Tests\Unit\Helpers;
 
 use AntispamBee\Helpers\Honeypot;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
+use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\when;
+
+if ( ! defined( 'NONCE_SALT' ) ) {
+	// Shaped like a real salt: 64 characters of printable ASCII, no whitespace.
+	define( 'NONCE_SALT', 'x9!Kq2#Vz7$Lp4%Rn8^Mb6&Tw3*Yh5(Jg1)Fd0-Sa7+Ce2=Vu9~Io4Pj6Zq8Xm3B' );
+}
 
 /**
  * Unit tests for {@see Honeypot} (helper).
  */
 class HoneypotHelperTest extends TestCase {
+
+	/**
+	 * The salt the stored option holds.
+	 *
+	 * @var string
+	 */
+	private $stored_salt = 'stored-test-salt';
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_field_names_are_derived_from_the_stored_salt(): void {
+		$this->stored_salt = 'a-stored-salt';
+
+		self::assertSame(
+			Honeypot::ensure_secret_starts_with_letter(
+				substr( sha1( md5( 'comment-id' . 'a-stored-salt' ) ), 0, 10 )
+			),
+			Honeypot::get_secret_name_for_post(),
+			'The field name should be derived from the stored salt'
+		);
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_field_names_are_stable_while_the_stored_salt_is(): void {
+		self::assertSame(
+			Honeypot::get_secret_name_for_post(),
+			Honeypot::get_secret_name_for_post(),
+			'The same stored salt must always produce the same field name'
+		);
+	}
+
+	/**
+	 * Storing the salt must not invalidate comment forms that are already sitting
+	 * in a page cache, so the stored value is seeded with the one the previous
+	 * derivation produced.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_the_salt_is_seeded_from_nonce_salt(): void {
+		$this->stored_salt = '';
+		$legacy            = substr( sha1( NONCE_SALT ), 0, 10 );
+
+		expect( 'add_option' )
+			->once()
+			->with( Honeypot::SALT_OPTION, $legacy )
+			->andReturn( true );
+
+		self::assertSame(
+			Honeypot::ensure_secret_starts_with_letter(
+				substr( sha1( md5( 'comment-id' . $legacy ) ), 0, 10 )
+			),
+			Honeypot::get_secret_name_for_post(),
+			'The field name should be unchanged from what the previous derivation produced'
+		);
+	}
+
 
 	/**
 	 * @runInSeparateProcess
@@ -81,5 +149,10 @@ class HoneypotHelperTest extends TestCase {
 		when( 'esc_attr' )->returnArg();
 		when( 'esc_js' )->returnArg();
 		when( 'wp_salt' )->justReturn( 'test-salt' );
+		when( 'get_option' )->alias(
+			function () {
+				return $this->stored_salt;
+			}
+		);
 	}
 }
