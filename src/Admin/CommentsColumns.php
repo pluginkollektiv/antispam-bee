@@ -136,7 +136,7 @@ class CommentsColumns {
 		<select id="filter-by-comment-spam-reason" name="comment_spam_reason">
 			<option value=""><?php esc_html_e( 'All spam reasons', 'antispam-bee' ); ?></option>
 			<?php
-			// phpcs:disable WordPress.Security.NonceVerification.Recommended
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$tmp = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->prefix}commentmeta WHERE meta_key = 'antispam_bee_reason' GROUP BY meta_value", ARRAY_A );
@@ -175,6 +175,7 @@ class CommentsColumns {
 	 * @param WP_Comment_Query $query Current WordPress query.
 	 */
 	public static function filter_by_spam_reason( WP_Comment_Query $query ): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$spam_reason = isset( $_GET['comment_spam_reason'] ) ? sanitize_text_field( wp_unslash( $_GET['comment_spam_reason'] ) ) : '';
 		if ( empty( $spam_reason ) ) {
 			return;
