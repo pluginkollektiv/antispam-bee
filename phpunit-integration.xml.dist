@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Integration test suite: boots a real WordPress against a real database.
+
+	Kept separate from `phpunit.xml.dist` because the two suites need different
+	bootstraps. The unit bootstrap loads the WP function stubs from `tests/_stubs/`,
+	which would shadow the real WordPress functions here.
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
+         backupGlobals="false"
+         bootstrap="tests/integration-bootstrap.php"
+         colors="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         convertErrorsToExceptions="true"
+         convertWarningsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertDeprecationsToExceptions="false">
+	<testsuites>
+		<testsuite name="integration">
+			<directory suffix=".php">tests/Integration</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

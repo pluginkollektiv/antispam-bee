@@ -18,7 +18,12 @@ treating it as project code produces false findings.
 | PHP code style          | `composer cs`                                |
 | PHPStan static analysis | `composer phpstan`                           |
 | PHP unit tests          | `composer test:unit`                         |
+| PHP integration tests   | `npm run env:start`, then `npm run test:integration` |
 | E2E tests               | `npm run env:start`, then `npm run test:e2e` |
+
+Unit tests mock WordPress with Brain Monkey and run without a database. Integration tests boot a
+real WordPress against the `wp-env` database — use them for anything touching options, the
+database or core hooks. `npm run test:integration:multisite` repeats the run on a network install.
 
 Fix code style violations automatically with `composer csfix`.
 
