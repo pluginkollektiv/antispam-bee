@@ -6,10 +6,6 @@ use AntispamBee\Helpers\Honeypot;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 use function Brain\Monkey\Functions\when;
 
-if ( ! defined( 'NONCE_SALT' ) ) {
-	define( 'NONCE_SALT', 'test-nonce-salt' );
-}
-
 /**
  * Unit tests for {@see Honeypot} (helper).
  */
@@ -84,5 +80,6 @@ class HoneypotHelperTest extends TestCase {
 		parent::set_up();
 		when( 'esc_attr' )->returnArg();
 		when( 'esc_js' )->returnArg();
+		when( 'wp_salt' )->justReturn( 'test-salt' );
 	}
 }
