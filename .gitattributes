@@ -1,4 +1,5 @@
 # Directories
+/.claude export-ignore
 /.cursor export-ignore
 /.github export-ignore
 /.wordpress-org export-ignore

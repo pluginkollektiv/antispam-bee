@@ -1,6 +1,9 @@
 # Directories
 /.aider/
-/.claude/
+# Local Claude Code state (worktrees, settings.local.json) stays untracked, but
+# `.claude/skills/` is shared with the team and must not be ignored.
+/.claude/*
+!/.claude/skills/
 /.idea/
 /assets/dist
 /build/
