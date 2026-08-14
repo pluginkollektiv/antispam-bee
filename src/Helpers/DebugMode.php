@@ -58,15 +58,19 @@ class DebugMode {
 	 *
 	 * `wp_salt()` prefers the `NONCE_*` constants from `wp-config.php` and
 	 * otherwise generates random values and stores them, so a secret is normally
-	 * always available. Should it ever yield nothing, this returns `null` and
-	 * logging is skipped rather than falling back to a predictable value.
+	 * always available. It cannot be trusted blindly, though: it recognises only
+	 * the English placeholder from `wp-config-sample.php`, so on a localised
+	 * install that was never configured it returns the translated placeholder as
+	 * if it were a secret. The result is checked with {@see Salt::is_generated()}
+	 * for that reason, and logging is skipped rather than writing to a file whose
+	 * name could be derived by anyone.
 	 *
 	 * @return string|null Suffix, or null if no secret salt is available.
 	 */
 	private static function get_log_file_suffix(): ?string {
 		$salt = wp_salt( 'nonce' );
 
-		if ( '' === $salt ) {
+		if ( ! Salt::is_generated( $salt ) ) {
 			return null;
 		}
 

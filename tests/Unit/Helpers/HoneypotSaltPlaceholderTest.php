@@ -26,7 +26,7 @@ class HoneypotSaltPlaceholderTest extends TestCase {
 	 *
 	 * @var string
 	 */
-	private const TRANSLATED_PLACEHOLDER = 'Füge hier Deine einzigartige Phrase ein';
+	private const TRANSLATED_PLACEHOLDER = 'füge hier deine einmalig genutzte Zeichenfolge ein'; // spellchecker:disable-line
 
 	/**
 	 * @runInSeparateProcess

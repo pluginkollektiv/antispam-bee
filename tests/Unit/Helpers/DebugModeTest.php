@@ -17,11 +17,11 @@ if ( ! defined( 'WP_CONTENT_DIR' ) ) {
 class DebugModeTest extends TestCase {
 
 	/**
-	 * The salt `wp_salt()` returns.
+	 * The salt `wp_salt()` returns. Shaped like a real one: long, no whitespace.
 	 *
 	 * @var string
 	 */
-	private $salt = 'test-salt';
+	private $salt = 'x9!Kq2#Vz7$Lp4%Rn8^Mb6&Tw3*Yh5(Jg1)Fd0-Sa7+Ce2=Vu9~Io4Pj6Zq8Xm3B';
 
 	public function test_log_writes_a_single_line_per_entry(): void {
 		self::force_debug_mode( true );
@@ -56,9 +56,7 @@ class DebugModeTest extends TestCase {
 
 	/**
 	 * The file name is derived from the salt, so without one there is nothing to
-	 * make the name unguessable and nothing may be written. `wp_salt()` normally
-	 * always returns a secret, so this is a safety net rather than a case that is
-	 * expected to occur.
+	 * make the name unguessable and nothing may be written.
 	 */
 	public function test_log_writes_nothing_without_a_secret_salt(): void {
 		$this->salt = '';
@@ -73,6 +71,25 @@ class DebugModeTest extends TestCase {
 		);
 	}
 
+	/**
+	 * `wp_salt()` recognises only the English placeholder from
+	 * `wp-config-sample.php`, so on a localised install that was never configured
+	 * it hands back the translated placeholder as though it were a secret. The
+	 * log holds comment data and IP addresses, so that must not name a file.
+	 */
+	public function test_log_writes_nothing_when_the_salt_is_a_placeholder(): void {
+		$this->salt = 'füge hier deine einmalig genutzte Zeichenfolge ein'; // spellchecker:disable-line
+		self::force_debug_mode( true );
+
+		DebugMode::log( 'should not be written' );
+
+		self::assertSame(
+			[],
+			self::log_files(),
+			'A placeholder phrase is not a secret, so the log file name must not be derived from it'
+		);
+	}
+
 	public function test_log_file_name_is_derived_from_the_salt(): void {
 		self::force_debug_mode( true );
 
@@ -80,7 +97,7 @@ class DebugModeTest extends TestCase {
 		$first = self::log_files();
 
 		self::remove_log_files();
-		$this->salt = 'another-salt';
+		$this->salt = 'B3mX8qZ6jP4oI9uV2eC+7aS-0dF1gJ)5hY*3wT&6bM^8nR%4pL$7zV#2qK!9x';
 
 		DebugMode::log( 'second entry' );
 		$second = self::log_files();

@@ -23,13 +23,6 @@ class Honeypot {
 	public const SALT_OPTION = 'antispam_bee_honeypot_salt';
 
 	/**
-	 * Shortest configured salt still treated as generated.
-	 *
-	 * @var int
-	 */
-	private const MIN_SALT_LENGTH = 32;
-
-	/**
 	 * Inject the honeypot field.
 	 *
 	 * @param string                $markup  The field markup.
@@ -237,40 +230,13 @@ class Honeypot {
 	 * @return string The initial salt.
 	 */
 	private static function initial_salt(): string {
-		if ( defined( 'NONCE_SALT' ) && is_string( \NONCE_SALT ) && self::is_generated_salt( \NONCE_SALT ) ) {
+		if ( defined( 'NONCE_SALT' ) && is_string( \NONCE_SALT ) && Salt::is_generated( \NONCE_SALT ) ) {
 			return substr( sha1( \NONCE_SALT ), 0, 10 );
 		}
 
-		return substr( sha1( wp_generate_password( 64, true, true ) ), 0, 10 );
+		return substr( sha1( Salt::generate() ), 0, 10 );
 	}
 
-	/**
-	 * Whether a configured salt looks like a generated one.
-	 *
-	 * The placeholders `wp-config-sample.php` ships are natural-language phrases,
-	 * and localised WordPress packages translate them, so comparing against the
-	 * English `put your unique phrase here` would miss a German or French install
-	 * that was never configured. Core's own `wp_salt()` has that same blind spot:
-	 * it seeds its list of non-secrets with the English phrase only, so it hashes
-	 * a translated placeholder as if it were a secret.
-	 *
-	 * Generated salts — both the ones api.wordpress.org hands out and the ones
-	 * `wp_generate_password( 64, true, true )` produces — are 64 characters of
-	 * printable ASCII containing no whitespace. Requiring some length and
-	 * rejecting whitespace therefore recognises a real salt whatever the locale,
-	 * and rejects a placeholder phrase in any language.
-	 *
-	 * A hand-written passphrase is rejected too. That is deliberate: such a value
-	 * is not guessable, but replacing it with a generated one is no worse, and the
-	 * check only runs once, when the salt is first stored.
-	 *
-	 * @param string $salt The configured salt.
-	 *
-	 * @return bool Whether the salt looks generated.
-	 */
-	private static function is_generated_salt( string $salt ): bool {
-		return strlen( $salt ) >= self::MIN_SALT_LENGTH && ! preg_match( '/\s/', $salt );
-	}
 
 	/**
 	 * Ensure that the secret starts with a letter.
