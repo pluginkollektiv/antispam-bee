@@ -15,6 +15,11 @@ use const AntispamBee\MAIN_PLUGIN_FILE;
  */
 class PluginUpdate {
 	/**
+	 * Name of the option holding the database version.
+	 */
+	const DB_VERSION_OPTION_NAME = 'antispambee_db_version';
+
+	/**
 	 * Mapping of spam reason keys (key is pre-3.0, value 3.0 and later).
 	 *
 	 * @var array<string, string|null>
@@ -70,7 +75,7 @@ class PluginUpdate {
 		}
 
 		self::$db_version_is_current = (bool) version_compare(
-			get_option( 'antispambee_db_version', '1.0' ),
+			get_option( self::DB_VERSION_OPTION_NAME, '1.0' ),
 			self::get_plugin_version(),
 			'=='
 		);
@@ -96,9 +101,9 @@ class PluginUpdate {
 		// Prevent further update triggers during the same request that run before the DB version is updated.
 		self::$db_update_triggered = true;
 
-		$version_from_db = get_option( 'antispambee_db_version', null );
+		$version_from_db = get_option( self::DB_VERSION_OPTION_NAME, null );
 
-		update_option( 'antispambee_db_version', self::get_plugin_version() );
+		update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
 
 		if ( null === $version_from_db ) {
 			return;
