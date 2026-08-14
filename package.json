@@ -9,8 +9,8 @@
 		"env:stop": "wp-env stop",
 		"env:clean": "wp-env reset tests",
 		"env:destroy": "wp-env destroy",
-		"test:integration": "wp-env run tests-cli --env-cwd=wp-content/plugins/antispam-bee -- composer test:integration",
-		"test:integration:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/antispam-bee -- env WP_MULTISITE=1 composer test:integration",
+		"test:integration": "wp-env run tests-cli --env-cwd=wp-content/plugins/\"$(basename \"$PWD\")\" -- composer test:integration",
+		"test:integration:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/\"$(basename \"$PWD\")\" -- env WP_MULTISITE=1 composer test:integration",
 		"test:e2e": "wp-scripts test-playwright",
 		"test:e2e:ui": "wp-scripts test-playwright --ui",
 		"test:e2e:debug": "wp-scripts test-playwright --debug"
