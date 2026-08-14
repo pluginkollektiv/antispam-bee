@@ -38,6 +38,10 @@ class DebugMode {
 		$content_dir = WP_CONTENT_DIR;
 		$suffix      = self::get_log_file_suffix();
 
+		if ( null === $suffix ) {
+			return;
+		}
+
 		// Comment data reaches the log, so a line break in the message would let
 		// an attacker forge additional log entries.
 		$message = (string) preg_replace( '/[\r\n]+/', ' ', $message );
@@ -52,12 +56,19 @@ class DebugMode {
 	 * The log contains comment data and `WP_CONTENT_DIR` is usually served
 	 * publicly, so the file name must not be guessable.
 	 *
-	 * @return string
+	 * This requires a secret salt. `NONCE_SALT` is defined on every normal
+	 * installation; when it is missing there is no secret to derive from, so
+	 * this returns `null` and logging is skipped rather than falling back to a
+	 * predictable value such as `ABSPATH`.
+	 *
+	 * @return string|null Suffix, or null if no secret salt is available.
 	 */
-	private static function get_log_file_suffix(): string {
-		$salt = defined( 'NONCE_SALT' ) ? \NONCE_SALT : \ABSPATH;
+	private static function get_log_file_suffix(): ?string {
+		if ( ! defined( 'NONCE_SALT' ) || ! is_string( \NONCE_SALT ) || '' === \NONCE_SALT ) {
+			return null;
+		}
 
-		return substr( sha1( 'asb-debug' . $salt ), 0, 12 );
+		return substr( sha1( 'asb-debug' . \NONCE_SALT ), 0, 12 );
 	}
 
 	/**
