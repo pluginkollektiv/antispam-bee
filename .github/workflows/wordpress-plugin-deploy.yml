@@ -10,16 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v7
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - name: Setup PHP and install dependencies
+      uses: ./.github/actions/setup-php
       with:
         php-version: '8.3'
-        tools: composer
-    - name: Build
-      run: composer install --ignore-platform-reqs
+        composer-flags: '--ignore-platform-reqs'
     - name: WordPress Plugin Deploy
-      uses: 10up/action-wordpress-plugin-deploy@stable
+      uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # 2.3.0
       env:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}

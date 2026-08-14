@@ -13,3 +13,19 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+  # The workflows pin every action to a commit hash, which stops a moved tag from
+  # changing what we run — but it also means a pin stays where it is until someone
+  # moves it. Dependabot advances the hash and the release comment for us. Weekly,
+  # because actions release far less often than the Composer and npm dependencies.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # A floating major tag like `@v7` only produces a pull request for `v7` -> `v8`,
+    # but a commit pin produces one for every patch release — and `actions/checkout`
+    # alone is referenced ten times. Group them so all action updates arrive in a
+    # single weekly pull request instead of one per action.
+    groups:
+      github-actions:
+        patterns:
+          - "*"
