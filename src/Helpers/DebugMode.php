@@ -38,6 +38,10 @@ class DebugMode {
 		$content_dir = WP_CONTENT_DIR;
 		$suffix      = self::get_log_file_suffix();
 
+		// Comment data reaches the log, so a line break in the message would let
+		// an attacker forge additional log entries.
+		$message = (string) preg_replace( '/[\r\n]+/', ' ', $message );
+
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug use.
 		error_log( "[{$date} {$time}] {$message}\n", 3, "{$content_dir}/asb-debug.{$date}.{$suffix}.log" );
 	}
