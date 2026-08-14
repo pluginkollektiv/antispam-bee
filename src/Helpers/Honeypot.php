@@ -16,6 +16,13 @@ use DOMXPath;
  */
 class Honeypot {
 	/**
+	 * Option that holds the secret the field names are built from.
+	 *
+	 * @var string
+	 */
+	public const SECRET_OPTION = 'antispam_bee_honeypot_secret';
+
+	/**
 	 * Inject the honeypot field.
 	 *
 	 * @param string                $markup  The field markup.
@@ -152,27 +159,92 @@ class Honeypot {
 	 * @return string The secret used in the textarea id attribute.
 	 */
 	public static function get_secret_id_for_post(): string {
-		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
+		return self::get_secret();
+	}
 
+	/**
+	 * Get the secret the honeypot field names are built from.
+	 *
+	 * The names are rendered into the comment form, so a page cache can serve a
+	 * form long after it was generated. If the names have changed by the time that
+	 * form is submitted, the honeypot and invalid-request rules see a field they
+	 * did not create and treat a genuine comment as spam. Deriving the names from
+	 * the `wp-config.php` salts made that happen whenever those were rotated or a
+	 * site was migrated, so the secret is stored once and then reused.
+	 *
+	 * What is stored is the finished secret, not the salt it came from: the secret
+	 * is in the markup of every comment form already, so keeping it in the options
+	 * table discloses nothing, whereas storing the salt would copy a value out of
+	 * `wp-config.php` into the database.
+	 *
+	 * @return string The secret.
+	 */
+	private static function get_secret(): string {
+		$secret = get_option( self::SECRET_OPTION );
+
+		if ( ! is_string( $secret ) || '' === $secret ) {
+			$secret = self::store_secret();
+		}
+
+		/**
+		 * Filters the secret the honeypot field names are built from.
+		 *
+		 * The stored secret never changes on its own, which is what keeps cached
+		 * comment forms valid. Filtering it renames every field, so a form already
+		 * sitting in a page cache stops matching until that cache is cleared.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string $secret The stored secret.
+		 */
+		$secret = (string) apply_filters( 'antispam_bee_honeypot_secret', $secret );
+
+		// The secret is used as an HTML id, which may not start with a digit, so the
+		// invariant is re-applied in case a filter returned a value that breaks it.
 		return self::ensure_secret_starts_with_letter( $secret );
 	}
 
 	/**
-	 * Get the current salt.
+	 * Create and store the secret.
 	 *
-	 * The honeypot field names are derived from this, so it must not be
-	 * predictable. {@see Salt::get()} prefers a configured `NONCE_SALT` and
-	 * otherwise falls back to `wp_salt()`, so there is always a secret to derive
-	 * from.
-	 *
-	 * The value is returned as it is, rather than hashed and shortened first: the
-	 * callers hash it anyway, and hashing it here would change every field name
-	 * relative to Antispam Bee 2.x, which derived them from the raw constant.
-	 *
-	 * @return string The current salt.
+	 * @return string The stored secret.
 	 */
-	private static function get_salt(): string {
-		return Salt::get();
+	private static function store_secret(): string {
+		$secret = self::derive_secret();
+
+		// A concurrent request may have stored one first; that one wins.
+		if ( ! add_option( self::SECRET_OPTION, $secret ) ) {
+			$stored = get_option( self::SECRET_OPTION );
+
+			if ( is_string( $stored ) && '' !== $stored ) {
+				return $stored;
+			}
+		}
+
+		return $secret;
+	}
+
+	/**
+	 * Derive the secret to store.
+	 *
+	 * Deriving it from the configured salt reproduces the names the site is
+	 * already serving, so storing the secret does not invalidate forms that are
+	 * already in a page cache. {@see Salt::get()} only returns a configured salt
+	 * when it looks generated, and falls back to the one WordPress manages
+	 * otherwise — the case where the previous derivation was predictable anyway.
+	 *
+	 * @return string The derived secret.
+	 */
+	private static function derive_secret(): string {
+		$salt = Salt::get();
+
+		if ( '' === $salt ) {
+			$salt = Salt::generate();
+		}
+
+		return self::ensure_secret_starts_with_letter(
+			substr( sha1( md5( 'comment-id' . $salt ) ), 0, 10 )
+		);
 	}
 
 	/**
@@ -209,8 +281,6 @@ class Honeypot {
 	 * @return string The secret used in the textarea name attribute.
 	 */
 	public static function get_secret_name_for_post(): string {
-		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
-
-		return self::ensure_secret_starts_with_letter( $secret );
+		return self::get_secret();
 	}
 }
