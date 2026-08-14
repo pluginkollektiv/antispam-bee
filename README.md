@@ -1,6 +1,16 @@
 # Antispam Bee #
 
-[![Build status](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/tests.yml/badge.svg)](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/tests.yml) [![Current Antispam Bee version](https://img.shields.io/wordpress/plugin/v/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/) [![Number of downloads](https://img.shields.io/wordpress/plugin/dt/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/advanced/) [![Number of active installs](https://img.shields.io/wordpress/plugin/installs/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/advanced/) [![WordPress plugin rating](https://img.shields.io/wordpress/plugin/r/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/#reviews) [![Donate with PayPal](https://img.shields.io/badge/PayPal-Donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW)
+[![Current Antispam Bee version](https://img.shields.io/wordpress/plugin/v/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/)
+[![Number of downloads](https://img.shields.io/wordpress/plugin/dt/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/advanced/)
+[![Number of active installs](https://img.shields.io/wordpress/plugin/installs/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/advanced/)
+[![WordPress plugin rating](https://img.shields.io/wordpress/plugin/r/antispam-bee.svg)](https://wordpress.org/plugins/antispam-bee/#reviews)
+[![Donate with PayPal](https://img.shields.io/badge/PayPal-Donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW)
+
+[![Unit tests](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/unit.yml/badge.svg?branch=v3)](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/unit.yml)
+[![Integration tests](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/integration.yml/badge.svg?branch=v3)](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/integration.yml)
+[![E2E tests](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/e2e.yml/badge.svg?branch=v3)](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/e2e.yml)
+[![Static analysis](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/static-analysis.yml/badge.svg?branch=v3)](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/static-analysis.yml)
+[![Plugin Check](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/wordpress-plugin-check.yml/badge.svg?branch=v3)](https://github.com/pluginkollektiv/antispam-bee/actions/workflows/wordpress-plugin-check.yml)
 
 Antispam plugin with a sophisticated toolset for effective day-to-day comment and linkback
 spam-fighting. Built with data protection and privacy in mind and extendable with your own
