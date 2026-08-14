@@ -37,15 +37,11 @@ class Sanitize {
 	/**
 	 * Sanitize an array of strings to match ISO format.
 	 *
-	 * @param mixed $codes A list of potential ISO codes to sanitize.
+	 * @param array<array-key, string> $codes A list of potential ISO codes to sanitize.
 	 *
 	 * @return array<array-key, string> Sanitized ISO codes.
 	 */
-	public static function iso_codes( $codes ): array {
-		if ( ! is_array( $codes ) ) {
-			return [];
-		}
-
+	public static function iso_codes( array $codes ): array {
 		foreach ( $codes as $key => $code ) {
 			$code = trim( $code );
 
