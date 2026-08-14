@@ -279,11 +279,22 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	/**
 	 * Sanitize ISO code strings.
 	 *
-	 * @param string $value Comma-separated list of potential ISO country codes.
+	 * Reached from a `sanitize` callback, which is handed the posted value as it
+	 * is. The field is a textarea, but a request can post an array for it just as
+	 * easily, and an array reaching a declared `string` parameter is a `TypeError`
+	 * rather than a value this can reject. So anything that is not a string counts
+	 * as no countries at all, the same way {@see Sanitize::checkbox()} and
+	 * {@see Sanitize::checkbox_group()} discard what they cannot use.
+	 *
+	 * @param mixed $value Comma-separated list of potential ISO country codes.
 	 *
 	 * @return string Comma-separated list of sanitized ISO country codes.
 	 */
-	private static function sanitize_iso_codes_string( string $value ): string {
+	private static function sanitize_iso_codes_string( $value ): string {
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+
 		$value  = strtoupper( $value );
 		$values = explode( ',', $value );
 		$values = Sanitize::iso_codes( $values );

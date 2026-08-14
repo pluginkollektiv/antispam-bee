@@ -275,6 +275,34 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	}
 
 	/**
+	 * The `sanitize` callbacks are handed the posted value as it arrived. The two
+	 * country lists are textareas, but a request can post an array for them, and
+	 * that used to reach a `string` parameter and raise a `TypeError` — a fatal
+	 * while saving the settings, from the code whose job is to reject bad input.
+	 */
+	public function test_the_country_list_sanitizers_discard_a_value_that_is_not_a_string(): void {
+		$sanitizers = [];
+		foreach ( CountrySpam::get_options() as $option ) {
+			if ( isset( $option['option_name'], $option['sanitize'] )
+				&& in_array( $option['option_name'], [ 'denied', 'allowed' ], true ) ) {
+				$sanitizers[ $option['option_name'] ] = $option['sanitize'];
+			}
+		}
+
+		self::assertCount( 2, $sanitizers, 'Both country lists should expose a sanitize callback' );
+
+		foreach ( $sanitizers as $option_name => $sanitize ) {
+			foreach ( [ 'an array' => [ 'DE' ], 'null' => null, 'a number' => 42 ] as $description => $value ) {
+				self::assertSame(
+					'',
+					$sanitize( $value ),
+					"The $option_name list should discard $description instead of raising a TypeError"
+				);
+			}
+		}
+	}
+
+	/**
 	 * Set up the test environment.
 	 *
 	 * @return void
