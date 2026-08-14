@@ -9,6 +9,7 @@ namespace AntispamBee\Handlers;
 
 use AntispamBee\Crons\DeleteSpamCron;
 use AntispamBee\GeneralOptions\Uninstall;
+use AntispamBee\Helpers\Honeypot;
 use AntispamBee\Helpers\Settings;
 
 /**
@@ -86,6 +87,7 @@ class PluginStateChangeHandler {
 		delete_option( PluginUpdate::DB_VERSION_OPTION_NAME );
 		delete_option( PluginUpdate::FAILURE_OPTION_NAME );
 		delete_option( PluginUpdate::MIGRATION_NOTICE_OPTION_NAME );
+		delete_option( Honeypot::SECRET_OPTION );
 		// delete_option( 'antispam_bee' );
 		// See https://github.com/pluginkollektiv/antispam-bee/issues/744 - enable on stable 3.0 release.
 
