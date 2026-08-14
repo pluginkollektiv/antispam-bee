@@ -8,6 +8,7 @@
 namespace AntispamBee\Helpers;
 
 use const ANTISPAM_BEE_DEBUG_MODE_ENABLED;
+use const NONCE_SALT;
 use const WP_CONTENT_DIR;
 
 /**
@@ -64,11 +65,11 @@ class DebugMode {
 	 * @return string|null Suffix, or null if no secret salt is available.
 	 */
 	private static function get_log_file_suffix(): ?string {
-		if ( ! defined( 'NONCE_SALT' ) || ! is_string( \NONCE_SALT ) || '' === \NONCE_SALT ) {
+		if ( ! defined( 'NONCE_SALT' ) || ! is_string( NONCE_SALT ) || '' === NONCE_SALT ) {
 			return null;
 		}
 
-		return substr( sha1( 'asb-debug' . \NONCE_SALT ), 0, 12 );
+		return substr( sha1( 'asb-debug' . NONCE_SALT ), 0, 12 );
 	}
 
 	/**
