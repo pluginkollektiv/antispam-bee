@@ -11,5 +11,4 @@ parameters:
   dynamicConstantNames:
     - ANTISPAM_BEE_DEBUG_MODE_ENABLED
     - ANTISPAM_BEE_LOG_FILE
-    - NONCE_SALT
   treatPhpDocTypesAsCertain: false

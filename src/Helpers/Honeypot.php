@@ -10,7 +10,6 @@ namespace AntispamBee\Helpers;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
-use const NONCE_SALT;
 
 /**
  * Honeypot field.
@@ -161,16 +160,15 @@ class Honeypot {
 	/**
 	 * Get the current salt.
 	 *
+	 * The honeypot field names are derived from this, so it must not be
+	 * predictable. `wp_salt()` prefers the `NONCE_*` constants from
+	 * `wp-config.php` and otherwise generates random values and stores them, so
+	 * there is always a secret to derive from.
+	 *
 	 * @return string The current salt.
 	 */
 	private static function get_salt(): string {
-		/*
-		 * `ABSPATH` is always a string at runtime, but `phpstan-wordpress` declares it
-		 * as `bool`, so it is normalised here to keep that union out of `sha1()`.
-		 */
-		$salt = defined( 'NONCE_SALT' ) && is_string( NONCE_SALT ) ? NONCE_SALT : (string) ABSPATH;
-
-		return substr( sha1( $salt ), 0, 10 );
+		return substr( sha1( wp_salt( 'nonce' ) ), 0, 10 );
 	}
 
 	/**

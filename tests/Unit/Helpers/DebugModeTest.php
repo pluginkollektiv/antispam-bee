@@ -5,6 +5,7 @@ namespace AntispamBee\Tests\Unit\Helpers;
 use AntispamBee\Helpers\DebugMode;
 use ReflectionProperty;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
+use function Brain\Monkey\Functions\when;
 
 if ( ! defined( 'WP_CONTENT_DIR' ) ) {
 	define( 'WP_CONTENT_DIR', sys_get_temp_dir() . '/asb-debug-mode-test' );
@@ -14,6 +15,13 @@ if ( ! defined( 'WP_CONTENT_DIR' ) ) {
  * Unit tests for {@see DebugMode}.
  */
 class DebugModeTest extends TestCase {
+
+	/**
+	 * The salt `wp_salt()` returns.
+	 *
+	 * @var string
+	 */
+	private $salt = 'test-salt';
 
 	public function test_log_writes_a_single_line_per_entry(): void {
 		self::force_debug_mode( true );
@@ -30,7 +38,7 @@ class DebugModeTest extends TestCase {
 		self::assertStringContainsString(
 			'first second third',
 			$contents,
-			'The line breaks should be collapsed into spaces rather than dropped'
+			'Runs of line breaks should be collapsed into a single space'
 		);
 	}
 
@@ -47,18 +55,13 @@ class DebugModeTest extends TestCase {
 	}
 
 	/**
-	 * The file name is derived from `NONCE_SALT`, so without it there is no secret
-	 * to make the name unguessable and nothing may be written. `NONCE_SALT` cannot
-	 * be undefined once another test file has defined it, so this runs isolated.
-	 *
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
+	 * The file name is derived from the salt, so without one there is nothing to
+	 * make the name unguessable and nothing may be written. `wp_salt()` normally
+	 * always returns a secret, so this is a safety net rather than a case that is
+	 * expected to occur.
 	 */
 	public function test_log_writes_nothing_without_a_secret_salt(): void {
-		if ( defined( 'NONCE_SALT' ) ) {
-			self::markTestSkipped( 'NONCE_SALT is already defined in this process.' );
-		}
-
+		$this->salt = '';
 		self::force_debug_mode( true );
 
 		DebugMode::log( 'should not be written' );
@@ -66,7 +69,26 @@ class DebugModeTest extends TestCase {
 		self::assertSame(
 			[],
 			self::log_files(),
-			'Without NONCE_SALT the file name would be guessable, so nothing may be logged'
+			'Without a salt the file name would be guessable, so nothing may be logged'
+		);
+	}
+
+	public function test_log_file_name_is_derived_from_the_salt(): void {
+		self::force_debug_mode( true );
+
+		DebugMode::log( 'first entry' );
+		$first = self::log_files();
+
+		self::remove_log_files();
+		$this->salt = 'another-salt';
+
+		DebugMode::log( 'second entry' );
+		$second = self::log_files();
+
+		self::assertNotSame(
+			$first,
+			$second,
+			'A different salt must produce a different, unguessable file name'
 		);
 	}
 
@@ -77,6 +99,12 @@ class DebugModeTest extends TestCase {
 	 */
 	protected function set_up() {
 		parent::set_up();
+
+		when( 'wp_salt' )->alias(
+			function () {
+				return $this->salt;
+			}
+		);
 
 		if ( ! is_dir( WP_CONTENT_DIR ) ) {
 			mkdir( WP_CONTENT_DIR, 0777, true );
