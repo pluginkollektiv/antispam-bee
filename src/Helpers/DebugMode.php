@@ -56,15 +56,15 @@ class DebugMode {
 	 * The log contains comment data and `WP_CONTENT_DIR` is usually served
 	 * publicly, so the file name must not be guessable.
 	 *
-	 * `wp_salt()` prefers the `NONCE_*` constants from `wp-config.php` and
-	 * otherwise generates random values and stores them, so a secret is normally
-	 * always available. Should it ever yield nothing, this returns `null` and
-	 * logging is skipped rather than falling back to a predictable value.
+	 * {@see Salt::get()} prefers a configured `NONCE_SALT` and otherwise falls
+	 * back to `wp_salt()`, so a secret is normally always available. Should it
+	 * ever yield nothing, this returns `null` and logging is skipped rather than
+	 * falling back to a predictable value.
 	 *
 	 * @return string|null Suffix, or null if no secret salt is available.
 	 */
 	private static function get_log_file_suffix(): ?string {
-		$salt = wp_salt( 'nonce' );
+		$salt = Salt::get();
 
 		if ( '' === $salt ) {
 			return null;
