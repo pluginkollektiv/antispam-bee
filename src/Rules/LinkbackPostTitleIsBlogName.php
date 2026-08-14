@@ -50,6 +50,11 @@ class LinkbackPostTitleIsBlogName extends Base implements SpamReason {
 	public static function verify( array $item ): int {
 		$body      = $item['body'] ?? null;
 		$blog_name = $item['author'] ?? null;
+
+		if ( ! is_string( $body ) || ! is_string( $blog_name ) ) {
+			return 0;
+		}
+
 		preg_match( '/<strong>(.*)<\/strong>\\n\\n/', $body, $matches );
 		if ( ! isset( $matches[1] ) ) {
 			return 0;
