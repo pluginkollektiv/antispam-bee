@@ -162,11 +162,20 @@ class CountrySpam extends ControllableBase implements SpamReason {
 			return 0;
 		}
 
-		if ( ! empty( $denied ) ) {
-			return in_array( $country, $denied, true ) ? 1 : 0;
+		/*
+		 * Both lists can be configured at once, so neither may short-circuit the
+		 * other: a denied country is spam, and once an allow list exists every
+		 * country outside it is spam too.
+		 */
+		if ( ! empty( $denied ) && in_array( $country, $denied, true ) ) {
+			return 1;
 		}
 
-		return in_array( $country, $allowed, true ) ? 0 : 1;
+		if ( ! empty( $allowed ) && ! in_array( $country, $allowed, true ) ) {
+			return 1;
+		}
+
+		return 0;
 	}
 
 	/**
