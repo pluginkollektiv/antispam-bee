@@ -21,4 +21,5 @@ define( 'ANTISPAM_BEE_LOG_FILE', 'asb.log' );
 // Defined in `wp-config.php`. Unlike the directory constants, it is not declared by
 // `phpstan-wordpress`, so an explicit `use const` import would not resolve during
 // analysis without this.
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- A WordPress core constant, stubbed for analysis only; this file is never shipped.
 define( 'NONCE_SALT', 'phpstan-nonce-salt' );
