@@ -20,6 +20,13 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	private $denied_countries = '';
 
 	/**
+	 * The country codes the rule allows, as stored by the settings.
+	 *
+	 * @var string
+	 */
+	private $allowed_countries = '';
+
+	/**
 	 * The URL the last expected request went to.
 	 *
 	 * @var string
@@ -160,6 +167,71 @@ class CountrySpamTest extends AbstractRuleTestCase {
 		);
 	}
 
+	public function test_verify_flags_a_country_outside_the_allow_list(): void {
+		$this->expect_request( '{"country_code":"US"}' );
+		$this->denied_countries  = '';
+		$this->allowed_countries = 'FR';
+
+		self::assertSame(
+			1,
+			CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ),
+			'With only an allow list, a country outside it should be flagged'
+		);
+	}
+
+	public function test_verify_does_not_flag_a_country_on_the_allow_list(): void {
+		$this->expect_request( '{"country_code":"FR"}' );
+		$this->denied_countries  = '';
+		$this->allowed_countries = 'FR';
+
+		self::assertSame(
+			0,
+			CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ),
+			'With only an allow list, a country on it should not be flagged'
+		);
+	}
+
+	/**
+	 * The deny list used to return early, so with both lists configured a country
+	 * on neither list was treated as ham — even though an allow list means "only
+	 * these are ham".
+	 */
+	public function test_verify_flags_a_country_on_neither_list_when_both_are_configured(): void {
+		$this->expect_request( '{"country_code":"US"}' );
+		$this->denied_countries  = 'DE';
+		$this->allowed_countries = 'FR';
+
+		self::assertSame(
+			1,
+			CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ),
+			'With both lists configured, a country outside the allow list should still be flagged'
+		);
+	}
+
+	public function test_verify_does_not_flag_an_allowed_country_when_both_lists_are_configured(): void {
+		$this->expect_request( '{"country_code":"FR"}' );
+		$this->denied_countries  = 'DE';
+		$this->allowed_countries = 'FR';
+
+		self::assertSame(
+			0,
+			CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ),
+			'A country on the allow list and absent from the deny list should not be flagged'
+		);
+	}
+
+	public function test_verify_flags_a_denied_country_when_both_lists_are_configured(): void {
+		$this->expect_request( '{"country_code":"DE"}' );
+		$this->denied_countries  = 'DE';
+		$this->allowed_countries = 'FR';
+
+		self::assertSame(
+			1,
+			CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ),
+			'The deny list should still apply when an allow list is configured'
+		);
+	}
+
 	/**
 	 * Without a key, the service answers anonymous lookups, but rejects an empty
 	 * `apikey` parameter with `401 Invalid API key`.
@@ -221,7 +293,8 @@ class CountrySpamTest extends AbstractRuleTestCase {
 		// Keep the plugin update logic, which the settings run into, from touching the database.
 		when( 'get_file_data' )->justReturn( [ 'Version' => '3.0.0' ] );
 
-		$this->denied_countries = 'DE';
+		$this->denied_countries  = 'DE';
+		$this->allowed_countries = '';
 
 		when( 'get_option' )->alias(
 			function ( string $option ) {
@@ -231,7 +304,8 @@ class CountrySpamTest extends AbstractRuleTestCase {
 
 				return [
 					'comment' => [
-						'rule_asb_country_spam_denied' => $this->denied_countries,
+						'rule_asb_country_spam_denied'  => $this->denied_countries,
+						'rule_asb_country_spam_allowed' => $this->allowed_countries,
 					],
 				];
 			}
