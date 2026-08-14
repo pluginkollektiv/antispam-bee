@@ -161,14 +161,18 @@ class Honeypot {
 	 * Get the current salt.
 	 *
 	 * The honeypot field names are derived from this, so it must not be
-	 * predictable. `wp_salt()` prefers the `NONCE_*` constants from
-	 * `wp-config.php` and otherwise generates random values and stores them, so
-	 * there is always a secret to derive from.
+	 * predictable. {@see Salt::get()} prefers a configured `NONCE_SALT` and
+	 * otherwise falls back to `wp_salt()`, so there is always a secret to derive
+	 * from.
+	 *
+	 * The value is returned as it is, rather than hashed and shortened first: the
+	 * callers hash it anyway, and hashing it here would change every field name
+	 * relative to Antispam Bee 2.x, which derived them from the raw constant.
 	 *
 	 * @return string The current salt.
 	 */
 	private static function get_salt(): string {
-		return substr( sha1( wp_salt( 'nonce' ) ), 0, 10 );
+		return Salt::get();
 	}
 
 	/**
