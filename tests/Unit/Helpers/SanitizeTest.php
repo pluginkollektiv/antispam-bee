@@ -4,6 +4,7 @@ namespace AntispamBee\Tests\Unit\Helpers;
 
 use AntispamBee\Helpers\Sanitize;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
+use function Brain\Monkey\Functions\when;
 
 /**
  * Unit tests for {@see Sanitize}.
@@ -60,5 +61,24 @@ class SanitizeTest extends TestCase {
 			Sanitize::iso_codes( [] ),
 			'An empty list has nothing to sanitize'
 		);
+	}
+
+	/**
+	 * Registered as the settings API `sanitize_callback`, so WordPress hands this
+	 * whatever the request posted. A scalar posted for the option used to reach a
+	 * declared `array` parameter and raise a `TypeError`, turning a malformed save
+	 * into a fatal instead of a rejected value.
+	 */
+	public function test_sanitize_options_discards_a_value_that_is_not_an_array(): void {
+		$stored = [ 'general' => [ 'some_option' => 'on' ] ];
+		when( 'get_option' )->justReturn( $stored );
+		when( 'get_file_data' )->justReturn( [ 'Version' => '3.0.0' ] );
+
+		foreach ( [ 'a string' => 'not-an-array', 'null' => null, 'a number' => 42 ] as $description => $value ) {
+			self::assertIsArray(
+				Sanitize::sanitize_options( $value ),
+				"Posting $description should be discarded rather than raise a TypeError"
+			);
+		}
 	}
 }

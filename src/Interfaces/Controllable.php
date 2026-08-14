@@ -54,6 +54,13 @@ interface Controllable {
 	 *   ]
 	 * ]
 	 *
+	 * A `sanitize` callback is handed the posted value exactly as it arrived, so it
+	 * has to accept `mixed`. Nothing guarantees the shape a request submits — a
+	 * textarea can be posted as an array — and a callback that declares a narrower
+	 * parameter type turns that into a `TypeError` instead of a rejected value.
+	 * Returning `null` removes the option, so discarding an unusable value is
+	 * always possible.
+	 *
 	 * @return array<int, array<string, mixed>>|null A list of advanced options, or null.
 	 */
 	public static function get_options(): ?array;

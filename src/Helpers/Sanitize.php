@@ -59,13 +59,20 @@ class Sanitize {
 	/**
 	 * Sanitize the options.
 	 *
-	 * @param array<string, array<string, string>> $options Options to sanitize.
+	 * Registered as the `sanitize_callback` of the settings API, so WordPress
+	 * passes whatever was posted. The settings screen submits an array, but the
+	 * request is not required to: a scalar posted for the option would reach a
+	 * declared `array` parameter and raise a `TypeError`. Sanitizing untrusted
+	 * input is this method's purpose, so it accepts anything and discards what it
+	 * cannot use, leaving the stored options untouched.
+	 *
+	 * @param mixed $options Options to sanitize.
 	 *
 	 * @return array<string, array<string, string>> Sanitized options.
 	 */
-	public static function sanitize_options( array $options ): array {
+	public static function sanitize_options( $options ): array {
 		$current_options = Settings::get_options();
-		$options         = ! empty( $options ) ? $options : [];
+		$options         = is_array( $options ) ? $options : [];
 
 		$tabs = self::get_tab_slugs();
 
