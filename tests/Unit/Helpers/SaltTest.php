@@ -4,6 +4,7 @@ namespace AntispamBee\Tests\Unit\Helpers;
 
 use AntispamBee\Helpers\Salt;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
+use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\when;
 
 /**
@@ -123,5 +124,17 @@ class SaltTest extends TestCase {
 		when( 'wp_salt' )->justReturn( '' );
 
 		self::assertSame( '', Salt::resolve( null ), 'An unavailable secret should stay empty' );
+	}
+
+	public function test_generate_asks_for_a_value_the_check_accepts(): void {
+		expect( 'wp_generate_password' )
+			->once()
+			->with( 64, true, true )
+			->andReturn( 'x9!Kq2#Vz7$Lp4%Rn8^Mb6&Tw3*Yh5(Jg1)Fd0-Sa7+Ce2=Vu9~Io4Pj6Zq8Xm3B' );
+
+		self::assertTrue(
+			Salt::is_generated( Salt::generate() ),
+			'A generated salt must satisfy the check the plugin applies to configured ones'
+		);
 	}
 }
