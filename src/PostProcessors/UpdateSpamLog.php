@@ -123,6 +123,13 @@ class UpdateSpamLog extends Base {
 		 * whitespace replaced and an empty value is written as `-`, so a filter
 		 * cannot break the shape of the line. An array value is joined with commas.
 		 *
+		 * Keep `ip` present and first unless you know you do not need it. The Fail2Ban
+		 * filter in the readme matches the first `ip=` on the line, so removing the
+		 * field stops it matching, and moving it behind a field whose value contains
+		 * `ip=` makes it match that value instead. Both are legitimate choices — a log
+		 * kept for statistics rather than for banning has good reason to drop the
+		 * address entirely — but neither reports an error.
+		 *
 		 * The timestamp is not part of this array — it has no key and has to stay at
 		 * the start of the line for Fail2Ban's date detection.
 		 *
@@ -132,11 +139,6 @@ class UpdateSpamLog extends Base {
 		 * @param array<string, mixed> $item   The item that was marked as spam.
 		 */
 		$fields = (array) apply_filters( 'antispam_bee_spam_log_fields', $fields, $item );
-
-		// The documented Fail2Ban filter matches `ip=<HOST>`; a line without it would silently stop being banned on.
-		if ( ! isset( $fields['ip'] ) ) {
-			$fields = array_merge( [ 'ip' => $ip ], $fields );
-		}
 
 		$pairs = [];
 

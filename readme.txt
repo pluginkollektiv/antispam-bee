@@ -122,7 +122,17 @@ Yes. Define the constant `ANTISPAM_BEE_LOG_FILE` in your `wp-config.php` with th
 
 The fields are space-separated `key=value` pairs, and every value is free of spaces, so the line can be parsed without quoting. A field that does not apply to a reaction is written as `-`; a form submission, for example, has no post to refer to. `reasons` lists the slugs of the rules that caught the item, so a Fail2Ban jail can ban honeypot hits longer than other detections.
 
-Match the IP with `ip=<HOST>` rather than by position: that field is the one Fail2Ban needs, and it will keep its name and shape in future versions of the format.
+Match the IP with `ip=<HOST>` rather than by position: that field is the one Fail2Ban needs, and it will keep its name and shape in future versions of the format. This filter bans every detected item and keeps working if the rest of the line changes:
+
+`failregex = ^.*?\bip=<HOST>\b`
+
+The `?` matters. Without it the expression is greedy and binds to the *last* `ip=` on the line, so a field added by a plugin whose value happens to contain `ip=` would decide who gets banned.
+
+Because the reasons are logged, a jail can also act on one detection only — banning honeypot hits, which no human ever triggers, for far longer than a content-based match:
+
+`failregex = ^\s*ip=<HOST> .*\breasons=(?:\S+,)?asb-honeypot(?:,\S+)?(?:\s|$)`
+
+Two things to know when writing your own. Fail2Ban removes the timestamp from the line before applying `failregex`, so do not try to match it — anchor on `ip=` instead. And a stricter expression that spells out the whole line, such as `^\s*ip=<HOST> type=\S+ post=\S+ reasons=\S+`, is more precise but will stop matching if the field set ever changes; the short form above is the one to prefer unless you need the precision.
 
 To add a field of your own, use the `antispam_bee_spam_log_fields` filter: it receives the fields as an associative array, and anything you append becomes another `key=value` pair at the end of the line. Keys and values are cleaned up afterwards, so an added field cannot break the format.
 

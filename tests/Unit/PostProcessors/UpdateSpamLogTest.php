@@ -328,10 +328,11 @@ class UpdateSpamLogTest extends TestCase {
 	}
 
 	/**
-	 * `ip=<HOST>` is the field the documented Fail2Ban filter matches on, so a line
-	 * without it would silently stop producing bans.
+	 * Dropping the IP breaks the Fail2Ban filter in the readme, but a log kept for
+	 * statistics rather than for banning has good reason not to retain addresses,
+	 * and the filter has to be able to say so.
 	 */
-	public function test_the_ip_survives_a_filter_that_drops_it(): void {
+	public function test_a_filter_can_drop_the_ip(): void {
 		expectApplied( 'antispam_bee_spam_log_fields' )
 			->once()
 			->andReturnUsing(
@@ -351,7 +352,10 @@ class UpdateSpamLogTest extends TestCase {
 			]
 		);
 
-		self::assertStringContainsString( 'ip=192.0.2.42', $this->get_log() );
+		self::assertSame(
+			'2026-01-15T10:23:45+00:00 type=comment post=474 reasons=asb-honeypot' . PHP_EOL,
+			$this->get_log()
+		);
 	}
 
 	public function test_appends_to_an_existing_log(): void {
