@@ -90,11 +90,11 @@ class UpdateSpamLog extends Base {
 	 * Space-separated `key=value` pairs, the shape `filter.d/dovecot.conf` already
 	 * matches on a great many servers, so it is not exotic in Fail2Ban terms. Every
 	 * value is space-free by construction, which is what makes the line parseable
-	 * without quoting. A field that does not apply to a reaction is written as `-`
+	 * without quoting. A field that has no value for a reaction is written as `-`
 	 * rather than omitted, so the field set is the same on every line.
 	 *
-	 * The timestamp comes first because Fail2Ban looks for it near the start of the
-	 * line to apply `findtime`.
+	 * The timestamp is not one of the fields: it has no key, and Fail2Ban looks for
+	 * it near the start of the line to apply `findtime`, so it must not be movable.
 	 *
 	 * @param array<string, mixed> $item Item that was marked as spam.
 	 * @param string               $ip   IP address the item was submitted from.
@@ -102,24 +102,99 @@ class UpdateSpamLog extends Base {
 	 * @return string The log entry, without a trailing newline.
 	 */
 	private static function get_entry( array $item, string $ip ): string {
-		$post = '-';
-		if ( isset( $item['comment_post_ID'] ) ) {
-			$post = (string) (int) $item['comment_post_ID'];
-		}
-
-		$reasons = '-';
+		$reasons = '';
 		if ( ! empty( $item['asb_reasons'] ) ) {
 			$reasons = implode( ',', array_map( [ self::class, 'sanitize_token' ], (array) $item['asb_reasons'] ) );
 		}
 
-		return sprintf(
-			'%s ip=%s type=%s post=%s reasons=%s',
-			self::get_timestamp(),
-			$ip,
-			self::sanitize_token( $item['reaction_type'] ?? '' ),
-			$post,
-			$reasons
-		);
+		$fields = [
+			'ip'      => $ip,
+			'type'    => self::sanitize_token( $item['reaction_type'] ?? '' ),
+			'post'    => isset( $item['comment_post_ID'] ) ? (int) $item['comment_post_ID'] : '',
+			'reasons' => $reasons,
+		];
+
+		/**
+		 * Filter the fields that make up a spam log line.
+		 *
+		 * Keys become the `key=` part and are written in the order of the array, so
+		 * appending to it adds a field at the end of the line. Keys are reduced to
+		 * `[a-zA-Z0-9_-]` and a key left empty by that is dropped; values have their
+		 * whitespace replaced and an empty value is written as `-`, so a filter
+		 * cannot break the shape of the line. An array value is joined with commas.
+		 *
+		 * The timestamp is not part of this array — it has no key and has to stay at
+		 * the start of the line for Fail2Ban's date detection.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param array<string, mixed> $fields The fields of the log line.
+		 * @param array<string, mixed> $item   The item that was marked as spam.
+		 */
+		$fields = (array) apply_filters( 'antispam_bee_spam_log_fields', $fields, $item );
+
+		// The documented Fail2Ban filter matches `ip=<HOST>`; a line without it would silently stop being banned on.
+		if ( ! isset( $fields['ip'] ) ) {
+			$fields = array_merge( [ 'ip' => $ip ], $fields );
+		}
+
+		$pairs = [];
+
+		foreach ( $fields as $key => $value ) {
+			$key = self::sanitize_key( $key );
+
+			if ( '' === $key ) {
+				continue;
+			}
+
+			$pairs[] = $key . '=' . self::sanitize_value( $value );
+		}
+
+		if ( [] === $pairs ) {
+			return self::get_timestamp();
+		}
+
+		return self::get_timestamp() . ' ' . implode( ' ', $pairs );
+	}
+
+	/**
+	 * Reduce a field name to characters that are safe in a `key=value` line.
+	 *
+	 * @param mixed $key Field name to sanitize.
+	 *
+	 * @return string The sanitized field name, empty if nothing usable was left.
+	 */
+	private static function sanitize_key( $key ): string {
+		return (string) preg_replace( '/[^a-zA-Z0-9_\-]/', '', (string) $key );
+	}
+
+	/**
+	 * Make a field value safe to write into a `key=value` line.
+	 *
+	 * Only whitespace and control characters actually break the format, so unlike
+	 * {@see self::sanitize_token()} this keeps punctuation: a filter may well add a
+	 * value that needs a dot or a colon, and stripping those would corrupt it
+	 * silently rather than protect anything.
+	 *
+	 * @param mixed $value Field value to sanitize.
+	 *
+	 * @return string The sanitized value, or `-` if it is empty.
+	 */
+	private static function sanitize_value( $value ): string {
+		if ( is_array( $value ) ) {
+			$value = implode( ',', array_map( 'strval', $value ) );
+		}
+
+		if ( is_bool( $value ) ) {
+			$value = $value ? '1' : '0';
+		}
+
+		// Whitespace first: a newline is also a control character, and deleting it
+		// outright would run two words together instead of keeping them apart.
+		$value = (string) preg_replace( '/\s+/', '_', trim( (string) $value ) );
+		$value = (string) preg_replace( '/[[:cntrl:]]/', '', $value );
+
+		return '' === $value ? '-' : $value;
 	}
 
 	/**

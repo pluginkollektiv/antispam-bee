@@ -237,6 +237,123 @@ class UpdateSpamLogTest extends TestCase {
 		self::assertSame( 'first second' . PHP_EOL, $this->get_log() );
 	}
 
+	/**
+	 * The point of the fields filter: adding a field should not mean rebuilding the
+	 * whole line and re-implementing its shape.
+	 */
+	public function test_a_filter_can_append_a_field(): void {
+		expectApplied( 'antispam_bee_spam_log_fields' )
+			->once()
+			->andReturnUsing(
+				static function ( $fields ) {
+					$fields['score'] = 7.5;
+
+					return $fields;
+				}
+			);
+
+		UpdateSpamLog::process(
+			[
+				'reaction_type'     => 'comment',
+				'comment_post_ID'   => 474,
+				'comment_author_IP' => '192.0.2.42',
+				'asb_reasons'       => [ 'asb-honeypot' ],
+			]
+		);
+
+		self::assertSame(
+			'2026-01-15T10:23:45+00:00 ip=192.0.2.42 type=comment post=474 reasons=asb-honeypot score=7.5' . PHP_EOL,
+			$this->get_log()
+		);
+	}
+
+	public function test_a_filter_can_remove_a_field(): void {
+		expectApplied( 'antispam_bee_spam_log_fields' )
+			->once()
+			->andReturnUsing(
+				static function ( $fields ) {
+					unset( $fields['post'] );
+
+					return $fields;
+				}
+			);
+
+		UpdateSpamLog::process(
+			[
+				'reaction_type'     => 'comment',
+				'comment_post_ID'   => 474,
+				'comment_author_IP' => '192.0.2.42',
+				'asb_reasons'       => [ 'asb-honeypot' ],
+			]
+		);
+
+		self::assertSame(
+			'2026-01-15T10:23:45+00:00 ip=192.0.2.42 type=comment reasons=asb-honeypot' . PHP_EOL,
+			$this->get_log()
+		);
+	}
+
+	/**
+	 * A value with a space in it would split into two fields and quietly corrupt
+	 * every line the filter touches.
+	 */
+	public function test_a_filtered_value_cannot_break_the_line(): void {
+		expectApplied( 'antispam_bee_spam_log_fields' )
+			->once()
+			->andReturnUsing(
+				static function ( $fields ) {
+					$fields['note']      = "two words\nand a newline";
+					$fields['bad key!']  = 'dropped';
+					$fields['tags']      = [ 'one', 'two' ];
+					$fields['empty']     = '';
+
+					return $fields;
+				}
+			);
+
+		UpdateSpamLog::process(
+			[
+				'reaction_type'     => 'comment',
+				'comment_post_ID'   => 474,
+				'comment_author_IP' => '192.0.2.42',
+				'asb_reasons'       => [ 'asb-honeypot' ],
+			]
+		);
+
+		self::assertSame(
+			'2026-01-15T10:23:45+00:00 ip=192.0.2.42 type=comment post=474 reasons=asb-honeypot'
+			. ' note=two_words_and_a_newline badkey=dropped tags=one,two empty=-' . PHP_EOL,
+			$this->get_log()
+		);
+	}
+
+	/**
+	 * `ip=<HOST>` is the field the documented Fail2Ban filter matches on, so a line
+	 * without it would silently stop producing bans.
+	 */
+	public function test_the_ip_survives_a_filter_that_drops_it(): void {
+		expectApplied( 'antispam_bee_spam_log_fields' )
+			->once()
+			->andReturnUsing(
+				static function ( $fields ) {
+					unset( $fields['ip'] );
+
+					return $fields;
+				}
+			);
+
+		UpdateSpamLog::process(
+			[
+				'reaction_type'     => 'comment',
+				'comment_post_ID'   => 474,
+				'comment_author_IP' => '192.0.2.42',
+				'asb_reasons'       => [ 'asb-honeypot' ],
+			]
+		);
+
+		self::assertStringContainsString( 'ip=192.0.2.42', $this->get_log() );
+	}
+
 	public function test_appends_to_an_existing_log(): void {
 		$item = [
 			'reaction_type'     => 'comment',

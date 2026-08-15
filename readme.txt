@@ -124,7 +124,9 @@ The fields are space-separated `key=value` pairs, and every value is free of spa
 
 Match the IP with `ip=<HOST>` rather than by position: that field is the one Fail2Ban needs, and it will keep its name and shape in future versions of the format.
 
-Use the `antispam_bee_spam_log_entry` filter to write your own format, or return an empty string from it to skip an item.
+To add a field of your own, use the `antispam_bee_spam_log_fields` filter: it receives the fields as an associative array, and anything you append becomes another `key=value` pair at the end of the line. Keys and values are cleaned up afterwards, so an added field cannot break the format.
+
+To replace the line wholesale — with CSV, JSON or anything else — use the `antispam_bee_spam_log_entry` filter, or return an empty string from it to skip an item.
 
 ### How can I report security bugs? ###
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/445425e4-f5dd-4404-80a7-690999f5bcb3)
