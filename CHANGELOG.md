@@ -8,8 +8,9 @@
     * Allows using Antispam Bee rules for other reactions than comments, for example, forms
     * The built-in patterns of the regular expression rule now have stable identifiers as array keys,
       so single patterns can be removed or modified via the `antispam_bee_patterns` filter
-    * The spam log now records the reasons an item was detected and supports reactions other than
-      comments
+    * The spam log now uses a `key=value` format with an ISO 8601 timestamp, records the reasons an
+      item was detected and supports reactions other than comments. Fail2Ban filters written for the
+      previous format need to be updated to match `ip=<HOST>`
     * Fix: The language rule now also checks comments written in a script that does not delimit
       its words with spaces, for example Chinese, Japanese, Korean or Thai
     * Fix: The language rule no longer marks a comment as spam if the language could not be
@@ -38,8 +39,9 @@
     * Die eingebauten Patterns der Regular-Expression-Regel haben nun feste Bezeichner als Array-Keys,
       sodass einzelne Patterns über den Filter `antispam_bee_patterns` entfernt oder angepasst werden
       können
-    * Das Spam-Log enthält jetzt die Gründe der Erkennung und unterstützt auch andere Reaktionen als
-      Kommentare
+    * Das Spam-Log verwendet jetzt ein `key=value`-Format mit einem ISO-8601-Zeitstempel, enthält die
+      Gründe der Erkennung und unterstützt auch andere Reaktionen als Kommentare. Fail2Ban-Filter für
+      das bisherige Format müssen auf `ip=<HOST>` umgestellt werden
     * Fix: Die Sprach-Regel prüft nun auch Kommentare in einer Schrift, die ihre Wörter nicht
       durch Leerzeichen trennt, beispielsweise Chinesisch, Japanisch, Koreanisch oder Thai
     * Fix: Die Sprach-Regel markiert einen Kommentar nicht mehr als Spam, wenn die Sprache

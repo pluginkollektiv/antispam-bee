@@ -55,7 +55,7 @@ class UpdateSpamLogTest extends TestCase {
 		);
 
 		self::assertSame(
-			'2026-01-15 10:23:45 comment for post=474 from host=192.0.2.42 marked as spam (asb-honeypot)' . PHP_EOL,
+			'2026-01-15T10:23:45+00:00 ip=192.0.2.42 type=comment post=474 reasons=asb-honeypot' . PHP_EOL,
 			$this->get_log()
 		);
 	}
@@ -70,14 +70,15 @@ class UpdateSpamLogTest extends TestCase {
 			]
 		);
 
-		self::assertStringContainsString( '(asb-honeypot,asb-too-fast-submit)', $this->get_log() );
+		self::assertStringContainsString( 'reasons=asb-honeypot,asb-too-fast-submit', $this->get_log() );
 	}
 
 	/**
-	 * Without reasons the line has to stay byte-identical to the one the log has
-	 * used since 2.5.7, so existing Fail2Ban filters keep matching.
+	 * A field that does not apply is written as `-` rather than left out, so every
+	 * line carries the same field set and a parser never has to cope with a missing
+	 * key.
 	 */
-	public function test_keeps_the_legacy_line_when_there_are_no_reasons(): void {
+	public function test_writes_a_placeholder_when_there_are_no_reasons(): void {
 		UpdateSpamLog::process(
 			[
 				'reaction_type'     => 'comment',
@@ -88,7 +89,7 @@ class UpdateSpamLogTest extends TestCase {
 		);
 
 		self::assertSame(
-			'2026-01-15 10:23:45 comment for post=474 from host=192.0.2.42 marked as spam' . PHP_EOL,
+			'2026-01-15T10:23:45+00:00 ip=192.0.2.42 type=comment post=474 reasons=-' . PHP_EOL,
 			$this->get_log()
 		);
 	}
@@ -103,7 +104,72 @@ class UpdateSpamLogTest extends TestCase {
 		);
 
 		self::assertSame(
-			'2026-01-15 10:23:45 my_plugin_form from host=192.0.2.42 marked as spam (asb-honeypot)' . PHP_EOL,
+			'2026-01-15T10:23:45+00:00 ip=192.0.2.42 type=my_plugin_form post=- reasons=asb-honeypot' . PHP_EOL,
+			$this->get_log()
+		);
+	}
+
+	/**
+	 * The offset is what makes the timestamp usable for `findtime` on a site whose
+	 * timezone differs from the server's.
+	 */
+	public function test_appends_the_utc_offset_of_the_site(): void {
+		stubs(
+			[
+				'current_time' => static function ( $type, $gmt = false ) {
+					return $gmt ? '2026-01-15 09:23:45' : '2026-01-15 10:23:45';
+				},
+			]
+		);
+
+		UpdateSpamLog::process(
+			[
+				'reaction_type'     => 'comment',
+				'comment_post_ID'   => 474,
+				'comment_author_IP' => '192.0.2.42',
+				'asb_reasons'       => [ 'asb-honeypot' ],
+			]
+		);
+
+		self::assertStringStartsWith( '2026-01-15T10:23:45+01:00 ', $this->get_log() );
+	}
+
+	public function test_appends_a_negative_utc_offset(): void {
+		stubs(
+			[
+				'current_time' => static function ( $type, $gmt = false ) {
+					return $gmt ? '2026-01-15 10:23:45' : '2026-01-15 05:53:45';
+				},
+			]
+		);
+
+		UpdateSpamLog::process(
+			[
+				'reaction_type'     => 'comment',
+				'comment_post_ID'   => 474,
+				'comment_author_IP' => '192.0.2.42',
+				'asb_reasons'       => [ 'asb-honeypot' ],
+			]
+		);
+
+		self::assertStringStartsWith( '2026-01-15T05:53:45-04:30 ', $this->get_log() );
+	}
+
+	/**
+	 * A reaction type and rule slugs can come from a third-party integration, and a
+	 * value containing a space would break the `key=value` shape for every parser.
+	 */
+	public function test_strips_characters_that_would_break_the_line(): void {
+		UpdateSpamLog::process(
+			[
+				'reaction_type' => 'my plugin/form!',
+				'ip'            => '192.0.2.42',
+				'asb_reasons'   => [ 'weird slug()', '' ],
+			]
+		);
+
+		self::assertSame(
+			'2026-01-15T10:23:45+00:00 ip=192.0.2.42 type=mypluginform post=- reasons=weirdslug,unknown' . PHP_EOL,
 			$this->get_log()
 		);
 	}

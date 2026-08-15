@@ -87,9 +87,14 @@ class UpdateSpamLog extends Base {
 	/**
 	 * Build the log entry for an item.
 	 *
-	 * Comments keep the wording the log has used since 2.5.7, so existing Fail2Ban
-	 * filters keep matching. Any other reaction is logged with its type instead of
-	 * the post reference it does not have.
+	 * Space-separated `key=value` pairs, the shape `filter.d/dovecot.conf` already
+	 * matches on a great many servers, so it is not exotic in Fail2Ban terms. Every
+	 * value is space-free by construction, which is what makes the line parseable
+	 * without quoting. A field that does not apply to a reaction is written as `-`
+	 * rather than omitted, so the field set is the same on every line.
+	 *
+	 * The timestamp comes first because Fail2Ban looks for it near the start of the
+	 * line to apply `findtime`.
 	 *
 	 * @param array<string, mixed> $item Item that was marked as spam.
 	 * @param string               $ip   IP address the item was submitted from.
@@ -97,26 +102,55 @@ class UpdateSpamLog extends Base {
 	 * @return string The log entry, without a trailing newline.
 	 */
 	private static function get_entry( array $item, string $ip ): string {
+		$post = '-';
 		if ( isset( $item['comment_post_ID'] ) ) {
-			$subject = sprintf( 'comment for post=%d', $item['comment_post_ID'] );
-		} else {
-			$subject = self::sanitize_token( $item['reaction_type'] ?? 'item' );
+			$post = (string) (int) $item['comment_post_ID'];
 		}
 
-		$reasons = '';
+		$reasons = '-';
 		if ( ! empty( $item['asb_reasons'] ) ) {
-			$reasons = sprintf(
-				' (%s)',
-				implode( ',', array_map( [ self::class, 'sanitize_token' ], (array) $item['asb_reasons'] ) )
-			);
+			$reasons = implode( ',', array_map( [ self::class, 'sanitize_token' ], (array) $item['asb_reasons'] ) );
 		}
 
 		return sprintf(
-			'%s %s from host=%s marked as spam%s',
-			current_time( 'mysql' ),
-			$subject,
+			'%s ip=%s type=%s post=%s reasons=%s',
+			self::get_timestamp(),
 			$ip,
+			self::sanitize_token( $item['reaction_type'] ?? '' ),
+			$post,
 			$reasons
+		);
+	}
+
+	/**
+	 * Get the current time as an ISO 8601 timestamp with a UTC offset.
+	 *
+	 * `current_time( 'mysql' )` writes WordPress-local time without an offset, so on
+	 * a site whose timezone differs from the server's, Fail2Ban reads entries as
+	 * outside `findtime` and silently never bans. The offset is derived from the
+	 * difference between local and UTC time at this very instant rather than from
+	 * the `gmt_offset` option, so it stays correct across daylight saving changes
+	 * and cannot disagree with the wall clock it is appended to.
+	 *
+	 * @return string The timestamp, for example `2026-01-15T10:23:45+01:00`.
+	 */
+	private static function get_timestamp(): string {
+		$local = (string) current_time( 'mysql' );
+		$utc   = (string) current_time( 'mysql', true );
+
+		$offset = strtotime( $local ) - strtotime( $utc );
+
+		$sign    = $offset < 0 ? '-' : '+';
+		$offset  = abs( $offset );
+		$hours   = (int) floor( $offset / 3600 );
+		$minutes = (int) floor( ( $offset % 3600 ) / 60 );
+
+		return sprintf(
+			'%s%s%02d:%02d',
+			str_replace( ' ', 'T', $local ),
+			$sign,
+			$hours,
+			$minutes
 		);
 	}
 

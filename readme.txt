@@ -118,9 +118,13 @@ Complete documentation is available on [pluginkollektiv.org](https://antispambee
 ### Can I log detected spam for Fail2Ban? ###
 Yes. Define the constant `ANTISPAM_BEE_LOG_FILE` in your `wp-config.php` with the path to a writable file. Antispam Bee then appends one line per detected spam item:
 
-> 2026-01-15 10:23:45 comment for post=474 from host=192.0.2.42 marked as spam (asb-honeypot)
+> 2026-01-15T10:23:45+01:00 ip=192.0.2.42 type=comment post=474 reasons=asb-honeypot
 
-The reasons in brackets are the slugs of the rules that caught the item, so a Fail2Ban jail can, for example, ban honeypot hits longer than other detections. Items that are not comments are logged with their reaction type instead of the post reference. Use the `antispam_bee_spam_log_entry` filter to write your own format, or return an empty string from it to skip an item.
+The fields are space-separated `key=value` pairs, and every value is free of spaces, so the line can be parsed without quoting. A field that does not apply to a reaction is written as `-`; a form submission, for example, has no post to refer to. `reasons` lists the slugs of the rules that caught the item, so a Fail2Ban jail can ban honeypot hits longer than other detections.
+
+Match the IP with `ip=<HOST>` rather than by position: that field is the one Fail2Ban needs, and it will keep its name and shape in future versions of the format.
+
+Use the `antispam_bee_spam_log_entry` filter to write your own format, or return an empty string from it to skip an item.
 
 ### How can I report security bugs? ###
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/445425e4-f5dd-4404-80a7-690999f5bcb3)
@@ -131,7 +135,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
     * Complete code rewrite and backend UI overhaul
     * Allows extending Antispam Bee with your own rules
     * Allows using Antispam Bee rules for other reactions than comments, for example, forms
-    * The spam log now records the reasons an item was detected and supports reactions other than comments
+    * The spam log now uses a `key=value` format with an ISO 8601 timestamp, records the reasons an item was detected and supports reactions other than comments. Fail2Ban filters written for the previous format need to be updated to match `ip=<HOST>`
     * Fix: The language rule now also checks comments written in a script that does not delimit its words with spaces, for example Chinese, Japanese, Korean or Thai
     * Fix: The language rule no longer marks a comment as spam if the language could not be determined at all
     * Fix: IP addresses are now anonymized by masking the host portion of the address: a /24 for IPv4, the same network WordPress itself keeps, as in Antispam Bee 2.x, and a /48 for IPv6 instead of only its first two groups
