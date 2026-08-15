@@ -10,7 +10,7 @@
  * Plugin Name: Antispam Bee
  * Plugin URI: https://antispambee.pluginkollektiv.org/
  * Description: Antispam plugin with a sophisticated toolset for effective day-to-day comment and trackback spam-fighting. Built with data protection and privacy in mind.
- * Version: 3.0.0-beta.1
+ * Version: 3.0.0-beta.2
  * Author: pluginkollektiv
  * Author URI: https://pluginkollektiv.org
  * Text Domain: antispam-bee
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( __NAMESPACE__ . '\MAIN_PLUGIN_FILE', __FILE__ );
 define( __NAMESPACE__ . '\PLUGIN_PATH', plugin_dir_path( MAIN_PLUGIN_FILE ) );
-define( __NAMESPACE__ . '\PLUGIN_VERSION', '3.0.0-beta.1' );
+define( __NAMESPACE__ . '\PLUGIN_VERSION', '3.0.0-beta.2' );
 
 // The pre_init function checks the plugin's compatibility and calls the init function if the check was successful.
 pre_init();
