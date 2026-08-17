@@ -1,0 +1,147 @@
+# Builds the distributable plugin archive and attaches it to the GitHub release.
+#
+# This is the 2.x-line copy of the workflow; its twin lives on `v3`. Both are needed,
+# because the two triggers resolve the workflow file from different places:
+#
+#   * `release: published` runs the file from the *released tag's* own ref
+#     (`GITHUB_REF` is `refs/tags/<tag>`). A copy on `master` alone would therefore never
+#     fire for a `3.0.0-beta.*` tag, whose commits do not contain this file — and the v3
+#     copy is what covers those.
+#   * `workflow_dispatch` only exists for workflows present on the repository's *default*
+#     branch, which is `master`. This copy is what makes a manual run possible at all.
+#
+# So this file automates the asset for 2.x releases, and doubles as the manual entry point
+# for any tag on either line. A manual run has to be dispatched **from a branch** with the
+# target tag passed as the `tag` input — dispatching against a tag ref would look for this
+# file inside that tag.
+#
+# Unlike the v3 copy it deliberately does not use `./.github/actions/setup-php`: a local
+# action is resolved from whatever `actions/checkout` put in the workspace, and since this
+# workflow checks out the *tag*, that directory has to exist in the tag. It does not exist
+# on the 2.x line at all, and on the v3 line only from `3.0.0-beta.2` onwards. Inlining
+# `shivammathur/setup-php` is what lets this one file build any tag.
+#
+# Scope: the 2.x line and `3.0.0-beta.2` onwards build cleanly. Older v3 tags are built
+# with their own release-time configuration and come out wrong — `3.0.0-beta.1` ships a
+# complete `vendor/` because its `.distignore` never mentions it, and `3.0.0-alpha.*` need
+# an npm `wp-scripts build` that nothing here runs. Both already have whatever asset they
+# are going to get.
+
+name: Attach plugin ZIP to release
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The release tag to build the plugin ZIP for and attach it to.
+        required: true
+
+permissions:
+  contents: write        # needed to upload a release asset
+
+jobs:
+  attach:
+    runs-on: ubuntu-latest
+    env:
+      # Both triggers share one code path from here on.
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - name: Checkout
+        # Explicitly the tag, not the branch head: a manual run has to build the code that
+        # was released, and the checkout directory is named after the repository, which is
+        # what gives the archive its `antispam-bee/` top-level directory.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+
+      - name: Setup PHP
+        # Pinned to a commit rather than to `v2`, because a tag can be moved: whoever
+        # controls the upstream repository can point `v2` at different code, and this
+        # action runs with access to the job. The trailing comment records which release
+        # the hash is, since a bare hash says nothing about how old the pin is.
+        #
+        # Note there is no Dependabot coverage for GitHub Actions in this repository yet,
+        # so this pin has to be advanced by hand until there is.
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: 'composer, wp-cli'
+
+      - name: Install the dependencies the archive needs
+        # The two release lines need opposite installs, so this keys off what the checked
+        # out `composer.json` actually declares rather than off the version number.
+        #
+        # On 2.x the dev install *is* the build: `post-install-cmd` runs the `minify`
+        # script, whose `minifycss`/`minifyjs` binaries come from `matthiasmullie/minify`,
+        # a `require-dev` package. The minified files are gitignored build products, and
+        # the plugin enqueues only those minified names — so `--no-dev` would both fail the
+        # install and produce a plugin whose CSS and JS 404. Shipping that dev `vendor/` is
+        # harmless here: 2.x excludes `/vendor` from the archive outright and never loads a
+        # Composer autoloader. This mirrors what the wordpress.org deploy already does.
+        #
+        # The v3 line has no build script and the opposite need: it ships
+        # `vendor/autoload.php` and `vendor/composer/`, so the autoloader inside the
+        # archive has to be the production one.
+        run: |
+          set -euo pipefail
+          if jq -e '.scripts.build' composer.json >/dev/null 2>&1; then
+            echo "Composer build script present — installing with dev dependencies."
+            composer install --ignore-platform-reqs
+          else
+            echo "No Composer build script — installing production dependencies only."
+            composer install --no-dev --optimize-autoloader
+          fi
+
+      - name: Verify the plugin version matches the tag
+        # The version is maintained by hand, and the header regularly lags behind on a
+        # working branch. A ZIP that announces a version other than the one it was released
+        # as would misreport itself to every site that installs it and defeat WordPress'
+        # update check, so this fails loudly instead of publishing it.
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*\(.*[^[:space:]]\)[[:space:]]*$/\1/p' antispam_bee.php | head -1)"
+          if [ -z "$version" ]; then
+            echo "::error::Could not read the version from the antispam_bee.php header."
+            exit 1
+          fi
+          if [ "$version" != "$TAG" ]; then
+            echo "::error::antispam_bee.php declares version $version, but the release is $TAG."
+            exit 1
+          fi
+          echo "Plugin header says $version — matches the tag."
+
+      - name: Install the dist-archive command
+        # `setup-php` seeds Composer's auth with a github-oauth token that Composer itself
+        # rejects as malformed, and `wp package install` registers the package as a GitHub
+        # VCS repository, which forces that token to be used. Isolate Composer from the
+        # ambient auth: a fresh COMPOSER_HOME (no seeded auth.json), an empty COMPOSER_AUTH
+        # and no GITHUB_TOKEN. The package is public, so anonymous access suffices.
+        env:
+          COMPOSER_HOME: ${{ runner.temp }}/composer-home
+          COMPOSER_AUTH: '{}'
+        run: |
+          unset GITHUB_TOKEN
+          wp package install wp-cli/dist-archive-command:^3.1
+
+      - name: Build the plugin archive
+        # Built outside the workspace so the archive cannot end up inside itself. The file
+        # name reproduces what `wp dist-archive` would pick on its own and what the manual
+        # uploads used, but derives it from the tag rather than from the header.
+        run: |
+          set -euo pipefail
+          zip="${{ runner.temp }}/antispam-bee.$TAG.zip"
+          wp dist-archive . "$zip"
+          unzip -l "$zip" | tail -1
+          echo "ZIP_FILE=$zip" >> "$GITHUB_ENV"
+
+      - name: Attach to the release
+        # `--clobber` keeps re-runs and manual backfills idempotent.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release upload "$TAG" "$ZIP_FILE" --clobber
+          echo "Attached $(basename "$ZIP_FILE") to $TAG."
