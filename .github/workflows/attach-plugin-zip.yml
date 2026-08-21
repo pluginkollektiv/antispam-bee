@@ -1,0 +1,115 @@
+# Builds the distributable plugin archive and attaches it to the GitHub release.
+#
+# For a pre-release this is the only channel there is: `wordpress-plugin-deploy.yml`
+# filters tags with `"!*-*"`, so every hyphenated tag (`3.0.0-beta.2`, `3.0.0-alpha.15`,
+# `2.9.0-beta`) deliberately never reaches wordpress.org. Testers can only get an
+# installable build from an asset on the release page — which used to be uploaded by
+# hand, and was duly forgotten for `3.0.0-beta.2`.
+#
+# The build itself is the one `wordpress-plugin-check.yml` already performs and throws
+# away: production dependencies, then `wp dist-archive`, which filters through
+# `.distignore`. Stable releases get the same asset; they are published to
+# wordpress.org as well, but a release page that carries the exact zip is worth having
+# either way.
+#
+# Kept separate from `attach-snapshot.yml`, which reacts to the same event: that one
+# fails on purpose when the detection-snapshot chain was interrupted, and a missing
+# snapshot must not keep the plugin zip off the release.
+#
+# Note on `workflow_dispatch`: GitHub only offers that trigger for workflows that exist
+# on the repository's *default* branch. While the default branch is `master` (the 2.x
+# line) and this file lives on `v3`, the manual re-run is therefore unavailable and only
+# the `release` trigger fires. It starts working, without any change here, once the v3
+# line becomes the default branch.
+
+name: Attach plugin ZIP to release
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The release tag to build the plugin ZIP for and attach it to.
+        required: true
+
+permissions:
+  contents: write        # needed to upload a release asset
+
+jobs:
+  attach:
+    runs-on: ubuntu-latest
+    env:
+      # Both triggers share one code path from here on.
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - name: Checkout
+        # Explicitly the tag, not the branch head: a manual run has to build the code
+        # that was released, and the checkout directory is named after the repository,
+        # which is what gives the archive its `antispam-bee/` top-level directory.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+
+      - name: Setup PHP and install production dependencies
+        # The archive ships `vendor/autoload.php` and `vendor/composer/`, so the
+        # autoloader inside it has to be the production one. `vendor/` is not committed,
+        # so this step is what puts it there in the first place.
+        uses: ./.github/actions/setup-php
+        with:
+          php-version: '8.3'
+          tools: 'composer, wp-cli'
+          composer-flags: '--no-dev --optimize-autoloader'
+
+      - name: Verify the plugin version matches the tag
+        # The version is maintained by hand in three places, and the header regularly
+        # lags behind on a working branch. A zip that announces a version other than the
+        # one it was released as would misreport itself to every site that installs it
+        # and defeat WordPress' update check, so this fails loudly instead of publishing
+        # it.
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*\(.*[^[:space:]]\)[[:space:]]*$/\1/p' antispam_bee.php | head -1)"
+          if [ -z "$version" ]; then
+            echo "::error::Could not read the version from the antispam_bee.php header."
+            exit 1
+          fi
+          if [ "$version" != "$TAG" ]; then
+            echo "::error::antispam_bee.php declares version $version, but the release is $TAG."
+            exit 1
+          fi
+          echo "Plugin header says $version — matches the tag."
+
+      - name: Install the dist-archive command
+        # `setup-php` seeds Composer's auth with a github-oauth token that Composer
+        # itself rejects as malformed, and `wp package install` registers the package as
+        # a GitHub VCS repository, which forces that token to be used. Isolate Composer
+        # from the ambient auth: a fresh COMPOSER_HOME (no seeded auth.json), an empty
+        # COMPOSER_AUTH and no GITHUB_TOKEN. The package is public, so anonymous access
+        # suffices.
+        env:
+          COMPOSER_HOME: ${{ runner.temp }}/composer-home
+          COMPOSER_AUTH: '{}'
+        run: |
+          unset GITHUB_TOKEN
+          wp package install wp-cli/dist-archive-command:^3.1
+
+      - name: Build the plugin archive
+        # Built outside the workspace so the archive cannot end up inside itself. The
+        # file name reproduces what `wp dist-archive` would pick on its own and what the
+        # manual uploads used, but derives it from the tag rather than the header.
+        run: |
+          set -euo pipefail
+          zip="${{ runner.temp }}/antispam-bee.$TAG.zip"
+          wp dist-archive . "$zip"
+          unzip -l "$zip" | tail -1
+          echo "ZIP_FILE=$zip" >> "$GITHUB_ENV"
+
+      - name: Attach to the release
+        # `--clobber` keeps re-runs and manual backfills idempotent.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release upload "$TAG" "$ZIP_FILE" --clobber
+          echo "Attached $(basename "$ZIP_FILE") to $TAG."
