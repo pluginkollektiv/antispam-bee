@@ -5,7 +5,7 @@
 * Requires at least: 4.6
 * Tested up to:      7.1
 * Requires PHP:      5.2
-* Stable tag:        2.11.12
+* Stable tag:        2.11.13
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,16 @@ A complete documentation is available on [pluginkollektiv.org](https://antispamb
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/445425e4-f5dd-4404-80a7-690999f5bcb3)
 
 ## Changelog ##
+
+### 2.11.13 ###
+  * Enhancement: New `antispam_bee_honeypot_styles` filter to change the inline styles of the honeypot field — set it to an empty string and load the styles from a file instead if the site uses a strict CSP
+  * Fix: Escape settings action link URL with `esc_url()` (Refs #534) (Thanks @thisismyurl!)
+  * Fix: Replace `strip_tags()` with `wp_strip_all_tags()` for WordPress-consistent tag stripping in spam notification email body (Refs #534) (Thanks @thisismyurl!)
+  * Fix: The plugin update notice is shown again — the `in_plugin_update_message-` hook used `__FILE__` instead of `plugin_basename( __FILE__ )`, and the notice text was read from an array key with a trailing space (Thanks @thisismyurl!)
+  * Fix: The `ANTISPAM_BEE_LOG_FILE` guard now rejects every invalid path `validate_file()` reports instead of only directory traversal, and validates the path before checking whether it is writable (Thanks @thisismyurl!)
+  * Fix: `_is_mobile()` returns a boolean again instead of the raw `strpos()` result (Thanks @thisismyurl!)
+  * Tweak: Use `wp_get_word_count_type()` when it is available (WordPress 6.2 and newer) to determine the word count type
+  * Maintenance: Tested up to WordPress 7.1
 
 ### 2.11.12 ###
   * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)
