@@ -45,6 +45,11 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 					return $field_markup;
 				}
 
+				// The timestamp is set again client-side below, because the rendered value is
+				// frozen for as long as a page cache serves this form. On a client that does
+				// not run the script the rendered value survives, and behind a cache it is
+				// always old enough to clear the limit, so the rule lets the reaction pass
+				// rather than rejecting a visitor whose browser it cannot measure.
 				$unique_id = uniqid( 'antispam-bee-time-' );
 				$script    = sprintf(
 					'<script>(function() {
@@ -132,10 +137,14 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	/**
 	 * Get the rule description.
 	 *
+	 * The time the form was opened is measured client-side, so a page cache does not
+	 * stop the rule from working. Without JavaScript the measurement falls back to
+	 * the rendered timestamp, which a cache makes useless.
+	 *
 	 * @return string|null The rule description, or null.
 	 */
 	public static function get_description(): ?string {
-		return __( 'Not recommended when using page caching', 'antispam-bee' );
+		return __( 'Works with page caching only if JavaScript is enabled', 'antispam-bee' );
 	}
 
 	/**
