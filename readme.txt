@@ -3,7 +3,7 @@
 * Tags:              anti-spam, antispam, comments, spam filter, spam protection
 * Donate link:       https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TD4AMD2D8EMZW
 * Requires at least: 4.6
-* Tested up to:      7.0
+* Tested up to:      7.1
 * Requires PHP:      5.2
 * Stable tag:        2.11.12
 * License:           GPLv2 or later
