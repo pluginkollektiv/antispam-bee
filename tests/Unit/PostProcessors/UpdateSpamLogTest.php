@@ -371,4 +371,161 @@ class UpdateSpamLogTest extends TestCase {
 
 		self::assertCount( 2, array_filter( explode( PHP_EOL, $this->get_log() ) ) );
 	}
+
+	/*
+	 * The tests below guard the shipped Fail2Ban filter against the log format drifting
+	 * away from it. A jail whose filter stops matching reports no error on either side:
+	 * Fail2Ban simply stops banning, and the site owner finds out from a rise in spam.
+	 * These assertions are the only place where such a mismatch becomes visible.
+	 */
+
+	public function test_the_shipped_fail2ban_filter_matches_a_logged_comment(): void {
+		UpdateSpamLog::process(
+			[
+				'reaction_type'     => 'comment',
+				'comment_post_ID'   => 474,
+				'comment_author_IP' => '192.0.2.42',
+				'asb_reasons'       => [ 'asb-honeypot' ],
+			]
+		);
+
+		self::assertSame( '192.0.2.42', $this->host_the_filter_bans_for( $this->get_log() ) );
+	}
+
+	public function test_the_shipped_fail2ban_filter_matches_a_line_full_of_placeholders(): void {
+		UpdateSpamLog::process(
+			[
+				'reaction_type' => 'form',
+				'ip'            => '192.0.2.43',
+			]
+		);
+
+		self::assertSame(
+			'192.0.2.43',
+			$this->host_the_filter_bans_for( $this->get_log() ),
+			'A reaction with no post and no reasons writes `-` for both, which must not stop the filter matching.'
+		);
+	}
+
+	public function test_the_shipped_fail2ban_filter_matches_an_ipv6_address(): void {
+		UpdateSpamLog::process(
+			[
+				'reaction_type'     => 'comment',
+				'comment_post_ID'   => 474,
+				'comment_author_IP' => '2001:db8::42',
+				'asb_reasons'       => [ 'asb-honeypot' ],
+			]
+		);
+
+		self::assertSame( '2001:db8::42', $this->host_the_filter_bans_for( $this->get_log() ) );
+	}
+
+	public function test_the_shipped_fail2ban_filter_survives_a_field_appended_by_a_filter(): void {
+		expectApplied( 'antispam_bee_spam_log_fields' )
+			->once()
+			->andReturnUsing(
+				static function ( $fields ) {
+					$fields['agent'] = 'some-bot/1.0';
+
+					return $fields;
+				}
+			);
+
+		UpdateSpamLog::process(
+			[
+				'reaction_type'     => 'comment',
+				'comment_post_ID'   => 474,
+				'comment_author_IP' => '192.0.2.42',
+				'asb_reasons'       => [ 'asb-honeypot' ],
+			]
+		);
+
+		self::assertSame(
+			'192.0.2.42',
+			$this->host_the_filter_bans_for( $this->get_log() ),
+			'The filter is anchored on the field name, so appending a field must not break it.'
+		);
+	}
+
+	public function test_the_shipped_fail2ban_filter_ignores_a_later_field_containing_an_address(): void {
+		expectApplied( 'antispam_bee_spam_log_fields' )
+			->once()
+			->andReturnUsing(
+				static function ( $fields ) {
+					$fields['note'] = 'see-ip=203.0.113.9';
+
+					return $fields;
+				}
+			);
+
+		UpdateSpamLog::process(
+			[
+				'reaction_type'     => 'comment',
+				'comment_post_ID'   => 474,
+				'comment_author_IP' => '192.0.2.42',
+				'asb_reasons'       => [ 'asb-honeypot' ],
+			]
+		);
+
+		self::assertSame(
+			'192.0.2.42',
+			$this->host_the_filter_bans_for( $this->get_log() ),
+			'The expression is non-greedy, so a later field whose value contains `ip=` must not decide who gets banned.'
+		);
+	}
+
+	/**
+	 * Apply the shipped `failregex` to a log line the way Fail2Ban does.
+	 *
+	 * Read from the shipped file rather than restated here, so that editing the filter
+	 * without editing the log format — or the other way round — fails these tests.
+	 *
+	 * Fail2Ban strips the timestamp it detected before applying `failregex`, which is why
+	 * it is removed here too. Verified against the real `fail2ban-regex`, which picks
+	 * `{^LN-BEG}...Zone offset` for this format, so no `datepattern` is needed.
+	 *
+	 * @param string $log The contents of the log file.
+	 *
+	 * @return string|null The address the jail would ban, or null if nothing matched.
+	 */
+	private function host_the_filter_bans_for( string $log ): ?string {
+		$line = trim( $log );
+
+		self::assertNotSame( '', $line, 'Nothing was logged, so there is nothing to match.' );
+		self::assertStringNotContainsString( PHP_EOL, $line, 'The helper expects a single log line.' );
+
+		// What Fail2Ban's date detection consumes: the ISO 8601 timestamp and the space after it.
+		$line = (string) preg_replace( '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}\s*/', '', $line );
+
+		// `<HOST>` stands for an address in Fail2Ban's own expressions; the character class
+		// covers IPv4 and IPv6 without reimplementing its full definition.
+		$pattern = str_replace( '<HOST>', '(?P<host>[0-9A-Fa-f.:]+)', $this->shipped_failregex() );
+
+		if ( ! preg_match( '/' . $pattern . '/', $line, $matches ) ) {
+			return null;
+		}
+
+		return $matches['host'];
+	}
+
+	/**
+	 * Read `failregex` out of the Fail2Ban filter shipped with the plugin.
+	 *
+	 * @return string The expression.
+	 */
+	private function shipped_failregex(): string {
+		$path = dirname( __DIR__, 3 ) . '/fail2ban/filter.d/antispam-bee.conf';
+
+		self::assertFileExists( $path, 'The Fail2Ban filter has to ship with the plugin.' );
+
+		$contents = (string) file_get_contents( $path );
+
+		self::assertSame(
+			1,
+			preg_match( '/^failregex\s*=\s*(?P<expression>.+)$/m', $contents, $matches ),
+			'The shipped filter has to define exactly one failregex.'
+		);
+
+		return trim( $matches['expression'] );
+	}
 }

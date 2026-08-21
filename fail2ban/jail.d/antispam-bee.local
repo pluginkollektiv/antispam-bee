@@ -1,0 +1,16 @@
+# Example Fail2Ban jail for Antispam Bee
+#
+# Copy to /etc/fail2ban/jail.d/antispam-bee.local and set `logpath` to the file you
+# defined as `ANTISPAM_BEE_LOG_FILE` in `wp-config.php`.
+#
+# Put the log outside the web root, or make sure the web server refuses to serve it:
+# it contains the IP addresses of everyone whose submission was rejected.
+
+[antispam-bee]
+enabled  = true
+filter   = antispam-bee
+logpath  = /var/log/antispam-bee.log
+port     = http,https
+maxretry = 3
+findtime = 1h
+bantime  = 1d
