@@ -104,19 +104,46 @@ class PluginUpdate {
 		$version_from_db = get_option( self::DB_VERSION_OPTION_NAME, null );
 
 		/*
-		 * The database version is written only after every migration step below has
-		 * succeeded. Raising it up front means a migration that aborts — a legacy
-		 * option of an unexpected shape, a failed query — is never retried, while
-		 * the new option was never written: the site silently falls back to the
-		 * defaults and every 2.x setting is lost. Writing it last turns such a
-		 * failure into a retry on the next request instead.
+		 * `null` is a fresh install, which has nothing to migrate. A recorded revision
+		 * that is not a scalar cannot be compared against at all, and since the version
+		 * write below no longer happens first, retrying such a value would now fatal on
+		 * every request rather than once. Neither case has a migration to run, so both
+		 * fall through to the version write.
 		 */
-		if ( null === $version_from_db ) {
-			update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
-
-			return;
+		if ( is_scalar( $version_from_db ) ) {
+			static::run_migration_steps( (string) $version_from_db );
 		}
 
+		/*
+		 * Only now that every step has completed. Writing the version first would spend
+		 * the one chance a site gets: `db_version_is_current()` would report the database
+		 * as up-to-date on every later request, so a step interrupted by a fatal, a DB
+		 * error, a timeout or a warning promoted to an exception would never run again.
+		 * The legacy option would still be in place while `antispam_bee_options` was
+		 * never written, leaving the site on `Settings::$defaults` — the user's entire
+		 * configuration gone, with no way to retrigger the migration short of editing
+		 * the option by hand.
+		 *
+		 * Deferring the write cannot make the migration run twice within a request,
+		 * because `self::$db_update_triggered` is already set above.
+		 */
+		update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
+	}
+
+	/**
+	 * Bring an existing install up to the current database revision.
+	 *
+	 * Called for an install that has a recorded revision; a fresh install has nothing
+	 * to migrate and only gets the revision written.
+	 *
+	 * Every step has to tolerate running against an install that already passed it: a
+	 * later step may fail and bring the whole method back on the next request.
+	 *
+	 * @param string $version_from_db The database revision the install is on.
+	 *
+	 * @return void
+	 */
+	protected static function run_migration_steps( string $version_from_db ): void {
 		if ( $version_from_db < 1.01 ) {
 			global $wpdb;
 
@@ -238,8 +265,6 @@ class PluginUpdate {
 				$new_options
 			);
 		}
-
-		update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
 	}
 
 	/**
@@ -249,8 +274,8 @@ class PluginUpdate {
 	 * 2.x install that never re-saved its settings can still hold a plain string
 	 * (`'translate_lang' => 'de'`) or an empty string where an array is expected.
 	 * PHP does not coerce a scalar into an `array` parameter even in weak mode, so
-	 * such a value used to raise an uncaught `TypeError` and abort the migration.
-	 * 2.x itself cast at every read site; this restores that tolerance.
+	 * such a value used to raise an uncaught `TypeError`. 2.x itself cast at every
+	 * read site; this restores that tolerance.
 	 *
 	 * @param mixed $values Raw legacy option value.
 	 *
