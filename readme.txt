@@ -69,6 +69,27 @@ Whether Antispam Bee works with a comment form submitted via AJAX depends on how
 
 If the comments are sent to the `admin-ajax.php`, the `antispam_bee_disallow_ajax_calls` filter must be used to run ASB for requests to that file as well. If the script does not send all form data to the file, but only some selected ones, further customization is probably necessary, as [exemplified in this post by Torsten Landsiedel](https://torstenlandsiedel.de/2020/10/04/ajaxifizierte-kommentare-und-antispam-bee/) (in German).
 
+### The honeypot field is visible on my site, which uses a strict Content Security Policy. What can I do? ###
+Antispam Bee hides its honeypot field with inline styles. If your site sends a Content Security Policy that does not allow inline styles (a `style-src` directive without `'unsafe-inline'`), the browser drops those styles and the field becomes visible to your visitors.
+
+Use the `antispam_bee_honeypot_styles` filter to return an empty string, so no inline styles are rendered at all:
+
+> add_filter( 'antispam_bee_honeypot_styles', '__return_empty_string' );
+
+Then hide the field from your own stylesheet, which your policy already allows:
+
+> textarea[aria-label="hp-comment"] {
+>     padding: 0 !important;
+>     clip: rect(1px, 1px, 1px, 1px) !important;
+>     position: absolute !important;
+>     white-space: nowrap !important;
+>     height: 1px !important;
+>     width: 1px !important;
+>     overflow: hidden !important;
+> }
+
+The same filter can also be used to return a modified set of styles instead of an empty one. Do not hide the field with `display: none` or `visibility: hidden`, as many spam bots skip fields hidden that way, which is exactly what the honeypot needs them not to do.
+
 ### Does Antispam Bee store any private user data, and is it compliant with GDPR? ###
 Antispam Bee is developed in Europe. You might have heard we can be a bit nitpicky over here when it comes to privacy. The plugin does not save private user data and is 100% compliant with GDPR.
 
@@ -99,7 +120,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 ## Changelog ##
 
 ### 2.11.13 ###
-  * Enhancement: New filter to change the styles of the honeypot field
+  * Enhancement: New filter `antispam_bee_honeypot_styles` to change the styles of the honeypot field
   * Fix: Escape the URL of the settings link (Thanks @thisismyurl!)
   * Fix: Strip tags in the spam notification email the WordPress way (Thanks @thisismyurl!)
   * Fix: Show the plugin update notice again (Thanks @thisismyurl!)

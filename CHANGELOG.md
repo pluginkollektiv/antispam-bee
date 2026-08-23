@@ -2,7 +2,7 @@
 
 ### 2.11.13 ###
 * **English**
-  * Enhancement: New filter to change the styles of the honeypot field
+  * Enhancement: New filter `antispam_bee_honeypot_styles` to change the styles of the honeypot field
   * Fix: Escape the URL of the settings link (Thanks @thisismyurl!)
   * Fix: Strip tags in the spam notification email the WordPress way (Thanks @thisismyurl!)
   * Fix: Show the plugin update notice again (Thanks @thisismyurl!)
@@ -12,7 +12,7 @@
   * Maintenance: Tested up to WordPress 7.1
 
 * **Deutsch**
-  * Verbesserung: Neuer Filter, um die Styles des Honeypot-Feldes anzupassen
+  * Verbesserung: Neuer Filter `antispam_bee_honeypot_styles`, um die Styles des Honeypot-Feldes anzupassen
   * Fix: Die URL des Einstellungs-Links wird maskiert (Danke @thisismyurl!)
   * Fix: Tags in der Spam-Benachrichtigungs-E-Mail werden WordPress-konform entfernt (Danke @thisismyurl!)
   * Fix: Der Update-Hinweis des Plugins wird wieder angezeigt (Danke @thisismyurl!)
