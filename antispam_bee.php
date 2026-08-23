@@ -1637,6 +1637,7 @@ class Antispam_Bee {
 		$fields = array(
 			'ip',
 			'host',
+			'rawurl',
 			'body',
 			'email',
 			'author',
@@ -1658,7 +1659,7 @@ class Antispam_Bee {
 				'body' => '\<\!.+?mfunc.+?\>',
 			),
 			array(
-				'author' => 'moncler|north face|vuitton|handbag|burberry|outlet|prada|cialis|viagra|maillot|oakley|ralph lauren|ray ban|iphone|プラダ',
+				'author' => 'moncler|north face|vuitton|handbag|burberry|outlet|prada|cialis|viagra|maillot|oakley|ralph lauren|ray ban|iphone|プラダ|[^\w]?porn[o]?[s]?[^\w]?|[^\w]?pornstar[^\w]?|^20bet$',
 			),
 			array(
 				'host' => '^(www\.)?fkbook\.co\.uk$|^(www\.)?nsru\.net$|^(www\.)?goo\.gl$|^(www\.)?bit\.ly$',
@@ -1677,6 +1678,9 @@ class Antispam_Bee {
 				'body' => '^https?:\/\/shorturl\.fm\/[a-zA-Z0-9]{5}$',
 				'email' => '@gmail\.com',
 				'author' => '^[A-Z][a-z]+\d{3,4}$',
+			),
+			array(
+				'rawurl' => '^http[s]?:\/\/(accounts\.)?binance\.com\/[a-zA-Z-]+\/register(-person)?\?ref=[\w]+',
 			),
 		);
 
