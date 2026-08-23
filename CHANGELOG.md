@@ -2,23 +2,23 @@
 
 ### 2.11.13 ###
 * **English**
-  * Enhancement: New `antispam_bee_honeypot_styles` filter to change the inline styles of the honeypot field — set it to an empty string and load the styles from a file instead if the site uses a strict CSP
-  * Fix: Escape settings action link URL with `esc_url()` (Refs #534) (Thanks @thisismyurl!)
-  * Fix: Replace `strip_tags()` with `wp_strip_all_tags()` for WordPress-consistent tag stripping in spam notification email body (Refs #534) (Thanks @thisismyurl!)
-  * Fix: The plugin update notice is shown again — the `in_plugin_update_message-` hook used `__FILE__` instead of `plugin_basename( __FILE__ )`, and the notice text was read from an array key with a trailing space (Thanks @thisismyurl!)
-  * Fix: The `ANTISPAM_BEE_LOG_FILE` guard now rejects every invalid path `validate_file()` reports instead of only directory traversal, and validates the path before checking whether it is writable (Thanks @thisismyurl!)
-  * Fix: `_is_mobile()` returns a boolean again instead of the raw `strpos()` result (Thanks @thisismyurl!)
-  * Tweak: Use `wp_get_word_count_type()` when it is available (WordPress 6.2 and newer) to determine the word count type
+  * Enhancement: New filter to change the styles of the honeypot field
+  * Fix: Escape the URL of the settings link (Thanks @thisismyurl!)
+  * Fix: Strip tags in the spam notification email the WordPress way (Thanks @thisismyurl!)
+  * Fix: Show the plugin update notice again (Thanks @thisismyurl!)
+  * Fix: Reject more invalid paths for the spam log file (Thanks @thisismyurl!)
+  * Fix: Return a boolean from the mobile theme check (Thanks @thisismyurl!)
+  * Tweak: Use the WordPress function for the word count type
   * Maintenance: Tested up to WordPress 7.1
 
 * **Deutsch**
-  * Verbesserung: Neuer Filter `antispam_bee_honeypot_styles`, um die Inline-Styles des Honeypot-Feldes anzupassen — mit einem leeren Wert lassen sich die Styles stattdessen aus einer Datei laden, falls die Website eine strikte CSP verwendet
-  * Fix: Einstellungs-Link-URL mit `esc_url()` maskieren (Refs #534) (Danke @thisismyurl!)
-  * Fix: `strip_tags()` durch `wp_strip_all_tags()` für WordPress-konformes Entfernen von Tags im Spam-Benachrichtigungs-E-Mail-Body ersetzen (Refs #534) (Danke @thisismyurl!)
-  * Fix: Der Update-Hinweis des Plugins wird wieder angezeigt — der Hook `in_plugin_update_message-` nutzte `__FILE__` statt `plugin_basename( __FILE__ )`, und der Hinweistext wurde aus einem Array-Schlüssel mit angehängtem Leerzeichen gelesen (Danke @thisismyurl!)
-  * Fix: Die Prüfung von `ANTISPAM_BEE_LOG_FILE` weist nun jeden von `validate_file()` gemeldeten ungültigen Pfad zurück statt nur Directory Traversal und prüft den Pfad, bevor die Schreibbarkeit geprüft wird (Danke @thisismyurl!)
-  * Fix: `_is_mobile()` gibt wieder einen booleschen Wert zurück statt des rohen `strpos()`-Ergebnisses (Danke @thisismyurl!)
-  * Tweak: `wp_get_word_count_type()` wird genutzt, sofern verfügbar (WordPress 6.2 und neuer), um den Typ der Wortzählung zu ermitteln
+  * Verbesserung: Neuer Filter, um die Styles des Honeypot-Feldes anzupassen
+  * Fix: Die URL des Einstellungs-Links wird maskiert (Danke @thisismyurl!)
+  * Fix: Tags in der Spam-Benachrichtigungs-E-Mail werden WordPress-konform entfernt (Danke @thisismyurl!)
+  * Fix: Der Update-Hinweis des Plugins wird wieder angezeigt (Danke @thisismyurl!)
+  * Fix: Mehr ungültige Pfade für die Spam-Log-Datei werden abgelehnt (Danke @thisismyurl!)
+  * Fix: Die Prüfung auf mobile Themes gibt einen booleschen Wert zurück (Danke @thisismyurl!)
+  * Tweak: Die WordPress-Funktion für den Typ der Wortzählung wird genutzt
   * Wartung: Getestet mit WordPress 7.1
 
 

@@ -99,13 +99,13 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 ## Changelog ##
 
 ### 2.11.13 ###
-  * Enhancement: New `antispam_bee_honeypot_styles` filter to change the inline styles of the honeypot field — set it to an empty string and load the styles from a file instead if the site uses a strict CSP
-  * Fix: Escape settings action link URL with `esc_url()` (Refs #534) (Thanks @thisismyurl!)
-  * Fix: Replace `strip_tags()` with `wp_strip_all_tags()` for WordPress-consistent tag stripping in spam notification email body (Refs #534) (Thanks @thisismyurl!)
-  * Fix: The plugin update notice is shown again — the `in_plugin_update_message-` hook used `__FILE__` instead of `plugin_basename( __FILE__ )`, and the notice text was read from an array key with a trailing space (Thanks @thisismyurl!)
-  * Fix: The `ANTISPAM_BEE_LOG_FILE` guard now rejects every invalid path `validate_file()` reports instead of only directory traversal, and validates the path before checking whether it is writable (Thanks @thisismyurl!)
-  * Fix: `_is_mobile()` returns a boolean again instead of the raw `strpos()` result (Thanks @thisismyurl!)
-  * Tweak: Use `wp_get_word_count_type()` when it is available (WordPress 6.2 and newer) to determine the word count type
+  * Enhancement: New filter to change the styles of the honeypot field
+  * Fix: Escape the URL of the settings link (Thanks @thisismyurl!)
+  * Fix: Strip tags in the spam notification email the WordPress way (Thanks @thisismyurl!)
+  * Fix: Show the plugin update notice again (Thanks @thisismyurl!)
+  * Fix: Reject more invalid paths for the spam log file (Thanks @thisismyurl!)
+  * Fix: Return a boolean from the mobile theme check (Thanks @thisismyurl!)
+  * Tweak: Use the WordPress function for the word count type
   * Maintenance: Tested up to WordPress 7.1
 
 ### 2.11.12 ###
