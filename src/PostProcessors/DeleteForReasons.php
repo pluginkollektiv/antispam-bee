@@ -7,6 +7,8 @@
 
 namespace AntispamBee\PostProcessors;
 
+use AntispamBee\Admin\Fields\FieldBuilder;
+use AntispamBee\Admin\Fields\FieldOptions;
 use AntispamBee\Handlers\Rules;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
@@ -78,7 +80,7 @@ class DeleteForReasons extends ControllableBase {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array<int, array<string, mixed>> The post-processor options.
+	 * @return array<int, FieldOptions> The post-processor options.
 	 * @throws ReflectionException
 	 */
 	public static function get_options(): array {
@@ -94,16 +96,16 @@ class DeleteForReasons extends ControllableBase {
 				$checkbox_options[ $rule::get_slug() ] = $rule::get_name();
 			}
 
-			$options[] = [
-				'valid_for'   => $reaction_type,
-				'label'       => __( 'Reasons', 'antispam-bee' ),
-				'type'        => 'checkbox-group',
-				'options'     => $checkbox_options,
-				'option_name' => 'reasons',
-				'sanitize'    => function ( $value ) use ( $checkbox_options ) {
-					return Sanitize::checkbox_group( $value, $checkbox_options );
-				},
-			];
+			$options[] = FieldBuilder::checkbox_group()
+				->valid_for( $reaction_type )
+				->label( __( 'Reasons', 'antispam-bee' ) )
+				->choices( $checkbox_options )
+				->option_name( 'reasons' )
+				->sanitize(
+					function ( $value ) use ( $checkbox_options ) {
+						return Sanitize::checkbox_group( $value, $checkbox_options );
+					}
+				);
 		}
 
 		return $options;

@@ -7,6 +7,8 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Admin\Fields\FieldBuilder;
+use AntispamBee\Admin\Fields\FieldOptions;
 use AntispamBee\Helpers\IpHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
@@ -225,54 +227,54 @@ class CountrySpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get the options.
+	 * Get the rules options.
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array<int, array<string, mixed>> The rule options.
+	 * @return array<int, FieldOptions> The rules options.
 	 */
 	public static function get_options(): array {
 		$iso_codes_link = 'https://www.iso.org/obp/ui/#search/code/';
+		$label_kses     = [
+			'a' => [
+				'href'   => true,
+				'target' => true,
+			],
+		];
 
 		return [
-			[
-				'type'        => 'textarea',
-				'label'       => sprintf( /* translators: 1=opening link tag to ISO codes list, 2=closing link tag. */
-					__( 'Denied %1$sISO country codes%2$s for this option.', 'antispam-bee' ),
-					"<a href='{$iso_codes_link}' target='_blank'>",
-					'</a>'
+			FieldBuilder::textarea()
+				->label(
+					sprintf( /* translators: 1=opening link tag to ISO codes list, 2=closing link tag. */
+						__( 'Denied %1$sISO country codes%2$s for this option.', 'antispam-bee' ),
+						"<a href='{$iso_codes_link}' target='_blank'>",
+						'</a>'
+					)
+				)
+				->label_kses( $label_kses )
+				->placeholder( __( 'e.g. BF, SG, YE', 'antispam-bee' ) )
+				->option_name( 'denied' )
+				->sanitize(
+					function ( $value ) {
+						return self::sanitize_iso_codes_string( $value );
+					}
 				),
-				'label_kses'  => [
-					'a' => [
-						'href'   => true,
-						'target' => true,
-					],
-				],
-				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
-				'option_name' => 'denied',
-				'sanitize'    => function ( $value ) {
-					return self::sanitize_iso_codes_string( $value );
-				},
-			],
-			[
-				'type'        => 'textarea',
-				'label'       => sprintf( /* translators: 1=opening link tag to ISO codes list, 2=closing link tag. */
-					__( 'Allowed %1$sISO country codes%2$s for this option.', 'antispam-bee' ),
-					"<a href='{$iso_codes_link}' target='_blank'>",
-					'</a>'
+			FieldBuilder::textarea()
+				->label(
+					sprintf( /* translators: 1=opening link tag to ISO codes list, 2=closing link tag. */
+						__( 'Allowed %1$sISO country codes%2$s for this option.', 'antispam-bee' ),
+						"<a href='{$iso_codes_link}' target='_blank'>",
+						'</a>'
+					)
+				)
+				->label_kses( $label_kses )
+				->placeholder( __( 'e.g. BF, SG, YE', 'antispam-bee' ) )
+				->option_name( 'allowed' )
+				->sanitize(
+					function ( $value ) {
+						return self::sanitize_iso_codes_string( $value );
+					}
 				),
-				'label_kses'  => [
-					'a' => [
-						'href'   => true,
-						'target' => true,
-					],
-				],
-				'placeholder' => __( 'e.g. BF, SG, YE', 'antispam-bee' ),
-				'option_name' => 'allowed',
-				'sanitize'    => function ( $value ) {
-					return self::sanitize_iso_codes_string( $value );
-				},
-			],
 		];
 	}
 

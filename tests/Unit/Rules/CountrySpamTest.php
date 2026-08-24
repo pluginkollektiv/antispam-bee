@@ -283,9 +283,10 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	public function test_the_country_list_sanitizers_discard_a_value_that_is_not_a_string(): void {
 		$sanitizers = [];
 		foreach ( CountrySpam::get_options() as $option ) {
-			if ( isset( $option['option_name'], $option['sanitize'] )
-				&& in_array( $option['option_name'], [ 'denied', 'allowed' ], true ) ) {
-				$sanitizers[ $option['option_name'] ] = $option['sanitize'];
+			$option_name = $option->get_option_name();
+			$sanitize    = $option->get_sanitize();
+			if ( null !== $sanitize && in_array( $option_name, [ 'denied', 'allowed' ], true ) ) {
+				$sanitizers[ $option_name ] = $sanitize;
 			}
 		}
 
