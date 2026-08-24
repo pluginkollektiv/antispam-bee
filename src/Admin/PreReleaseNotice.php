@@ -7,7 +7,6 @@
 
 namespace AntispamBee\Admin;
 
-use AntispamBee\Helpers\StringHelper;
 use const AntispamBee\MAIN_PLUGIN_FILE;
 use const AntispamBee\PLUGIN_VERSION;
 
@@ -92,27 +91,34 @@ class PreReleaseNotice {
 			self::DISMISS_ACTION
 		);
 
+		$version_label = wp_kses_post(
+			sprintf(
+				/* translators: %s: installed version, already wrapped in code tags. */
+				__( 'You are running version %s.', 'antispam-bee' ),
+				'<code>' . esc_html( PLUGIN_VERSION ) . '</code>'
+			)
+		);
+
 		printf(
-			'<div class="notice notice-warning" data-antispam-bee-pre-release-notice>' .
+			'<div class="notice notice-warning is-dismissible" data-antispam-bee-pre-release-notice data-antispam-bee-dismiss-link="%5$s">' .
 			'<p><strong>%1$s</strong></p>' .
-			'<p>%2$s <code>%3$s</code></p>' .
-			'<p>%4$s</p>' .
-			'<p><a class="button" href="%5$s" target="_blank" rel="noopener noreferrer">%6$s</a> ' .
-			'<a class="button-link" href="%7$s" data-antispam-bee-dismiss-link="%7$s">%8$s</a></p>' .
-			'<button type="button" class="notice-dismiss" data-antispam-bee-dismiss aria-label="%9$s"><span class="screen-reader-text">%9$s</span></button>' .
+			'<p>%2$s</p>' .
+			'<p>%3$s</p>' .
+			'<p><a class="button" href="%4$s" target="_blank" rel="noopener noreferrer">%6$s</a> ' .
+			'<a class="button-link" href="%5$s">%7$s</a></p>' .
 			'</div>',
 			esc_html__( 'Antispam Bee is a pre-release version', 'antispam-bee' ),
-			esc_html__( 'You are running version', 'antispam-bee' ),
-			esc_html( PLUGIN_VERSION ),
+			// The version label is sanitized by wp_kses_post() above.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$version_label,
 			esc_html__(
 				'This is a pre-release and not intended for production. Please test it and report any issues you find.',
 				'antispam-bee'
 			),
 			esc_url( self::FEEDBACK_URL ),
-			esc_html__( 'Report a bug', 'antispam-bee' ),
 			esc_url( $dismiss_url ),
-			esc_html__( 'Dismiss', 'antispam-bee' ),
-			esc_html__( 'Dismiss this notice', 'antispam-bee' )
+			esc_html__( 'Report a bug', 'antispam-bee' ),
+			esc_html__( 'Dismiss', 'antispam-bee' )
 		);
 	}
 
@@ -128,7 +134,7 @@ class PreReleaseNotice {
 
 		wp_enqueue_script(
 			'antispam-bee-pre-release-notice',
-			plugin_dir_url( MAIN_PLUGIN_FILE ) . 'assets/js/admin-notice.js',
+			plugin_dir_url( MAIN_PLUGIN_FILE ) . 'assets/js/pre-release-notice.js',
 			[ 'wp-util' ],
 			PLUGIN_VERSION,
 			true
@@ -152,7 +158,7 @@ class PreReleaseNotice {
 	 * @return bool Whether to show the notice.
 	 */
 	private static function should_show( string $hook_suffix ): bool {
-		if ( ! StringHelper::is_pre_release( PLUGIN_VERSION ) ) {
+		if ( ! self::is_pre_release( PLUGIN_VERSION ) ) {
 			return false;
 		}
 
@@ -164,33 +170,61 @@ class PreReleaseNotice {
 			return false;
 		}
 
-		return false === (bool) get_user_meta( get_current_user_id(), self::DISMISSED_META_KEY, true );
+		return get_user_meta( get_current_user_id(), self::DISMISSED_META_KEY, true ) !== PLUGIN_VERSION;
+	}
+
+	/**
+	 * Whether a plugin version string marks a pre-release.
+	 *
+	 * A version is a pre-release if the measured number is followed by a
+	 * semantic versioning pre-release suffix, e.g. `3.0.0-RC.1` or
+	 * `3.0.0-beta.2`. The stable `3.0.0` has no such suffix. Build metadata
+	 * after the pre-release suffix, e.g. `3.0.0-beta.2+build`, still marks a
+	 * pre-release.
+	 *
+	 * @param string $version The version string.
+	 *
+	 * @return bool Whether the version is a pre-release.
+	 */
+	public static function is_pre_release( string $version ): bool {
+		return 1 === preg_match( '/^[0-9]+(?:\.[0-9]+){0,2}-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/', $version );
 	}
 
 	/**
 	 * Persist the dismissal, then acknowledge an AJAX request or redirect.
 	 *
-	 * Both `wp_send_json_success()` and the redirect end the request, so the
-	 * non-AJAX branch is the only one that reaches the redirect and `exit`.
+	 * `wp_send_json_success()` ends an AJAX request, so the non-AJAX branch is
+	 * the only one that reaches the redirect and `exit`.
 	 */
 	public static function handle_dismiss(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to do this.', 'antispam-bee' ), 403 );
+			$message = esc_html__( 'You do not have permission to do this.', 'antispam-bee' );
+
+			if ( wp_doing_ajax() ) {
+				wp_send_json_error( $message, 403 );
+			}
+
+			// The message is escaped by esc_html__() above.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			wp_die( $message, '', 403 );
 		}
 
 		$is_ajax = wp_doing_ajax();
 
 		if ( $is_ajax ) {
 			check_ajax_referer( self::DISMISS_ACTION );
-			update_user_meta( get_current_user_id(), self::DISMISSED_META_KEY, 1 );
-			wp_send_json_success();
 		} else {
 			check_admin_referer( self::DISMISS_ACTION );
-			update_user_meta( get_current_user_id(), self::DISMISSED_META_KEY, 1 );
-
-			wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url() );
-
-			exit;
 		}
+
+		update_user_meta( get_current_user_id(), self::DISMISSED_META_KEY, PLUGIN_VERSION );
+
+		if ( $is_ajax ) {
+			wp_send_json_success();
+		}
+
+		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url() );
+
+		exit;
 	}
 }

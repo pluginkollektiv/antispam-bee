@@ -22,16 +22,21 @@ class PreReleaseNoticeTest extends TestCase {
 	 * @param bool $can_manage Whether the mock user may manage options.
 	 * @param bool $dismissed  Whether the mock user dismissed the notice.
 	 */
-	private function mock_dependencies( bool $can_manage = true, bool $dismissed = false ): void {
+	private function mock_dependencies( bool $can_manage = true, ?string $dismissed_version = null ): void {
 		when( 'esc_html' )->returnArg();
 		when( 'esc_url' )->returnArg();
+		when( 'wp_kses_post' )->returnArg();
 		when( 'wp_nonce_url' )->returnArg();
 		when( 'admin_url' )->returnArg();
 		when( 'current_user_can' )->justReturn( $can_manage );
 		when( 'get_current_user_id' )->justReturn( 1 );
 		when( 'get_user_meta' )->alias(
-			static function ( $id, $key ) use ( $dismissed ) {
-				return $key === PreReleaseNotice::DISMISSED_META_KEY ? $dismissed : false;
+			static function ( $id, $key ) use ( $dismissed_version ) {
+				if ( $key !== PreReleaseNotice::DISMISSED_META_KEY ) {
+					return false;
+				}
+
+				return null === $dismissed_version ? '' : $dismissed_version;
 			}
 		);
 		when( 'plugin_dir_url' )->returnArg();
@@ -95,19 +100,19 @@ class PreReleaseNoticeTest extends TestCase {
 	public function test_renders_on_the_settings_page(): void {
 		self::mock_dependencies();
 
-		self::assertStringContainsString(
-			'pre-release',
-			self::render_for( 'settings_page_antispam_bee' )
-		);
+		$output = self::render_for( 'settings_page_antispam_bee' );
+
+		self::assertStringContainsString( 'pre-release', $output );
+		self::assertStringContainsString( 'is-dismissible', $output );
+		self::assertStringContainsString( '<code>3.0.0-beta.2</code>', $output );
+		self::assertStringNotContainsString( 'data-antispam-bee-dismiss ', $output );
+		self::assertStringNotContainsString( '<button type="button" class="notice-dismiss"', $output );
 	}
 
 	public function test_renders_on_the_plugins_list(): void {
 		self::mock_dependencies();
 
-		self::assertStringContainsString(
-			'pre-release',
-			self::render_for( 'plugins.php' )
-		);
+		self::assertStringContainsString( 'pre-release', self::render_for( 'plugins.php' ) );
 	}
 
 	public function test_renders_using_the_global_hook_suffix(): void {
@@ -154,10 +159,16 @@ class PreReleaseNoticeTest extends TestCase {
 		self::assertSame( '', self::render_for( 'plugins.php' ) );
 	}
 
-	public function test_does_not_render_when_dismissed_by_the_user(): void {
-		self::mock_dependencies( true, true );
+	public function test_does_not_render_when_dismissed_for_the_installed_version(): void {
+		self::mock_dependencies( true, '3.0.0-beta.2' );
 
 		self::assertSame( '', self::render_for( 'plugins.php' ) );
+	}
+
+	public function test_renders_again_for_a_newer_prerelease_version(): void {
+		self::mock_dependencies( true, '3.0.0-RC.1' );
+
+		self::assertStringContainsString( 'pre-release', self::render_for( 'plugins.php' ) );
 	}
 
 	public function test_enqueues_assets_on_the_plugins_list(): void {
@@ -207,12 +218,18 @@ class PreReleaseNoticeTest extends TestCase {
 		when( 'wp_send_json_success' )->alias(
 			static function () use ( &$sent ) {
 				$sent = true;
+
+				throw new RuntimeException( '__ANTISPAM_BEE_EXPECTED_HALT__' );
 			}
 		);
 
-		PreReleaseNotice::handle_dismiss();
+		self::assert_and_terminates(
+			static function () {
+				PreReleaseNotice::handle_dismiss();
+			}
+		);
 
-		self::assertSame( [ [ 1, PreReleaseNotice::DISMISSED_META_KEY, 1 ] ], $updated );
+		self::assertSame( [ [ 1, PreReleaseNotice::DISMISSED_META_KEY, \AntispamBee\PLUGIN_VERSION ] ], $updated );
 		self::assertTrue( $sent, 'The AJAX request must be acknowledged' );
 	}
 
@@ -243,13 +260,37 @@ class PreReleaseNoticeTest extends TestCase {
 			}
 		);
 
-		self::assertSame( [ [ 1, PreReleaseNotice::DISMISSED_META_KEY, 1 ] ], $updated );
+		self::assertSame( [ [ 1, PreReleaseNotice::DISMISSED_META_KEY, \AntispamBee\PLUGIN_VERSION ] ], $updated );
 		self::assertSame( 'https://example.com/wp-admin/plugins.php', $target );
 	}
 
-	public function test_handle_dismiss_denies_without_capability(): void {
+	public function test_handle_dismiss_denies_ajax_without_capability(): void {
 		self::mock_dependencies( false );
 		when( 'wp_doing_ajax' )->justReturn( true );
+
+		$captured = null;
+		when( 'wp_send_json_error' )->alias(
+			static function ( ...$args ) use ( &$captured ) {
+				$captured = $args;
+
+				throw new RuntimeException( '__ANTISPAM_BEE_EXPECTED_HALT__' );
+			}
+		);
+
+		self::assert_and_terminates(
+			static function () {
+				PreReleaseNotice::handle_dismiss();
+			}
+		);
+
+		self::assertNotNull( $captured, 'The handler must refuse users without the capability' );
+		self::assertCount( 2, $captured );
+		self::assertSame( 403, $captured[1], 'The AJAX denial must carry an HTTP 403 status' );
+	}
+
+	public function test_handle_dismiss_denies_form_request_without_capability(): void {
+		self::mock_dependencies( false );
+		when( 'wp_doing_ajax' )->justReturn( false );
 
 		$captured = null;
 		self::stub_terminator( 'wp_die', static function ( ...$args ) use ( &$captured ) {
@@ -263,6 +304,41 @@ class PreReleaseNoticeTest extends TestCase {
 		);
 
 		self::assertNotNull( $captured, 'The handler must refuse users without the capability' );
-		self::assertSame( 403, $captured[1] );
+		self::assertCount( 3, $captured );
+		self::assertSame( '', $captured[1], 'The page title must be an empty string' );
+		self::assertSame( 403, $captured[2], 'The non-AJAX denial must carry an HTTP 403 status' );
+	}
+
+	/**
+	 * Data provider for pre-release detection.
+	 *
+	 * @return array<string, array{string, bool}>
+	 */
+	public static function data_is_pre_release(): array {
+		return [
+			'stable 3.0.0'            => [ '3.0.0', false ],
+			'stable 1.2.3'            => [ '1.2.3', false ],
+			'stable with prefix'      => [ 'v2.11.13', false ],
+			'rc suffix'               => [ '3.0.0-RC.1', true ],
+			'beta suffix'             => [ '3.0.0-beta.2', true ],
+			'alpha suffix'            => [ '3.0.0-alpha', true ],
+			'mixed case suffix'       => [ '3.0.0-Rc1', true ],
+			'build metadata'          => [ '3.0.0-beta.2+build', true ],
+			'empty string'            => [ '', false ],
+			'not a version'           => [ 'foo', false ],
+			'suffix without number'   => [ '-beta', false ],
+		];
+	}
+
+	/**
+	 * Test is_pre_release() against a range of version strings.
+	 *
+	 * @param string $version Version string.
+	 * @param bool   $expected Expected result.
+	 *
+	 * @dataProvider data_is_pre_release
+	 */
+	public function test_is_pre_release( string $version, bool $expected ): void {
+		self::assertSame( $expected, PreReleaseNotice::is_pre_release( $version ) );
 	}
 }
