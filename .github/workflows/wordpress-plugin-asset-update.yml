@@ -3,6 +3,14 @@ on:
   push:
     branches:
     - master
+
+# The upload authenticates against the wordpress.org SVN repository with its own
+# credentials and never touches the GitHub API, so the job token needs nothing
+# beyond reading the checkout. Declared explicitly because this is one of the two
+# jobs that carries real credentials in its environment.
+permissions:
+  contents: read
+
 jobs:
   master:
     name: Push to master
@@ -10,6 +18,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
     - name: Setup PHP and install dependencies
       uses: ./.github/actions/setup-php
       with:

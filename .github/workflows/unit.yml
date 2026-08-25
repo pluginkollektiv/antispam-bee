@@ -32,6 +32,12 @@ on:
   # Allow forcing a full run by hand, for example before cutting a release.
   workflow_dispatch:
 
+# The jobs only read the checkout and run the suite, so nothing beyond read access
+# is needed. Declared explicitly so it stays restricted even if the repository
+# default token permission is widened later.
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -44,6 +50,8 @@ jobs:
         php-versions: ['8.5', '7.4']
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
     - name: Setup PHP and install dependencies
       uses: ./.github/actions/setup-php
       with:
