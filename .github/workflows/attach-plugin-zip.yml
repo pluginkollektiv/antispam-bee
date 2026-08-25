@@ -56,7 +56,8 @@ jobs:
         # The archive ships `vendor/autoload.php` and `vendor/composer/`, so the
         # autoloader inside it has to be the production one. `vendor/` is not committed,
         # so this step is what puts it there in the first place.
-        uses: ./.github/actions/setup-php
+        # See the `self-repository` note on the `workflows` job in static-analysis.yml.
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.3'
           tools: 'composer, wp-cli'

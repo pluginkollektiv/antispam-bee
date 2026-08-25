@@ -91,7 +91,8 @@ jobs:
         echo "php-version=${php_version}" >> "$GITHUB_OUTPUT"
     # The dev dependencies are required: the suite runs through PHPUnit.
     - name: Setup PHP and install dependencies
-      uses: ./.github/actions/setup-php
+      # See the `self-repository` note on the `workflows` job in static-analysis.yml.
+      uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
       with:
         php-version: ${{ steps.wp-env.outputs.php-version }}
     # Provides WordPress, the database and the WordPress PHPUnit test library.

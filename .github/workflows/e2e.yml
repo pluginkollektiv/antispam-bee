@@ -92,7 +92,8 @@ jobs:
     - name: Install Playwright browsers
       run: npx playwright install chromium --with-deps
     - name: Setup PHP and install dependencies
-      uses: ./.github/actions/setup-php
+      # See the `self-repository` note on the `workflows` job in static-analysis.yml.
+      uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
       with:
         php-version: ${{ matrix.php }}
         composer-flags: '--no-dev --optimize-autoloader'
