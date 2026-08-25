@@ -43,8 +43,7 @@ runs:
       # runs with access to the job. The trailing comment records which release the hash
       # is, since a bare hash says nothing about how old the pin is.
       #
-      # Note there is no Dependabot coverage for GitHub Actions in this repository yet, so
-      # this pin has to be advanced by hand until there is.
+      # Dependabot advances the hash and the release comment; see `.github/dependabot.yml`.
       uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
       with:
         php-version: ${{ inputs.php-version }}
@@ -53,4 +52,11 @@ runs:
         tools: ${{ inputs.tools }}
     - name: Install Composer dependencies
       shell: bash
-      run: composer install ${{ inputs.composer-flags }}
+      # Through the environment rather than spliced into the command: an expression is
+      # expanded before the shell ever sees the line, so it would be executed as code
+      # rather than read as an argument. Unquoted on purpose — the flags are several
+      # words (`--no-dev --optimize-autoloader`) and have to split into several
+      # arguments; word splitting is all that happens to an environment variable.
+      env:
+        COMPOSER_FLAGS: ${{ inputs.composer-flags }}
+      run: composer install $COMPOSER_FLAGS

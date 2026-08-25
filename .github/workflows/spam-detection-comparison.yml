@@ -92,6 +92,11 @@ on:
         required: false
         default: '1G'
 
+# No job here runs with the workflow default: `compare` declares the permissions it
+# actually needs itself. An empty block means a job added later starts with no token
+# access until it asks for what it needs.
+permissions: {}
+
 jobs:
   compare:
     runs-on: ubuntu-latest
@@ -128,6 +133,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0        # full history/tags for baseline resolution
 
       # Sets ASB_CORPUS_READY so a missing URL degrades to the bundled fixture
@@ -142,7 +148,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "${ENC_URL:-}" ] || [ -z "${ASB_CORPUS_KEY:-}" ]; then
-            echo "::notice::No '${{ env.ASB_CORPUS }}' corpus configured; using the bundled fixture."
+            echo "::notice::No '$ASB_CORPUS' corpus configured; using the bundled fixture."
             echo "ASB_CORPUS_READY=false" >> "$GITHUB_ENV"
             exit 0
           fi
@@ -237,6 +243,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PR: ${{ inputs.comment_pr }}
+          REPO: ${{ github.repository }}
           REPORT: ${{ steps.compare.outputs.report-markdown }}
         run: |
           set -euo pipefail
@@ -250,11 +257,11 @@ jobs:
           fi
 
           # Reuse our own previous comment when there is one.
-          existing="$(gh api "repos/${{ github.repository }}/issues/$PR/comments" --paginate \
+          existing="$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
             --jq 'map(select(.body | contains("<!-- asb-detection-compare -->"))) | last | .id // empty')"
 
           if [ -n "$existing" ]; then
-            gh api --method PATCH "repos/${{ github.repository }}/issues/comments/$existing" \
+            gh api --method PATCH "repos/$REPO/issues/comments/$existing" \
               -F body=@"$REPORT" >/dev/null
             echo "Updated comment $existing on PR #$PR."
           else
