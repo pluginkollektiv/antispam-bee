@@ -39,6 +39,26 @@ pnpm deepsec export      --format md-dir --out ./findings
 `scan` is free (regex only). `process` is the AI stage (≈$0.30/file
 on Opus by default). Run state goes to `data/antispam-bee/`.
 
+## Long sweeps under a subscription session limit
+
+With `--model-auth local` the AI stage bills against the machine's `claude`
+subscription, and that has a session limit. Parallel batches exhaust it before
+any of them finish, and a batch killed mid-investigation banks nothing — a
+`--concurrency 12` sweep of 71 files produced 0 analyses and 17 failed batches.
+
+Use the driver instead. It runs one file per agent invocation, records each
+completed file, and stops cleanly the moment the limit is hit:
+
+```bash
+.deepsec/bin/sweep-one-at-a-time.sh            # until the limit stops it
+.deepsec/bin/sweep-one-at-a-time.sh --max 5    # cap the files per run
+.deepsec/bin/sweep-one-at-a-time.sh --list     # what is left
+```
+
+Exit code 2 means the session limit stopped it; re-run after the reset and it
+resumes with the files it has not reached yet. State and per-file logs live in
+`data/antispam-bee/debug/sweep/` (gitignored, absolute paths, machine-local).
+
 ## Adding another project
 
 To scan another codebase from this same `.deepsec/`:
