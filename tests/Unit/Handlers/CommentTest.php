@@ -121,7 +121,7 @@ class CommentTest extends TestCase {
 		self::assertEmpty( $processed, 'The filter should have skipped the verification' );
 		$skip_filter = null;
 
-		// An unparseable request is still flagged.
+		// An unparsable request is still flagged.
 		$processed              = [];
 		$_SERVER['SCRIPT_NAME'] = '';
 		$result                 = Comment::process( $comment );
