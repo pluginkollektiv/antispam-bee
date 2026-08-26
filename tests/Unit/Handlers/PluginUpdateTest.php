@@ -26,6 +26,13 @@ class PluginUpdateTest extends TestCase {
 	private $written_options = [];
 
 	/**
+	 * Names of the options written, in the order `update_option()` was called.
+	 *
+	 * @var string[]
+	 */
+	private $write_order = [];
+
+	/**
 	 * Reset the memoized migration state and stub the option and plugin-file functions.
 	 *
 	 * @return void
@@ -39,9 +46,12 @@ class PluginUpdateTest extends TestCase {
 		$this->written_options = [];
 
 		when( 'get_file_data' )->justReturn( [ 'Version' => '3.0.0-beta.1' ] );
+		$this->write_order = [];
+
 		when( 'update_option' )->alias(
 			function ( $name, $value ) {
 				$this->written_options[ $name ] = $value;
+				$this->write_order[]            = $name;
 
 				return true;
 			}
@@ -188,5 +198,113 @@ class PluginUpdateTest extends TestCase {
 
 		$this->assertSame( '', $comment['rule_asb_regexp_active'] );
 		$this->assertSame( 'on', $comment['rule_asb_honeypot_active'], 'The honeypot rule is always migrated as enabled.' );
+	}
+
+	/**
+	 * A legacy `translate_lang` that is still a plain string must not abort the migration.
+	 *
+	 * The option was a single value before the multiselect rework, so a 2.x install that
+	 * never re-saved its settings still holds a string here. Passing it into an `array`
+	 * parameter raised an uncaught `TypeError`.
+	 *
+	 * @return void
+	 */
+	public function test_scalar_translate_lang_does_not_abort_the_migration(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'           => [
+					'translate_lang' => 'de',
+				],
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertArrayHasKey( Settings::OPTION_NAME, $this->written_options );
+		$this->assertSame(
+			[ 'de' => 'on' ],
+			$this->written_options[ Settings::OPTION_NAME ]['comment']['rule_asb_lang_spam_allowed'],
+			'A single legacy language is migrated as one selected value.'
+		);
+	}
+
+	/**
+	 * A legacy `ignore_reasons` that is still a plain string must migrate through the mapping.
+	 *
+	 * @return void
+	 */
+	public function test_scalar_ignore_reasons_does_not_abort_the_migration(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'           => [
+					'ignore_reasons' => 'css',
+				],
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame(
+			[ 'asb-honeypot' => 'on' ],
+			$this->written_options[ Settings::OPTION_NAME ]['comment']['post_processor_asb_delete_for_reasons_reasons'],
+			'The legacy reason slug is mapped to its 3.0 equivalent.'
+		);
+	}
+
+	/**
+	 * An empty legacy multiselect value must migrate to an empty selection, not to an empty key.
+	 *
+	 * @return void
+	 */
+	public function test_empty_scalar_multiselect_migrates_to_an_empty_selection(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'           => [
+					'translate_lang' => '',
+				],
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame(
+			[],
+			$this->written_options[ Settings::OPTION_NAME ]['comment']['rule_asb_lang_spam_allowed']
+		);
+	}
+
+	/**
+	 * The database version must be raised only after the migrated options were written.
+	 *
+	 * Raising it first means a migration that aborts is never retried while the new option
+	 * was never written, so the site silently falls back to the defaults.
+	 *
+	 * @return void
+	 */
+	public function test_db_version_is_raised_after_the_options_were_written(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'           => [
+					'regexp_check' => 1,
+				],
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$options_position = array_search( Settings::OPTION_NAME, $this->write_order, true );
+		$version_position = array_search( PluginUpdate::DB_VERSION_OPTION_NAME, $this->write_order, true );
+
+		$this->assertNotFalse( $options_position, 'The migrated options were written.' );
+		$this->assertNotFalse( $version_position, 'The database version was written.' );
+		$this->assertGreaterThan(
+			$options_position,
+			$version_position,
+			'The database version is raised after the migrated options, so an aborted migration is retried.'
+		);
 	}
 }
