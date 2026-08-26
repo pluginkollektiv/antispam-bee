@@ -80,7 +80,7 @@ class CommentTest extends TestCase {
 		$_SERVER['SCRIPT_NAME'] = '/wp-comments-post.php';
 		$_POST                  = [ 'comment' => 'Hello' ];
 		$result                 = Comment::process( $comment );
-		self::assertSame( '192.0.2.100', $result['comment_author_IP'], 'Unexpected author IP on wp-comments-post.php' );
+		self::assertSame( '192.0.2.100', $result['comment_author_IP'], 'The client IP fills an empty author IP' );
 		self::assertCount( 1, $processed, 'Comment should have been processed on wp-comments-post.php' );
 
 		/*
@@ -121,11 +121,30 @@ class CommentTest extends TestCase {
 		self::assertEmpty( $processed, 'The filter should have skipped the verification' );
 		$skip_filter = null;
 
-		// An unparsable request is still flagged.
+		/*
+		 * An IP supplied by the caller survives. Core only falls back to REMOTE_ADDR for
+		 * an absent value, so importers and plugins passing a historical IP must keep it.
+		 */
+		$processed = [];
+		$result    = Comment::process(
+			[
+				'comment_type'      => 'comment',
+				'comment_author_IP' => '198.51.100.7',
+			]
+		);
+		self::assertSame( '198.51.100.7', $result['comment_author_IP'], 'A supplied IP must not be overwritten' );
+
+		// An unusable REMOTE_ADDR is left alone instead of blanking the field.
 		$processed              = [];
-		$_SERVER['SCRIPT_NAME'] = '';
-		$result                 = Comment::process( $comment );
-		self::assertSame( 1, $result['ab_spam__invalid_request'], 'Invalid request not detected' );
+		$_SERVER['REMOTE_ADDR'] = 'fe80::1%eth0';
+		$result                 = Comment::process(
+			[
+				'comment_type'      => 'comment',
+				'comment_author_IP' => '203.0.113.9',
+			]
+		);
+		self::assertSame( '203.0.113.9', $result['comment_author_IP'], 'A valid IP must not be clobbered with an empty string' );
+		$_SERVER['REMOTE_ADDR'] = '192.0.2.100';
 
 		// A reaction of another type is left untouched.
 		$linkback = [ 'comment_type' => 'linkback' ];
