@@ -60,17 +60,25 @@ class Comment extends Reaction {
 			return $reaction;
 		}
 
-		$reaction['comment_author_IP'] = IpHelper::get_client_ip();
-
-		$request_uri  = isset( $_SERVER['SCRIPT_NAME'] ) ? esc_url_raw( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) : '';
-		$request_path = DataHelper::parse_url( $request_uri, 'path' );
-
-		if ( empty( $request_path ) ) {
-			$reaction['ab_spam__invalid_request'] = 1;
-		}
-
 		if ( self::skip_verification( $reaction ) ) {
 			return $reaction;
+		}
+
+		/*
+		 * Only filled in when the caller did not supply one. Core does the same
+		 * (`wp_new_comment()` falls back to REMOTE_ADDR only for an absent value), so
+		 * importers, migrations and plugins that pass a historical or explicit IP keep
+		 * it. An unusable REMOTE_ADDR is left alone rather than written back as an
+		 * empty string: `IpHelper::get_client_ip()` returns '' for anything
+		 * `FILTER_VALIDATE_IP` rejects, such as a zone-scoped IPv6 address, and storing
+		 * that would drop an IP core would have kept.
+		 */
+		if ( empty( $reaction['comment_author_IP'] ) ) {
+			$client_ip = IpHelper::get_client_ip();
+
+			if ( '' !== $client_ip ) {
+				$reaction['comment_author_IP'] = $client_ip;
+			}
 		}
 
 		parent::process( $reaction );
