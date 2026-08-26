@@ -189,4 +189,80 @@ class PluginUpdateTest extends TestCase {
 		$this->assertSame( '', $comment['rule_asb_regexp_active'] );
 		$this->assertSame( 'on', $comment['rule_asb_honeypot_active'], 'The honeypot rule is always migrated as enabled.' );
 	}
+
+	/**
+	 * A legacy `translate_lang` that is still a plain string must not abort the migration.
+	 *
+	 * The option was a single value before the multiselect rework, so a 2.x install that
+	 * never re-saved its settings still holds a string here. Passing it into an `array`
+	 * parameter raised an uncaught `TypeError`.
+	 *
+	 * @return void
+	 */
+	public function test_scalar_translate_lang_does_not_abort_the_migration(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'           => [
+					'translate_lang' => 'de',
+				],
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertArrayHasKey( Settings::OPTION_NAME, $this->written_options );
+		$this->assertSame(
+			[ 'de' => 'on' ],
+			$this->written_options[ Settings::OPTION_NAME ]['comment']['rule_asb_lang_spam_allowed'],
+			'A single legacy language is migrated as one selected value.'
+		);
+	}
+
+	/**
+	 * A legacy `ignore_reasons` that is still a plain string must migrate through the mapping.
+	 *
+	 * @return void
+	 */
+	public function test_scalar_ignore_reasons_does_not_abort_the_migration(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'           => [
+					'ignore_reasons' => 'css',
+				],
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame(
+			[ 'asb-honeypot' => 'on' ],
+			$this->written_options[ Settings::OPTION_NAME ]['comment']['post_processor_asb_delete_for_reasons_reasons'],
+			'The legacy reason slug is mapped to its 3.0 equivalent.'
+		);
+	}
+
+	/**
+	 * An empty legacy multiselect value must migrate to an empty selection, not to an empty key.
+	 *
+	 * @return void
+	 */
+	public function test_empty_scalar_multiselect_migrates_to_an_empty_selection(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'           => [
+					'translate_lang' => '',
+				],
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame(
+			[],
+			$this->written_options[ Settings::OPTION_NAME ]['comment']['rule_asb_lang_spam_allowed']
+		);
+	}
 }

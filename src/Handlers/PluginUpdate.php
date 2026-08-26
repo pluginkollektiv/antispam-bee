@@ -268,16 +268,52 @@ class PluginUpdate {
 	}
 
 	/**
+	 * Normalize a legacy multiselect option into a list of non-empty strings.
+	 *
+	 * These options were single-value settings before the multiselect rework, so a
+	 * 2.x install that never re-saved its settings can still hold a plain string
+	 * (`'translate_lang' => 'de'`) or an empty string where an array is expected.
+	 * PHP does not coerce a scalar into an `array` parameter even in weak mode, so
+	 * such a value used to raise an uncaught `TypeError`. 2.x itself cast at every
+	 * read site; this restores that tolerance.
+	 *
+	 * @param mixed $values Raw legacy option value.
+	 *
+	 * @return string[] Normalized list of selected values.
+	 */
+	private static function normalize_multiselect_values( $values ): array {
+		if ( ! is_array( $values ) ) {
+			$values = is_scalar( $values ) ? [ $values ] : [];
+		}
+
+		$normalized = [];
+		foreach ( $values as $value ) {
+			if ( ! is_scalar( $value ) ) {
+				continue;
+			}
+
+			$value = (string) $value;
+			if ( '' !== $value ) {
+				$normalized[] = $value;
+			}
+		}
+
+		return $normalized;
+	}
+
+	/**
 	 * Convert multiselect values.
 	 * Takes an array of selected keys, applies optional mapping and generates a new array using
 	 * these values as keys and "on" as value.
 	 *
-	 * @param string[]                   $values  Selected values.
+	 * @param mixed                      $values  Selected values, in whatever shape the legacy option holds.
 	 * @param array<string, string|null> $mapping Key mapping (optional).
 	 *
 	 * @return array<string, string> Converted array of selected options.
 	 */
-	private static function convert_multiselect_values( array $values, array $mapping = [] ): array {
+	private static function convert_multiselect_values( $values, array $mapping = [] ): array {
+		$values = self::normalize_multiselect_values( $values );
+
 		if ( empty( $values ) ) {
 			return $values;
 		}
