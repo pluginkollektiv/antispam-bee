@@ -26,6 +26,20 @@ class PluginUpdateTest extends TestCase {
 	private $written_options = [];
 
 	/**
+	 * Options removed via `delete_option()`.
+	 *
+	 * @var string[]
+	 */
+	private $deleted_options = [];
+
+	/**
+	 * The simulated option store that `get_option()` reads from.
+	 *
+	 * @var array<string, mixed>
+	 */
+	private $stored_options = [];
+
+	/**
 	 * Reset the memoized migration state and stub the option and plugin-file functions.
 	 *
 	 * @return void
@@ -36,12 +50,31 @@ class PluginUpdateTest extends TestCase {
 		$this->reset_static( 'db_update_triggered', false );
 		$this->reset_static( 'db_version_is_current', null );
 
+		FailingPluginUpdate::$calls             = 0;
+		FailingPluginUpdate::$state_during_call = null;
+
 		$this->written_options = [];
+		$this->deleted_options = [];
+		$this->stored_options  = [];
 
 		when( 'get_file_data' )->justReturn( [ 'Version' => '3.0.0-beta.1' ] );
+		when( 'get_option' )->alias(
+			function ( $name, $default = false ) {
+				return array_key_exists( $name, $this->stored_options ) ? $this->stored_options[ $name ] : $default;
+			}
+		);
 		when( 'update_option' )->alias(
 			function ( $name, $value ) {
 				$this->written_options[ $name ] = $value;
+				$this->stored_options[ $name ]  = $value;
+
+				return true;
+			}
+		);
+		when( 'delete_option' )->alias(
+			function ( $name ) {
+				$this->deleted_options[] = $name;
+				unset( $this->stored_options[ $name ] );
 
 				return true;
 			}
@@ -63,18 +96,14 @@ class PluginUpdateTest extends TestCase {
 	}
 
 	/**
-	 * Stub `get_option()` with a fixed set of stored options.
+	 * Seed the simulated option store.
 	 *
 	 * @param array<string, mixed> $stored Option values keyed by option name.
 	 *
 	 * @return void
 	 */
 	private function stub_options( array $stored ): void {
-		when( 'get_option' )->alias(
-			function ( $name, $default = false ) use ( $stored ) {
-				return array_key_exists( $name, $stored ) ? $stored[ $name ] : $default;
-			}
-		);
+		$this->stored_options = $stored;
 	}
 
 	/**
@@ -263,6 +292,171 @@ class PluginUpdateTest extends TestCase {
 		$this->assertSame(
 			[],
 			$this->written_options[ Settings::OPTION_NAME ]['comment']['rule_asb_lang_spam_allowed']
+		);
+	}
+
+	/**
+	 * A migration that completes clears the failure state and records the new version.
+	 *
+	 * @return void
+	 */
+	public function test_a_successful_migration_clears_the_failure_state(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'                   => [ 'regexp_check' => 1 ],
+				'antispambee_db_version'         => '1.02',
+				'antispambee_db_update_failures' => [
+					'version'  => '3.0.0-beta.1',
+					'attempts' => 1,
+					'message'  => 'Migration exploded',
+					'time'     => 1,
+				],
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertContains( PluginUpdate::FAILURE_OPTION_NAME, $this->deleted_options );
+		$this->assertSame( '3.0.0-beta.1', $this->written_options[ PluginUpdate::DB_VERSION_OPTION_NAME ] );
+	}
+
+	/**
+	 * A failing step records the attempt and leaves the database version untouched.
+	 *
+	 * The version has to stay stale so the migration is retried, and the failure must not
+	 * escape: the request continues on the defaults rather than fataling.
+	 *
+	 * @return void
+	 */
+	public function test_a_failing_step_records_an_attempt_and_keeps_the_version_stale(): void {
+		$this->stub_options( [ 'antispambee_db_version' => '1.02' ] );
+
+		FailingPluginUpdate::maybe_run_plugin_updated_logic();
+
+		$state = $this->written_options[ PluginUpdate::FAILURE_OPTION_NAME ];
+
+		$this->assertSame( 1, $state['attempts'] );
+		$this->assertSame( 'Migration exploded', $state['message'] );
+		$this->assertArrayNotHasKey(
+			PluginUpdate::DB_VERSION_OPTION_NAME,
+			$this->written_options,
+			'A failed migration must not mark the database as up-to-date.'
+		);
+	}
+
+	/**
+	 * The attempt is persisted before the step runs, not after it.
+	 *
+	 * A step killed by a timeout or a fatal never returns, so a counter raised afterwards
+	 * would stay at zero and the migration would be retried forever.
+	 *
+	 * @return void
+	 */
+	public function test_the_attempt_is_recorded_before_the_step_runs(): void {
+		$this->stub_options( [ 'antispambee_db_version' => '1.02' ] );
+
+		FailingPluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertIsArray( FailingPluginUpdate::$state_during_call );
+		$this->assertSame( 1, FailingPluginUpdate::$state_during_call['attempts'] );
+	}
+
+	/**
+	 * Once the cap is reached the migration is not attempted again.
+	 *
+	 * @return void
+	 */
+	public function test_the_migration_is_not_attempted_after_the_cap_is_reached(): void {
+		$this->stub_options(
+			[
+				'antispambee_db_version'         => '1.02',
+				'antispambee_db_update_failures' => [
+					'version'  => '3.0.0-beta.1',
+					'attempts' => PluginUpdate::MAX_UPDATE_ATTEMPTS,
+					'message'  => 'Migration exploded',
+					'time'     => 1,
+				],
+			]
+		);
+
+		FailingPluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame( 0, FailingPluginUpdate::$calls );
+		$this->assertSame( [], $this->written_options );
+	}
+
+	/**
+	 * A failure recorded against another plugin version does not block the migration.
+	 *
+	 * A release that fixes whatever made the migration fail has to get its own attempts,
+	 * so a site that gave up recovers on update instead of needing a manual retry.
+	 *
+	 * @return void
+	 */
+	public function test_a_failure_state_from_another_version_is_discarded(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'                   => [ 'regexp_check' => 1 ],
+				'antispambee_db_version'         => '1.02',
+				'antispambee_db_update_failures' => [
+					'version'  => '3.0.0-beta.0',
+					'attempts' => PluginUpdate::MAX_UPDATE_ATTEMPTS,
+					'message'  => 'Migration exploded',
+					'time'     => 1,
+				],
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertArrayHasKey( Settings::OPTION_NAME, $this->written_options );
+	}
+
+	/**
+	 * Settings the user saved while the database version was still stale are not overwritten.
+	 *
+	 * @return void
+	 */
+	public function test_existing_options_are_not_overwritten(): void {
+		$saved_by_hand = [ 'comment' => [ 'rule_asb_regexp_active' => '' ] ];
+
+		$this->stub_options(
+			[
+				'antispam_bee'           => [ 'regexp_check' => 1 ],
+				'antispam_bee_options'   => $saved_by_hand,
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertArrayNotHasKey( Settings::OPTION_NAME, $this->written_options );
+		$this->assertSame(
+			$saved_by_hand,
+			$this->stored_options[ Settings::OPTION_NAME ],
+			'The stored settings are left exactly as the user saved them.'
+		);
+	}
+
+	/**
+	 * A stored value that is not an array is corrupt, not a configuration, and is replaced.
+	 *
+	 * @return void
+	 */
+	public function test_corrupt_existing_options_are_replaced(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'           => [ 'regexp_check' => 1 ],
+				'antispam_bee_options'   => 'corrupted',
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame(
+			'on',
+			$this->written_options[ Settings::OPTION_NAME ]['comment']['rule_asb_regexp_active']
 		);
 	}
 }
