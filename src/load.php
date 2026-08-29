@@ -9,6 +9,7 @@ namespace AntispamBee;
 
 use AntispamBee\Admin\CommentsColumns;
 use AntispamBee\Admin\DashboardWidgets;
+use AntispamBee\Admin\MigrationFailureNotice;
 use AntispamBee\Admin\SettingsPage;
 use AntispamBee\Admin\UpgradeNotice;
 use AntispamBee\Crons\DeleteSpamCron;
@@ -19,6 +20,7 @@ use AntispamBee\GeneralOptions\Uninstall;
 use AntispamBee\Handlers\Comment;
 use AntispamBee\Handlers\Linkback;
 use AntispamBee\Handlers\PluginStateChangeHandler;
+use AntispamBee\Handlers\PluginUpdate;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Helpers\SpamReasonTextHelper;
 use AntispamBee\PostProcessors\Delete;
@@ -55,9 +57,11 @@ function init(): void {
 		new SettingsPage(),
 		CommentsColumns::class,
 		UpgradeNotice::class,
+		MigrationFailureNotice::class,
 		DeleteSpamCron::class,
 		Settings::class,
 		// Handlers.
+		PluginUpdate::class,
 		Comment::class,
 		Linkback::class,
 		// Helpers.
