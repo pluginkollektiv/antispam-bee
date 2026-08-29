@@ -161,7 +161,7 @@ class MigrationFailureNotice {
 	private static function redirect_back(): void {
 		$referer = wp_get_referer();
 
-		wp_safe_redirect( $referer ? $referer : admin_url() );
+		wp_safe_redirect( $referer ?: admin_url() );
 		exit;
 	}
 }
