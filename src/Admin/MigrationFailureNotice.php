@@ -20,11 +20,17 @@ class MigrationFailureNotice {
 	const RETRY_ACTION = 'antispam_bee_retry_migration';
 
 	/**
-	 * Register the notice and the retry handler.
+	 * Action name used to stop retrying and keep the current settings.
+	 */
+	const DISMISS_ACTION = 'antispam_bee_dismiss_migration';
+
+	/**
+	 * Register the notice and its handlers.
 	 */
 	public static function init(): void {
 		add_action( 'admin_notices', [ __CLASS__, 'render' ] );
 		add_action( 'admin_post_' . self::RETRY_ACTION, [ __CLASS__, 'handle_retry' ] );
+		add_action( 'admin_post_' . self::DISMISS_ACTION, [ __CLASS__, 'handle_dismiss' ] );
 	}
 
 	/**
@@ -49,6 +55,11 @@ class MigrationFailureNotice {
 			self::RETRY_ACTION
 		);
 
+		$dismiss_url = wp_nonce_url(
+			admin_url( 'admin-post.php?action=' . self::DISMISS_ACTION ),
+			self::DISMISS_ACTION
+		);
+
 		echo '<div class="notice notice-error">';
 
 		printf(
@@ -69,9 +80,16 @@ class MigrationFailureNotice {
 		}
 
 		printf(
-			'<p><a class="button button-primary" href="%s">%s</a></p>',
+			'<p><a class="button button-primary" href="%s">%s</a> <a class="button" href="%s">%s</a></p>',
 			esc_url( $retry_url ),
-			esc_html__( 'Retry migration', 'antispam-bee' )
+			esc_html__( 'Retry migration', 'antispam-bee' ),
+			esc_url( $dismiss_url ),
+			esc_html__( 'Keep the current settings', 'antispam-bee' )
+		);
+
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__( 'Retrying never overwrites settings you have already saved. Choose “Keep the current settings” to stop retrying for good and configure the plugin yourself.', 'antispam-bee' )
 		);
 
 		echo '</div>';
@@ -84,15 +102,48 @@ class MigrationFailureNotice {
 	 * so the next read of the settings runs the migration with a fresh set of attempts.
 	 */
 	public static function handle_retry(): void {
+		self::authorize( self::RETRY_ACTION );
+
+		delete_option( PluginUpdate::FAILURE_OPTION_NAME );
+
+		self::redirect_back();
+	}
+
+	/**
+	 * Stop retrying and keep whatever is configured now.
+	 *
+	 * For a site whose migration cannot be made to work: the user configures the
+	 * plugin by hand and takes the notice away for good. Nothing is overwritten —
+	 * the database is simply recorded as migrated.
+	 */
+	public static function handle_dismiss(): void {
+		self::authorize( self::DISMISS_ACTION );
+
+		PluginUpdate::mark_as_migrated();
+
+		self::redirect_back();
+	}
+
+	/**
+	 * Make sure the current request may act on the migration state.
+	 *
+	 * @param string $action The action being performed.
+	 */
+	private static function authorize( string $action ): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to do this.', 'antispam-bee' ), '', [ 'response' => 403 ] );
 		}
 
-		check_admin_referer( self::RETRY_ACTION );
+		check_admin_referer( $action );
+	}
 
-		delete_option( PluginUpdate::FAILURE_OPTION_NAME );
+	/**
+	 * Return to the page the notice was shown on.
+	 */
+	private static function redirect_back(): void {
+		$referer = wp_get_referer();
 
-		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url() );
+		wp_safe_redirect( $referer ? $referer : admin_url() );
 		exit;
 	}
 }
