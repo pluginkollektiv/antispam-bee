@@ -103,6 +103,15 @@ Generally yes. However, running Antispam Bee with truncated or shortened IP addr
 ### How can I submit undetected spam? ###
 If the antispam plugin has let some spam comments through, these comments can be reported for analysis. A [Google Form](http://goo.gl/forms/ITzVHXkLVL) was created for this purpose.
 
+### Can I use my own IPLocate API key for the country rule? ###
+Yes. The country rule looks the visitor's country up at IPLocate, which rate-limits requests that carry no API key. Define the constant `ANTISPAM_BEE_IPLOCATE_API_KEY` in your `wp-config.php` and set it to your key:
+
+> define( 'ANTISPAM_BEE_IPLOCATE_API_KEY', getenv( 'IPLOCATE_API_KEY' ) );
+
+Reading it from the environment like this keeps the key out of your code and out of version control. The value is passed to the `antispam_bee_iplocate_api_key` filter, so a filter can still override it.
+
+That filter was called `antispam_bee_country_spam_apikey` before 3.0.0. The old name still works, but it is deprecated and will be removed in 4.0.
+
 ### Antispam Bee with Varnish? ###
 If WordPress is operated with Apache + Varnish, the actual IP address of the visitors does not appear in WordPress. Accordingly, Antispam Bee lacks the basis it needs to function correctly. An adaptation in the Varnish configuration file /etc/varnish/default.vcl provides a remedy and forwards the original (not from Apache) IP address in the HTTP header X-Forwarded-For:
 

@@ -3,6 +3,7 @@
 namespace AntispamBee\Tests\Unit\Rules;
 
 use AntispamBee\Rules\CountrySpam;
+use ReflectionMethod;
 use function Brain\Monkey\Filters\expectApplied;
 use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\when;
@@ -256,7 +257,7 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	}
 
 	public function test_verify_sends_a_configured_api_key_as_a_header(): void {
-		expectApplied( 'antispam_bee_country_spam_apikey' )->once()->andReturn( ' secret-key ' );
+		expectApplied( 'antispam_bee_iplocate_api_key' )->once()->andReturn( ' secret-key ' );
 
 		$this->expect_request( '{"country_code":"DE"}' );
 
@@ -272,6 +273,46 @@ class CountrySpamTest extends AbstractRuleTestCase {
 			$this->request_args,
 			'The key should be sent as a header, trimmed'
 		);
+	}
+
+	public function test_api_key_defaults_to_empty_string() {
+		expectApplied( 'antispam_bee_iplocate_api_key' )
+			->once()
+			->with( '' )
+			->andReturnFirstArg();
+
+		self::assertSame( '', self::get_api_key(), 'Without a key configured the result should be an empty string' );
+	}
+
+	public function test_api_key_comes_from_the_filter() {
+		expectApplied( 'antispam_bee_iplocate_api_key' )
+			->once()
+			->andReturn( 'from-filter' );
+
+		self::assertSame( 'from-filter', self::get_api_key(), 'The filtered key should be used' );
+	}
+
+	/**
+	 * A site still using the old hook keeps working, and its value is handed on to
+	 * the new one.
+	 *
+	 * Core only runs the deprecated hook, and only emits the notice, when something
+	 * is actually hooked to it. That guard lives in `apply_filters_deprecated()`
+	 * itself, which Brain Monkey models as a plain `apply_filters()`, so it is core's
+	 * contract rather than something asserted here.
+	 */
+	public function test_deprecated_filter_still_applies() {
+		expectApplied( 'antispam_bee_country_spam_apikey' )
+			->once()
+			->with( '' )
+			->andReturn( 'from-deprecated' );
+
+		expectApplied( 'antispam_bee_iplocate_api_key' )
+			->once()
+			->with( 'from-deprecated' )
+			->andReturnFirstArg();
+
+		self::assertSame( 'from-deprecated', self::get_api_key(), 'The deprecated filter should still be honoured' );
 	}
 
 	/**
@@ -379,5 +420,17 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	 */
 	private function expect_no_request(): void {
 		expect( 'wp_safe_remote_get' )->never();
+	}
+
+	/**
+	 * Call the private `get_api_key` method.
+	 *
+	 * @return string The resolved API key.
+	 */
+	private static function get_api_key(): string {
+		$method = new ReflectionMethod( CountrySpam::class, 'get_api_key' );
+		$method->setAccessible( true );
+
+		return $method->invoke( null );
 	}
 }

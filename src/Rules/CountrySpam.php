@@ -107,14 +107,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 			return 0;
 		}
 
-		/**
-		 * Filters the IPLocate API key. With this filter, you can add your own IPLocate API key.
-		 *
-		 * @since 2.10.0
-		 *
-		 * @param string $apikey The current IPLocate API key. Default is empty string.
-		 */
-		$apikey = trim( (string) apply_filters( 'antispam_bee_country_spam_apikey', '' ) );
+		$apikey = trim( self::get_api_key() );
 
 		/*
 		 * The service answers anonymous lookups within its free tier, but rejects
@@ -300,6 +293,48 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		$values = Sanitize::iso_codes( $values );
 
 		return implode( ',', $values );
+	}
+
+	/**
+	 * Get the IPLocate API key.
+	 *
+	 * The `ANTISPAM_BEE_IPLOCATE_API_KEY` constant provides the key, so it can be
+	 * deployed with the environment instead of with code. It is passed as the default
+	 * to the filter, which keeps the last word. Without either, the lookup is made
+	 * against IPLocate's free rate limit.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string The API key, or an empty string when none is configured.
+	 */
+	private static function get_api_key(): string {
+		$apikey = defined( 'ANTISPAM_BEE_IPLOCATE_API_KEY' ) ? (string) ANTISPAM_BEE_IPLOCATE_API_KEY : '';
+
+		/**
+		 * Filters the IPLocate API key.
+		 *
+		 * @since      2.10.0
+		 * @deprecated 3.0.0 Use `antispam_bee_iplocate_api_key` instead.
+		 *
+		 * @param string $apikey The current IPLocate API key.
+		 */
+		$apikey = apply_filters_deprecated(
+			'antispam_bee_country_spam_apikey',
+			[ $apikey ],
+			'3.0.0',
+			'antispam_bee_iplocate_api_key'
+		);
+
+		/**
+		 * Filters the IPLocate API key. With this filter, you can add your own IPLocate API key.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string $apikey The current IPLocate API key. Defaults to the
+		 *                       `ANTISPAM_BEE_IPLOCATE_API_KEY` constant when it is
+		 *                       defined, an empty string otherwise.
+		 */
+		return (string) apply_filters( 'antispam_bee_iplocate_api_key', $apikey );
 	}
 
 	/**

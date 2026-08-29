@@ -18,3 +18,4 @@ define( __NAMESPACE__ . '\PLUGIN_VERSION', '3.0.0-alpha.15' );
 // PHPStan uses the declared type instead of narrowing to these literal values.
 define( 'ANTISPAM_BEE_DEBUG_MODE_ENABLED', false );
 define( 'ANTISPAM_BEE_LOG_FILE', 'asb.log' );
+define( 'ANTISPAM_BEE_IPLOCATE_API_KEY', '' );
