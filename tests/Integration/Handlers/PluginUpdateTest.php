@@ -63,6 +63,7 @@ final class PluginUpdateTest extends TestCase {
 		parent::set_up();
 
 		$this->reset_plugin_update_state();
+		delete_option( PluginUpdate::FAILURE_OPTION_NAME );
 	}
 
 	/**
@@ -72,6 +73,7 @@ final class PluginUpdateTest extends TestCase {
 	 */
 	public function tear_down(): void {
 		$this->reset_plugin_update_state();
+		delete_option( PluginUpdate::FAILURE_OPTION_NAME );
 
 		parent::tear_down();
 	}
@@ -289,31 +291,67 @@ final class PluginUpdateTest extends TestCase {
 	public function test_a_failed_migration_step_leaves_the_database_version_untouched(): void {
 		$this->seed_legacy_install();
 
-		$this->expectException( RuntimeException::class );
+		// The failure must not escape: a request that reads a setting carries on without it.
+		FailingPluginUpdate::maybe_run_plugin_updated_logic();
 
-		try {
+		self::assertSame(
+			'1.02',
+			get_option( self::DB_VERSION_OPTION ),
+			'A migration that fails must not leave the database version bumped, or it is never retried.'
+		);
+		self::assertFalse(
+			get_option( Settings::OPTION_NAME ),
+			'Nothing was migrated, so the v3 option must not exist.'
+		);
+	}
+
+	public function test_a_failed_migration_step_is_recorded(): void {
+		$this->seed_legacy_install();
+
+		FailingPluginUpdate::maybe_run_plugin_updated_logic();
+
+		$failures = get_option( PluginUpdate::FAILURE_OPTION_NAME );
+
+		self::assertSame( 1, $failures['attempts'], 'The failed attempt has to be counted.' );
+		self::assertStringContainsString(
+			'A migration step failed',
+			$failures['message'],
+			'The reason has to be recorded, or the notice has nothing to show.'
+		);
+	}
+
+	public function test_the_migration_is_abandoned_once_the_attempts_run_out(): void {
+		$this->seed_legacy_install();
+
+		for ( $attempt = 0; $attempt < PluginUpdate::MAX_UPDATE_ATTEMPTS; $attempt++ ) {
 			FailingPluginUpdate::maybe_run_plugin_updated_logic();
-		} finally {
-			self::assertSame(
-				'1.02',
-				get_option( self::DB_VERSION_OPTION ),
-				'A migration that fails must not leave the database version bumped, or it is never retried.'
-			);
-			self::assertFalse(
-				get_option( Settings::OPTION_NAME ),
-				'Nothing was migrated, so the v3 option must not exist.'
-			);
+			$this->reset_plugin_update_state();
 		}
+
+		self::assertSame(
+			PluginUpdate::MAX_UPDATE_ATTEMPTS,
+			get_option( PluginUpdate::FAILURE_OPTION_NAME )['attempts'],
+			'Every request up to the cap has to spend an attempt.'
+		);
+
+		// A working migration is no longer even tried once the attempts are spent.
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		self::assertFalse(
+			get_option( Settings::OPTION_NAME ),
+			'Past the cap the migration must not run, so nothing is written.'
+		);
+		self::assertSame(
+			'1.02',
+			get_option( self::DB_VERSION_OPTION ),
+			'Past the cap the database version stays stale, so the notice keeps showing.'
+		);
 	}
 
 	public function test_a_failed_migration_is_retried_on_the_next_request(): void {
 		$this->seed_legacy_install();
 
-		try {
-			FailingPluginUpdate::maybe_run_plugin_updated_logic();
-		} catch ( RuntimeException $exception ) {
-			unset( $exception );
-		}
+		FailingPluginUpdate::maybe_run_plugin_updated_logic();
 
 		// The next request starts with the per-request guards cleared.
 		$this->reset_plugin_update_state();
