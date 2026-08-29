@@ -439,6 +439,44 @@ class PluginUpdateTest extends TestCase {
 	}
 
 	/**
+	 * A retry the user asked for clears the stored settings, so the migration really runs.
+	 *
+	 * Without this the guard that protects the automatic retries would make the manual one
+	 * skip its work and report success, which is the opposite of what the button promises.
+	 *
+	 * @return void
+	 */
+	public function test_resetting_for_a_retry_clears_the_stored_settings(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'                   => [ 'regexp_check' => 1 ],
+				'antispam_bee_options'           => [ 'comment' => [ 'rule_asb_regexp_active' => '' ] ],
+				'antispambee_db_version'         => '1.02',
+				'antispambee_db_update_failures' => [
+					'version'  => '3.0.0-beta.1',
+					'attempts' => PluginUpdate::MAX_UPDATE_ATTEMPTS,
+					'message'  => 'Migration exploded',
+					'time'     => 1,
+				],
+			]
+		);
+
+		PluginUpdate::reset_for_retry();
+
+		$this->assertContains( Settings::OPTION_NAME, $this->deleted_options );
+		$this->assertContains( PluginUpdate::FAILURE_OPTION_NAME, $this->deleted_options );
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame(
+			'on',
+			$this->written_options[ Settings::OPTION_NAME ]['comment']['rule_asb_regexp_active'],
+			'The legacy settings are migrated again instead of being skipped.'
+		);
+		$this->assertSame( '3.0.0-beta.1', $this->written_options[ PluginUpdate::DB_VERSION_OPTION_NAME ] );
+	}
+
+	/**
 	 * Marking the database as migrated stops the retries without touching the settings.
 	 *
 	 * @return void

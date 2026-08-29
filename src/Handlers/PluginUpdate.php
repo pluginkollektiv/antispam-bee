@@ -185,6 +185,31 @@ class PluginUpdate {
 	}
 
 	/**
+	 * Whether the plugin already has settings of its own stored.
+	 *
+	 * @return bool Whether `antispam_bee_options` holds a configuration.
+	 */
+	public static function has_stored_settings(): bool {
+		$stored = get_option( Settings::OPTION_NAME, null );
+
+		return is_array( $stored ) && ! empty( $stored );
+	}
+
+	/**
+	 * Throw away the stored settings so the next run migrates the legacy ones again.
+	 *
+	 * The automatic retries deliberately never touch a stored configuration — see the
+	 * guard in the 3.0.0 step. A retry the user asked for is the opposite situation:
+	 * they are looking at a notice that says their old settings were not migrated and
+	 * are choosing to have them back, so the settings standing in the way have to go,
+	 * or the retry would silently do nothing at all.
+	 */
+	public static function reset_for_retry(): void {
+		delete_option( Settings::OPTION_NAME );
+		delete_option( self::FAILURE_OPTION_NAME );
+	}
+
+	/**
 	 * Record the database as migrated without running the migration.
 	 *
 	 * For the user who gave up on the migration and configured the plugin by hand
@@ -299,10 +324,10 @@ class PluginUpdate {
 			 * over either would throw away their configuration. The write below is the step's
 			 * last action, so a run cut short left nothing behind and a present array is always
 			 * one of those two. A stored value that is not an array is corrupt, not a
-			 * configuration, and is replaced.
+			 * configuration, and is replaced. A retry the user explicitly asked for clears
+			 * the option first, so this guard only ever holds back the automatic retries.
 			 */
-			$existing_options = get_option( Settings::OPTION_NAME, null );
-			if ( is_array( $existing_options ) && ! empty( $existing_options ) ) {
+			if ( self::has_stored_settings() ) {
 				return;
 			}
 

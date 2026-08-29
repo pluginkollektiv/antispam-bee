@@ -67,10 +67,13 @@ class MigrationFailureNotice {
 			esc_html__( 'Antispam Bee could not migrate your settings.', 'antispam-bee' )
 		);
 
-		printf(
-			'<p>%s</p>',
-			esc_html__( 'The plugin is currently running with its default settings. Your previous settings have not been lost — they are still stored in the database and will be applied as soon as the migration succeeds.', 'antispam-bee' )
-		);
+		if ( PluginUpdate::has_stored_settings() ) {
+			$intro = __( 'The plugin is running with the settings currently stored. Your previous settings have not been lost — they are still in the database, unmigrated.', 'antispam-bee' );
+		} else {
+			$intro = __( 'The plugin is currently running with its default settings. Your previous settings have not been lost — they are still stored in the database and will be applied as soon as the migration succeeds.', 'antispam-bee' );
+		}
+
+		printf( '<p>%s</p>', esc_html( $intro ) );
 
 		if ( '' !== $state['message'] ) {
 			printf(
@@ -79,17 +82,32 @@ class MigrationFailureNotice {
 			);
 		}
 
+		/*
+		 * The wording has to follow what the button actually does. Once settings are
+		 * stored — because the user gave up and configured the plugin by hand — a retry
+		 * can only get the old settings back by replacing them, and saying "retry" while
+		 * quietly leaving them in place would be a lie: the migration would skip its work
+		 * and simply report success.
+		 */
+		if ( PluginUpdate::has_stored_settings() ) {
+			$retry_label = __( 'Discard the current settings and migrate again', 'antispam-bee' );
+			$explanation = __( 'Migrating again replaces the settings currently stored with the result of migrating your previous ones. Choose “Keep the current settings” to stop retrying and leave your settings exactly as they are.', 'antispam-bee' );
+		} else {
+			$retry_label = __( 'Migrate again', 'antispam-bee' );
+			$explanation = __( 'Choose “Keep the current settings” to stop retrying for good and configure the plugin yourself.', 'antispam-bee' );
+		}
+
 		printf(
 			'<p><a class="button button-primary" href="%s">%s</a> <a class="button" href="%s">%s</a></p>',
 			esc_url( $retry_url ),
-			esc_html__( 'Retry migration', 'antispam-bee' ),
+			esc_html( $retry_label ),
 			esc_url( $dismiss_url ),
 			esc_html__( 'Keep the current settings', 'antispam-bee' )
 		);
 
 		printf(
 			'<p class="description">%s</p>',
-			esc_html__( 'Retrying never overwrites settings you have already saved. Choose “Keep the current settings” to stop retrying for good and configure the plugin yourself.', 'antispam-bee' )
+			esc_html( $explanation )
 		);
 
 		echo '</div>';
@@ -104,7 +122,7 @@ class MigrationFailureNotice {
 	public static function handle_retry(): void {
 		self::authorize( self::RETRY_ACTION );
 
-		delete_option( PluginUpdate::FAILURE_OPTION_NAME );
+		PluginUpdate::reset_for_retry();
 
 		self::redirect_back();
 	}
