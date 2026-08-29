@@ -185,6 +185,19 @@ class PluginUpdate {
 	}
 
 	/**
+	 * Record the database as migrated without running the migration.
+	 *
+	 * For the user who gave up on the migration and configured the plugin by hand
+	 * instead: their settings are the ones that should survive, and nothing is left
+	 * to migrate. Writing the version is what actually stops the retries, because
+	 * `db_version_is_current()` then reports the database as up-to-date.
+	 */
+	public static function mark_as_migrated(): void {
+		delete_option( self::FAILURE_OPTION_NAME );
+		update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
+	}
+
+	/**
 	 * Read the recorded state of failed migration attempts.
 	 *
 	 * State recorded against a different plugin version is discarded: a release that

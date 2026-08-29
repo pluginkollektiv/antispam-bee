@@ -439,6 +439,39 @@ class PluginUpdateTest extends TestCase {
 	}
 
 	/**
+	 * Marking the database as migrated stops the retries without touching the settings.
+	 *
+	 * @return void
+	 */
+	public function test_marking_as_migrated_stops_the_retries(): void {
+		$saved_by_hand = [ 'comment' => [ 'rule_asb_regexp_active' => '' ] ];
+
+		$this->stub_options(
+			[
+				'antispam_bee'                   => [ 'regexp_check' => 1 ],
+				'antispam_bee_options'           => $saved_by_hand,
+				'antispambee_db_version'         => '1.02',
+				'antispambee_db_update_failures' => [
+					'version'  => '3.0.0-beta.1',
+					'attempts' => PluginUpdate::MAX_UPDATE_ATTEMPTS,
+					'message'  => 'Migration exploded',
+					'time'     => 1,
+				],
+			]
+		);
+
+		PluginUpdate::mark_as_migrated();
+
+		$this->assertContains( PluginUpdate::FAILURE_OPTION_NAME, $this->deleted_options );
+		$this->assertSame( '3.0.0-beta.1', $this->written_options[ PluginUpdate::DB_VERSION_OPTION_NAME ] );
+		$this->assertSame(
+			$saved_by_hand,
+			$this->stored_options[ Settings::OPTION_NAME ],
+			'The settings the user configured by hand are left untouched.'
+		);
+	}
+
+	/**
 	 * A stored value that is not an array is corrupt, not a configuration, and is replaced.
 	 *
 	 * @return void
