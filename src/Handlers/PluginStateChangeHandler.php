@@ -53,20 +53,36 @@ class PluginStateChangeHandler {
 			return;
 		}
 
-		$site_ids = get_sites(
-			[
-				'fields'                 => 'ids',
-				'number'                 => 100,
-				'update_site_cache'      => false,
-				'update_site_meta_cache' => false,
-			]
-		);
+		/*
+		 * Walked in pages rather than with a single unbounded query: uninstall runs in
+		 * one request, and a network can hold far more sites than one query should
+		 * return at once. Removing options does not change the set of sites, so the
+		 * offset stays stable across iterations.
+		 */
+		$batch_size = 100;
+		$offset     = 0;
 
-		foreach ( $site_ids as $site_id ) {
-			switch_to_blog( $site_id );
-			self::maybe_remove_antispam_bee_data();
-			restore_current_blog();
-		}
+		do {
+			$site_ids = get_sites(
+				[
+					'fields'                 => 'ids',
+					'number'                 => $batch_size,
+					'offset'                 => $offset,
+					'update_site_cache'      => false,
+					'update_site_meta_cache' => false,
+				]
+			);
+
+			$found = count( $site_ids );
+
+			foreach ( $site_ids as $site_id ) {
+				switch_to_blog( $site_id );
+				self::maybe_remove_antispam_bee_data();
+				restore_current_blog();
+			}
+
+			$offset += $batch_size;
+		} while ( $found === $batch_size );
 	}
 
 	/**
