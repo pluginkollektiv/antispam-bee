@@ -65,7 +65,7 @@ class Linkback extends Reaction {
 			'body'          => self::scalar( $reaction['comment_content'] ?? '' ),
 			'email'         => '',
 			'author'        => self::scalar( $reaction['comment_author'] ?? '' ),
-			'useragent'     => '',
+			'useragent'     => self::scalar( $reaction['comment_agent'] ?? '' ),
 			'post_id'       => self::scalar( $reaction['comment_post_ID'] ?? null ),
 		];
 	}
@@ -73,14 +73,19 @@ class Linkback extends Reaction {
 	/**
 	 * Normalize a possibly array-valued linkback field to a scalar.
 	 *
+	 * Nested arrays are flattened all the way down, because a single `reset()`
+	 * peels one level only and would hand an array to string-typed sinks such as
+	 * `DataHelper::parse_url()` or `preg_quote()`. An array that holds nothing
+	 * becomes an empty string rather than the `false` that `reset()` returns.
+	 *
 	 * @param mixed $value Raw field value.
-	 * @return mixed First element for arrays, the value otherwise.
+	 * @return mixed First scalar for arrays, the value otherwise.
 	 */
 	private static function scalar( $value ) {
-		if ( is_array( $value ) ) {
-			return reset( $value );
+		while ( is_array( $value ) ) {
+			$value = reset( $value );
 		}
 
-		return $value;
+		return false === $value ? '' : $value;
 	}
 }

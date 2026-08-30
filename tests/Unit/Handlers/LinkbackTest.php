@@ -78,4 +78,87 @@ class LinkbackTest extends TestCase {
 
 		self::assertSame( '', $payload['author'] );
 	}
+
+	/**
+	 * Core populates comment_agent for linkbacks just as it does for comments, so the
+	 * payload must carry it: RegexpSpam requires a hit for every field of a pattern, so
+	 * an always-empty useragent makes any pattern naming that field unsatisfiable.
+	 */
+	public function test_payload_maps_useragent_from_comment_agent() {
+		$payload = self::build_payload(
+			[
+				'comment_author'     => 'Example Blog',
+				'comment_content'    => 'Some excerpt.',
+				'comment_author_url' => 'https://example.com/post/',
+				'comment_author_IP'  => '192.0.2.10',
+				'comment_agent'      => 'WordPress/6.9; https://example.com',
+				'comment_post_ID'    => 1,
+			]
+		);
+
+		self::assertSame(
+			'WordPress/6.9; https://example.com',
+			$payload['useragent'],
+			'useragent must be mapped from comment_agent'
+		);
+	}
+
+	/**
+	 * A missing user agent yields an empty string rather than a warning.
+	 */
+	public function test_payload_useragent_defaults_to_empty() {
+		$payload = self::build_payload(
+			[
+				'comment_author'     => 'Example Blog',
+				'comment_content'    => '',
+				'comment_author_url' => '',
+				'comment_author_IP'  => '192.0.2.10',
+				'comment_post_ID'    => 1,
+			]
+		);
+
+		self::assertSame( '', $payload['useragent'] );
+	}
+
+	/**
+	 * A nested array must be flattened all the way down, not peeled one level.
+	 *
+	 * A single reset() leaves an array in place, which then reaches string-typed sinks
+	 * such as DataHelper::parse_url() and raises an uncaught TypeError on the
+	 * unauthenticated trackback path.
+	 */
+	public function test_payload_flattens_nested_array_values() {
+		$payload = self::build_payload(
+			[
+				'comment_author'     => [ [ 'Example Blog' ] ],
+				'comment_content'    => '',
+				'comment_author_url' => [ [ 'https://example.com/post/' ] ],
+				'comment_author_IP'  => '192.0.2.10',
+				'comment_post_ID'    => 1,
+			]
+		);
+
+		self::assertSame( 'Example Blog', $payload['author'], 'a nested author must be flattened to a string' );
+		self::assertSame( 'https://example.com/post/', $payload['url'], 'a nested url must be flattened to a string' );
+		self::assertSame( 'example.com', $payload['host'] );
+	}
+
+	/**
+	 * An empty array must normalize to an empty string, not to the false that reset() returns.
+	 */
+	public function test_payload_empty_array_becomes_empty_string() {
+		$payload = self::build_payload(
+			[
+				'comment_author'     => [],
+				'comment_content'    => [],
+				'comment_author_url' => [],
+				'comment_author_IP'  => '192.0.2.10',
+				'comment_post_ID'    => 1,
+			]
+		);
+
+		self::assertSame( '', $payload['author'] );
+		self::assertSame( '', $payload['body'] );
+		self::assertSame( '', $payload['url'] );
+	}
 }
