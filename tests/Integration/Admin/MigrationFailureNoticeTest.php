@@ -218,6 +218,54 @@ final class MigrationFailureNoticeTest extends TestCase {
 	}
 
 	/**
+	 * Discarding hand-made settings for a retry that fails again is the worst case: the
+	 * settings the user built are gone, the migration still did not run, and the site is
+	 * back on the defaults. That is the one moment they most need to be told.
+	 *
+	 * @return void
+	 */
+	public function test_a_discarding_retry_that_fails_again_is_reported(): void {
+		$this->seed_legacy_install();
+		$this->exhaust_the_attempts();
+		$this->save_settings_by_hand();
+
+		// What `handle_retry()` does: the settings standing in the way are thrown away.
+		PluginUpdate::reset_for_retry();
+
+		// The redirected request, with the migration still broken.
+		$this->reset_request_state();
+		FailingPluginUpdate::maybe_run_plugin_updated_logic();
+
+		$_GET[ MigrationFailureNotice::RETRY_RESULT_ARG ] = '1';
+
+		$output = $this->render();
+
+		self::assertLessThan(
+			PluginUpdate::MAX_UPDATE_ATTEMPTS,
+			PluginUpdate::get_failure_state()['attempts'],
+			'The report has to come from below the cap, or this proves nothing.'
+		);
+		self::assertStringContainsString(
+			'could not migrate your settings',
+			$output,
+			'Having just lost their hand-made settings, the user has to be told the retry failed.'
+		);
+		self::assertFalse(
+			get_option( Settings::OPTION_NAME ),
+			'The retry discards the stored settings before running, even when it then fails.'
+		);
+		self::assertStringContainsString(
+			'running with its default settings',
+			$output,
+			'With the stored settings gone the notice has to describe the site as running on defaults.'
+		);
+		self::assertNotFalse(
+			get_option( self::LEGACY_OPTION ),
+			'The legacy settings are the only copy left, so they must survive the failed retry.'
+		);
+	}
+
+	/**
 	 * Case B: the user keeps the settings they made, and the notice goes for good.
 	 *
 	 * @return void
