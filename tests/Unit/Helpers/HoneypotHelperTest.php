@@ -86,19 +86,115 @@ class HoneypotHelperTest extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_the_secret_is_derived_the_way_version_2_derived_it(): void {
-		// Version 2's formula, spelled out here rather than called, so this asserts
-		// against the old behaviour instead of against the current implementation.
-		$secret     = substr( sha1( md5( 'comment-id' . 'test-salt' ) ), 0, 10 );
-		$first_char = substr( $secret, 0, 1 );
-		$expected   = is_numeric( $first_char )
-			? chr( (int) $first_char + 97 ) . substr( $secret, 1 )
-			: $secret;
-
 		self::assertSame(
-			$expected,
+			self::version_2_secret( 'test-salt' ),
 			Honeypot::get_secret_name_for_post(),
 			'The field name must stay byte-for-byte what Antispam Bee 2.x produced for the same salt'
 		);
+	}
+
+	/**
+	 * The names have to survive salt rotation and site migration, which is the
+	 * whole reason the secret is stored instead of derived on every call.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_a_stored_secret_is_used_even_when_the_salt_changed(): void {
+		when( 'get_option' )->justReturn( 'storedvalue' );
+		when( 'wp_salt' )->justReturn( 'a-completely-different-salt' );
+
+		self::assertSame(
+			'storedvalue',
+			Honeypot::get_secret_name_for_post(),
+			'A stored secret must win over anything the current salt would derive'
+		);
+	}
+
+	/**
+	 * What lands in the options table has to be the finished field name, which is
+	 * public in every comment form anyway — never the salt it came from, which
+	 * would copy a `wp-config.php` secret into the database.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_the_stored_value_is_the_secret_and_not_the_salt(): void {
+		$stored = null;
+		when( 'get_option' )->justReturn( '' );
+		when( 'add_option' )->alias(
+			static function ( $option, $value ) use ( &$stored ) {
+				$stored = $value;
+
+				return true;
+			}
+		);
+
+		$secret = Honeypot::get_secret_name_for_post();
+
+		self::assertSame( $secret, $stored, 'The stored value should be the secret the form renders' );
+		self::assertSame( self::version_2_secret( 'test-salt' ), $stored, 'The secret should be the derived one' );
+		self::assertStringNotContainsString( 'test-salt', (string) $stored, 'The salt must never reach the database' );
+	}
+
+	/**
+	 * Two requests can miss the option at the same time. Whichever one gets its
+	 * `add_option()` in first defines the names, and the other has to adopt it
+	 * rather than keep a value it never stored.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_a_concurrently_stored_secret_wins(): void {
+		$calls = 0;
+		when( 'get_option' )->alias(
+			static function () use ( &$calls ) {
+				++$calls;
+
+				// Missing on the first read, present on the re-read after the failed write.
+				return $calls > 1 ? 'winningvalue' : '';
+			}
+		);
+		when( 'add_option' )->justReturn( false );
+
+		self::assertSame(
+			'winningvalue',
+			Honeypot::get_secret_name_for_post(),
+			'A secret stored by a concurrent request should be adopted'
+		);
+	}
+
+	/**
+	 * The secret is used as an HTML id, which may not start with a digit.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_a_filtered_secret_still_starts_with_a_letter(): void {
+		when( 'get_option' )->justReturn( '7abcdefghi' );
+
+		self::assertSame(
+			'habcdefghi',
+			Honeypot::get_secret_name_for_post(),
+			'A stored or filtered secret starting with a digit should be corrected'
+		);
+	}
+
+	/**
+	 * Antispam Bee 2.x's derivation, spelled out here rather than called, so the
+	 * tests assert against the old behaviour and not against the implementation.
+	 *
+	 * @param string $salt The salt to derive from.
+	 *
+	 * @return string The secret version 2 produced for that salt.
+	 */
+	private static function version_2_secret( string $salt ): string {
+		$secret     = substr( sha1( md5( 'comment-id' . $salt ) ), 0, 10 );
+		$first_char = substr( $secret, 0, 1 );
+
+		return is_numeric( $first_char )
+			? chr( (int) $first_char + 97 ) . substr( $secret, 1 )
+			: $secret;
 	}
 
 	protected function set_up(): void {
@@ -106,5 +202,7 @@ class HoneypotHelperTest extends TestCase {
 		when( 'esc_attr' )->returnArg();
 		when( 'esc_js' )->returnArg();
 		when( 'wp_salt' )->justReturn( 'test-salt' );
+		when( 'get_option' )->justReturn( '' );
+		when( 'add_option' )->justReturn( true );
 	}
 }

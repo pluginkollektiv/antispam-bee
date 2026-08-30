@@ -65,6 +65,15 @@ class Salt {
 	}
 
 	/**
+	 * Generate a salt.
+	 *
+	 * @return string The generated salt.
+	 */
+	public static function generate(): string {
+		return wp_generate_password( 64, true, true );
+	}
+
+	/**
 	 * Whether a configured salt looks like a generated one.
 	 *
 	 * The placeholders `wp-config-sample.php` ships are natural-language phrases,
