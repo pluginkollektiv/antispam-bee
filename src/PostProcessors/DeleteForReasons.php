@@ -10,6 +10,7 @@ namespace AntispamBee\PostProcessors;
 use AntispamBee\Handlers\Rules;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
+use AntispamBee\Interfaces\Controllable;
 use ReflectionException;
 
 /**
@@ -86,21 +87,32 @@ class DeleteForReasons extends ControllableBase {
 		foreach ( self::get_supported_types() as $reaction_type ) {
 			$filtered_rules   = Rules::get_spam_reason_rules( $reaction_type );
 			$checkbox_options = [];
+			$disabled_keys    = [];
 
 			foreach ( $filtered_rules as $rule ) {
 				if ( $rule::is_invisible() ) {
 					continue;
 				}
-				$checkbox_options[ $rule::get_slug() ] = $rule::get_name();
+
+				$slug                      = $rule::get_slug();
+				$checkbox_options[ $slug ] = $rule::get_name();
+
+				// Disable the reason when its rule is inactive, so users cannot pick a reason that never fires.
+				if ( is_a( $rule, Controllable::class, true ) && ! $rule::is_active( $reaction_type ) ) {
+					$disabled_keys[ $slug ] = true;
+				}
 			}
 
 			$options[] = [
-				'valid_for'   => $reaction_type,
-				'label'       => __( 'Reasons', 'antispam-bee' ),
-				'type'        => 'checkbox-group',
-				'options'     => $checkbox_options,
-				'option_name' => 'reasons',
-				'sanitize'    => function ( $value ) use ( $checkbox_options ) {
+				'valid_for'     => $reaction_type,
+				'label'         => __( 'Reasons', 'antispam-bee' ),
+				'type'          => 'checkbox-group',
+				'options'       => $checkbox_options,
+				'disabled_keys' => $disabled_keys,
+				'option_name'   => 'reasons',
+				// Sanitize still keys on the full option list on purpose: a disabled reason must keep its
+				// stored value, so re-enabling the rule restores the user's earlier choice.
+				'sanitize'      => function ( $value ) use ( $checkbox_options ) {
 					return Sanitize::checkbox_group( $value, $checkbox_options );
 				},
 			];
