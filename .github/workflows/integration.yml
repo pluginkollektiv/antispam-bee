@@ -57,11 +57,35 @@ jobs:
         cache: 'npm'
     - name: Install npm dependencies
       run: npm ci
+    # `composer install` runs here, on the runner, while the tests run inside the wp-env
+    # container. Composer resolves against the PHP it runs on and `composer.lock` is not
+    # committed, so the two versions have to agree or the container can end up with a
+    # `vendor/` it cannot parse — which surfaces only once a test fails, as a parse error
+    # in place of the failure. Reading the version out of `.wp-env.json` keeps the single
+    # source of truth there instead of duplicating it as a literal that drifts unnoticed.
+    # `e2e.yml` ties the two together the same way, from its matrix.
+    #
+    # The value is checked before it becomes a step output. It is read from a file that a
+    # pull request can edit, and a newline in it would let the `>>` below append further
+    # outputs of the attacker's choosing. Matching it against a bare `<major>.<minor>` in
+    # bash — where `^` and `$` anchor the whole string rather than a line — rejects that,
+    # and a malformed version fails the job here instead of somewhere less obvious later.
+    - name: Read the PHP version wp-env runs
+      id: wp-env
+      run: |
+        php_version="$(jq -er '.phpVersion' .wp-env.json)"
+
+        if [[ ! "$php_version" =~ ^[0-9]+\.[0-9]+$ ]]; then
+          echo "Unexpected phpVersion in .wp-env.json: ${php_version}" >&2
+          exit 1
+        fi
+
+        echo "php-version=${php_version}" >> "$GITHUB_OUTPUT"
     # The dev dependencies are required: the suite runs through PHPUnit.
     - name: Setup PHP and install dependencies
       uses: ./.github/actions/setup-php
       with:
-        php-version: '8.2'
+        php-version: ${{ steps.wp-env.outputs.php-version }}
     # Provides WordPress, the database and the WordPress PHPUnit test library.
     - name: Start wp-env
       run: npm run env:start

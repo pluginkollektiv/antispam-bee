@@ -25,6 +25,17 @@ Unit tests mock WordPress with Brain Monkey and run without a database. Integrat
 real WordPress against the `wp-env` database — use them for anything touching options, the
 database or core hooks. `npm run test:integration:multisite` repeats the run on a network install.
 
+Those two suites run inside the `wp-env` container, but `vendor/` is installed outside it. Composer
+resolves against the PHP it runs on, and `composer.lock` is gitignored, so installing on a newer PHP
+than the `phpVersion` in `.wp-env.json` can produce a `vendor/` the container cannot parse. The
+suites still pass — until a test fails, at which point PHPUnit prints a PHP parse error instead of
+the failure. Install the dependencies on the PHP version `.wp-env.json` pins, or from inside the
+container, where it holds by construction:
+
+```
+./node_modules/.bin/wp-env run tests-cli --env-cwd=wp-content/plugins/"$(basename "$PWD")" -- composer install
+```
+
 Fix code style violations automatically with `composer csfix`.
 
 Target PHP 7.4+. Avoid syntax introduced in PHP 8.0 or later: `match` expressions, constructor
