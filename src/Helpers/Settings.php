@@ -95,13 +95,58 @@ class Settings {
 	 */
 	public static function get_options(): array {
 		PluginUpdate::maybe_run_plugin_updated_logic();
-		$options = wp_cache_get( self::OPTION_NAME );
-		if ( $options ) {
-			return $options;
+		$defaults = self::get_defaults();
+		$options  = wp_cache_get( self::OPTION_NAME );
+
+		if ( ! $options ) {
+			$options = get_option( self::OPTION_NAME, $defaults );
+			wp_cache_set( self::OPTION_NAME, $options );
 		}
 
-		$options = get_option( self::OPTION_NAME, self::$defaults );
-		wp_cache_set( self::OPTION_NAME, $options );
+		return self::add_missing_defaults( is_array( $options ) ? $options : [], $defaults );
+	}
+
+	/**
+	 * Get the default options.
+	 *
+	 * @return array<string, array<string, mixed>> The default options, keyed by reaction type.
+	 */
+	public static function get_defaults(): array {
+		/**
+		 * Filters the default options, keyed by reaction type.
+		 *
+		 * Plugins that register a custom reaction type can use this filter to
+		 * declare which rules and post-processors should be active for it out of
+		 * the box. Without defaults, every controllable rule starts inactive for
+		 * a custom reaction type, so nothing is checked until an administrator
+		 * enables rules on its settings tab.
+		 *
+		 * Defaults only apply to reaction types that are absent from the stored
+		 * options. As soon as a reaction type has been saved, the stored state
+		 * wins — otherwise a rule an administrator deliberately disabled would be
+		 * re-enabled on the next request.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param array $defaults The default options, keyed by reaction type.
+		 */
+		return (array) apply_filters( 'antispam_bee_default_options', self::$defaults );
+	}
+
+	/**
+	 * Fill in the defaults of reaction types that are absent from the stored options.
+	 *
+	 * @param array<string, mixed>                $options  The stored options.
+	 * @param array<string, array<string, mixed>> $defaults The default options.
+	 *
+	 * @return array<string, mixed> The options, with missing reaction types defaulted.
+	 */
+	private static function add_missing_defaults( array $options, array $defaults ): array {
+		foreach ( $defaults as $reaction_type => $default_options ) {
+			if ( ! isset( $options[ $reaction_type ] ) && is_array( $default_options ) ) {
+				$options[ $reaction_type ] = $default_options;
+			}
+		}
 
 		return $options;
 	}
