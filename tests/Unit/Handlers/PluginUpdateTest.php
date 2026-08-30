@@ -321,6 +321,41 @@ class PluginUpdateTest extends TestCase {
 	}
 
 	/**
+	 * A migration that ran records itself, so the next admin page load can report it.
+	 *
+	 * The request that migrates is usually not one anybody is watching — a WP-CLI update,
+	 * a cron run, a front-end hit that read a setting.
+	 *
+	 * @return void
+	 */
+	public function test_a_successful_migration_records_the_pending_notice(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'           => [ 'regexp_check' => 1 ],
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame( '1.02', $this->written_options[ PluginUpdate::MIGRATION_NOTICE_OPTION_NAME ] );
+	}
+
+	/**
+	 * A fresh install has nothing to report: no step ran, so no settings were migrated.
+	 *
+	 * @return void
+	 */
+	public function test_a_fresh_install_records_no_pending_notice(): void {
+		$this->stub_options( [] );
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertArrayNotHasKey( PluginUpdate::MIGRATION_NOTICE_OPTION_NAME, $this->written_options );
+		$this->assertSame( '3.0.0-beta.1', $this->written_options[ PluginUpdate::DB_VERSION_OPTION_NAME ] );
+	}
+
+	/**
 	 * A failing step records the attempt and leaves the database version untouched.
 	 *
 	 * The version has to stay stale so the migration is retried, and the failure must not
