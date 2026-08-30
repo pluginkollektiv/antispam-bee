@@ -25,6 +25,16 @@ class MigrationFailureNotice {
 	const DISMISS_ACTION = 'antispam_bee_dismiss_migration';
 
 	/**
+	 * Query argument marking the page load that follows a retry the user asked for.
+	 *
+	 * A manual retry starts its attempts from zero, so a retry that fails again lands
+	 * far below the cap and would render nothing at all — leaving the button looking
+	 * like it had worked. The marker lets that one page load report the outcome
+	 * regardless of how many attempts have been spent.
+	 */
+	const RETRY_RESULT_ARG = 'antispam-bee-migration-retried';
+
+	/**
 	 * Register the notice and its handlers.
 	 */
 	public static function init(): void {
@@ -45,8 +55,19 @@ class MigrationFailureNotice {
 			return;
 		}
 
+		if ( self::render_success() ) {
+			return;
+		}
+
 		$state = PluginUpdate::get_failure_state();
-		if ( $state['attempts'] < PluginUpdate::MAX_UPDATE_ATTEMPTS ) {
+
+		/*
+		 * Below the cap the automatic retries are still running and there is nothing to
+		 * ask the user for — except right after they pressed the button themselves, where
+		 * silence would read as success.
+		 */
+		if ( $state['attempts'] < PluginUpdate::MAX_UPDATE_ATTEMPTS
+			&& ! ( self::is_retry_result() && $state['attempts'] > 0 ) ) {
 			return;
 		}
 
@@ -114,6 +135,53 @@ class MigrationFailureNotice {
 	}
 
 	/**
+	 * Report a migration that completed, once.
+	 *
+	 * Reported wherever the admin happens to land, because the request that ran the
+	 * migration is usually not one anybody was watching: a WP-CLI update, a cron run,
+	 * or a front-end hit that read a setting. Without this the user has no way to tell
+	 * their migrated settings apart from the defaults.
+	 *
+	 * @return bool Whether a success notice was rendered.
+	 */
+	private static function render_success(): bool {
+		$migrated_from = PluginUpdate::get_pending_migration_notice();
+		if ( null === $migrated_from ) {
+			return false;
+		}
+
+		PluginUpdate::clear_pending_migration_notice();
+
+		echo '<div class="notice notice-success is-dismissible">';
+
+		printf(
+			'<p><strong>%s</strong></p>',
+			esc_html__( 'Antispam Bee migrated your settings.', 'antispam-bee' )
+		);
+
+		printf(
+			'<p>%s</p>',
+			esc_html__( 'Your previous configuration has been carried over to the new settings. Please check that everything is as you expect.', 'antispam-bee' )
+		);
+
+		echo '</div>';
+
+		return true;
+	}
+
+	/**
+	 * Whether this page load is the one following a retry the user asked for.
+	 *
+	 * @return bool Whether the retry marker is present.
+	 */
+	private static function is_retry_result(): bool {
+		// The marker only decides whether a message is shown; the action it follows was
+		// nonce-checked in `handle_retry()`, and nothing here acts on the request.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return ! empty( $_GET[ self::RETRY_RESULT_ARG ] );
+	}
+
+	/**
 	 * Reset the failure state so the migration is attempted again.
 	 *
 	 * Clearing the state is all it takes: the database version is still the old one,
@@ -124,7 +192,7 @@ class MigrationFailureNotice {
 
 		PluginUpdate::reset_for_retry();
 
-		self::redirect_back();
+		self::redirect_back( [ self::RETRY_RESULT_ARG => '1' ] );
 	}
 
 	/**
@@ -157,11 +225,18 @@ class MigrationFailureNotice {
 
 	/**
 	 * Return to the page the notice was shown on.
+	 *
+	 * @param array<string, string> $args Query arguments to carry over to that page.
 	 */
-	private static function redirect_back(): void {
+	private static function redirect_back( array $args = [] ): void {
 		$referer = wp_get_referer();
+		$target  = $referer ?: admin_url();
 
-		wp_safe_redirect( $referer ?: admin_url() );
+		if ( ! empty( $args ) ) {
+			$target = add_query_arg( $args, $target );
+		}
+
+		wp_safe_redirect( $target );
 		exit;
 	}
 }

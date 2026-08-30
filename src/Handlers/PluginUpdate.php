@@ -26,6 +26,16 @@ class PluginUpdate {
 	const FAILURE_OPTION_NAME = 'antispambee_db_update_failures';
 
 	/**
+	 * Name of the option recording a migration that completed and has not been reported yet.
+	 *
+	 * A migration usually finishes in a request nobody is watching — an update run over
+	 * WP-CLI, a cron job, a front-end hit that happened to read a setting. Recording it
+	 * lets the next admin page load say so once, instead of leaving the user to guess
+	 * whether the settings they are looking at are their own or the defaults.
+	 */
+	const MIGRATION_NOTICE_OPTION_NAME = 'antispambee_db_migration_notice';
+
+	/**
 	 * How often a migration to the same plugin version may be attempted before giving up.
 	 */
 	const MAX_UPDATE_ATTEMPTS = 3;
@@ -131,6 +141,7 @@ class PluginUpdate {
 		}
 
 		$version_from_db = get_option( self::DB_VERSION_OPTION_NAME, null );
+		$migrated_from   = null;
 
 		/*
 		 * `null` is a fresh install, which has nothing to migrate. A recorded revision
@@ -165,6 +176,8 @@ class PluginUpdate {
 
 				return;
 			}
+
+			$migrated_from = (string) $version_from_db;
 		}
 
 		/*
@@ -182,6 +195,16 @@ class PluginUpdate {
 		 */
 		delete_option( self::FAILURE_OPTION_NAME );
 		update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
+
+		/*
+		 * Only a migration that actually had legacy settings to convert is worth
+		 * reporting. A fresh install falls through the block above without running a
+		 * single step, and telling that user their settings were migrated would be
+		 * both untrue and confusing.
+		 */
+		if ( null !== $migrated_from ) {
+			update_option( self::MIGRATION_NOTICE_OPTION_NAME, $migrated_from );
+		}
 	}
 
 	/**
@@ -220,6 +243,24 @@ class PluginUpdate {
 	public static function mark_as_migrated(): void {
 		delete_option( self::FAILURE_OPTION_NAME );
 		update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
+	}
+
+	/**
+	 * The version a completed migration converted from, if it has not been reported yet.
+	 *
+	 * @return string|null The legacy database version, or `null` when there is nothing to report.
+	 */
+	public static function get_pending_migration_notice(): ?string {
+		$migrated_from = get_option( self::MIGRATION_NOTICE_OPTION_NAME, null );
+
+		return is_scalar( $migrated_from ) ? (string) $migrated_from : null;
+	}
+
+	/**
+	 * Forget a completed migration once it has been reported.
+	 */
+	public static function clear_pending_migration_notice(): void {
+		delete_option( self::MIGRATION_NOTICE_OPTION_NAME );
 	}
 
 	/**
