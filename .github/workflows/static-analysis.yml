@@ -2,7 +2,10 @@
 # `wp-since`, since that is what the status checks on existing pull requests are called.
 #
 # The jobs share a workflow because they share a trigger: all of them are static checks
-# over the source, none starts an environment. They still report as separate status checks.
+# over the repository, none starts an environment. They still report as separate status
+# checks. `workflows` analyses `.github/` itself rather than the plugin source, but it is
+# static analysis over checked-in code all the same, so it belongs here rather than in a
+# workflow of its own.
 #
 # Only `pull_request` is filtered — `push` to a major branch deliberately runs everything.
 # A merge carries the same diff the pull request carried, so a filter that is too narrow
@@ -31,12 +34,19 @@ on:
       # `Requires at least` header in `readme.txt`, so lowering it there alone changes
       # the outcome of the check.
       - 'readme.txt'
-      - '.github/workflows/static-analysis.yml'
-      # The shared PHP setup is part of this workflow's setup, so a change to it has to run
-      # this workflow as well.
-      - '.github/actions/setup-php/**'
+      # The shared PHP setup is part of this workflow's setup, and `workflows` analyses
+      # every workflow and composite action, so any change under `.github/` has to run
+      # this workflow.
+      - '.github/workflows/**'
+      - '.github/actions/**'
   # Allow forcing a full run by hand, for example before cutting a release.
   workflow_dispatch:
+
+# The jobs only read the checkout and run the suite, so nothing beyond read access
+# is needed. Declared explicitly so it stays restricted even if the repository
+# default token permission is widened later.
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -47,6 +57,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Setup PHP and install dependencies
         uses: ./.github/actions/setup-php
         with:
@@ -59,6 +71,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
     - name: Setup PHP and install dependencies
       uses: ./.github/actions/setup-php
       with:
@@ -73,6 +87,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
     - name: Setup PHP and install dependencies
       uses: ./.github/actions/setup-php
       with:
@@ -80,3 +96,29 @@ jobs:
         composer-flags: '--ignore-platform-req=php'
     - name: Check for unavailable WordPress functions
       run: ./vendor/bin/wp-since check .
+
+  workflows:
+    name: Workflow hardening
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+    - name: Audit the workflows with zizmor
+      # Workflows are code, and the same static analysis the PHP gets. zizmor covers
+      # what review reliably misses: an action pinned to a movable tag, a job running
+      # with more token than it needs, event data spliced into a shell script, a
+      # checkout leaving its credentials in `.git/config`.
+      #
+      # Deliberately the plain CLI rather than `zizmorcore/zizmor-action`: one fewer
+      # third-party action in the very workflow that argues for fewer of them, and the
+      # action's SARIF upload would need `security-events: write` for a report that is
+      # just as readable in the log.
+      #
+      # `GH_TOKEN` only to lift zizmor out of offline mode. Some of its checks have to
+      # ask the API — whether a pinned hash is a commit that actually exists in the
+      # action's repository, most of all, which is how an impostor pin is caught. The
+      # read-only job token is enough for that.
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: pipx run zizmor --persona=regular --format=plain .github/

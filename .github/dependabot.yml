@@ -5,11 +5,19 @@
 
 version: 2
 updates:
-  - package-ecosystem: "composer" # See documentation for possible values
+  # The `dependabot-cooldown` suppressions below are deliberate, not an oversight.
+  # A cooldown makes Dependabot wait a few days after a version is published before
+  # proposing it, so a hijacked release that is yanked within that window never reaches
+  # us — at the price of delaying every routine bump by the same few days. Whether
+  # that trade is worth making for a repository whose every updated package is dev
+  # tooling that never reaches a user site is
+  # https://github.com/pluginkollektiv/antispam-bee/issues/855, not something to
+  # settle in passing while hardening the workflows.
+  - package-ecosystem: "composer" # zizmor: ignore[dependabot-cooldown]
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
-  - package-ecosystem: "npm" # See documentation for possible values
+  - package-ecosystem: "npm" # zizmor: ignore[dependabot-cooldown]
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
@@ -17,7 +25,7 @@ updates:
   # changing what we run — but it also means a pin stays where it is until someone
   # moves it. Dependabot advances the hash and the release comment for us. Weekly,
   # because actions release far less often than the Composer and npm dependencies.
-  - package-ecosystem: "github-actions"
+  - package-ecosystem: "github-actions" # zizmor: ignore[dependabot-cooldown]
     directory: "/"
     schedule:
       interval: "weekly"
