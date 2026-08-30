@@ -177,6 +177,24 @@ class Antispam_Bee {
 				)
 			);
 
+			// Pre-release recruitment for 3.0.0, to be removed again in the next 2.11.x release. See #811.
+			if ( self::_current_page( 'plugins' ) || self::_current_page( 'options' ) ) {
+				add_action(
+					'admin_init',
+					array(
+						__CLASS__,
+						'dismiss_prerelease_notice',
+					)
+				);
+				add_action(
+					'admin_notices',
+					array(
+						__CLASS__,
+						'print_prerelease_notice',
+					)
+				);
+			}
+
 			if ( self::_current_page( 'dashboard' ) ) {
 				add_filter(
 					'dashboard_glance_items',
@@ -1107,6 +1125,93 @@ class Antispam_Bee {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Prints the admin notice recruiting testers for the 3.0.0 pre-release.
+	 *
+	 * Only rendered on the plugins list and on the Antispam Bee settings page, for
+	 * users who may install plugins and who have not dismissed the notice yet.
+	 *
+	 * @since 2.11.14
+	 *
+	 * @todo Remove again in the next 2.11.x release, once 3.0.0 has shipped. See #811.
+	 *
+	 * @return void
+	 */
+	public static function print_prerelease_notice() {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
+
+		if ( get_user_meta( get_current_user_id(), 'antispam_bee_dismissed_prerelease_notice_300', true ) ) {
+			return;
+		}
+
+		$dismiss_url = wp_nonce_url(
+			add_query_arg( 'antispam_bee_dismiss_prerelease_notice', '1' ),
+			'antispam_bee_dismiss_prerelease_notice'
+		);
+
+		/* translators: Do not translate this URL, keep the English one. Only replace it if an announcement post in your language exists - so far there is only an English and a German post. */
+		$announcement_url = __( 'https://pluginkollektiv.org/antispam-bee-3-0-0-pre-release/', 'antispam-bee' );
+
+		echo '<div class="notice notice-info">';
+
+		printf(
+			'<p><strong>%s</strong></p>',
+			esc_html__( 'Antispam Bee 3.0.0 is looking for testers', 'antispam-bee' )
+		);
+
+		printf(
+			'<p>%s</p>',
+			esc_html__( 'The upcoming version 3.0.0 is a complete rewrite of Antispam Bee. Updating migrates your current settings to the new options, so please try the pre-release on a staging site first, not on a live site.', 'antispam-bee' )
+		);
+
+		printf(
+			'<p><a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a> &middot; <a href="%3$s">%4$s</a></p>',
+			esc_url( $announcement_url ),
+			esc_html__( 'Get the pre-release and tell us how it went', 'antispam-bee' ),
+			esc_url( $dismiss_url ),
+			esc_html__( 'Dismiss this notice', 'antispam-bee' )
+		);
+
+		echo '</div>';
+	}
+
+	/**
+	 * Stores the dismissal of the 3.0.0 pre-release notice for the current user.
+	 *
+	 * @since 2.11.14
+	 *
+	 * @todo Remove again in the next 2.11.x release, once 3.0.0 has shipped. See #811.
+	 *
+	 * @return void
+	 */
+	public static function dismiss_prerelease_notice() {
+		// phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification
+		if ( empty( $_GET['antispam_bee_dismiss_prerelease_notice'] ) ) {
+			return;
+		}
+		// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
+
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
+
+		check_admin_referer( 'antispam_bee_dismiss_prerelease_notice' );
+
+		update_user_meta( get_current_user_id(), 'antispam_bee_dismissed_prerelease_notice_300', 1 );
+
+		wp_safe_redirect(
+			remove_query_arg(
+				array(
+					'antispam_bee_dismiss_prerelease_notice',
+					'_wpnonce',
+				)
+			)
+		);
+		exit;
 	}
 
 

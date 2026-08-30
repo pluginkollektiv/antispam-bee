@@ -1,5 +1,12 @@
 ## Changelog ##
 
+### 2.11.14 ###
+* **English**
+  * Enhancement: Admin notice recruiting testers for the Antispam Bee 3.0.0 pre-release
+
+* **Deutsch**
+  * Verbesserung: Hinweis im Backend, der Testerinnen und Tester für die Vorabversion von Antispam Bee 3.0.0 sucht
+
 ### 2.11.13 ###
 * **English**
   * Enhancement: New filter `antispam_bee_honeypot_styles` to change the styles of the honeypot field

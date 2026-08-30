@@ -119,6 +119,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 ## Changelog ##
 
+### 2.11.14 ###
+  * Enhancement: Admin notice recruiting testers for the Antispam Bee 3.0.0 pre-release
+
 ### 2.11.13 ###
   * Enhancement: New filter `antispam_bee_honeypot_styles` to change the styles of the honeypot field
   * Fix: Escape the URL of the settings link (Thanks @thisismyurl!)
@@ -348,6 +351,9 @@ IMPORTANT: If you use the country check and are behind a proxy or similar, you n
 For the complete changelog, check out our [GitHub repository](https://github.com/pluginkollektiv/antispam-bee).
 
 == Upgrade Notice ==
+
+= 2.11.14 =
+Antispam Bee 3.0.0 is a complete rewrite and needs testers. Updating migrates your settings, so please try the pre-release on a staging site first: https://pluginkollektiv.org/antispam-bee-3-0-0-pre-release/
 
 = 2.11.5 =
 Instead of pre_comment_user_ip you need to use our new filter antispam_bee_trusted_ip to send the correct IP address
