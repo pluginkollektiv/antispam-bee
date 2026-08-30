@@ -69,15 +69,62 @@ class Comment extends Reaction {
 			$reaction['ab_spam__invalid_request'] = 1;
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
-		// Everybody can post.
-		if ( strpos( $request_path, 'wp-comments-post.php' ) === false || empty( $_POST ) ) {
+		if ( self::skip_verification( $reaction ) ) {
 			return $reaction;
 		}
 
 		parent::process( $reaction );
 
 		return $reaction;
+	}
+
+	/**
+	 * Whether the spam verification is skipped for this comment.
+	 *
+	 * @param array<string, mixed> $reaction Comment to process.
+	 *
+	 * @return bool Whether to skip the verification.
+	 */
+	private static function skip_verification( array $reaction ): bool {
+		/**
+		 * Filters whether Antispam Bee skips the spam verification for a comment.
+		 *
+		 * Every caller of `wp_new_comment()` reaches this handler through
+		 * `preprocess_comment`, not just the front-end comment form, so the
+		 * decision is made from the request context rather than from the script
+		 * that happens to be executing.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param bool  $skip     Whether to skip the verification.
+		 * @param array $reaction The comment being processed.
+		 */
+		return (bool) apply_filters( 'antispam_bee_skip_comment_verification', self::is_trusted_context(), $reaction );
+	}
+
+	/**
+	 * Whether the comment originates from a context that is not a public submission.
+	 *
+	 * Comments inserted while WordPress installs, while an importer runs, from
+	 * WP-CLI, or by a moderator working in the admin are not visitor input and are
+	 * therefore not verified.
+	 *
+	 * @return bool Whether the current request is a trusted context.
+	 */
+	private static function is_trusted_context(): bool {
+		if ( wp_installing() ) {
+			return true;
+		}
+
+		if ( defined( 'WP_IMPORTING' ) && WP_IMPORTING ) {
+			return true;
+		}
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			return true;
+		}
+
+		return is_admin() && current_user_can( 'moderate_comments' );
 	}
 
 	/**

@@ -6,12 +6,19 @@ use AntispamBee\Handlers\Comment;
 use AntispamBee\Handlers\Reaction;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 use function Brain\Monkey\Functions\stubs;
+use function Brain\Monkey\Functions\when;
 
 /**
  * Unit tests for {@see Comment}.
  */
 class CommentTest extends TestCase {
 
+	/**
+	 * The verification decision is driven by the request context, not by the executing script.
+	 *
+	 * Mockery's `overload:` may only be applied once per process, so the whole contract is
+	 * asserted in a single test method against one overloaded parent.
+	 */
 	public function test_process() {
 		global $_POST;
 		global $_SERVER;
@@ -20,6 +27,10 @@ class CommentTest extends TestCase {
 		$_SERVER = [
 			'REMOTE_ADDR' => '192.0.2.100',
 		];
+
+		$is_admin     = false;
+		$can_moderate = false;
+		$skip_filter  = null;
 
 		stubs(
 			[
@@ -30,12 +41,33 @@ class CommentTest extends TestCase {
 				'wp_unslash'   => function ( $value ) {
 					return $value;
 				},
+				'wp_installing' => false,
 			]
+		);
+
+		when( 'is_admin' )->alias(
+			function () use ( &$is_admin ) {
+				return $is_admin;
+			}
+		);
+		when( 'current_user_can' )->alias(
+			function () use ( &$can_moderate ) {
+				return $can_moderate;
+			}
+		);
+		when( 'apply_filters' )->alias(
+			function ( $hook, $value = null ) use ( &$skip_filter ) {
+				if ( 'antispam_bee_skip_comment_verification' === $hook && null !== $skip_filter ) {
+					return $skip_filter;
+				}
+
+				return $value;
+			}
 		);
 
 		$processed = [];
 		mock( 'overload:' . Reaction::class )
-			->expects( 'process' )
+			->allows( 'process' )
 			->withArgs( function ( $input ) use ( &$processed ) {
 				$processed[] = $input;
 
@@ -44,27 +76,60 @@ class CommentTest extends TestCase {
 
 		$comment = [ 'comment_type' => 'comment' ];
 
-		$result = Comment::process( $comment );
-		self::assertSame( '192.0.2.100', $result['comment_author_IP'], 'Unexpected author IP on index.php' );
-		self::assertEmpty( $processed, 'Comment should not have been processed on index.php' );
+		// The front-end comment form is verified, as it always was.
+		$_SERVER['SCRIPT_NAME'] = '/wp-comments-post.php';
+		$_POST                  = [ 'comment' => 'Hello' ];
+		$result                 = Comment::process( $comment );
+		self::assertSame( '192.0.2.100', $result['comment_author_IP'], 'Unexpected author IP on wp-comments-post.php' );
+		self::assertCount( 1, $processed, 'Comment should have been processed on wp-comments-post.php' );
 
+		/*
+		 * Every caller of `wp_new_comment()` reaches this handler through
+		 * `preprocess_comment`. XML-RPC's `wp.newComment` is served by /xmlrpc.php with
+		 * an empty $_POST (the payload is a raw XML body), and used to skip every rule.
+		 */
+		$processed              = [];
+		$_SERVER['SCRIPT_NAME'] = '/xmlrpc.php';
+		$_POST                  = [];
+		$result                 = Comment::process( $comment );
+		self::assertCount( 1, $processed, 'Comment submitted over XML-RPC should have been processed' );
+
+		// A REST or headless front-end submission is verified too.
+		$processed              = [];
+		$_SERVER['SCRIPT_NAME'] = '/index.php';
+		$result                 = Comment::process( $comment );
+		self::assertCount( 1, $processed, 'Comment submitted outside the comment form should have been processed' );
+
+		// A moderator working in the admin is not a public submission.
+		$processed    = [];
+		$is_admin     = true;
+		$can_moderate = true;
+		$result       = Comment::process( $comment );
+		self::assertEmpty( $processed, 'Comment created by a moderator in the admin should not have been processed' );
+
+		// A visitor hitting an admin-side endpoint is still verified.
+		$processed    = [];
+		$can_moderate = false;
+		$result       = Comment::process( $comment );
+		self::assertCount( 1, $processed, 'Comment from a non-moderator should have been processed' );
+
+		// The decision is filterable.
+		$processed   = [];
+		$is_admin    = false;
+		$skip_filter = true;
+		$result      = Comment::process( $comment );
+		self::assertEmpty( $processed, 'The filter should have skipped the verification' );
+		$skip_filter = null;
+
+		// An unparsable request is still flagged.
+		$processed              = [];
 		$_SERVER['SCRIPT_NAME'] = '';
 		$result                 = Comment::process( $comment );
-		self::assertSame( '192.0.2.100', $result['comment_author_IP'], 'Unexpected author IP on invalid request' );
 		self::assertSame( 1, $result['ab_spam__invalid_request'], 'Invalid request not detected' );
-		self::assertEmpty( $processed, 'Comment should not have been processed on invalid request' );
 
-		$_SERVER['SCRIPT_NAME'] = '/wp-comments-post.php';
-		$result                 = Comment::process( $comment );
-		self::assertSame( '192.0.2.100', $result['comment_author_IP'], 'Unexpected author IP on invalid request' );
-		self::assertArrayNotHasKey( 'processed', $result, 'Comment should not have been processed without POST data' );
-
-		$_POST  = 'test me';
-		$result = Comment::process( $comment );
-		self::assertSame( [ $result ], $processed, 'Comment was not processed' );
-
-		$comment = [ 'comment_type' => 'linkback' ];
-		$result  = Comment::process( $comment );
-		self::assertSame( $comment, $result, 'Linkback should not be modified by comment handler' );
+		// A reaction of another type is left untouched.
+		$linkback = [ 'comment_type' => 'linkback' ];
+		$result   = Comment::process( $linkback );
+		self::assertSame( $linkback, $result, 'Linkback should not be modified by comment handler' );
 	}
 }
