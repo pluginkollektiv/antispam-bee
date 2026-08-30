@@ -45,36 +45,6 @@ defined( 'ABSPATH' ) || exit;
 class Antispam_Bee {
 
 	/**
-	 * Canonical announcement post for the 3.0.0 pre-release.
-	 *
-	 * Both the admin notice and the readme.txt upgrade notice point here, so the
-	 * target can be kept up to date while the pre-release progresses.
-	 *
-	 * @since 2.11.14
-	 *
-	 * @var string
-	 */
-	const PRERELEASE_ANNOUNCEMENT_URL = 'https://pluginkollektiv.org/antispam-bee-3-0-0-pre-release/';
-
-	/**
-	 * User meta key storing the dismissal of the 3.0.0 pre-release notice.
-	 *
-	 * @since 2.11.14
-	 *
-	 * @var string
-	 */
-	const PRERELEASE_NOTICE_USER_META = 'antispam_bee_dismissed_prerelease_notice_300';
-
-	/**
-	 * Query argument used by the dismiss link of the 3.0.0 pre-release notice.
-	 *
-	 * @since 2.11.14
-	 *
-	 * @var string
-	 */
-	const PRERELEASE_NOTICE_DISMISS_ARG = 'antispam_bee_dismiss_prerelease_notice';
-
-	/**
 	 * The option defaults.
 	 *
 	 * @var array
@@ -1174,14 +1144,17 @@ class Antispam_Bee {
 			return;
 		}
 
-		if ( get_user_meta( get_current_user_id(), self::PRERELEASE_NOTICE_USER_META, true ) ) {
+		if ( get_user_meta( get_current_user_id(), 'antispam_bee_dismissed_prerelease_notice_300', true ) ) {
 			return;
 		}
 
 		$dismiss_url = wp_nonce_url(
-			add_query_arg( self::PRERELEASE_NOTICE_DISMISS_ARG, '1' ),
-			self::PRERELEASE_NOTICE_DISMISS_ARG
+			add_query_arg( 'antispam_bee_dismiss_prerelease_notice', '1' ),
+			'antispam_bee_dismiss_prerelease_notice'
 		);
+
+		/* translators: Do not translate this URL, keep the English one. Only replace it if an announcement post in your language exists - so far there is only an English and a German post. */
+		$announcement_url = __( 'https://pluginkollektiv.org/antispam-bee-3-0-0-pre-release/', 'antispam-bee' );
 
 		echo '<div class="notice notice-info">';
 
@@ -1197,7 +1170,7 @@ class Antispam_Bee {
 
 		printf(
 			'<p><a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a> &middot; <a href="%3$s">%4$s</a></p>',
-			esc_url( self::PRERELEASE_ANNOUNCEMENT_URL ),
+			esc_url( $announcement_url ),
 			esc_html__( 'Get the pre-release and tell us how it went', 'antispam-bee' ),
 			esc_url( $dismiss_url ),
 			esc_html__( 'Dismiss this notice', 'antispam-bee' )
@@ -1217,7 +1190,7 @@ class Antispam_Bee {
 	 */
 	public static function dismiss_prerelease_notice() {
 		// phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification
-		if ( empty( $_GET[ self::PRERELEASE_NOTICE_DISMISS_ARG ] ) ) {
+		if ( empty( $_GET['antispam_bee_dismiss_prerelease_notice'] ) ) {
 			return;
 		}
 		// phpcs:enable WordPress.CSRF.NonceVerification.NoNonceVerification
@@ -1226,14 +1199,14 @@ class Antispam_Bee {
 			return;
 		}
 
-		check_admin_referer( self::PRERELEASE_NOTICE_DISMISS_ARG );
+		check_admin_referer( 'antispam_bee_dismiss_prerelease_notice' );
 
-		update_user_meta( get_current_user_id(), self::PRERELEASE_NOTICE_USER_META, 1 );
+		update_user_meta( get_current_user_id(), 'antispam_bee_dismissed_prerelease_notice_300', 1 );
 
 		wp_safe_redirect(
 			remove_query_arg(
 				array(
-					self::PRERELEASE_NOTICE_DISMISS_ARG,
+					'antispam_bee_dismiss_prerelease_notice',
 					'_wpnonce',
 				)
 			)
