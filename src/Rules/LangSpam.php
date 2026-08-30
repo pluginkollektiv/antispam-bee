@@ -7,6 +7,8 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Admin\Fields\FieldBuilder;
+use AntispamBee\Admin\Fields\FieldOptions;
 use AntispamBee\Helpers\LangHelper;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
@@ -208,11 +210,11 @@ class LangSpam extends ControllableBase implements SpamReason {
 	}
 
 	/**
-	 * Get the options.
+	 * Get the rules options.
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array<int, array<string, mixed>> The rule options.
+	 * @return array<int, FieldOptions> The rules options.
 	 */
 	public static function get_options(): array {
 		$languages = [
@@ -248,15 +250,15 @@ class LangSpam extends ControllableBase implements SpamReason {
 		$languages = (array) apply_filters( 'antispam_bee_allowed_languages', $languages );
 
 		return [
-			[
-				'type'        => 'checkbox-group',
-				'options'     => $languages,
-				'label'       => __( 'Allowed languages', 'antispam-bee' ),
-				'option_name' => 'allowed',
-				'sanitize'    => function ( $value ) use ( $languages ) {
-					return Sanitize::checkbox_group( $value, $languages );
-				},
-			],
+			FieldBuilder::checkbox_group()
+				->choices( $languages )
+				->label( __( 'Allowed languages', 'antispam-bee' ) )
+				->option_name( 'allowed' )
+				->sanitize(
+					function ( $value ) use ( $languages ) {
+						return Sanitize::checkbox_group( $value, $languages );
+					}
+				),
 		];
 	}
 
