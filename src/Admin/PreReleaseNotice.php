@@ -105,7 +105,7 @@ class PreReleaseNotice {
 			'<p>%2$s</p>' .
 			'<p>%3$s</p>' .
 			'<p><a class="button" href="%4$s" target="_blank" rel="noopener noreferrer">%6$s</a> ' .
-			'<a class="button-link" href="%5$s">%7$s</a></p>' .
+			'<a class="button" href="%5$s" data-antispam-bee-dismiss>%7$s</a></p>' .
 			'</div>',
 			esc_html__( 'Antispam Bee is a pre-release version', 'antispam-bee' ),
 			// The version label is sanitized by wp_kses_post() above.
