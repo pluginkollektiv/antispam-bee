@@ -10,7 +10,7 @@
 		for ( const notice of notices ) {
 			notice.addEventListener( 'click', ( event ) => {
 				const dismiss = event.target.closest(
-					'.notice-dismiss, [data-antispam-bee-dismiss-link]'
+					'.notice-dismiss, [data-antispam-bee-dismiss]'
 				);
 
 				if ( ! dismiss ) {

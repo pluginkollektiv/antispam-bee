@@ -105,8 +105,40 @@ class PreReleaseNoticeTest extends TestCase {
 		self::assertStringContainsString( 'pre-release', $output );
 		self::assertStringContainsString( 'is-dismissible', $output );
 		self::assertStringContainsString( '<code>3.0.0-beta.2</code>', $output );
-		self::assertStringNotContainsString( 'data-antispam-bee-dismiss ', $output );
 		self::assertStringNotContainsString( '<button type="button" class="notice-dismiss"', $output );
+	}
+
+	public function test_only_the_dismiss_link_carries_the_dismiss_marker(): void {
+		self::mock_dependencies();
+
+		$output = self::render_for( 'plugins.php' );
+
+		self::assertStringContainsString(
+			'<a class="button" href="admin-post.php?action=' . PreReleaseNotice::DISMISS_ACTION . '" data-antispam-bee-dismiss>',
+			$output,
+			'The Dismiss link must carry the marker the click handler matches'
+		);
+
+		self::assertMatchesRegularExpression(
+			'/<div class="notice[^>]*data-antispam-bee-dismiss-link="[^"]+"/',
+			$output,
+			'The notice must keep the fallback URL the failed AJAX call navigates to'
+		);
+
+		self::assertSame(
+			1,
+			preg_match(
+				'/<a[^>]*href="' . preg_quote( PreReleaseNotice::FEEDBACK_URL, '/' ) . '"[^>]*>/',
+				$output,
+				$feedback_link
+			),
+			'The notice must render the feedback link'
+		);
+		self::assertStringNotContainsString(
+			'data-antispam-bee-dismiss',
+			$feedback_link[0],
+			'The feedback link must not be matched by the dismiss click handler'
+		);
 	}
 
 	public function test_renders_on_the_plugins_list(): void {
