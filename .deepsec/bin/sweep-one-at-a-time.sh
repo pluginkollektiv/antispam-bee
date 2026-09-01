@@ -20,8 +20,12 @@
 # read from a git worktree or a moved checkout. Absolute entries written by
 # earlier versions are migrated in place on the next run.
 #
+# A file is recorded as done only when the run reports that it actually
+# analysed it. Any other outcome stops the sweep rather than banking a file
+# that was never examined, which would otherwise be skipped forever.
+#
 # Exit codes: 0 = all remaining files done, 2 = stopped by the session limit,
-# 1 = usage or setup error.
+# 3 = a file failed to analyse, 1 = usage or setup error.
 
 set -uo pipefail
 
@@ -118,6 +122,18 @@ for rel in "${PENDING[@]}"; do
 		printf '%d file(s) completed this run. Re-run after the reset to continue.\n' "$processed"
 		printf 'Log: %s\n' "$log"
 		exit 2
+	fi
+
+	# `deepsec process` exits non-zero when it finds something, so the exit
+	# status cannot distinguish success from failure. The run summary can:
+	# it reports the number of files it actually analysed.
+	analyses=$(grep -oE 'Analyses: [0-9]+' "$log" | tail -1 | grep -oE '[0-9]+')
+	if [[ "${analyses:-0}" != 1 ]]; then
+		printf 'FAILED (analysed %s file(s), expected 1).\n' "${analyses:-0}"
+		printf '\nStopped: %s was not analysed, so it has not been recorded as\n' "$rel"
+		printf 'done. Nothing is lost — re-run to retry it.\n'
+		printf 'Log: %s\n' "$log"
+		exit 3
 	fi
 
 	findings=$(grep -oE 'Findings: [0-9]+' "$log" | tail -1 | grep -oE '[0-9]+')
