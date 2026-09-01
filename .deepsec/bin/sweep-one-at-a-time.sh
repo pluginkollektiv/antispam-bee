@@ -16,6 +16,10 @@
 #   --thinking-level L default: xhigh
 #   --list             print remaining files and exit
 #
+# Progress is recorded as repository-relative paths, so the state survives being
+# read from a git worktree or a moved checkout. Absolute entries written by
+# earlier versions are migrated in place on the next run.
+#
 # Exit codes: 0 = all remaining files done, 2 = stopped by the session limit,
 # 1 = usage or setup error.
 
@@ -49,10 +53,21 @@ touch "$DONE_FILE"
 # tests. Regenerated every run so new files are picked up automatically.
 targets() {
 	{
-		find "$REPO_ROOT/src" -name '*.php' -type f
-		[[ -f "$REPO_ROOT/antispam_bee.php" ]] && echo "$REPO_ROOT/antispam_bee.php"
+		find "$REPO_ROOT/src" -name '*.php' -type f -printf 'src/%P\n'
+		[[ -f "$REPO_ROOT/antispam_bee.php" ]] && echo 'antispam_bee.php'
 	} | sort
 }
+
+# Older runs recorded absolute paths, which pinned the state to one checkout.
+# Every target is either `src/...` or `antispam_bee.php`, so an absolute entry
+# can be reduced to its relative form by dropping everything before that.
+migrate_done_file() {
+	grep -q '^/' "$DONE_FILE" || return 0
+	sed -i -E 's#^.*/(src/.*|antispam_bee\.php)$#\1#' "$DONE_FILE"
+	printf 'Migrated recorded progress to repository-relative paths.\n'
+}
+
+migrate_done_file
 
 mapfile -t PENDING < <(targets | { while IFS= read -r f; do grep -qxF "$f" "$DONE_FILE" || printf '%s\n' "$f"; done; })
 
@@ -61,7 +76,7 @@ done_count=$(( total_targets - ${#PENDING[@]} ))
 
 if (( LIST_ONLY )); then
 	printf 'Done: %d/%d. Remaining:\n' "$done_count" "$total_targets"
-	printf '  %s\n' "${PENDING[@]#"$REPO_ROOT/"}"
+	printf '  %s\n' "${PENDING[@]}"
 	exit 0
 fi
 
@@ -74,13 +89,13 @@ printf 'Sweep: %d/%d done, %d remaining. Model %s, thinking %s.\n\n' \
 	"$done_count" "$total_targets" "${#PENDING[@]}" "$MODEL" "$THINKING"
 
 processed=0
-for abs in "${PENDING[@]}"; do
+for rel in "${PENDING[@]}"; do
 	if (( MAX > 0 && processed >= MAX )); then
 		printf '\nReached --max %d, stopping.\n' "$MAX"
 		break
 	fi
 
-	rel="${abs#"$REPO_ROOT/"}"
+	abs="$REPO_ROOT/$rel"
 	log="$STATE_DIR/$(printf '%s' "$rel" | tr '/' '_').log"
 
 	printf '[%d/%d] %s … ' "$(( done_count + processed + 1 ))" "$total_targets" "$rel"
@@ -108,7 +123,7 @@ for abs in "${PENDING[@]}"; do
 	findings=$(grep -oE 'Findings: [0-9]+' "$log" | tail -1 | grep -oE '[0-9]+')
 	printf 'done (%s finding(s))\n' "${findings:-0}"
 
-	printf '%s\n' "$abs" >>"$DONE_FILE"
+	printf '%s\n' "$rel" >>"$DONE_FILE"
 	processed=$(( processed + 1 ))
 done
 
