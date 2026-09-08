@@ -26,8 +26,15 @@
 	<!-- Enable colors in the output -->
 	<arg name="colors"/>
 
-	<!-- Check all files in this directory and the directories below it. -->
-	<file>.</file>
+	<!-- The paths that hold the plugin's own PHP, listed explicitly the same way
+		 `phpstan.neon` declares its `paths`. An allowlist keeps the run from walking
+		 the whole working tree, which matters because a checkout can contain build
+		 output, caches, and the working directories of AI agents — `.claude/worktrees/`
+		 alone held tens of thousands of PHP files here. -->
+	<file>antispam_bee.php</file>
+	<file>phpstan-bootstrap.php</file>
+	<file>rector.php</file>
+	<file>src</file>
 
 	<!--
 	#############################################################################
@@ -39,6 +46,21 @@
 	<exclude-pattern>/vendor/</exclude-pattern>
 	<exclude-pattern>/node_modules/</exclude-pattern>
 	<exclude-pattern>/tests/</exclude-pattern>
+
+	<!-- The `<file>` list above already keeps the default run out of these, but a path
+		 passed on the command line (by an IDE, or `phpcs .`) overrides that list, so the
+		 patterns stay as a safety net.
+
+		 Exclude patterns are regular expressions, so this one covers every hidden
+		 directory at once: editor state (`.idea/`) and the working directories AI
+		 agents create (`.claude/`, `.aider/`, `.cursor/`, `.windsurf/`, …). Those can
+		 hold entire checkouts of this repository, and a contributor may well have dot
+		 directories no list here could predict. -->
+	<exclude-pattern>/\.[^/]+/</exclude-pattern>
+
+	<!-- Local scratch and tool output. Both are in `.gitignore`. -->
+	<exclude-pattern>/tmp/</exclude-pattern>
+	<exclude-pattern>/test-results/</exclude-pattern>
 
 	<!--
 	#############################################################################
