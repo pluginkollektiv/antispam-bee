@@ -209,12 +209,12 @@ class MigrationFailureNoticeTest extends TestCase {
 		 * had the handler continued past an authorisation failure, the options would show it.
 		 */
 		when( 'wp_safe_redirect' )->alias(
-			static function ( $location ) {
+			static function ( $location ): void {
 				throw new RedirectedException( (string) $location );
 			}
 		);
 		when( 'wp_die' )->alias(
-			static function () {
+			static function (): void {
 				throw new DiedException( 'wp_die' );
 			}
 		);

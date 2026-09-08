@@ -357,7 +357,7 @@ final class PluginUpdateTest extends TestCase {
 		 * the fault where a broken option or an unserialize error would actually raise it:
 		 * inside the step, part-way through its work.
 		 */
-		$explode = static function () {
+		$explode = static function (): void {
 			throw new RuntimeException( 'Reading the legacy option failed' );
 		};
 
