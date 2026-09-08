@@ -34,14 +34,20 @@ abstract class Reaction {
 		);
 
 		// Add our manual spam reason to the list of reasons.
-		add_filter(
-			'antispam_bee_additional_spam_reasons',
-			function ( $reasons ) {
-				$reasons['asb-marked-manually'] = __( 'Manually', 'antispam-bee' );
+		add_filter( 'antispam_bee_additional_spam_reasons', [ self::class, 'add_manual_spam_reason' ] );
+	}
 
-				return $reasons;
-			}
-		);
+	/**
+	 * Add the "marked manually" reason to the list of spam reasons.
+	 *
+	 * @param array<string, string> $reasons The registered spam reasons.
+	 *
+	 * @return array<string, string> The reasons, including the manual one.
+	 */
+	public static function add_manual_spam_reason( $reasons ) {
+		$reasons['asb-marked-manually'] = __( 'Manually', 'antispam-bee' );
+
+		return $reasons;
 	}
 
 	/**
@@ -97,18 +103,22 @@ abstract class Reaction {
 	protected static function handle_spam( array $reaction, Rules $rules ) {
 		$item = PostProcessors::apply( static::$reaction_type, $reaction, $rules->get_spam_reasons() );
 		if ( ! isset( $item['asb_marked_as_delete'] ) ) {
-			add_filter(
-				'pre_comment_approved',
-				function () {
-					return 'spam';
-				}
-			);
+			add_filter( 'pre_comment_approved', [ self::class, 'mark_as_spam' ] );
 
 			return $reaction;
 		}
 
 		status_header( 403 );
 		die( 'Spam deleted.' );
+	}
+
+	/**
+	 * Force the approval status of a comment to "spam".
+	 *
+	 * @return string Always `spam`.
+	 */
+	public static function mark_as_spam() {
+		return 'spam';
 	}
 
 	/**
