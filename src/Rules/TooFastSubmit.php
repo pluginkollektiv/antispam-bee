@@ -38,38 +38,44 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	public static function init(): void {
 		add_filter( 'antispam_bee_rules', [ __CLASS__, 'add_rule' ] );
 
-		add_filter(
-			'comment_form_field_comment',
-			function ( $field_markup ) {
-				if ( ! self::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
-					return $field_markup;
+		add_filter( 'comment_form_field_comment', [ self::class, 'inject_time_field' ] );
+	}
+
+	/**
+	 * Inject the submission-time field into the comment form.
+	 *
+	 * @param string $field_markup Markup of the comment field.
+	 *
+	 * @return string The markup, with the time field injected.
+	 */
+	public static function inject_time_field( $field_markup ) {
+		if ( ! self::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
+			return $field_markup;
+		}
+
+		// The timestamp is set again client-side below, because the rendered value is
+		// frozen for as long as a page cache serves this form. On a client that does
+		// not run the script the rendered value survives, and behind a cache it is
+		// always old enough to clear the limit, so the rule lets the reaction pass
+		// rather than rejecting a visitor whose browser it cannot measure.
+		$unique_id = uniqid( 'antispam-bee-time-' );
+		$script    = sprintf(
+			'<script>(function() {
+				var time = Math.floor(Date.now() / 1000),
+					timeField = document.querySelector(\'input[data-unique-id="%s"]\');
+
+				if (timeField) {
+					timeField.value = time;
 				}
+			}());</script>',
+			$unique_id
+		);
 
-				// The timestamp is set again client-side below, because the rendered value is
-				// frozen for as long as a page cache serves this form. On a client that does
-				// not run the script the rendered value survives, and behind a cache it is
-				// always old enough to clear the limit, so the rule lets the reaction pass
-				// rather than rejecting a visitor whose browser it cannot measure.
-				$unique_id = uniqid( 'antispam-bee-time-' );
-				$script    = sprintf(
-					'<script>(function() {
-						var time = Math.floor(Date.now() / 1000),
-							timeField = document.querySelector(\'input[data-unique-id="%s"]\');
-
-						if (timeField) {
-							timeField.value = time;
-						}
-					}());</script>',
-					$unique_id
-				);
-
-				return $field_markup . sprintf(
-					'<input type="hidden" name="ab_init_time" data-unique-id="%s" value="%d" />%s',
-					$unique_id,
-					time(),
-					$script
-				);
-			}
+		return $field_markup . sprintf(
+			'<input type="hidden" name="ab_init_time" data-unique-id="%s" value="%d" />%s',
+			$unique_id,
+			time(),
+			$script
 		);
 	}
 

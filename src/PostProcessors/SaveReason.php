@@ -20,6 +20,16 @@ class SaveReason extends ControllableBase {
 	protected static $slug = 'asb-save-reason';
 
 	/**
+	 * The spam reasons to persist once the comment has been saved.
+	 *
+	 * Carried between `process()` and `save_reasons()`, because `comment_post`
+	 * hands the callback nothing but the comment ID.
+	 *
+	 * @var array<int, string>
+	 */
+	private static $reasons = [];
+
+	/**
 	 * Process an item.
 	 * Save spam reasons.
 	 *
@@ -38,18 +48,26 @@ class SaveReason extends ControllableBase {
 			return $item;
 		}
 
-		add_action(
-			'comment_post',
-			function ( $comment_id ) use ( $item ) {
-				add_comment_meta(
-					$comment_id,
-					'antispam_bee_reason',
-					implode( ',', $item['asb_reasons'] )
-				);
-			}
-		);
+		self::$reasons = (array) $item['asb_reasons'];
+
+		add_action( 'comment_post', [ self::class, 'save_reasons' ] );
 
 		return $item;
+	}
+
+	/**
+	 * Persist the spam reasons as comment meta.
+	 *
+	 * @param int $comment_id ID of the comment that was just saved.
+	 *
+	 * @return void
+	 */
+	public static function save_reasons( $comment_id ) {
+		add_comment_meta(
+			$comment_id,
+			'antispam_bee_reason',
+			implode( ',', self::$reasons )
+		);
 	}
 
 	/**
