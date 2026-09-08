@@ -36,7 +36,7 @@ require_once $asb_tests_dir . 'includes/functions.php';
  */
 tests_add_filter(
 	'muplugins_loaded',
-	static function () {
+	static function (): void {
 		require dirname( __DIR__ ) . '/antispam_bee.php';
 	}
 );
