@@ -77,6 +77,12 @@
 		],
 		"rector:fix": [
 			"rector process"
+		],
+		"wp-since": [
+			"wp-since check ."
+		],
+		"check": [
+			"bin/check.sh"
 		]
 	},
 	"config": {

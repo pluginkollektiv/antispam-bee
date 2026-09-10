@@ -13,19 +13,38 @@ treating it as project code produces false findings.
 
 ## Code quality — verify before every commit
 
-| Check                   | Command                                      |
-|-------------------------|----------------------------------------------|
-| PHP code style          | `composer cs`                                |
-| PHPStan static analysis | `composer phpstan`                           |
-| PHP unit tests          | `composer test:unit`                         |
-| PHP integration tests   | `npm run env:start`, then `npm run test:integration` |
-| E2E tests               | `npm run env:start`, then `npm run test:e2e` |
+`composer check` runs every check that needs nothing but PHP and Composer, and takes a few
+seconds. Prefer it over running them individually: it does not stop at the first failure, so one
+run reports everything that needs fixing.
+
+| Check                        | Command                                      | In `composer check` |
+|------------------------------|----------------------------------------------|---------------------|
+| PHP code style               | `composer cs`                                | yes                 |
+| PHPStan static analysis      | `composer phpstan`                           | yes                 |
+| Rector                       | `composer rector`                            | yes                 |
+| PHP unit tests               | `composer test:unit`                         | yes                 |
+| WordPress function usage     | `composer wp-since`                          | yes                 |
+| PHP integration tests        | `npm run env:start`, then `npm run test:integration` | no          |
+| E2E tests                    | `npm run env:start`, then `npm run test:e2e` | no                  |
+
+The last two need a running `wp-env`, which takes minutes rather than seconds, so they stay
+outside `composer check`. Run them when you touch what they cover.
 
 Unit tests mock WordPress with Brain Monkey and run without a database. Integration tests boot a
 real WordPress against the `wp-env` database — use them for anything touching options, the
 database or core hooks. `npm run test:integration:multisite` repeats the run on a network install.
 
-Fix code style violations automatically with `composer csfix`.
+Fix code style violations automatically with `composer csfix`, and pending Rector rewrites with
+`composer rector:fix`. Run `composer rector:fix` before `composer csfix`: Rector's printer does not
+follow WPCS spacing on the nodes it rewrites.
+
+There is deliberately no pre-commit hook. A commit is a checkpoint and may well be a work in
+progress; the gate that matters is CI on the pull request. If you want the checks run
+automatically, a `pre-push` hook is the right place, and stays your own choice:
+
+```sh
+printf '#!/bin/sh\nexec composer check\n' > .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+```
 
 Target PHP 7.4+. Avoid syntax introduced in PHP 8.0 or later: `match` expressions, constructor
 property promotion, named arguments, nullsafe operator (`?->`), union types. The `phpcs.xml` ruleset
