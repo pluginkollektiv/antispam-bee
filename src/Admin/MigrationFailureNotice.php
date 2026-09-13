@@ -295,9 +295,27 @@ class MigrationFailureNotice {
 			esc_html__( 'Antispam Bee migrated your settings.', 'antispam-bee' )
 		);
 
+		/*
+		 * The link carries its own meaning, so it reads as a destination out of context
+		 * rather than as "click here". Following it also retires this report, because the
+		 * page it points at is where the checking actually happens.
+		 */
+		$settings_link = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( admin_url( 'options-general.php?page=' . SettingsPage::SETTINGS_PAGE_SLUG ) ),
+			esc_html__( 'Antispam Bee settings', 'antispam-bee' )
+		);
+
 		printf(
 			'<p>%s</p>',
-			esc_html__( 'Your previous configuration has been carried over to the new settings. Please check that everything is as you expect.', 'antispam-bee' )
+			wp_kses(
+				sprintf(
+					/* translators: %s: link whose text reads "Antispam Bee settings". */
+					__( 'Your previous configuration has been carried over. Please review your %s and check that everything is as you expect.', 'antispam-bee' ),
+					$settings_link
+				),
+				[ 'a' => [ 'href' => [] ] ]
+			)
 		);
 
 		printf(

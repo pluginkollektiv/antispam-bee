@@ -132,6 +132,7 @@ class MigrationFailureNoticeTest extends TestCase {
 		// `__()` and `esc_html__()` already exist as test stubs; these two do not.
 		when( 'esc_html' )->returnArg();
 		when( 'esc_url' )->returnArg();
+		when( 'wp_kses' )->returnArg();
 
 		when( 'current_user_can' )->justReturn( true );
 		when( 'is_network_admin' )->alias(
@@ -482,6 +483,24 @@ class MigrationFailureNoticeTest extends TestCase {
 			$this->deleted_options,
 			'Rendering must not consume the record.'
 		);
+	}
+
+	/**
+	 * The report points at the settings it is asking the user to check.
+	 *
+	 * The link text names its destination rather than saying "click here", and following
+	 * it retires the report, so the invitation and the way to act on it are the same.
+	 *
+	 * @return void
+	 */
+	public function test_the_completed_migration_report_links_to_the_settings(): void {
+		$this->stored_options[ PluginUpdate::MIGRATION_NOTICE_OPTION_NAME ] = '1.02';
+
+		$output = $this->render();
+
+		$this->assertStringContainsString( 'options-general.php?page=antispam_bee', $output );
+		$this->assertStringContainsString( '>Antispam Bee settings</a>', $output );
+		$this->assertStringContainsString( 'review your', $output );
 	}
 
 	/**
