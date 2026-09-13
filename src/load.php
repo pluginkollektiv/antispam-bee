@@ -9,6 +9,7 @@ namespace AntispamBee;
 
 use AntispamBee\Admin\CommentsColumns;
 use AntispamBee\Admin\DashboardWidgets;
+use AntispamBee\Admin\PreReleaseNotice;
 use AntispamBee\Admin\SettingsPage;
 use AntispamBee\Admin\UpgradeNotice;
 use AntispamBee\Crons\DeleteSpamCron;
@@ -55,6 +56,7 @@ function init(): void {
 		new SettingsPage(),
 		CommentsColumns::class,
 		UpgradeNotice::class,
+		PreReleaseNotice::class,
 		DeleteSpamCron::class,
 		Settings::class,
 		// Handlers.
