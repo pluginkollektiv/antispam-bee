@@ -14,6 +14,41 @@ if ( ! defined( 'AntispamBee\MAIN_PLUGIN_FILE' ) ) {
 }
 
 /**
+ * Stands in for the `exit` that follows the redirect, so a handler can be run to
+ * completion in-process and the target asserted.
+ */
+class RedirectedException extends \RuntimeException {
+
+	/**
+	 * The location the handler redirected to.
+	 *
+	 * @var string
+	 */
+	public $location;
+
+	/**
+	 * @param string $location The redirect target.
+	 */
+	public function __construct( string $location ) {
+		parent::__construct( 'Redirected to ' . $location );
+
+		$this->location = $location;
+	}
+}
+
+/**
+ * Stands in for the `wp_die()` that ends an unauthorised request.
+ */
+class DiedException extends \RuntimeException {
+}
+
+/**
+ * Stands in for the `die()` inside `check_admin_referer()` on a bad nonce.
+ */
+class BadNonceException extends \RuntimeException {
+}
+
+/**
  * Unit tests for the notice that reports a migration which failed.
  *
  * Every bug this notice has had so far was a question of which state it decided to
@@ -37,6 +72,34 @@ class MigrationFailureNoticeTest extends TestCase {
 	private $stored_options = [];
 
 	/**
+	 * Options removed via `delete_option()`.
+	 *
+	 * @var string[]
+	 */
+	private $deleted_options = [];
+
+	/**
+	 * Options written via `update_option()`, keyed by option name.
+	 *
+	 * @var array<string, mixed>
+	 */
+	private $written_options = [];
+
+	/**
+	 * Nonce actions passed to `check_admin_referer()`.
+	 *
+	 * @var string[]
+	 */
+	private $checked_nonces = [];
+
+	/**
+	 * Whether the nonce check should fail.
+	 *
+	 * @var bool
+	 */
+	private $nonce_is_valid = true;
+
+	/**
 	 * Stub the WordPress functions the notice reaches for.
 	 *
 	 * @return void
@@ -44,7 +107,11 @@ class MigrationFailureNoticeTest extends TestCase {
 	public function set_up(): void {
 		parent::set_up();
 
-		$this->stored_options = [];
+		$this->stored_options  = [];
+		$this->deleted_options = [];
+		$this->written_options = [];
+		$this->checked_nonces  = [];
+		$this->nonce_is_valid  = true;
 
 		// `__()` and `esc_html__()` already exist as test stubs; these two do not.
 		when( 'esc_html' )->returnArg();
@@ -65,6 +132,51 @@ class MigrationFailureNoticeTest extends TestCase {
 		when( 'get_option' )->alias(
 			function ( $name, $default = false ) {
 				return array_key_exists( $name, $this->stored_options ) ? $this->stored_options[ $name ] : $default;
+			}
+		);
+		when( 'delete_option' )->alias(
+			function ( $name ) {
+				$this->deleted_options[] = $name;
+				unset( $this->stored_options[ $name ] );
+
+				return true;
+			}
+		);
+		when( 'update_option' )->alias(
+			function ( $name, $value ) {
+				$this->written_options[ $name ] = $value;
+				$this->stored_options[ $name ]  = $value;
+
+				return true;
+			}
+		);
+		when( 'wp_get_referer' )->justReturn( 'https://example.com/wp-admin/options-general.php' );
+
+		/*
+		 * The handlers end in `exit`, and `check_admin_referer()` and `wp_die()` end the
+		 * request themselves. Throwing from each stub stops the handler exactly where the
+		 * real call would, which is also what makes "nothing destructive ran" assertable:
+		 * had the handler continued past an authorisation failure, the options would show it.
+		 */
+		when( 'wp_safe_redirect' )->alias(
+			static function ( $location ) {
+				throw new RedirectedException( (string) $location );
+			}
+		);
+		when( 'wp_die' )->alias(
+			static function () {
+				throw new DiedException( 'wp_die' );
+			}
+		);
+		when( 'check_admin_referer' )->alias(
+			function ( $action ) {
+				$this->checked_nonces[] = $action;
+
+				if ( ! $this->nonce_is_valid ) {
+					throw new BadNonceException( 'bad nonce' );
+				}
+
+				return true;
 			}
 		);
 	}
@@ -232,5 +344,138 @@ class MigrationFailureNoticeTest extends TestCase {
 		$this->record_failure( PluginUpdate::MAX_UPDATE_ATTEMPTS );
 
 		$this->assertSame( '', $this->render() );
+	}
+
+	/**
+	 * The retry clears both the stored settings and the failure state, then goes back.
+	 *
+	 * @return void
+	 */
+	public function test_the_retry_clears_the_state_and_redirects_back(): void {
+		$this->record_failure( PluginUpdate::MAX_UPDATE_ATTEMPTS );
+		$this->stored_options[ Settings::OPTION_NAME ] = [ 'comment' => [] ];
+
+		try {
+			MigrationFailureNotice::handle_retry();
+			$this->fail( 'The handler has to end the request by redirecting.' );
+		} catch ( RedirectedException $redirect ) {
+			$this->assertSame( 'https://example.com/wp-admin/options-general.php', $redirect->location );
+		}
+
+		$this->assertContains( Settings::OPTION_NAME, $this->deleted_options );
+		$this->assertContains( PluginUpdate::FAILURE_OPTION_NAME, $this->deleted_options );
+		$this->assertSame( [ MigrationFailureNotice::RETRY_ACTION ], $this->checked_nonces );
+	}
+
+	/**
+	 * Keeping the current settings records the version and leaves the settings alone.
+	 *
+	 * @return void
+	 */
+	public function test_the_dismissal_records_the_version_without_touching_the_settings(): void {
+		$this->record_failure( PluginUpdate::MAX_UPDATE_ATTEMPTS );
+		$this->stored_options[ Settings::OPTION_NAME ] = [ 'comment' => [] ];
+
+		try {
+			MigrationFailureNotice::handle_dismiss();
+			$this->fail( 'The handler has to end the request by redirecting.' );
+		} catch ( RedirectedException $redirect ) {
+			unset( $redirect );
+		}
+
+		$this->assertSame(
+			self::VERSION,
+			$this->written_options[ PluginUpdate::DB_VERSION_OPTION_NAME ],
+			'Recording the version is what actually stops the retries.'
+		);
+		$this->assertContains( PluginUpdate::FAILURE_OPTION_NAME, $this->deleted_options );
+		$this->assertNotContains(
+			Settings::OPTION_NAME,
+			$this->deleted_options,
+			'Keeping the current settings must not delete them.'
+		);
+	}
+
+	/**
+	 * Without the capability, the retry must not reach the deletions.
+	 *
+	 * `reset_for_retry()` throws the settings away, so this is the difference between a
+	 * capability check and data loss for anyone who can be made to follow a link.
+	 *
+	 * @return void
+	 */
+	public function test_the_retry_is_refused_without_the_capability(): void {
+		when( 'current_user_can' )->justReturn( false );
+		$this->record_failure( PluginUpdate::MAX_UPDATE_ATTEMPTS );
+		$this->stored_options[ Settings::OPTION_NAME ] = [ 'comment' => [] ];
+
+		$this->expectException( DiedException::class );
+
+		try {
+			MigrationFailureNotice::handle_retry();
+		} finally {
+			$this->assertSame( [], $this->deleted_options, 'Nothing may be deleted for a user who may not do this.' );
+			$this->assertSame( [], $this->checked_nonces, 'The capability is checked before the nonce.' );
+		}
+	}
+
+	/**
+	 * Without the capability, the dismissal must not record the version either.
+	 *
+	 * @return void
+	 */
+	public function test_the_dismissal_is_refused_without_the_capability(): void {
+		when( 'current_user_can' )->justReturn( false );
+		$this->record_failure( PluginUpdate::MAX_UPDATE_ATTEMPTS );
+
+		$this->expectException( DiedException::class );
+
+		try {
+			MigrationFailureNotice::handle_dismiss();
+		} finally {
+			$this->assertSame( [], $this->written_options, 'Nothing may be written for a user who may not do this.' );
+			$this->assertSame( [], $this->deleted_options );
+		}
+	}
+
+	/**
+	 * A request that does not carry the nonce must not reach the deletions.
+	 *
+	 * Both handlers are plain links, so without this they would fire on any request that
+	 * can be pointed at an administrator's browser.
+	 *
+	 * @return void
+	 */
+	public function test_the_retry_is_refused_without_a_valid_nonce(): void {
+		$this->nonce_is_valid = false;
+		$this->record_failure( PluginUpdate::MAX_UPDATE_ATTEMPTS );
+		$this->stored_options[ Settings::OPTION_NAME ] = [ 'comment' => [] ];
+
+		$this->expectException( BadNonceException::class );
+
+		try {
+			MigrationFailureNotice::handle_retry();
+		} finally {
+			$this->assertSame( [], $this->deleted_options, 'A missing nonce must stop the handler before it deletes anything.' );
+		}
+	}
+
+	/**
+	 * The dismissal is nonce-protected too, and against its own action.
+	 *
+	 * @return void
+	 */
+	public function test_the_dismissal_is_refused_without_a_valid_nonce(): void {
+		$this->nonce_is_valid = false;
+		$this->record_failure( PluginUpdate::MAX_UPDATE_ATTEMPTS );
+
+		$this->expectException( BadNonceException::class );
+
+		try {
+			MigrationFailureNotice::handle_dismiss();
+		} finally {
+			$this->assertSame( [ MigrationFailureNotice::DISMISS_ACTION ], $this->checked_nonces );
+			$this->assertSame( [], $this->written_options );
+		}
 	}
 }
