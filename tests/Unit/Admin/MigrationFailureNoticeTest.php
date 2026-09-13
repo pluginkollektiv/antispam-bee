@@ -242,7 +242,6 @@ class MigrationFailureNoticeTest extends TestCase {
 			'version'  => self::VERSION,
 			'attempts' => $attempts,
 			'message'  => 'Migration exploded',
-			'time'     => 1,
 		];
 	}
 
@@ -377,7 +376,6 @@ class MigrationFailureNoticeTest extends TestCase {
 			'version'  => '3.0.0-beta.0',
 			'attempts' => PluginUpdate::MAX_UPDATE_ATTEMPTS,
 			'message'  => 'Migration exploded',
-			'time'     => 1,
 		];
 
 		$this->assertSame( '', $this->render() );

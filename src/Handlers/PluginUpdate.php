@@ -185,7 +185,6 @@ class PluginUpdate {
 				 * rethrow would turn every commenting visitor's request into.
 				 */
 				$failures['message'] = $throwable->getMessage();
-				$failures['time']    = time();
 				self::save_failure_state( $failures );
 
 				return;
@@ -257,7 +256,7 @@ class PluginUpdate {
 	 * ships a fix for whatever made the migration fail has to get its own attempts,
 	 * so a site that gave up recovers on update instead of needing a manual retry.
 	 *
-	 * @return array{version: string, attempts: int, message: string, time: int} The failure state.
+	 * @return array{version: string, attempts: int, message: string} The failure state.
 	 */
 	public static function get_failure_state(): array {
 		$version = self::get_plugin_version();
@@ -265,7 +264,6 @@ class PluginUpdate {
 			'version'  => $version,
 			'attempts' => 0,
 			'message'  => '',
-			'time'     => 0,
 		];
 
 		$state = get_option( self::FAILURE_OPTION_NAME, null );
@@ -343,7 +341,7 @@ class PluginUpdate {
 	/**
 	 * Persist the state of failed migration attempts.
 	 *
-	 * @param array{version: string, attempts: int, message: string, time: int} $state The failure state.
+	 * @param array{version: string, attempts: int, message: string} $state The failure state.
 	 */
 	private static function save_failure_state( array $state ): void {
 		update_option( self::FAILURE_OPTION_NAME, $state );

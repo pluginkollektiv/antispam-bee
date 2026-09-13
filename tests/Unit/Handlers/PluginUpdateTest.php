@@ -473,8 +473,7 @@ class PluginUpdateTest extends TestCase {
 					'version'  => '3.0.0-beta.1',
 					'attempts' => 1,
 					'message'  => 'Migration exploded',
-					'time'     => 1,
-				],
+						],
 			]
 		);
 
@@ -538,8 +537,7 @@ class PluginUpdateTest extends TestCase {
 					'version'  => '3.0.0-beta.1',
 					'attempts' => PluginUpdate::MAX_UPDATE_ATTEMPTS,
 					'message'  => 'Migration exploded',
-					'time'     => 1,
-				],
+						],
 			]
 		);
 
@@ -566,8 +564,7 @@ class PluginUpdateTest extends TestCase {
 					'version'  => '3.0.0-beta.0',
 					'attempts' => PluginUpdate::MAX_UPDATE_ATTEMPTS,
 					'message'  => 'Migration exploded',
-					'time'     => 1,
-				],
+						],
 			]
 		);
 
@@ -645,8 +642,7 @@ class PluginUpdateTest extends TestCase {
 					'version'  => '3.0.0-beta.1',
 					'attempts' => PluginUpdate::MAX_UPDATE_ATTEMPTS,
 					'message'  => 'Migration exploded',
-					'time'     => 1,
-				],
+						],
 			]
 		);
 
@@ -682,8 +678,7 @@ class PluginUpdateTest extends TestCase {
 					'version'  => '3.0.0-beta.1',
 					'attempts' => PluginUpdate::MAX_UPDATE_ATTEMPTS,
 					'message'  => 'Migration exploded',
-					'time'     => 1,
-				],
+						],
 			]
 		);
 
