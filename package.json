@@ -7,10 +7,13 @@
 	"scripts": {
 		"env:start": "wp-env start",
 		"env:stop": "wp-env stop",
-		"env:clean": "wp-env reset tests",
 		"env:destroy": "wp-env destroy",
-		"test:integration": "wp-env run tests-cli --env-cwd=wp-content/plugins/\"$(basename \"$PWD\")\" -- composer test:integration",
-		"test:integration:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/\"$(basename \"$PWD\")\" -- env WP_MULTISITE=1 composer test:integration",
+		"env:test:start": "wp-env start --config=.wp-env.test.json",
+		"env:test:stop": "wp-env stop --config=.wp-env.test.json",
+		"env:test:clean": "wp-env reset --config=.wp-env.test.json",
+		"env:test:destroy": "wp-env destroy --config=.wp-env.test.json",
+		"test:integration": "wp-env run cli --config=.wp-env.test.json --env-cwd=wp-content/plugins/\"$(basename \"$PWD\")\" -- composer test:integration",
+		"test:integration:multisite": "wp-env run cli --config=.wp-env.test.json --env-cwd=wp-content/plugins/\"$(basename \"$PWD\")\" -- env WP_MULTISITE=1 composer test:integration",
 		"test:e2e": "wp-scripts test-playwright",
 		"test:e2e:ui": "wp-scripts test-playwright --ui",
 		"test:e2e:debug": "wp-scripts test-playwright --debug"

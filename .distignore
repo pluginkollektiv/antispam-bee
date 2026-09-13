@@ -29,6 +29,8 @@
 /.windsurfrules
 /.wp-env.json
 /.wp-env.override.json
+/.wp-env.test.json
+/.wp-env.test.override.json
 /AGENTS.local.md
 /AGENTS.md
 /CLAUDE.local.md

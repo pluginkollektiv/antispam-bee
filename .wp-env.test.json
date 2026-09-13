@@ -4,11 +4,19 @@
 	"plugins": [
 		"."
 	],
+	"port": 8889,
 	"testsEnvironment": false,
 	"config": {
 		"WP_DEBUG": true,
 		"WP_DEBUG_LOG": true,
 		"WP_DEBUG_DISPLAY": true,
 		"WP_ENVIRONMENT_TYPE": "production"
+	},
+	"mappings": {
+		"wp-content/mu-plugins": "./tests/e2e/env/mu-plugins"
+	},
+	"lifecycleScripts": {
+		"afterStart": "node tests/e2e/language-api/start.js",
+		"afterDestroy": "node tests/e2e/language-api/stop.js"
 	}
 }

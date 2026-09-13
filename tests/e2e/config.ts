@@ -1,10 +1,11 @@
 /**
  * Base URL of the WordPress test site.
  *
- * `wp-scripts test-playwright` reads the port from the wp-env config and sets
- * WP_BASE_URL before spawning the Playwright process. This variable picks that
- * up automatically, so tests always hit the same site as the browser fixture,
- * regardless of which port wp-env happens to use.
+ * The test site is the `wp-env` environment described by `.wp-env.test.json`, which
+ * pins port 8889. `wp-scripts test-playwright` only derives WP_BASE_URL from an
+ * `env.tests` section of the default `.wp-env.json`, and that section no longer
+ * exists — the tests environment has a configuration file of its own — so this
+ * default is what points the suite at the right site.
  *
  * Override by setting WP_BASE_URL in the environment before running the suite.
  */

@@ -35,7 +35,7 @@ on:
       - 'package-lock.json'
       - 'playwright.config.ts'
       - 'tests/e2e/**'
-      - '.wp-env.json'
+      - '.wp-env.test.json'
       - '.github/workflows/e2e.yml'
       # The shared PHP setup is part of this workflow's setup, so a change to it has to run
       # this workflow as well.
@@ -95,9 +95,9 @@ jobs:
           latest)  CORE="https://wordpress.org/latest.zip" ;;
           *)       CORE="https://wordpress.org/wordpress-${{ matrix.wordpress }}.zip" ;;
         esac
-        echo "{\"core\":\"${CORE}\",\"phpVersion\":\"${{ matrix.php }}\"}" | tee .wp-env.override.json
+        echo "{\"core\":\"${CORE}\",\"phpVersion\":\"${{ matrix.php }}\"}" | tee .wp-env.test.override.json
     - name: Start wp-env
-      run: npm run env:start
+      run: npm run env:test:start
     - name: Run E2E tests
       run: npm run test:e2e
     - name: Upload test report on failure
@@ -109,4 +109,4 @@ jobs:
         retention-days: 7
     - name: Stop wp-env
       if: always()
-      run: npm run env:stop
+      run: npm run env:test:stop
