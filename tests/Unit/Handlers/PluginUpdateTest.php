@@ -34,6 +34,13 @@ class PluginUpdateTest extends TestCase {
 	private $deleted_options = [];
 
 	/**
+	 * Option names in the order they were written.
+	 *
+	 * @var string[]
+	 */
+	private $write_order = [];
+
+	/**
 	 * The simulated option store that `get_option()` reads from.
 	 *
 	 * @var array<string, mixed>
@@ -63,6 +70,7 @@ class PluginUpdateTest extends TestCase {
 
 		$this->written_options = [];
 		$this->deleted_options = [];
+		$this->write_order     = [];
 		$this->stored_options  = [];
 
 		$this->explode_on_option = null;
@@ -81,6 +89,7 @@ class PluginUpdateTest extends TestCase {
 			function ( $name, $value ) {
 				$this->written_options[ $name ] = $value;
 				$this->stored_options[ $name ]  = $value;
+				$this->write_order[]            = $name;
 
 				return true;
 			}
@@ -306,6 +315,38 @@ class PluginUpdateTest extends TestCase {
 		$this->assertSame(
 			[],
 			$this->written_options[ Settings::OPTION_NAME ]['comment']['rule_asb_lang_spam_allowed']
+		);
+	}
+
+	/**
+	 * The database version is raised only after the migrated options were written.
+	 *
+	 * Ported from the suite that landed with #857: the ordering is the whole point of
+	 * writing the version last, so it is asserted rather than assumed.
+	 *
+	 * @return void
+	 */
+	public function test_db_version_is_raised_after_the_options_were_written(): void {
+		$this->stub_options(
+			[
+				'antispam_bee'           => [
+					'regexp_check' => 1,
+				],
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$options_position = array_search( Settings::OPTION_NAME, $this->write_order, true );
+		$version_position = array_search( PluginUpdate::DB_VERSION_OPTION_NAME, $this->write_order, true );
+
+		$this->assertNotFalse( $options_position, 'The migrated options were written.' );
+		$this->assertNotFalse( $version_position, 'The database version was written.' );
+		$this->assertGreaterThan(
+			$options_position,
+			$version_position,
+			'The database version is raised after the migrated options, so an aborted migration is retried.'
 		);
 	}
 
