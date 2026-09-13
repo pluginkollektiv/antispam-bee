@@ -29,6 +29,13 @@ class MigrationFailureNotice {
 	 */
 	public static function init(): void {
 		add_action( 'admin_notices', [ __CLASS__, 'render' ] );
+
+		/*
+		 * A network-activated install puts an administrator on the network screens, where
+		 * `admin_notices` never fires, so without this the people most likely to be running
+		 * a migration across many sites are the ones who would never hear that one failed.
+		 */
+		add_action( 'network_admin_notices', [ __CLASS__, 'render' ] );
 		add_action( 'admin_post_' . self::RETRY_ACTION, [ __CLASS__, 'handle_retry' ] );
 		add_action( 'admin_post_' . self::DISMISS_ACTION, [ __CLASS__, 'handle_dismiss' ] );
 	}
@@ -74,6 +81,26 @@ class MigrationFailureNotice {
 				? esc_html__( 'Antispam Bee could not migrate your settings.', 'antispam-bee' )
 				: esc_html__( 'Antispam Bee could not migrate your settings yet.', 'antispam-bee' )
 		);
+
+		/*
+		 * The migration, and so this state, belongs to one site. On the network screens
+		 * there is no current site from the reader's point of view, so the notice has to
+		 * name the one it is reporting on, or it reads as a statement about the network.
+		 * It reports the site being browsed rather than scanning every site in the network,
+		 * for the same reason the migration itself does not: that does not scale.
+		 */
+		if ( is_network_admin() ) {
+			printf(
+				'<p>%s</p>',
+				esc_html(
+					sprintf(
+						/* translators: %s: name of the site the failed migration belongs to. */
+						__( 'This concerns the site %s. Other sites in the network migrate separately and report separately.', 'antispam-bee' ),
+						get_bloginfo( 'name' )
+					)
+				)
+			);
+		}
 
 		/*
 		 * What is running now and what happens next are two separate questions, and the

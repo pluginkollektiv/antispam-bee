@@ -118,6 +118,8 @@ class MigrationFailureNoticeTest extends TestCase {
 		when( 'esc_url' )->returnArg();
 
 		when( 'current_user_can' )->justReturn( true );
+		when( 'is_network_admin' )->justReturn( false );
+		when( 'get_bloginfo' )->justReturn( 'Example Subsite' );
 		when( 'get_file_data' )->justReturn( [ 'Version' => self::VERSION ] );
 		when( 'admin_url' )->alias(
 			static function ( $path = '' ) {
@@ -344,6 +346,56 @@ class MigrationFailureNoticeTest extends TestCase {
 		$this->record_failure( PluginUpdate::MAX_UPDATE_ATTEMPTS );
 
 		$this->assertSame( '', $this->render() );
+	}
+
+	/**
+	 * On the network screens the notice has to say which site it is about.
+	 *
+	 * The migration belongs to one site, so an unqualified notice there would read as a
+	 * statement about the whole network.
+	 *
+	 * @return void
+	 */
+	public function test_the_network_screens_name_the_site_the_failure_belongs_to(): void {
+		when( 'is_network_admin' )->justReturn( true );
+		$this->record_failure( 1 );
+
+		$output = $this->render();
+
+		$this->assertStringContainsString( 'Example Subsite', $output );
+		$this->assertStringContainsString( 'migrate separately', $output );
+	}
+
+	/**
+	 * On a single site there is no other site to distinguish it from.
+	 *
+	 * @return void
+	 */
+	public function test_a_single_site_notice_does_not_name_the_site(): void {
+		$this->record_failure( 1 );
+
+		$output = $this->render();
+
+		$this->assertStringNotContainsString( 'Example Subsite', $output );
+	}
+
+	/**
+	 * The notice is registered for the network screens as well as the site ones.
+	 *
+	 * A network-activated install leaves administrators on the network screens, where
+	 * `admin_notices` never fires.
+	 *
+	 * @return void
+	 */
+	public function test_the_notice_is_registered_for_both_admin_contexts(): void {
+		MigrationFailureNotice::init();
+
+		$this->assertNotFalse(
+			has_action( 'admin_notices', [ MigrationFailureNotice::class, 'render' ] )
+		);
+		$this->assertNotFalse(
+			has_action( 'network_admin_notices', [ MigrationFailureNotice::class, 'render' ] )
+		);
 	}
 
 	/**
