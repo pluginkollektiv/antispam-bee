@@ -72,6 +72,10 @@ class MigrationFailureNotice {
 			return;
 		}
 
+		if ( self::render_success() ) {
+			return;
+		}
+
 		$state = PluginUpdate::get_failure_state();
 		if ( $state['attempts'] < 1 ) {
 			return;
@@ -240,6 +244,41 @@ class MigrationFailureNotice {
 		}
 
 		echo '</div>';
+	}
+
+	/**
+	 * Report a migration that completed, once.
+	 *
+	 * Reported wherever the admin happens to land, because the request that ran the
+	 * migration is usually not one anybody was watching: a WP-CLI update, a cron run,
+	 * or a front-end hit that read a setting. Without this the user has no way to tell
+	 * their migrated settings apart from the defaults.
+	 *
+	 * @return bool Whether a success notice was rendered.
+	 */
+	private static function render_success(): bool {
+		$migrated_from = PluginUpdate::get_pending_migration_notice();
+		if ( null === $migrated_from ) {
+			return false;
+		}
+
+		PluginUpdate::clear_pending_migration_notice();
+
+		echo '<div class="notice notice-success is-dismissible">';
+
+		printf(
+			'<p><strong>%s</strong></p>',
+			esc_html__( 'Antispam Bee migrated your settings.', 'antispam-bee' )
+		);
+
+		printf(
+			'<p>%s</p>',
+			esc_html__( 'Your previous configuration has been carried over to the new settings. Please check that everything is as you expect.', 'antispam-bee' )
+		);
+
+		echo '</div>';
+
+		return true;
 	}
 
 	/**

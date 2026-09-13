@@ -85,6 +85,7 @@ class PluginStateChangeHandler {
 		delete_option( Settings::OPTION_NAME );
 		delete_option( PluginUpdate::DB_VERSION_OPTION_NAME );
 		delete_option( PluginUpdate::FAILURE_OPTION_NAME );
+		delete_option( PluginUpdate::MIGRATION_NOTICE_OPTION_NAME );
 		// delete_option( 'antispam_bee' );
 		// See https://github.com/pluginkollektiv/antispam-bee/issues/744 - enable on stable 3.0 release.
 

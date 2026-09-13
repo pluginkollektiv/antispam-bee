@@ -460,6 +460,39 @@ class MigrationFailureNoticeTest extends TestCase {
 	}
 
 	/**
+	 * A completed migration is reported, and the record is cleared so it is reported once.
+	 *
+	 * @return void
+	 */
+	public function test_a_completed_migration_is_reported_and_then_forgotten(): void {
+		$this->stored_options[ PluginUpdate::MIGRATION_NOTICE_OPTION_NAME ] = '1.02';
+
+		$output = $this->render();
+
+		$this->assertStringContainsString( 'migrated your settings', $output );
+		$this->assertContains(
+			PluginUpdate::MIGRATION_NOTICE_OPTION_NAME,
+			$this->deleted_options,
+			'The record has to be cleared, or every later page load repeats it.'
+		);
+	}
+
+	/**
+	 * Success takes precedence: the failure it followed is over and done with.
+	 *
+	 * @return void
+	 */
+	public function test_a_completed_migration_replaces_a_stale_failure_notice(): void {
+		$this->record_failure( PluginUpdate::MAX_UPDATE_ATTEMPTS );
+		$this->stored_options[ PluginUpdate::MIGRATION_NOTICE_OPTION_NAME ] = '1.02';
+
+		$output = $this->render();
+
+		$this->assertStringContainsString( 'migrated your settings', $output );
+		$this->assertStringNotContainsString( 'could not migrate', $output );
+	}
+
+	/**
 	 * The retry clears both the stored settings and the failure state, then goes back.
 	 *
 	 * @return void
