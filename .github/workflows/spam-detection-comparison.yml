@@ -151,9 +151,14 @@ jobs:
             -o corpus.sql.gz -d corpus.sql.gz.gpg
           echo "ASB_CORPUS_READY=true" >> "$GITHUB_ENV"
 
+      # v1.9.0 or newer is required: the harness replays the corpus in-process
+      # under WP-CLI, which `Comment::process()` treats as a trusted context, and
+      # only from that version does the harness pin
+      # `antispam_bee_skip_comment_verification` to false. On an older action every
+      # comment comes back unverified and the whole corpus flips to ham.
       - name: Compare spam detection
         id: compare
-        uses: 2ndkauboy/asb-detection-compare@05975dd833642599d023bdce5136fbc90399e411 # v1.8.0
+        uses: 2ndkauboy/asb-detection-compare@fae80ff70deaff7c82a94734e4459402d97c951e # v1.9.0
         with:
           # PR -> the PR's base branch. Manual -> the chosen baseline. Prepare
           # push -> empty, so the baseline is resolved from the branch name.
