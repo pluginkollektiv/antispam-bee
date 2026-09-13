@@ -29,4 +29,5 @@
 /phpstan-bootstrap.php export-ignore
 /phpunit.xml.dist export-ignore
 /playwright.config.ts export-ignore
+/rector.php export-ignore
 /typos.toml export-ignore
