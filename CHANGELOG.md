@@ -27,6 +27,10 @@
       made the geolocation service reject every lookup. A key set through the
       `antispam_bee_country_spam_apikey` filter is now sent as a request header, which also keeps
       it out of proxy and server logs
+    * Fix: The honeypot field names are stored once instead of being derived from the salts in
+      `wp-config.php` on every request, so a comment form served from a page cache keeps working
+      after those salts are rotated or the site is migrated. A site that configured its salts
+      keeps the field names it already used in Antispam Bee 2.x
     * Enhancement: New `antispam_bee_country_spam_ip` filter to change which address the country
       rule looks up — mask it differently, send the original one for a more precise country, or
       return an empty string to skip the lookup
@@ -58,6 +62,11 @@
       `apikey`-Parameter führte dazu, dass der Geolokalisierungs-Dienst jede Abfrage ablehnte. Ein
       über den Filter `antispam_bee_country_spam_apikey` gesetzter Key wird nun als Request-Header
       gesendet, was ihn zugleich aus Proxy- und Server-Logs heraushält
+    * Fix: Die Feldnamen des Honeypots werden einmalig gespeichert, anstatt bei jeder Anfrage aus
+      den Salts der `wp-config.php` abgeleitet zu werden. Ein aus einem Page-Cache ausgeliefertes
+      Kommentarformular funktioniert damit auch nach dem Rotieren dieser Salts oder einer Migration
+      der Website weiter. Eine Website mit konfigurierten Salts behält die Feldnamen, die sie schon
+      in Antispam Bee 2.x verwendet hat
     * Verbesserung: Neuer Filter `antispam_bee_country_spam_ip`, um die Adresse zu ändern, die die
       Länder-Regel abfragt – anders maskieren, die ursprüngliche Adresse für ein genaueres Land
       senden oder mit einem leeren String die Abfrage ganz überspringen
