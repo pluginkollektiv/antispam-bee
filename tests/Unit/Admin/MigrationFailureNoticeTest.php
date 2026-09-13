@@ -120,7 +120,7 @@ class MigrationFailureNoticeTest extends TestCase {
 		$output = $this->render();
 
 		$this->assertStringContainsString( 'could not migrate your settings yet', $output );
-		$this->assertStringContainsString( 'Attempt 1 of 3', $output );
+		$this->assertStringContainsString( 'Attempt 1 of ' . PluginUpdate::MAX_UPDATE_ATTEMPTS, $output );
 		$this->assertStringContainsString( 'Migration exploded', $output );
 	}
 
@@ -135,7 +135,7 @@ class MigrationFailureNoticeTest extends TestCase {
 		$output = $this->render();
 
 		$this->assertStringContainsString( 'will try again on the next page load', $output );
-		$this->assertStringContainsString( 'Attempt 2 of 3', $output );
+		$this->assertStringContainsString( 'Attempt 2 of ' . PluginUpdate::MAX_UPDATE_ATTEMPTS, $output );
 		$this->assertStringNotContainsString( 'stopped after', $output );
 	}
 
@@ -152,7 +152,10 @@ class MigrationFailureNoticeTest extends TestCase {
 
 		$output = $this->render();
 
-		$this->assertStringContainsString( 'stopped after 3 attempts', $output );
+		$this->assertStringContainsString(
+			sprintf( 'stopped after %d attempts', PluginUpdate::MAX_UPDATE_ATTEMPTS ),
+			$output
+		);
 		$this->assertStringContainsString( 'will not try again on its own', $output );
 		$this->assertStringNotContainsString( 'as soon as the migration succeeds', $output );
 		$this->assertStringNotContainsString( 'will try again on the next page load', $output );

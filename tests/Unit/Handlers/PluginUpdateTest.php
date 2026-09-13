@@ -5,6 +5,7 @@ namespace AntispamBee\Tests\Unit\Handlers;
 use AntispamBee\Handlers\PluginUpdate;
 use AntispamBee\Helpers\Settings;
 use ReflectionProperty;
+use RuntimeException;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 
 use function Brain\Monkey\Functions\when;
@@ -40,6 +41,13 @@ class PluginUpdateTest extends TestCase {
 	private $stored_options = [];
 
 	/**
+	 * Option name whose read should blow up, standing in for a broken stored value.
+	 *
+	 * @var string|null
+	 */
+	private $explode_on_option = null;
+
+	/**
 	 * Reset the memoized migration state and stub the option and plugin-file functions.
 	 *
 	 * @return void
@@ -57,9 +65,15 @@ class PluginUpdateTest extends TestCase {
 		$this->deleted_options = [];
 		$this->stored_options  = [];
 
+		$this->explode_on_option = null;
+
 		when( 'get_file_data' )->justReturn( [ 'Version' => '3.0.0-beta.1' ] );
 		when( 'get_option' )->alias(
 			function ( $name, $default = false ) {
+				if ( null !== $this->explode_on_option && $name === $this->explode_on_option ) {
+					throw new RuntimeException( 'Reading ' . $name . ' failed' );
+				}
+
 				return array_key_exists( $name, $this->stored_options ) ? $this->stored_options[ $name ] : $default;
 			}
 		);
@@ -435,6 +449,31 @@ class PluginUpdateTest extends TestCase {
 			$saved_by_hand,
 			$this->stored_options[ Settings::OPTION_NAME ],
 			'The stored settings are left exactly as the user saved them.'
+		);
+	}
+
+	/**
+	 * A fault raised by the step's own work is contained like any other failure.
+	 *
+	 * The other failure tests replace `run_migration_steps()` wholesale, so none of them
+	 * touch the real one. Blowing up the legacy read instead exercises the step itself.
+	 *
+	 * @return void
+	 */
+	public function test_a_failure_raised_inside_the_real_step_is_contained(): void {
+		$this->stub_options( [ 'antispambee_db_version' => '1.02' ] );
+		$this->explode_on_option = 'antispam_bee';
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$state = $this->written_options[ PluginUpdate::FAILURE_OPTION_NAME ];
+
+		$this->assertSame( 1, $state['attempts'] );
+		$this->assertStringContainsString( 'Reading antispam_bee failed', $state['message'] );
+		$this->assertArrayNotHasKey(
+			PluginUpdate::DB_VERSION_OPTION_NAME,
+			$this->written_options,
+			'A step that died must not mark the database as up-to-date.'
 		);
 	}
 

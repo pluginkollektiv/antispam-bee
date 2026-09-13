@@ -28,7 +28,7 @@ class PluginUpdate {
 	/**
 	 * How often a migration to the same plugin version may be attempted before giving up.
 	 */
-	const MAX_UPDATE_ATTEMPTS = 3;
+	const MAX_UPDATE_ATTEMPTS = 10;
 
 	/**
 	 * Mapping of spam reason keys (key is pre-3.0, value 3.0 and later).

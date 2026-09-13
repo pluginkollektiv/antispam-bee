@@ -348,6 +348,48 @@ final class PluginUpdateTest extends TestCase {
 		);
 	}
 
+	public function test_a_failure_raised_inside_the_real_step_is_contained(): void {
+		$this->seed_legacy_install();
+
+		/*
+		 * The other failure tests swap the whole step out for one that throws, which says
+		 * nothing about the real one. Failing the legacy read through its own filter puts
+		 * the fault where a broken option or an unserialize error would actually raise it:
+		 * inside the step, part-way through its work.
+		 */
+		$explode = static function () {
+			throw new RuntimeException( 'Reading the legacy option failed' );
+		};
+
+		add_filter( 'option_' . self::LEGACY_OPTION, $explode );
+
+		try {
+			// Must not escape into the request that happened to trigger the migration.
+			PluginUpdate::maybe_run_plugin_updated_logic();
+		} finally {
+			remove_filter( 'option_' . self::LEGACY_OPTION, $explode );
+		}
+
+		self::assertSame(
+			'1.02',
+			get_option( self::DB_VERSION_OPTION ),
+			'The version has to stay stale so the migration is tried again.'
+		);
+		self::assertFalse(
+			get_option( Settings::OPTION_NAME ),
+			'The step died before writing, so the v3 option must not exist.'
+		);
+
+		$failures = get_option( PluginUpdate::FAILURE_OPTION_NAME );
+
+		self::assertSame( 1, $failures['attempts'], 'The attempt has to be counted.' );
+		self::assertStringContainsString(
+			'Reading the legacy option failed',
+			$failures['message'],
+			'The real reason has to reach the notice, not a generic message.'
+		);
+	}
+
 	public function test_a_failed_migration_is_retried_on_the_next_request(): void {
 		$this->seed_legacy_install();
 
