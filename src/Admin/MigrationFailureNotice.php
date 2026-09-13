@@ -34,11 +34,15 @@ class MigrationFailureNotice {
 	}
 
 	/**
-	 * Render the notice once the migration has given up.
+	 * Render the notice for a migration that failed.
 	 *
-	 * Shown until the migration succeeds, because a site running on default settings
-	 * while its real configuration sits unmigrated is not a state to let pass quietly:
-	 * rules the user turned off are active again, and rules they relied on may not be.
+	 * Shown from the first recorded failure, not only once the attempts are spent. The
+	 * state is what the user acts on: a retry they asked for has to report back in the
+	 * same page load, and a migration killed by a fatal is worth knowing about before
+	 * the third one. It stays up until the migration succeeds, because a site running
+	 * on settings that are not the ones it was configured with is not a state to let
+	 * pass quietly: rules the user turned off are active again, and rules they relied
+	 * on may not be.
 	 */
 	public static function render(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -46,9 +50,11 @@ class MigrationFailureNotice {
 		}
 
 		$state = PluginUpdate::get_failure_state();
-		if ( $state['attempts'] < PluginUpdate::MAX_UPDATE_ATTEMPTS ) {
+		if ( $state['attempts'] < 1 ) {
 			return;
 		}
+
+		$gave_up = $state['attempts'] >= PluginUpdate::MAX_UPDATE_ATTEMPTS;
 
 		$retry_url = wp_nonce_url(
 			admin_url( 'admin-post.php?action=' . self::RETRY_ACTION ),
@@ -64,16 +70,45 @@ class MigrationFailureNotice {
 
 		printf(
 			'<p><strong>%s</strong></p>',
-			esc_html__( 'Antispam Bee could not migrate your settings.', 'antispam-bee' )
+			$gave_up
+				? esc_html__( 'Antispam Bee could not migrate your settings.', 'antispam-bee' )
+				: esc_html__( 'Antispam Bee could not migrate your settings yet.', 'antispam-bee' )
 		);
 
+		/*
+		 * What is running now and what happens next are two separate questions, and the
+		 * answer to the second one flips at the cap. Folding them into a single sentence is
+		 * how the give-up state came to promise settings that would be applied "as soon as
+		 * the migration succeeds" when nothing was ever going to try again.
+		 */
 		if ( PluginUpdate::has_stored_settings() ) {
-			$intro = __( 'The plugin is running with the settings currently stored. Your previous settings have not been lost — they are still in the database, unmigrated.', 'antispam-bee' );
+			$state_line = __( 'The plugin is running with the settings currently stored.', 'antispam-bee' );
 		} else {
-			$intro = __( 'The plugin is currently running with its default settings. Your previous settings have not been lost — they are still stored in the database and will be applied as soon as the migration succeeds.', 'antispam-bee' );
+			$state_line = __( 'The plugin is currently running with its default settings.', 'antispam-bee' );
 		}
 
-		printf( '<p>%s</p>', esc_html( $intro ) );
+		printf(
+			'<p>%s %s</p>',
+			esc_html( $state_line ),
+			esc_html__( 'Your previous settings have not been lost — they are still in the database, unmigrated.', 'antispam-bee' )
+		);
+
+		if ( $gave_up ) {
+			$next_line = sprintf(
+				/* translators: %d: number of attempts that were made before giving up. */
+				__( 'Antispam Bee stopped after %d attempts and will not try again on its own.', 'antispam-bee' ),
+				PluginUpdate::MAX_UPDATE_ATTEMPTS
+			);
+		} else {
+			$next_line = sprintf(
+				/* translators: 1: number of the attempt that just failed, 2: total number of attempts. */
+				__( 'Antispam Bee will try again on the next page load. Attempt %1$d of %2$d.', 'antispam-bee' ),
+				$state['attempts'],
+				PluginUpdate::MAX_UPDATE_ATTEMPTS
+			);
+		}
+
+		printf( '<p>%s</p>', esc_html( $next_line ) );
 
 		if ( '' !== $state['message'] ) {
 			printf(
