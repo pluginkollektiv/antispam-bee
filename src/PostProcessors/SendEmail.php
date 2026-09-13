@@ -36,6 +36,13 @@ class SendEmail extends ControllableBase {
 			return $item;
 		}
 
+		// The notification is built from the stored comment, so the item has to become one.
+		if ( ! isset( $item['comment_post_ID'] ) ) {
+			$item['asb_post_processors_failed'][] = self::get_slug();
+
+			return $item;
+		}
+
 		add_action(
 			'comment_post',
 			function ( $id ) use ( $item ) {

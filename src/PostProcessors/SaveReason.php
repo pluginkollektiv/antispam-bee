@@ -32,6 +32,13 @@ class SaveReason extends ControllableBase {
 			return $item;
 		}
 
+		// The reason is stored as comment meta, so the item has to become a comment.
+		if ( ! isset( $item['comment_post_ID'] ) ) {
+			$item['asb_post_processors_failed'][] = self::get_slug();
+
+			return $item;
+		}
+
 		if ( ! isset( $item['asb_reasons'] ) ) {
 			$item['asb_post_processors_failed'][] = self::get_slug();
 
