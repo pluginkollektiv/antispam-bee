@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 
 function wpCli( args: string ): string {
-	return execSync( `npx wp-env run tests-cli wp ${ args }`, {
+	return execSync( `npx wp-env run cli --config=.wp-env.test.json wp ${ args }`, {
 		encoding: 'utf8',
 		stdio: [ 'pipe', 'pipe', 'pipe' ],
 		timeout: 30_000,
@@ -53,7 +53,7 @@ function ensurePostId( id: number, createArgs: string ): void {
 		throw new Error(
 			`E2E setup could not create post ID ${ id }: it is still missing after creating ` +
 				`post ${ createdId } and moving it. The test database is in an unexpected ` +
-				'state — run `npm run env:clean` and start the suite again.'
+				'state — run `npm run env:test:clean` and start the suite again.'
 		);
 	}
 }

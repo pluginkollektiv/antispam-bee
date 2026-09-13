@@ -33,7 +33,7 @@ on:
       - 'phpunit-integration.xml.dist'
       - 'tests/Integration/**'
       - 'tests/integration-bootstrap.php'
-      - '.wp-env.json'
+      - '.wp-env.test.json'
       - '.github/workflows/integration.yml'
       # The shared PHP setup is part of this workflow's setup, so a change to it has to run
       # this workflow as well.
@@ -64,11 +64,11 @@ jobs:
         php-version: '8.2'
     # Provides WordPress, the database and the WordPress PHPUnit test library.
     - name: Start wp-env
-      run: npm run env:start
+      run: npm run env:test:start
     - name: Run integration tests
       run: npm run test:integration
     - name: Run integration tests on multisite
       run: npm run test:integration:multisite
     - name: Stop wp-env
       if: always()
-      run: npm run env:stop
+      run: npm run env:test:stop
