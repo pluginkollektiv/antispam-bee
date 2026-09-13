@@ -72,6 +72,20 @@ class MigrationFailureNoticeTest extends TestCase {
 	private $stored_options = [];
 
 	/**
+	 * Whether the render happens on the network screens.
+	 *
+	 * @var bool
+	 */
+	private $is_network_admin = false;
+
+	/**
+	 * The simulated network option store.
+	 *
+	 * @var array<string, mixed>
+	 */
+	private $network_options = [];
+
+	/**
 	 * Options removed via `delete_option()`.
 	 *
 	 * @var string[]
@@ -107,7 +121,9 @@ class MigrationFailureNoticeTest extends TestCase {
 	public function set_up(): void {
 		parent::set_up();
 
-		$this->stored_options  = [];
+		$this->stored_options   = [];
+		$this->is_network_admin = false;
+		$this->network_options  = [];
 		$this->deleted_options = [];
 		$this->written_options = [];
 		$this->checked_nonces  = [];
@@ -118,8 +134,39 @@ class MigrationFailureNoticeTest extends TestCase {
 		when( 'esc_url' )->returnArg();
 
 		when( 'current_user_can' )->justReturn( true );
-		when( 'is_network_admin' )->justReturn( false );
-		when( 'get_bloginfo' )->justReturn( 'Example Subsite' );
+		when( 'is_network_admin' )->alias(
+			function () {
+				return $this->is_network_admin;
+			}
+		);
+		when( 'is_multisite' )->justReturn( true );
+		when( 'get_current_blog_id' )->justReturn( 1 );
+		when( 'get_site_option' )->alias(
+			function ( $name, $default = false ) {
+				return array_key_exists( $name, $this->network_options ) ? $this->network_options[ $name ] : $default;
+			}
+		);
+		when( 'update_site_option' )->justReturn( true );
+		when( 'delete_site_option' )->justReturn( true );
+		when( 'get_admin_url' )->alias(
+			static function ( $site_id ) {
+				return 'https://example.com/site-' . $site_id . '/wp-admin/';
+			}
+		);
+		when( 'get_site' )->alias(
+			static function ( $site_id ) {
+				return (object) [
+					'blogname' => 'Site ' . $site_id,
+					'domain'   => 'example.com',
+					'path'     => '/site-' . $site_id . '/',
+				];
+			}
+		);
+		when( '_n' )->alias(
+			static function ( $single, $plural, $number ) {
+				return 1 === $number ? $single : $plural;
+			}
+		);
 		when( 'get_file_data' )->justReturn( [ 'Version' => self::VERSION ] );
 		when( 'admin_url' )->alias(
 			static function ( $path = '' ) {
@@ -349,34 +396,50 @@ class MigrationFailureNoticeTest extends TestCase {
 	}
 
 	/**
-	 * On the network screens the notice has to say which site it is about.
-	 *
-	 * The migration belongs to one site, so an unqualified notice there would read as a
-	 * statement about the whole network.
+	 * The network screens name the sites whose migration failed.
 	 *
 	 * @return void
 	 */
-	public function test_the_network_screens_name_the_site_the_failure_belongs_to(): void {
-		when( 'is_network_admin' )->justReturn( true );
-		$this->record_failure( 1 );
+	public function test_the_network_screens_list_the_affected_sites(): void {
+		$this->is_network_admin = true;
+		$this->network_options  = [ PluginUpdate::NETWORK_FAILURE_OPTION_NAME => [ 7, 9 ] ];
 
 		$output = $this->render();
 
-		$this->assertStringContainsString( 'Example Subsite', $output );
-		$this->assertStringContainsString( 'migrate separately', $output );
+		$this->assertStringContainsString( 'could not migrate the settings on 2 sites', $output );
+		$this->assertStringContainsString( 'Site 7', $output );
+		$this->assertStringContainsString( 'Site 9', $output );
+		$this->assertStringContainsString( 'https://example.com/site-7/wp-admin/', $output );
 	}
 
 	/**
-	 * On a single site there is no other site to distinguish it from.
+	 * With nothing registered, the network screens stay quiet.
 	 *
 	 * @return void
 	 */
-	public function test_a_single_site_notice_does_not_name_the_site(): void {
-		$this->record_failure( 1 );
+	public function test_the_network_screens_stay_quiet_without_failures(): void {
+		$this->is_network_admin = true;
 
-		$output = $this->render();
+		$this->assertSame( '', $this->render() );
+	}
 
-		$this->assertStringNotContainsString( 'Example Subsite', $output );
+	/**
+	 * The network screens must not report the main site's own state as the network's.
+	 *
+	 * They are served by the main site, so the per-site failure state read for a normal
+	 * admin page describes that one site and would say nothing about the rest.
+	 *
+	 * @return void
+	 */
+	public function test_the_network_screens_do_not_report_the_main_site_state(): void {
+		$this->is_network_admin = true;
+		$this->record_failure( PluginUpdate::MAX_UPDATE_ATTEMPTS );
+
+		$this->assertSame(
+			'',
+			$this->render(),
+			'A site-level failure is reported on that site, not as a network-wide statement.'
+		);
 	}
 
 	/**

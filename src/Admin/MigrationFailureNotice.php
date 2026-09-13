@@ -25,6 +25,11 @@ class MigrationFailureNotice {
 	const DISMISS_ACTION = 'antispam_bee_dismiss_migration';
 
 	/**
+	 * How many affected sites the network notice names before summarising the rest.
+	 */
+	const MAX_LISTED_SITES = 20;
+
+	/**
 	 * Register the notice and its handlers.
 	 */
 	public static function init(): void {
@@ -56,6 +61,17 @@ class MigrationFailureNotice {
 			return;
 		}
 
+		/*
+		 * The network screens are served by the main site, so the per-site failure state
+		 * read below describes that one site and nothing else. Reporting it there would
+		 * answer a question nobody asked while hiding the one they did: which site failed.
+		 */
+		if ( is_network_admin() ) {
+			self::render_network_summary();
+
+			return;
+		}
+
 		$state = PluginUpdate::get_failure_state();
 		if ( $state['attempts'] < 1 ) {
 			return;
@@ -81,26 +97,6 @@ class MigrationFailureNotice {
 				? esc_html__( 'Antispam Bee could not migrate your settings.', 'antispam-bee' )
 				: esc_html__( 'Antispam Bee could not migrate your settings yet.', 'antispam-bee' )
 		);
-
-		/*
-		 * The migration, and so this state, belongs to one site. On the network screens
-		 * there is no current site from the reader's point of view, so the notice has to
-		 * name the one it is reporting on, or it reads as a statement about the network.
-		 * It reports the site being browsed rather than scanning every site in the network,
-		 * for the same reason the migration itself does not: that does not scale.
-		 */
-		if ( is_network_admin() ) {
-			printf(
-				'<p>%s</p>',
-				esc_html(
-					sprintf(
-						/* translators: %s: name of the site the failed migration belongs to. */
-						__( 'This concerns the site %s. Other sites in the network migrate separately and report separately.', 'antispam-bee' ),
-						get_bloginfo( 'name' )
-					)
-				)
-			);
-		}
 
 		/*
 		 * What is running now and what happens next are two separate questions, and the
@@ -171,6 +167,77 @@ class MigrationFailureNotice {
 			'<p class="description">%s</p>',
 			esc_html( $explanation )
 		);
+
+		echo '</div>';
+	}
+
+	/**
+	 * List the sites in this network whose migration failed.
+	 *
+	 * Each site keeps its own failure state, which the network screens cannot read, so
+	 * the sites register themselves in a network option as they fail. Only the sites that
+	 * actually failed are looked up here, which keeps this proportional to the problem
+	 * rather than to the size of the network.
+	 */
+	private static function render_network_summary(): void {
+		$site_ids = PluginUpdate::get_failed_sites();
+		if ( empty( $site_ids ) ) {
+			return;
+		}
+
+		echo '<div class="notice notice-error">';
+
+		printf(
+			'<p><strong>%s</strong></p>',
+			esc_html(
+				sprintf(
+					/* translators: %d: number of sites whose migration failed. */
+					_n(
+						'Antispam Bee could not migrate the settings on %d site in this network.',
+						'Antispam Bee could not migrate the settings on %d sites in this network.',
+						count( $site_ids ),
+						'antispam-bee'
+					),
+					count( $site_ids )
+				)
+			)
+		);
+
+		printf(
+			'<p>%s</p>',
+			esc_html__( 'Each site reports the details on its own dashboard, where the migration can be retried or the current settings kept.', 'antispam-bee' )
+		);
+
+		$shown = array_slice( $site_ids, 0, self::MAX_LISTED_SITES );
+
+		echo '<ul>';
+		foreach ( $shown as $site_id ) {
+			$site = get_site( $site_id );
+			if ( ! $site ) {
+				continue;
+			}
+
+			printf(
+				'<li><a href="%s">%s</a></li>',
+				esc_url( get_admin_url( $site_id ) ),
+				esc_html( $site->blogname ? $site->blogname : $site->domain . $site->path )
+			);
+		}
+		echo '</ul>';
+
+		$remaining = count( $site_ids ) - count( $shown );
+		if ( $remaining > 0 ) {
+			printf(
+				'<p>%s</p>',
+				esc_html(
+					sprintf(
+						/* translators: %d: number of further affected sites not listed. */
+						_n( 'and %d more site.', 'and %d more sites.', $remaining, 'antispam-bee' ),
+						$remaining
+					)
+				)
+			);
+		}
 
 		echo '</div>';
 	}

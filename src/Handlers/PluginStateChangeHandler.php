@@ -67,6 +67,9 @@ class PluginStateChangeHandler {
 			self::maybe_remove_antispam_bee_data();
 			restore_current_blog();
 		}
+
+		// The failure list belongs to the network, not to any one site in it.
+		delete_site_option( PluginUpdate::NETWORK_FAILURE_OPTION_NAME );
 	}
 
 	/**

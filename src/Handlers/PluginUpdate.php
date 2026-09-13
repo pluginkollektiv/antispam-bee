@@ -26,6 +26,17 @@ class PluginUpdate {
 	const FAILURE_OPTION_NAME = 'antispambee_db_update_failures';
 
 	/**
+	 * Name of the network option listing the sites whose migration failed.
+	 *
+	 * The failure state itself is a per-site option, and the network screens are served
+	 * by the main site, so from there every other site's state is simply unreadable.
+	 * Reading them would mean switching to each site in the network on every page load,
+	 * which is the same thing the migration itself refuses to do. A network-level list of
+	 * the sites that actually failed is one read, and only grows with real failures.
+	 */
+	const NETWORK_FAILURE_OPTION_NAME = 'antispambee_db_update_failed_sites';
+
+	/**
 	 * How often a migration to the same plugin version may be attempted before giving up.
 	 */
 	const MAX_UPDATE_ATTEMPTS = 10;
@@ -69,6 +80,20 @@ class PluginUpdate {
 	 */
 	public static function init(): void {
 		add_action( 'admin_init', [ __CLASS__, 'maybe_run_plugin_updated_logic' ] );
+
+		// A deleted site must not keep a place in the list it can never be removed from.
+		add_action( 'wp_delete_site', [ __CLASS__, 'forget_deleted_site' ] );
+	}
+
+	/**
+	 * Drop a site from the failure list when the site itself is deleted.
+	 *
+	 * @param object $site The site being deleted.
+	 */
+	public static function forget_deleted_site( $site ): void {
+		if ( isset( $site->blog_id ) ) {
+			self::forget_failed_site( (int) $site->blog_id );
+		}
 	}
 
 	/**
@@ -181,6 +206,7 @@ class PluginUpdate {
 		 * because `self::$db_update_triggered` is already set above.
 		 */
 		delete_option( self::FAILURE_OPTION_NAME );
+		self::forget_failed_site();
 		update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
 	}
 
@@ -207,6 +233,7 @@ class PluginUpdate {
 	public static function reset_for_retry(): void {
 		delete_option( Settings::OPTION_NAME );
 		delete_option( self::FAILURE_OPTION_NAME );
+		self::forget_failed_site();
 	}
 
 	/**
@@ -219,6 +246,7 @@ class PluginUpdate {
 	 */
 	public static function mark_as_migrated(): void {
 		delete_option( self::FAILURE_OPTION_NAME );
+		self::forget_failed_site();
 		update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
 	}
 
@@ -249,12 +277,77 @@ class PluginUpdate {
 	}
 
 	/**
+	 * The sites in this network whose migration failed.
+	 *
+	 * @return int[] Blog IDs, newest registration last.
+	 */
+	public static function get_failed_sites(): array {
+		if ( ! is_multisite() ) {
+			return [];
+		}
+
+		$sites = get_site_option( self::NETWORK_FAILURE_OPTION_NAME, [] );
+		if ( ! is_array( $sites ) ) {
+			return [];
+		}
+
+		return array_values( array_unique( array_map( 'intval', array_filter( $sites, 'is_scalar' ) ) ) );
+	}
+
+	/**
+	 * Note that this site's migration failed, so the network screens can report it.
+	 */
+	private static function register_failed_site(): void {
+		if ( ! is_multisite() ) {
+			return;
+		}
+
+		$sites   = self::get_failed_sites();
+		$site_id = get_current_blog_id();
+
+		if ( in_array( $site_id, $sites, true ) ) {
+			return;
+		}
+
+		$sites[] = $site_id;
+		update_site_option( self::NETWORK_FAILURE_OPTION_NAME, $sites );
+	}
+
+	/**
+	 * Forget a site, because its migration is no longer outstanding.
+	 *
+	 * @param int|null $site_id Blog ID, or `null` for the current site.
+	 */
+	public static function forget_failed_site( ?int $site_id = null ): void {
+		if ( ! is_multisite() ) {
+			return;
+		}
+
+		$sites     = self::get_failed_sites();
+		$site_id   = $site_id ?? get_current_blog_id();
+		$remaining = array_values( array_diff( $sites, [ $site_id ] ) );
+
+		if ( $remaining === $sites ) {
+			return;
+		}
+
+		if ( empty( $remaining ) ) {
+			delete_site_option( self::NETWORK_FAILURE_OPTION_NAME );
+
+			return;
+		}
+
+		update_site_option( self::NETWORK_FAILURE_OPTION_NAME, $remaining );
+	}
+
+	/**
 	 * Persist the state of failed migration attempts.
 	 *
 	 * @param array{version: string, attempts: int, message: string, time: int} $state The failure state.
 	 */
 	private static function save_failure_state( array $state ): void {
 		update_option( self::FAILURE_OPTION_NAME, $state );
+		self::register_failed_site();
 	}
 
 	/**

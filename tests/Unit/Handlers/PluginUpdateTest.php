@@ -41,6 +41,20 @@ class PluginUpdateTest extends TestCase {
 	private $write_order = [];
 
 	/**
+	 * Whether the simulated install is a network.
+	 *
+	 * @var bool
+	 */
+	private $is_multisite = false;
+
+	/**
+	 * The simulated network option store.
+	 *
+	 * @var array<string, mixed>
+	 */
+	private $network_options = [];
+
+	/**
 	 * The simulated option store that `get_option()` reads from.
 	 *
 	 * @var array<string, mixed>
@@ -71,11 +85,38 @@ class PluginUpdateTest extends TestCase {
 		$this->written_options = [];
 		$this->deleted_options = [];
 		$this->write_order     = [];
+		$this->is_multisite    = false;
+		$this->network_options = [];
 		$this->stored_options  = [];
 
 		$this->explode_on_option = null;
 
 		when( 'get_file_data' )->justReturn( [ 'Version' => '3.0.0-beta.1' ] );
+		when( 'is_multisite' )->alias(
+			function () {
+				return $this->is_multisite;
+			}
+		);
+		when( 'get_current_blog_id' )->justReturn( 7 );
+		when( 'get_site_option' )->alias(
+			function ( $name, $default = false ) {
+				return array_key_exists( $name, $this->network_options ) ? $this->network_options[ $name ] : $default;
+			}
+		);
+		when( 'update_site_option' )->alias(
+			function ( $name, $value ) {
+				$this->network_options[ $name ] = $value;
+
+				return true;
+			}
+		);
+		when( 'delete_site_option' )->alias(
+			function ( $name ) {
+				unset( $this->network_options[ $name ] );
+
+				return true;
+			}
+		);
 		when( 'get_option' )->alias(
 			function ( $name, $default = false ) {
 				if ( null !== $this->explode_on_option && $name === $this->explode_on_option ) {
@@ -348,6 +389,74 @@ class PluginUpdateTest extends TestCase {
 			$version_position,
 			'The database version is raised after the migrated options, so an aborted migration is retried.'
 		);
+	}
+
+	/**
+	 * On a network, a failing site puts itself on a list the network screens can read.
+	 *
+	 * The failure state is a per-site option, and the network screens are served by the
+	 * main site, so without this a failure anywhere else is simply invisible there.
+	 *
+	 * @return void
+	 */
+	public function test_a_failing_site_registers_itself_with_the_network(): void {
+		$this->is_multisite = true;
+		$this->stub_options( [ 'antispambee_db_version' => '1.02' ] );
+		$this->explode_on_option = 'antispam_bee';
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame( [ 7 ], PluginUpdate::get_failed_sites() );
+	}
+
+	/**
+	 * A site that migrates in the end takes itself off that list again.
+	 *
+	 * @return void
+	 */
+	public function test_a_site_that_succeeds_is_taken_off_the_network_list(): void {
+		$this->is_multisite    = true;
+		$this->network_options = [ PluginUpdate::NETWORK_FAILURE_OPTION_NAME => [ 7, 9 ] ];
+		$this->stub_options(
+			[
+				'antispam_bee'           => [ 'regexp_check' => 1 ],
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame( [ 9 ], PluginUpdate::get_failed_sites(), 'Only the site that succeeded is removed.' );
+	}
+
+	/**
+	 * Keeping the current settings also ends the network-level report.
+	 *
+	 * @return void
+	 */
+	public function test_keeping_the_settings_takes_the_site_off_the_network_list(): void {
+		$this->is_multisite    = true;
+		$this->network_options = [ PluginUpdate::NETWORK_FAILURE_OPTION_NAME => [ 7 ] ];
+		$this->stub_options( [ 'antispambee_db_version' => '1.02' ] );
+
+		PluginUpdate::mark_as_migrated();
+
+		$this->assertSame( [], PluginUpdate::get_failed_sites() );
+	}
+
+	/**
+	 * A single site has no network list to keep.
+	 *
+	 * @return void
+	 */
+	public function test_a_single_site_records_nothing_network_wide(): void {
+		$this->stub_options( [ 'antispambee_db_version' => '1.02' ] );
+		$this->explode_on_option = 'antispam_bee';
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame( [], PluginUpdate::get_failed_sites() );
+		$this->assertSame( [], $this->network_options );
 	}
 
 	/**
