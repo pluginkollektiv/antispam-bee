@@ -48,11 +48,11 @@ final class MigrationFailureNoticeTest extends TestCase {
 	}
 
 	/**
-	 * A migration that carried settings over says so, and says it only once.
+	 * A migration that carried settings over says so, and keeps saying so until dismissed.
 	 *
 	 * @return void
 	 */
-	public function test_a_completed_migration_is_reported_once(): void {
+	public function test_a_completed_migration_is_reported_until_dismissed(): void {
 		update_option( 'antispam_bee', [ 'regexp_check' => 1 ] );
 		update_option( PluginUpdate::DB_VERSION_OPTION_NAME, '1.02' );
 
@@ -63,11 +63,15 @@ final class MigrationFailureNoticeTest extends TestCase {
 			$this->render(),
 			'The migration ran in a request nobody was watching, so the next admin page has to report it.'
 		);
-		self::assertSame(
-			'',
+		self::assertStringContainsString(
+			'migrated your settings',
 			$this->render(),
-			'Reporting it again on every later page load would be noise.'
+			'Another administrator, or another page, still has to be able to see it.'
 		);
+
+		PluginUpdate::clear_pending_migration_notice();
+
+		self::assertSame( '', $this->render(), 'Once it has been put away it stays away.' );
 	}
 
 	/**

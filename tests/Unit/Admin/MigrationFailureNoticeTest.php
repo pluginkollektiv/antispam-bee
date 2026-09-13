@@ -460,20 +460,98 @@ class MigrationFailureNoticeTest extends TestCase {
 	}
 
 	/**
-	 * A completed migration is reported, and the record is cleared so it is reported once.
+	 * A completed migration keeps being reported until somebody puts the report away.
+	 *
+	 * Clearing the record while rendering handed it to whichever admin page load got
+	 * there first and destroyed it in the same breath, so a second administrator could
+	 * never see it and the first could easily miss it.
 	 *
 	 * @return void
 	 */
-	public function test_a_completed_migration_is_reported_and_then_forgotten(): void {
+	public function test_a_completed_migration_is_reported_until_it_is_dismissed(): void {
+		$this->stored_options[ PluginUpdate::MIGRATION_NOTICE_OPTION_NAME ] = '1.02';
+
+		$this->assertStringContainsString( 'migrated your settings', $this->render() );
+		$this->assertStringContainsString(
+			'migrated your settings',
+			$this->render(),
+			'A second page load still has to report it.'
+		);
+		$this->assertNotContains(
+			PluginUpdate::MIGRATION_NOTICE_OPTION_NAME,
+			$this->deleted_options,
+			'Rendering must not consume the record.'
+		);
+	}
+
+	/**
+	 * The report offers a way to put it away.
+	 *
+	 * Core's `is-dismissible` is not it: that hides a notice for one page load and
+	 * remembers nothing.
+	 *
+	 * @return void
+	 */
+	public function test_the_completed_migration_report_offers_a_dismissal(): void {
 		$this->stored_options[ PluginUpdate::MIGRATION_NOTICE_OPTION_NAME ] = '1.02';
 
 		$output = $this->render();
 
-		$this->assertStringContainsString( 'migrated your settings', $output );
-		$this->assertContains(
-			PluginUpdate::MIGRATION_NOTICE_OPTION_NAME,
-			$this->deleted_options,
-			'The record has to be cleared, or every later page load repeats it.'
+		$this->assertStringContainsString( MigrationFailureNotice::DISMISS_SUCCESS_ACTION, $output );
+		$this->assertStringNotContainsString( 'is-dismissible', $output );
+	}
+
+	/**
+	 * Dismissing the report clears it for the whole site.
+	 *
+	 * @return void
+	 */
+	public function test_dismissing_the_report_clears_it(): void {
+		$this->stored_options[ PluginUpdate::MIGRATION_NOTICE_OPTION_NAME ] = '1.02';
+
+		try {
+			MigrationFailureNotice::handle_dismiss_success();
+			$this->fail( 'The handler has to end the request by redirecting.' );
+		} catch ( RedirectedException $redirect ) {
+			unset( $redirect );
+		}
+
+		$this->assertContains( PluginUpdate::MIGRATION_NOTICE_OPTION_NAME, $this->deleted_options );
+		$this->assertSame( [ MigrationFailureNotice::DISMISS_SUCCESS_ACTION ], $this->checked_nonces );
+	}
+
+	/**
+	 * The dismissal is guarded like the others.
+	 *
+	 * @return void
+	 */
+	public function test_dismissing_the_report_is_refused_without_the_capability(): void {
+		when( 'current_user_can' )->justReturn( false );
+		$this->stored_options[ PluginUpdate::MIGRATION_NOTICE_OPTION_NAME ] = '1.02';
+
+		$this->expectException( DiedException::class );
+
+		try {
+			MigrationFailureNotice::handle_dismiss_success();
+		} finally {
+			$this->assertSame( [], $this->deleted_options );
+		}
+	}
+
+	/**
+	 * Opening the settings page retires the report on its own.
+	 *
+	 * @return void
+	 */
+	public function test_opening_the_settings_page_retires_the_report(): void {
+		MigrationFailureNotice::init();
+
+		$this->assertNotFalse(
+			has_action(
+				'load-settings_page_antispam_bee',
+				[ PluginUpdate::class, 'clear_pending_migration_notice' ]
+			),
+			'The page the report points at is where it stops being needed.'
 		);
 	}
 
