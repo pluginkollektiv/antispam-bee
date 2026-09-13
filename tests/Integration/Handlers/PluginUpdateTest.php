@@ -10,7 +10,29 @@ namespace AntispamBee\Tests\Integration\Handlers;
 use AntispamBee\Handlers\PluginUpdate;
 use AntispamBee\Helpers\Settings;
 use ReflectionClass;
+use RuntimeException;
 use Yoast\WPTestUtils\WPIntegration\TestCase;
+
+/**
+ * A migration whose steps fail, standing in for a fatal, a DB error, a timeout or a
+ * warning promoted to an exception. `PluginUpdate` reaches the steps through
+ * `static::`, so overriding them here is enough to drive the failure path.
+ */
+final class FailingPluginUpdate extends PluginUpdate {
+
+	/**
+	 * Fail before anything is migrated.
+	 *
+	 * @param string $version_from_db The database revision the install is on.
+	 *
+	 * @return void
+	 *
+	 * @throws RuntimeException Always.
+	 */
+	protected static function run_migration_steps( string $version_from_db ): void {
+		throw new RuntimeException( 'A migration step failed at revision ' . $version_from_db );
+	}
+}
 
 /**
  * The migration runs once per site and its result becomes the user's configuration,
@@ -261,6 +283,56 @@ final class PluginUpdateTest extends TestCase {
 			$first_run,
 			get_option( Settings::OPTION_NAME ),
 			'Running the update logic twice must not change the migrated options.'
+		);
+	}
+
+	public function test_a_failed_migration_step_leaves_the_database_version_untouched(): void {
+		$this->seed_legacy_install();
+
+		$this->expectException( RuntimeException::class );
+
+		try {
+			FailingPluginUpdate::maybe_run_plugin_updated_logic();
+		} finally {
+			self::assertSame(
+				'1.02',
+				get_option( self::DB_VERSION_OPTION ),
+				'A migration that fails must not leave the database version bumped, or it is never retried.'
+			);
+			self::assertFalse(
+				get_option( Settings::OPTION_NAME ),
+				'Nothing was migrated, so the v3 option must not exist.'
+			);
+		}
+	}
+
+	public function test_a_failed_migration_is_retried_on_the_next_request(): void {
+		$this->seed_legacy_install();
+
+		try {
+			FailingPluginUpdate::maybe_run_plugin_updated_logic();
+		} catch ( RuntimeException $exception ) {
+			unset( $exception );
+		}
+
+		// The next request starts with the per-request guards cleared.
+		$this->reset_plugin_update_state();
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		self::assertNotFalse(
+			get_option( Settings::OPTION_NAME ),
+			'The retry has to migrate the options the failed run never wrote.'
+		);
+		self::assertSame(
+			4711,
+			get_option( Settings::OPTION_NAME )['spam_count'],
+			'The retry has to migrate from the legacy option, not from defaults.'
+		);
+		self::assertNotSame(
+			'1.02',
+			get_option( self::DB_VERSION_OPTION ),
+			'A successful retry has to record the current database version.'
 		);
 	}
 
