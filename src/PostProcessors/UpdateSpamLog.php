@@ -7,10 +7,19 @@
 
 namespace AntispamBee\PostProcessors;
 
+use AntispamBee\Helpers\LogPath;
+
 /**
  * Post-processor that is responsible for updating the spam log file.
  */
 class UpdateSpamLog extends Base {
+	/**
+	 * File name prefix of the spam log.
+	 *
+	 * @var string
+	 */
+	const LOG_PREFIX = 'asb-spam';
+
 
 	/**
 	 * Post-processor slug.
@@ -37,12 +46,12 @@ class UpdateSpamLog extends Base {
 			return $item;
 		}
 
+		$log_file = self::get_log_file();
+
 		if (
-			! defined( 'ANTISPAM_BEE_LOG_FILE' )
-			|| ! ANTISPAM_BEE_LOG_FILE
-			|| validate_file( ANTISPAM_BEE_LOG_FILE ) !== 0
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- WP_Filesystem cannot perform an atomic FILE_APPEND | LOCK_EX write to the log file.
-			|| ! is_writable( ANTISPAM_BEE_LOG_FILE )
+			null === $log_file
+			|| validate_file( $log_file ) !== 0
+			|| ! LogPath::is_writable( $log_file )
 		) {
 			return $item;
 		}
@@ -76,7 +85,7 @@ class UpdateSpamLog extends Base {
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- WP_Filesystem cannot perform an atomic FILE_APPEND | LOCK_EX write to the log file.
 		file_put_contents(
-			ANTISPAM_BEE_LOG_FILE,
+			$log_file,
 			$entry . PHP_EOL,
 			FILE_APPEND | LOCK_EX
 		);
@@ -267,5 +276,28 @@ class UpdateSpamLog extends Base {
 		$sanitized = preg_replace( '/[^a-zA-Z0-9_\-]/', '', (string) $token );
 
 		return empty( $sanitized ) ? 'unknown' : $sanitized;
+	}
+	/**
+	 * Get the spam log file path.
+	 *
+	 * Unlike the debug log the generated name carries no date. A Fail2Ban jail expands
+	 * `logpath` globs when it starts, so a file name that changes daily would stop being
+	 * matched until the jail is reloaded.
+	 *
+	 * @return string|null Path, or null when spam logging is off.
+	 */
+	public static function get_log_file(): ?string {
+		$log_file = LogPath::resolve( 'ANTISPAM_BEE_SPAM_LOG', 'ANTISPAM_BEE_SPAM_LOG_DIR', self::LOG_PREFIX );
+
+		if ( null !== $log_file ) {
+			return $log_file;
+		}
+
+		// Deprecated since 3.0.0, use `ANTISPAM_BEE_SPAM_LOG` instead.
+		if ( defined( 'ANTISPAM_BEE_LOG_FILE' ) && \ANTISPAM_BEE_LOG_FILE ) {
+			return (string) \ANTISPAM_BEE_LOG_FILE;
+		}
+
+		return null;
 	}
 }
