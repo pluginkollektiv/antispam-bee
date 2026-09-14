@@ -15,6 +15,7 @@
 /.phpunit.result.cache
 /.windsurfrules
 /.wp-env.override.json
+/.wp-env.test.override.json
 /AGENTS.local.md
 /CLAUDE.local.md
 /CONVENTIONS.local.md

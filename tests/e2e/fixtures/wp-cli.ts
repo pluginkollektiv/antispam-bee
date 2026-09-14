@@ -44,7 +44,7 @@ export class WpCli {
 	}
 
 	private run( args: string ): string {
-		const cmd = `npx wp-env run tests-cli wp ${ args }`;
+		const cmd = `npx wp-env run cli --config=.wp-env.test.json wp ${ args }`;
 		try {
 			return execSync( cmd, {
 				encoding: 'utf8',
