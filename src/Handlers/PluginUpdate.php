@@ -8,6 +8,7 @@
 namespace AntispamBee\Handlers;
 
 use AntispamBee\Helpers\Settings;
+use Throwable;
 use const AntispamBee\MAIN_PLUGIN_FILE;
 
 /**
@@ -18,6 +19,27 @@ class PluginUpdate {
 	 * Name of the option holding the database version.
 	 */
 	const DB_VERSION_OPTION_NAME = 'antispambee_db_version';
+
+	/**
+	 * Name of the option holding the state of failed migration attempts.
+	 */
+	const FAILURE_OPTION_NAME = 'antispambee_db_update_failures';
+
+	/**
+	 * Name of the network option listing the sites whose migration failed.
+	 *
+	 * The failure state itself is a per-site option, and the network screens are served
+	 * by the main site, so from there every other site's state is simply unreadable.
+	 * Reading them would mean switching to each site in the network on every page load,
+	 * which is the same thing the migration itself refuses to do. A network-level list of
+	 * the sites that actually failed is one read, and only grows with real failures.
+	 */
+	const NETWORK_FAILURE_OPTION_NAME = 'antispambee_db_update_failed_sites';
+
+	/**
+	 * How often a migration to the same plugin version may be attempted before giving up.
+	 */
+	const MAX_UPDATE_ATTEMPTS = 10;
 
 	/**
 	 * Mapping of spam reason keys (key is pre-3.0, value 3.0 and later).
@@ -52,6 +74,27 @@ class PluginUpdate {
 	 * @var bool|null
 	 */
 	private static $db_version_is_current = null;
+
+	/**
+	 * Register the hooks of this handler.
+	 */
+	public static function init(): void {
+		add_action( 'admin_init', [ __CLASS__, 'maybe_run_plugin_updated_logic' ] );
+
+		// A deleted site must not keep a place in the list it can never be removed from.
+		add_action( 'wp_delete_site', [ __CLASS__, 'forget_deleted_site' ] );
+	}
+
+	/**
+	 * Drop a site from the failure list when the site itself is deleted.
+	 *
+	 * @param object $site The site being deleted.
+	 */
+	public static function forget_deleted_site( $site ): void {
+		if ( isset( $site->blog_id ) ) {
+			self::forget_failed_site( (int) $site->blog_id );
+		}
+	}
 
 	/**
 	 * Run after Antispam Bee was upgraded.
@@ -96,27 +139,229 @@ class PluginUpdate {
 
 	/**
 	 * Make database changes, if needed.
+	 *
+	 * Runs for the current site only. In a multisite network every site migrates
+	 * lazily and independently, the first time something on that site reads a
+	 * setting — there is deliberately no network-wide loop, because migrating
+	 * thousands of sites synchronously inside one request cannot work. The attempt
+	 * cap below bounds the cost of a failing migration per site.
 	 */
 	private static function maybe_update_database(): void {
 		// Prevent further update triggers during the same request that run before the DB version is updated.
 		self::$db_update_triggered = true;
 
+		$failures = self::get_failure_state();
+		if ( $failures['attempts'] >= self::MAX_UPDATE_ATTEMPTS ) {
+			return;
+		}
+
 		$version_from_db = get_option( self::DB_VERSION_OPTION_NAME, null );
 
 		/*
-		 * The database version is written only after every migration step below has
-		 * succeeded. Raising it up front means a migration that aborts — a legacy
-		 * option of an unexpected shape, a failed query — is never retried, while
-		 * the new option was never written: the site silently falls back to the
-		 * defaults and every 2.x setting is lost. Writing it last turns such a
-		 * failure into a retry on the next request instead.
+		 * `null` is a fresh install, which has nothing to migrate. A recorded revision
+		 * that is not a scalar cannot be compared against at all, and since the version
+		 * write below no longer happens first, retrying such a value would now fatal on
+		 * every request rather than once. Neither case has a migration to run, so both
+		 * fall through to the version write without spending an attempt.
 		 */
-		if ( null === $version_from_db ) {
-			update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
+		if ( is_scalar( $version_from_db ) ) {
+			/*
+			 * Recorded before the attempt, not after it: a step killed by a timeout or a
+			 * true fatal never returns here, so a counter raised afterwards would stay at
+			 * zero and the site would retry — and fatal — on every single request, forever.
+			 * Burning the attempt up front is what makes the cap hold for uncatchable
+			 * failures too.
+			 */
+			++$failures['attempts'];
+			self::save_failure_state( $failures );
+
+			try {
+				static::run_migration_steps( (string) $version_from_db );
+			} catch ( Throwable $throwable ) {
+				/*
+				 * Catchable failures are recorded and swallowed rather than propagated. The
+				 * request then continues on `Settings::$defaults`, which for a comment being
+				 * submitted means slightly wrong spam settings — far better than the fatal a
+				 * rethrow would turn every commenting visitor's request into.
+				 */
+				$failures['message'] = $throwable->getMessage();
+				self::save_failure_state( $failures );
+
+				return;
+			}
+		}
+
+		/*
+		 * Only now that every step has completed. Writing the version first would spend
+		 * the one chance a site gets: `db_version_is_current()` would report the database
+		 * as up-to-date on every later request, so a step interrupted by a fatal, a DB
+		 * error, a timeout or a warning promoted to an exception would never run again.
+		 * The legacy option would still be in place while `antispam_bee_options` was
+		 * never written, leaving the site on `Settings::$defaults` — the user's entire
+		 * configuration gone, with no way to retrigger the migration short of editing
+		 * the option by hand.
+		 *
+		 * Deferring the write cannot make the migration run twice within a request,
+		 * because `self::$db_update_triggered` is already set above.
+		 */
+		delete_option( self::FAILURE_OPTION_NAME );
+		self::forget_failed_site();
+		update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
+	}
+
+	/**
+	 * Whether the plugin already has settings of its own stored.
+	 *
+	 * @return bool Whether `antispam_bee_options` holds a configuration.
+	 */
+	public static function has_stored_settings(): bool {
+		$stored = get_option( Settings::OPTION_NAME, null );
+
+		return is_array( $stored ) && ! empty( $stored );
+	}
+
+	/**
+	 * Throw away the stored settings so the next run migrates the legacy ones again.
+	 *
+	 * The automatic retries deliberately never touch a stored configuration — see the
+	 * guard in the 3.0.0 step. A retry the user asked for is the opposite situation:
+	 * they are looking at a notice that says their old settings were not migrated and
+	 * are choosing to have them back, so the settings standing in the way have to go,
+	 * or the retry would silently do nothing at all.
+	 */
+	public static function reset_for_retry(): void {
+		delete_option( Settings::OPTION_NAME );
+		delete_option( self::FAILURE_OPTION_NAME );
+		self::forget_failed_site();
+	}
+
+	/**
+	 * Record the database as migrated without running the migration.
+	 *
+	 * For the user who gave up on the migration and configured the plugin by hand
+	 * instead: their settings are the ones that should survive, and nothing is left
+	 * to migrate. Writing the version is what actually stops the retries, because
+	 * `db_version_is_current()` then reports the database as up-to-date.
+	 */
+	public static function mark_as_migrated(): void {
+		delete_option( self::FAILURE_OPTION_NAME );
+		self::forget_failed_site();
+		update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
+	}
+
+	/**
+	 * Read the recorded state of failed migration attempts.
+	 *
+	 * State recorded against a different plugin version is discarded: a release that
+	 * ships a fix for whatever made the migration fail has to get its own attempts,
+	 * so a site that gave up recovers on update instead of needing a manual retry.
+	 *
+	 * @return array{version: string, attempts: int, message: string} The failure state.
+	 */
+	public static function get_failure_state(): array {
+		$version = self::get_plugin_version();
+		$default = [
+			'version'  => $version,
+			'attempts' => 0,
+			'message'  => '',
+		];
+
+		$state = get_option( self::FAILURE_OPTION_NAME, null );
+		if ( ! is_array( $state ) || ( $state['version'] ?? null ) !== $version ) {
+			return $default;
+		}
+
+		return array_merge( $default, $state );
+	}
+
+	/**
+	 * The sites in this network whose migration failed.
+	 *
+	 * @return int[] Blog IDs, newest registration last.
+	 */
+	public static function get_failed_sites(): array {
+		if ( ! is_multisite() ) {
+			return [];
+		}
+
+		$sites = get_site_option( self::NETWORK_FAILURE_OPTION_NAME, [] );
+		if ( ! is_array( $sites ) ) {
+			return [];
+		}
+
+		return array_values( array_unique( array_map( 'intval', array_filter( $sites, 'is_scalar' ) ) ) );
+	}
+
+	/**
+	 * Note that this site's migration failed, so the network screens can report it.
+	 */
+	private static function register_failed_site(): void {
+		if ( ! is_multisite() ) {
+			return;
+		}
+
+		$sites   = self::get_failed_sites();
+		$site_id = get_current_blog_id();
+
+		if ( in_array( $site_id, $sites, true ) ) {
+			return;
+		}
+
+		$sites[] = $site_id;
+		update_site_option( self::NETWORK_FAILURE_OPTION_NAME, $sites );
+	}
+
+	/**
+	 * Forget a site, because its migration is no longer outstanding.
+	 *
+	 * @param int|null $site_id Blog ID, or `null` for the current site.
+	 */
+	public static function forget_failed_site( ?int $site_id = null ): void {
+		if ( ! is_multisite() ) {
+			return;
+		}
+
+		$sites     = self::get_failed_sites();
+		$site_id   = $site_id ?? get_current_blog_id();
+		$remaining = array_values( array_diff( $sites, [ $site_id ] ) );
+
+		if ( $remaining === $sites ) {
+			return;
+		}
+
+		if ( empty( $remaining ) ) {
+			delete_site_option( self::NETWORK_FAILURE_OPTION_NAME );
 
 			return;
 		}
 
+		update_site_option( self::NETWORK_FAILURE_OPTION_NAME, $remaining );
+	}
+
+	/**
+	 * Persist the state of failed migration attempts.
+	 *
+	 * @param array{version: string, attempts: int, message: string} $state The failure state.
+	 */
+	private static function save_failure_state( array $state ): void {
+		update_option( self::FAILURE_OPTION_NAME, $state );
+		self::register_failed_site();
+	}
+
+	/**
+	 * Bring an existing install up to the current database revision.
+	 *
+	 * Called for an install that has a recorded revision; a fresh install has nothing
+	 * to migrate and only gets the revision written.
+	 *
+	 * Every step has to tolerate running against an install that already passed it: a
+	 * later step may fail and bring the whole method back on the next request.
+	 *
+	 * @param string $version_from_db The database revision the install is on.
+	 *
+	 * @return void
+	 */
+	protected static function run_migration_steps( string $version_from_db ): void {
 		if ( $version_from_db < 1.01 ) {
 			global $wpdb;
 
@@ -163,6 +408,20 @@ class PluginUpdate {
 			'3.0.0-alpha.1',
 			'<'
 		) ) {
+			/*
+			 * This step creates `antispam_bee_options` out of the legacy option, so anything
+			 * already stored under that name is either a run that got this far or settings the
+			 * user saved by hand while the database version was still stale — and rebuilding
+			 * over either would throw away their configuration. The write below is the step's
+			 * last action, so a run cut short left nothing behind and a present array is always
+			 * one of those two. A stored value that is not an array is corrupt, not a
+			 * configuration, and is replaced. A retry the user explicitly asked for clears
+			 * the option first, so this guard only ever holds back the automatic retries.
+			 */
+			if ( self::has_stored_settings() ) {
+				return;
+			}
+
 			// Update options (we migrate to a new option name `antispam_bee_options` in this release).
 			$options = get_option( 'antispam_bee', [] );
 			if ( ! is_array( $options ) ) {
@@ -238,8 +497,6 @@ class PluginUpdate {
 				$new_options
 			);
 		}
-
-		update_option( self::DB_VERSION_OPTION_NAME, self::get_plugin_version() );
 	}
 
 	/**
@@ -249,8 +506,8 @@ class PluginUpdate {
 	 * 2.x install that never re-saved its settings can still hold a plain string
 	 * (`'translate_lang' => 'de'`) or an empty string where an array is expected.
 	 * PHP does not coerce a scalar into an `array` parameter even in weak mode, so
-	 * such a value used to raise an uncaught `TypeError` and abort the migration.
-	 * 2.x itself cast at every read site; this restores that tolerance.
+	 * such a value used to raise an uncaught `TypeError`. 2.x itself cast at every
+	 * read site; this restores that tolerance.
 	 *
 	 * @param mixed $values Raw legacy option value.
 	 *
