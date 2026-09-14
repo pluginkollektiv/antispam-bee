@@ -47,17 +47,22 @@ class Honeypot extends ControllableBase implements SpamReason {
 	public static function init(): void {
 		add_filter( 'antispam_bee_rules', [ __CLASS__, 'add_rule' ] );
 
-		add_filter(
-			'comment_form_field_comment',
-			function ( $field_markup ) {
-				if ( ! static::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
-					return $field_markup;
-				}
+		add_filter( 'comment_form_field_comment', [ static::class, 'inject_honeypot_field' ], 99 );
+	}
 
-				return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
-			},
-			99
-		);
+	/**
+	 * Inject the honeypot field into the comment form.
+	 *
+	 * @param string $field_markup Markup of the comment field.
+	 *
+	 * @return string The markup, with the honeypot field injected.
+	 */
+	public static function inject_honeypot_field( $field_markup ) {
+		if ( ! static::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
+			return $field_markup;
+		}
+
+		return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
 	}
 
 	/**
