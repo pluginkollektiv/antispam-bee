@@ -25,6 +25,11 @@ class MigrationFailureNotice {
 	const DISMISS_ACTION = 'antispam_bee_dismiss_migration';
 
 	/**
+	 * Action name used to put away the report of a completed migration.
+	 */
+	const DISMISS_SUCCESS_ACTION = 'antispam_bee_dismiss_migration_notice';
+
+	/**
 	 * How many affected sites the network notice names before summarising the rest.
 	 */
 	const MAX_LISTED_SITES = 20;
@@ -43,6 +48,16 @@ class MigrationFailureNotice {
 		add_action( 'network_admin_notices', [ __CLASS__, 'render' ] );
 		add_action( 'admin_post_' . self::RETRY_ACTION, [ __CLASS__, 'handle_retry' ] );
 		add_action( 'admin_post_' . self::DISMISS_ACTION, [ __CLASS__, 'handle_dismiss' ] );
+		add_action( 'admin_post_' . self::DISMISS_SUCCESS_ACTION, [ __CLASS__, 'handle_dismiss_success' ] );
+
+		/*
+		 * The report asks the user to check their settings, so opening that page is them
+		 * doing it. Retiring the report there saves nagging someone who has already looked.
+		 */
+		add_action(
+			'load-settings_page_' . SettingsPage::SETTINGS_PAGE_SLUG,
+			[ PluginUpdate::class, 'clear_pending_migration_notice' ]
+		);
 	}
 
 	/**
@@ -69,6 +84,10 @@ class MigrationFailureNotice {
 		if ( is_network_admin() ) {
 			self::render_network_summary();
 
+			return;
+		}
+
+		if ( self::render_success() ) {
 			return;
 		}
 
@@ -243,6 +262,79 @@ class MigrationFailureNotice {
 	}
 
 	/**
+	 * Report a migration that completed, once.
+	 *
+	 * Reported wherever the admin happens to land, because the request that ran the
+	 * migration is usually not one anybody was watching: a WP-CLI update, a cron run,
+	 * or a front-end hit that read a setting. Without this the user has no way to tell
+	 * their migrated settings apart from the defaults.
+	 *
+	 * @return bool Whether a success notice was rendered.
+	 */
+	private static function render_success(): bool {
+		$migrated_from = PluginUpdate::get_pending_migration_notice();
+		if ( null === $migrated_from ) {
+			return false;
+		}
+
+		/*
+		 * The record is deliberately left in place. Clearing it here would hand the report
+		 * to whichever admin page load happened to render first and destroy it in the same
+		 * breath: a second administrator could never see it, and neither could the first if
+		 * they were looking at something else on the screen. It stays until someone puts it
+		 * away, or until someone opens the settings page it is pointing at.
+		 *
+		 * `is-dismissible` is deliberately absent too. Core's dismiss button hides a notice
+		 * for one page load and remembers nothing, which is exactly the promise this notice
+		 * must not make.
+		 */
+		echo '<div class="notice notice-success">';
+
+		printf(
+			'<p><strong>%s</strong></p>',
+			esc_html__( 'Antispam Bee migrated your settings.', 'antispam-bee' )
+		);
+
+		/*
+		 * The link carries its own meaning, so it reads as a destination out of context
+		 * rather than as "click here". Following it also retires this report, because the
+		 * page it points at is where the checking actually happens.
+		 */
+		$settings_link = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( admin_url( 'options-general.php?page=' . SettingsPage::SETTINGS_PAGE_SLUG ) ),
+			esc_html__( 'Antispam Bee settings', 'antispam-bee' )
+		);
+
+		printf(
+			'<p>%s</p>',
+			wp_kses(
+				sprintf(
+					/* translators: %s: link whose text reads "Antispam Bee settings". */
+					__( 'Your previous configuration has been carried over. Please review your %s and check that everything is as you expect.', 'antispam-bee' ),
+					$settings_link
+				),
+				[ 'a' => [ 'href' => [] ] ]
+			)
+		);
+
+		printf(
+			'<p><a class="button" href="%s">%s</a></p>',
+			esc_url(
+				wp_nonce_url(
+					admin_url( 'admin-post.php?action=' . self::DISMISS_SUCCESS_ACTION ),
+					self::DISMISS_SUCCESS_ACTION
+				)
+			),
+			esc_html__( 'Dismiss', 'antispam-bee' )
+		);
+
+		echo '</div>';
+
+		return true;
+	}
+
+	/**
 	 * Reset the failure state so the migration is attempted again.
 	 *
 	 * Clearing the state is all it takes: the database version is still the old one,
@@ -267,6 +359,21 @@ class MigrationFailureNotice {
 		self::authorize( self::DISMISS_ACTION );
 
 		PluginUpdate::mark_as_migrated();
+
+		self::redirect_back();
+	}
+
+	/**
+	 * Put away the report of a completed migration.
+	 *
+	 * Site-wide, like the fact it reports: the settings belong to the site, not to the
+	 * administrator who happened to read about them, and checking them is a job one
+	 * person does once.
+	 */
+	public static function handle_dismiss_success(): void {
+		self::authorize( self::DISMISS_SUCCESS_ACTION );
+
+		PluginUpdate::clear_pending_migration_notice();
 
 		self::redirect_back();
 	}
