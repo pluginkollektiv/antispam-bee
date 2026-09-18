@@ -24,6 +24,40 @@ class LangHelper {
 	public static function map( string $franc_code ): string {
 		// spellchecker:off.
 		$codes = [
+
+			/*
+			 * Members of a macrolanguage that the service reports individually. Each is
+			 * mapped to the ISO 639-1 code of the macrolanguage it belongs to, because
+			 * that is the code the allowed-languages setting is expressed in. Without
+			 * these the code falls through unmapped and never matches an allowed
+			 * language, so every comment in that language is flagged as spam.
+			 *
+			 * Individual codes with no ISO 639-1 equivalent of their own (ceb, ilo,
+			 * war, …) are deliberately left out: flagging those is the intended
+			 * behaviour.
+			 */
+			'als' => 'sq',
+			'arb' => 'ar',
+			'ayr' => 'ay',
+			'azj' => 'az',
+			'ckb' => 'ku',
+			'ekk' => 'et',
+			'fuf' => 'ff',
+			'fuv' => 'ff',
+			'khk' => 'mn',
+			'knc' => 'kr',
+			'lvs' => 'lv',
+			'npi' => 'ne',
+			'pes' => 'fa',
+			'plt' => 'mg',
+			'prs' => 'fa',
+			'qug' => 'qu',
+			'quy' => 'qu',
+			'quz' => 'qu',
+			'swh' => 'sw',
+			'uzn' => 'uz',
+			'zlm' => 'ms',
+
 			'zha' => 'za',
 			'zho' => 'zh',
 
