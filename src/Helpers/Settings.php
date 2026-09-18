@@ -54,6 +54,25 @@ class Settings {
 			1,
 			2
 		);
+
+		/*
+		 * `update_option()` delegates to `add_option()` when the row does not exist
+		 * yet, and that path fires `add_option_{$option}` instead of
+		 * `update_option_{$option}`. Without this the very first save leaves the
+		 * cache holding the defaults that were read before the write.
+		 */
+		add_action(
+			'add_option_' . self::OPTION_NAME,
+			[ __CLASS__, 'add_cache' ],
+			1,
+			2
+		);
+
+		add_action(
+			'delete_option_' . self::OPTION_NAME,
+			[ __CLASS__, 'delete_cache' ],
+			1
+		);
 	}
 
 	/**
@@ -66,6 +85,27 @@ class Settings {
 	 */
 	public static function update_cache( $old_value, $value ): void {
 		wp_cache_set( self::OPTION_NAME, $value );
+	}
+
+	/**
+	 * Cache the option value when the option row is created.
+	 *
+	 * @param string $option The option name.
+	 * @param mixed  $value  The option value.
+	 *
+	 * @return void
+	 */
+	public static function add_cache( $option, $value ): void {
+		wp_cache_set( self::OPTION_NAME, $value );
+	}
+
+	/**
+	 * Drop the cached option value when the option row is deleted.
+	 *
+	 * @return void
+	 */
+	public static function delete_cache(): void {
+		wp_cache_delete( self::OPTION_NAME );
 	}
 
 	/**

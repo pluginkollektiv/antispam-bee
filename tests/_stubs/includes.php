@@ -14,6 +14,8 @@ function wp_cache_get( $key ) { return false; }
 
 function wp_cache_set( $key, $data ) { return true; }
 
+function wp_cache_delete( $key ) { return true; }
+
 function wp_parse_args( $args, $defaults = '' ) {
 	if ( is_object( $args ) ) {
 		$r = get_object_vars( $args );
