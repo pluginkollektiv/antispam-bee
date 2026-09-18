@@ -131,4 +131,63 @@ class RulesTest extends TestCase {
 		self::assertSame( 1, RulesTestFinalRule::$verify_calls, 'final rule should have been checked' );
 		self::assertSame( 1, RulesTestNonFinalRule::$verify_calls, 'non-final rule should have been checked' );
 	}
+
+	public function test_score_below_the_configured_spam_threshold_is_not_spam() {
+		$this->register_test_rules();
+		RulesTestFinalRule::$score    = 0;
+		RulesTestNonFinalRule::$score = 1;
+
+		expectApplied( 'antispam_bee_spam_threshold' )
+			->once()
+			->andReturn( 2.0 );
+
+		$rules = new Rules( ContentTypeHelper::COMMENT_TYPE );
+
+		self::assertFalse(
+			$rules->apply( [] ),
+			'a single rule hit should stay ham when the threshold demands two'
+		);
+	}
+
+	public function test_score_at_the_configured_spam_threshold_is_spam() {
+		$this->register_test_rules();
+		RulesTestFinalRule::$score    = 0;
+		RulesTestNonFinalRule::$score = 2;
+
+		expectApplied( 'antispam_bee_spam_threshold' )
+			->once()
+			->andReturn( 2.0 );
+
+		$rules = new Rules( ContentTypeHelper::COMMENT_TYPE );
+
+		self::assertTrue( $rules->apply( [] ), 'a score matching the threshold should be spam' );
+	}
+
+	public function test_score_above_the_configured_no_spam_threshold_is_still_spam() {
+		$this->register_test_rules();
+		RulesTestFinalRule::$score    = 0;
+		RulesTestNonFinalRule::$score = 1;
+
+		expectApplied( 'antispam_bee_no_spam_threshold' )
+			->once()
+			->andReturn( -2.0 );
+
+		$rules = new Rules( ContentTypeHelper::COMMENT_TYPE );
+
+		self::assertTrue( $rules->apply( [] ), 'a positive score should stay spam below the ham threshold' );
+	}
+
+	public function test_score_at_the_configured_no_spam_threshold_is_not_spam() {
+		$this->register_test_rules();
+		RulesTestFinalRule::$score    = 0;
+		RulesTestNonFinalRule::$score = -2;
+
+		expectApplied( 'antispam_bee_no_spam_threshold' )
+			->once()
+			->andReturn( -2.0 );
+
+		$rules = new Rules( ContentTypeHelper::COMMENT_TYPE );
+
+		self::assertFalse( $rules->apply( [] ), 'a score matching the ham threshold should not be spam' );
+	}
 }
