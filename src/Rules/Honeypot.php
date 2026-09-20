@@ -99,11 +99,27 @@ class Honeypot extends ControllableBase implements SpamReason {
 		}
 
 		$plugin_field_name = HoneypotField::get_secret_name_for_post();
+		$marker_field_name = HoneypotField::get_marker_name_for_post();
 
 		$hidden_field = Settings::get_key( $_POST, 'comment' );
 		$plugin_field = Settings::get_key( $_POST, $plugin_field_name );
+		$marker_field = Settings::get_key( $_POST, $marker_field_name );
 
-		// The secret comment field was not present in $_POST data.
+		/*
+		 * The form this was submitted from does not carry the honeypot. Injection
+		 * is skipped whenever the comment field cannot be found, is not a
+		 * textarea, or the markup does not match, and a page cached before the
+		 * plugin was active or before the salt was rotated ships without it too.
+		 * The honeypot cannot judge such a submission, so it casts no verdict and
+		 * leaves the decision to the remaining rules.
+		 */
+		if ( is_null( $marker_field ) ) {
+			return;
+		}
+
+		unset( $_POST[ $marker_field_name ] );
+
+		// The form carried the honeypot, but the secret comment field was stripped.
 		if ( is_null( $plugin_field ) ) {
 			$_POST['ab_spam__invalid_request'] = 1;
 

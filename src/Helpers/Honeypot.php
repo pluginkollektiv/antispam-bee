@@ -131,6 +131,16 @@ class Honeypot {
 						$output .= $matches['content'];
 						$output .= '</textarea><textarea ' . $attributes_string . '></textarea>';
 
+						/*
+						 * Reached only when the secret field was actually placed, which is
+						 * what lets the rule distinguish a stripped field from a form the
+						 * injection never modified.
+						 */
+						$output .= sprintf(
+							'<input type="hidden" name="%s" value="1" />',
+							esc_attr( self::get_marker_name_for_post() )
+						);
+
 						$output .= $id_script;
 
 						return $output;
@@ -210,6 +220,29 @@ class Honeypot {
 	 */
 	public static function get_secret_name_for_post(): string {
 		$secret = substr( sha1( md5( 'comment-id' . self::get_salt() ) ), 0, 10 );
+
+		return self::ensure_secret_starts_with_letter( $secret );
+	}
+
+	/**
+	 * Return the name of the field marking a form the honeypot was injected into.
+	 *
+	 * `inject()` cannot always place the secret field: the comment field may be
+	 * missing, carry a different id, not be a textarea, or the markup may not
+	 * match. Its absence from a submission is therefore not by itself a bot
+	 * signal. This marker is emitted only where the injection actually
+	 * succeeded, so the rule can tell "no honeypot in this form" from "honeypot
+	 * present and the secret field was stripped".
+	 *
+	 * The name is derived from the same salt as the secret field, so rotating
+	 * the salt invalidates a marker cached in a page along with the secret name
+	 * it belongs to, and such a form is treated as un-injected rather than as
+	 * spam.
+	 *
+	 * @return string The marker field name.
+	 */
+	public static function get_marker_name_for_post(): string {
+		$secret = substr( sha1( md5( 'comment-marker' . self::get_salt() ) ), 0, 10 );
 
 		return self::ensure_secret_starts_with_letter( $secret );
 	}

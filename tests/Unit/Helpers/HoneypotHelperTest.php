@@ -107,4 +107,37 @@ class HoneypotHelperTest extends TestCase {
 		when( 'esc_js' )->returnArg();
 		when( 'wp_salt' )->justReturn( 'test-salt' );
 	}
+
+	/**
+	 * The marker is what lets the rule tell a stripped secret field from a form
+	 * the injection never touched, so it must appear exactly where the secret
+	 * field does — and nowhere else.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_emits_the_marker_only_when_it_placed_the_secret_field(): void {
+		when( 'esc_attr' )->returnArg();
+		when( 'esc_js' )->returnArg();
+
+		$untouched = Honeypot::inject( '<textarea id="other" name="other"></textarea>', [ 'field_id' => 'comment' ] );
+
+		self::assertStringNotContainsString(
+			Honeypot::get_marker_name_for_post(),
+			$untouched,
+			'markup the injection did not modify must not carry the marker'
+		);
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_marker_name_differs_from_the_secret_name(): void {
+		self::assertNotSame(
+			Honeypot::get_secret_name_for_post(),
+			Honeypot::get_marker_name_for_post(),
+			'the marker must not collide with the secret comment field'
+		);
+	}
 }

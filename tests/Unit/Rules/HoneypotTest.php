@@ -54,9 +54,9 @@ class HoneypotTest extends AbstractRuleTestCase {
 				},
 			]
 		);
-		mock( 'overload:' . \AntispamBee\Helpers\Honeypot::class )
-			->expects( 'get_secret_name_for_post' )
-			->andReturns( 'd7dcf95a06' );
+		$honeypot_helper = mock( 'overload:' . \AntispamBee\Helpers\Honeypot::class );
+		$honeypot_helper->allows( 'get_secret_name_for_post' )->andReturns( 'd7dcf95a06' );
+		$honeypot_helper->allows( 'get_marker_name_for_post' )->andReturns( 'm4rk3rf13' );
 
 		$_POST = [];
 
@@ -73,10 +73,31 @@ class HoneypotTest extends AbstractRuleTestCase {
 		// Send all following requests to the correct URL.
 		$_SERVER = [ 'SCRIPT_NAME' => '/wp-comments-post.php' ];
 
+		/*
+		 * Without the marker the form never carried the honeypot, so the rule must
+		 * stay silent instead of returning a final, unappealable spam verdict.
+		 */
 		Honeypot::precheck();
-		self::assertSame( 1, $_POST['ab_spam__invalid_request'], 'Request with a missing field not detected' );
+		self::assertArrayNotHasKey(
+			'ab_spam__invalid_request',
+			$_POST,
+			'a form without the honeypot marker must not be treated as an invalid request'
+		);
+
+		// Marker present but the secret field stripped: that is a real bot signal.
+		$_POST = [
+			'm4rk3rf13' => '1',
+			'comment'   => 'H1dd3n',
+		];
+		Honeypot::precheck();
+		self::assertSame(
+			1,
+			$_POST['ab_spam__invalid_request'],
+			'a stripped secret field on an injected form should be detected'
+		);
 
 		$_POST = [
+			'm4rk3rf13'  => '1',
 			'd7dcf95a06' => 'S3cr3t',
 			'comment'    => 'H1dd3n',
 		];
@@ -84,6 +105,7 @@ class HoneypotTest extends AbstractRuleTestCase {
 		self::assertSame( 1, $_POST['ab_spam__hidden_field'], 'Non-empty hidden field not detected' );
 
 		$_POST = [
+			'm4rk3rf13'  => '1',
 			'd7dcf95a06' => 'S3cr3t',
 			'comment'    => '',
 		];
@@ -91,11 +113,12 @@ class HoneypotTest extends AbstractRuleTestCase {
 		self::assertSame(
 			[ 'comment' => 'S3cr3t' ],
 			$_POST,
-			'Secret was not moved to hidden field'
+			'Secret was not moved to hidden field, or the marker was left behind'
 		);
 
 		// Honeypot field entirely absent while the secret field is present.
 		$_POST = [
+			'm4rk3rf13'  => '1',
 			'd7dcf95a06' => 'S3cr3t',
 		];
 		Honeypot::precheck();
