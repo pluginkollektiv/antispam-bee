@@ -22,6 +22,7 @@ class LangHelperTest extends TestCase {
 	 * @return array<string, array{string, string}>
 	 */
 	public function macrolanguage_members(): array {
+		// spellchecker:off.
 		return [
 			'Tosk Albanian'                => [ 'als', 'sq' ],
 			'Standard Arabic'              => [ 'arb', 'ar' ],
@@ -47,6 +48,7 @@ class LangHelperTest extends TestCase {
 			'Mandarin Chinese'             => [ 'cmn', 'zh' ],
 			'Cantonese'                    => [ 'yue', 'zh' ],
 		];
+		// spellchecker:on.
 	}
 
 	/**
