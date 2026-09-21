@@ -56,7 +56,7 @@ class PreReleaseNoticeTest extends TestCase {
 	 */
 	private function stub_terminator( string $function, \Closure $record ): void {
 		when( $function )->alias(
-			static function ( ...$args ) use ( $record ) {
+			static function ( ...$args ) use ( $record ): void {
 				$record( ...$args );
 
 				throw new RuntimeException( '__ANTISPAM_BEE_EXPECTED_HALT__' );
@@ -160,7 +160,7 @@ class PreReleaseNoticeTest extends TestCase {
 	public function test_always_init_registers_the_dismissal_handlers(): void {
 		$actions = [];
 		when( 'add_action' )->alias(
-			static function ( $hook, $callback ) use ( &$actions ) {
+			static function ( $hook, $callback ) use ( &$actions ): void {
 				$actions[ $hook ] = $callback;
 			}
 		);
@@ -207,7 +207,7 @@ class PreReleaseNoticeTest extends TestCase {
 		self::mock_dependencies();
 		$enqueued = [];
 		when( 'wp_enqueue_script' )->alias(
-			static function ( $handle, $src, $deps, $ver, $in_footer ) use ( &$enqueued ) {
+			static function ( $handle, $src, $deps, $ver, $in_footer ) use ( &$enqueued ): void {
 				$enqueued[] = $handle;
 			}
 		);
@@ -223,7 +223,7 @@ class PreReleaseNoticeTest extends TestCase {
 		self::mock_dependencies();
 		$enqueued = [];
 		when( 'wp_enqueue_script' )->alias(
-			static function ( $handle ) use ( &$enqueued ) {
+			static function ( $handle ) use ( &$enqueued ): void {
 				$enqueued[] = $handle;
 			}
 		);
@@ -248,7 +248,7 @@ class PreReleaseNoticeTest extends TestCase {
 		);
 		$sent = false;
 		when( 'wp_send_json_success' )->alias(
-			static function () use ( &$sent ) {
+			static function () use ( &$sent ): void {
 				$sent = true;
 
 				throw new RuntimeException( '__ANTISPAM_BEE_EXPECTED_HALT__' );
@@ -256,7 +256,7 @@ class PreReleaseNoticeTest extends TestCase {
 		);
 
 		self::assert_and_terminates(
-			static function () {
+			static function (): void {
 				PreReleaseNotice::handle_dismiss();
 			}
 		);
@@ -280,14 +280,14 @@ class PreReleaseNoticeTest extends TestCase {
 		when( 'wp_get_referer' )->justReturn( 'https://example.com/wp-admin/plugins.php' );
 		$target = null;
 		when( 'wp_safe_redirect' )->alias(
-			static function ( $url ) use ( &$target ) {
+			static function ( $url ) use ( &$target ): void {
 				$target = $url;
 				throw new RuntimeException( '__ANTISPAM_BEE_EXPECTED_HALT__' );
 			}
 		);
 
 		self::assert_and_terminates(
-			static function () {
+			static function (): void {
 				PreReleaseNotice::handle_dismiss();
 			}
 		);
@@ -302,7 +302,7 @@ class PreReleaseNoticeTest extends TestCase {
 
 		$captured = null;
 		when( 'wp_send_json_error' )->alias(
-			static function ( ...$args ) use ( &$captured ) {
+			static function ( ...$args ) use ( &$captured ): void {
 				$captured = $args;
 
 				throw new RuntimeException( '__ANTISPAM_BEE_EXPECTED_HALT__' );
@@ -310,7 +310,7 @@ class PreReleaseNoticeTest extends TestCase {
 		);
 
 		self::assert_and_terminates(
-			static function () {
+			static function (): void {
 				PreReleaseNotice::handle_dismiss();
 			}
 		);
@@ -325,12 +325,12 @@ class PreReleaseNoticeTest extends TestCase {
 		when( 'wp_doing_ajax' )->justReturn( false );
 
 		$captured = null;
-		self::stub_terminator( 'wp_die', static function ( ...$args ) use ( &$captured ) {
+		self::stub_terminator( 'wp_die', static function ( ...$args ) use ( &$captured ): void {
 			$captured = $args;
 		} );
 
 		self::assert_and_terminates(
-			static function () {
+			static function (): void {
 				PreReleaseNotice::handle_dismiss();
 			}
 		);
