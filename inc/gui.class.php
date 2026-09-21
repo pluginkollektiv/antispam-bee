@@ -484,7 +484,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_dashboard_chart" id="ab_dashboard_chart" value="1" <?php checked( $options['dashboard_chart'], 1 ); ?> />
 								<label for="ab_dashboard_chart">
 									<?php esc_html_e( 'Generate statistics as a dashboard widget', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Daily updates of spam detection rate', 'antispam-bee' ); ?></span>
+									<span><?php esc_html_e( 'Daily number of detected spam comments. This can differ from the current spam comments.', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 
@@ -492,7 +492,7 @@ class Antispam_Bee_GUI extends Antispam_Bee {
 								<input type="checkbox" name="ab_dashboard_count" id="ab_dashboard_count" value="1" <?php checked( $options['dashboard_count'], 1 ); ?> />
 								<label for="ab_dashboard_count">
 									<?php esc_html_e( 'Spam counter on the dashboard', 'antispam-bee' ); ?>
-									<span><?php esc_html_e( 'Amount of identified spam comments', 'antispam-bee' ); ?></span>
+									<span><?php esc_html_e( 'Total number of detected spam comments. Use the current spam count to review stored comments.', 'antispam-bee' ); ?></span>
 								</label>
 							</li>
 

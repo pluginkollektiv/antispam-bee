@@ -769,6 +769,25 @@ class Antispam_Bee {
 			)
 		) . '</span>';
 
+		$comments_number = wp_count_comments();
+
+		$items[] = sprintf(
+			'<a href="%s" class="ab-current-spam">%s</a>',
+			esc_url( add_query_arg( 'comment_status', 'spam', admin_url( 'edit-comments.php' ) ) ),
+			esc_html(
+				sprintf(
+					// translators: The number of spam comments currently stored in the spam database.
+					_n(
+						'%s comment in the spam database',
+						'%s comments in the spam database',
+						$comments_number->spam,
+						'antispam-bee'
+					),
+					number_format_i18n( $comments_number->spam )
+				)
+			)
+		);
+
 		return $items;
 	}
 
@@ -898,6 +917,9 @@ class Antispam_Bee {
 		$html .= "</table>\n";
 
 		echo wp_kses_post( '<div id="ab_chart">' . $html . '</div>' );
+		echo wp_kses_post(
+			'<p class="ab-chart-note">' . esc_html__( 'Detected spam comments per day. These totals can differ from the comments currently stored as spam.', 'antispam-bee' ) . '</p>'
+		);
 	}
 
 	/*
