@@ -17,3 +17,11 @@
 	position: relative;
 	white-space: nowrap;
 }
+
+.ab-chart-note {
+	color: #a7aaad;
+	font-size: 12px;
+	margin: 8px 0 0;
+	text-align: center;
+	white-space: normal;
+}

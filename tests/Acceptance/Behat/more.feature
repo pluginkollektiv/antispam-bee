@@ -18,6 +18,7 @@ Feature: More settings
     Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then I should see "0 Blocked"
+    Then I should see "0 comments in the spam database"
     Then I should not see "Fatal"
     Then I should not see "Notice"
 
@@ -45,6 +46,7 @@ Feature: More settings
     Given I am logged in as admin
     Given I am on "/wp-admin/"
     Then I should see "2 Blocked"
+    Then I should see "2 comments in the spam database"
     Then I should not see "Fatal"
     Then I should not see "Notice"
 
