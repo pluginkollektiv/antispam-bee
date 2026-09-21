@@ -37,11 +37,16 @@ class PreReleaseNotice {
 	public const PLUGINS_PAGE = 'plugins.php';
 
 	/**
-	 * The URL of the issue tracker used as the feedback channel.
+	 * The URL of the feedback channel.
+	 *
+	 * Points at the wiki rather than straight at the issue tracker, for two reasons.
+	 * The page can be repointed while a pre-release is in the field, which a constant
+	 * compiled into a released tag cannot; and it carries the German translation
+	 * alongside the English one, which a single URL otherwise cannot.
 	 *
 	 * @var string
 	 */
-	public const FEEDBACK_URL = 'https://github.com/pluginkollektiv/antispam-bee/issues';
+	public const FEEDBACK_URL = 'https://github.com/pluginkollektiv/antispam-bee/wiki/en-Pre-release';
 
 	/**
 	 * Register the notice hooks.
