@@ -158,7 +158,7 @@ jobs:
       # comment comes back unverified and the whole corpus flips to ham.
       - name: Compare spam detection
         id: compare
-        uses: 2ndkauboy/asb-detection-compare@fae80ff70deaff7c82a94734e4459402d97c951e # v1.9.0
+        uses: 2ndkauboy/asb-detection-compare@82ce70cf5184187ae984271b4c873ce277aa10ae # v1.10.0
         with:
           # PR -> the PR's base branch. Manual -> the chosen baseline. Prepare
           # push -> empty, so the baseline is resolved from the branch name.
