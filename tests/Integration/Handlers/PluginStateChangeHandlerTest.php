@@ -10,6 +10,7 @@ namespace AntispamBee\Tests\Integration\Handlers;
 use AntispamBee\Crons\DeleteSpamCron;
 use AntispamBee\Handlers\PluginStateChangeHandler;
 use AntispamBee\Handlers\PluginUpdate;
+use AntispamBee\Helpers\Honeypot;
 use AntispamBee\Helpers\Settings;
 use ReflectionClass;
 use Yoast\WPTestUtils\WPIntegration\TestCase;
@@ -69,6 +70,10 @@ final class PluginStateChangeHandlerTest extends TestCase {
 			get_option( self::DB_VERSION_OPTION ),
 			'The database version has to be removed on uninstall.'
 		);
+		self::assertFalse(
+			get_option( Honeypot::SECRET_OPTION ),
+			'The stored honeypot secret has to be removed on uninstall.'
+		);
 	}
 
 	public function test_uninstall_keeps_the_plugin_options_when_disabled(): void {
@@ -83,6 +88,10 @@ final class PluginStateChangeHandlerTest extends TestCase {
 		self::assertNotFalse(
 			get_option( self::DB_VERSION_OPTION ),
 			'The database version must survive an uninstall that was not opted into.'
+		);
+		self::assertNotFalse(
+			get_option( Honeypot::SECRET_OPTION ),
+			'The stored honeypot secret must survive an uninstall that was not opted into.'
 		);
 	}
 
@@ -171,6 +180,7 @@ final class PluginStateChangeHandlerTest extends TestCase {
 		);
 		update_option( self::DB_VERSION_OPTION, '3.0.0-beta.1' );
 		update_option( self::LEGACY_OPTION, [ 'regexp_check' => 1 ] );
+		update_option( Honeypot::SECRET_OPTION, 'abcdefghij' );
 
 		wp_cache_delete( Settings::OPTION_NAME );
 	}
