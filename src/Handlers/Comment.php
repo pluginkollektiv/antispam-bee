@@ -23,17 +23,22 @@ class Comment extends Reaction {
 	 * @return void
 	 */
 	public static function init(): void {
-		add_action(
-			'init',
-			function () {
-				if ( ! Honeypot::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
-					return;
-				}
-				Honeypot::precheck();
-			}
-		);
+		add_action( 'init', [ self::class, 'precheck_honeypot' ] );
 
 		parent::init();
+	}
+
+	/**
+	 * Run the honeypot pre-check, if the honeypot rule is active.
+	 *
+	 * @return void
+	 */
+	public static function precheck_honeypot() {
+		if ( ! Honeypot::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
+			return;
+		}
+
+		Honeypot::precheck();
 	}
 
 	/**
