@@ -202,7 +202,7 @@ class Section {
 			add_settings_field(
 				'asb-row-' . wp_generate_uuid4(),
 				$row['label'],
-				function () use ( $row ) {
+				function () use ( $row ): void {
 					$this->render_row_fields( $row );
 				},
 				$page,

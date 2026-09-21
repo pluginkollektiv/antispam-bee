@@ -27,6 +27,7 @@ on:
       - 'composer.lock'
       - 'phpcs.xml'
       - 'phpstan.neon'
+      - 'rector.php'
       # `wp-since` resolves the minimum supported WordPress version from the
       # `Requires at least` header in `readme.txt`, so lowering it there alone changes
       # the outcome of the check.
@@ -68,6 +69,10 @@ jobs:
       run: |
         ./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
         composer cs
+    # `--dry-run` exits non-zero as soon as Rector would rewrite something, so the job
+    # fails with the diff instead of silently changing the checkout.
+    - name: Check for pending Rector changes
+      run: composer rector
 
   wp-since:
     runs-on: ubuntu-latest
