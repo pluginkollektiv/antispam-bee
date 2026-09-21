@@ -192,15 +192,11 @@ class Rules {
 
 		DebugMode::log( "Overall score after checking all rules: {$score}" );
 
-		if ( $no_spam_threshold < 0.0 && $score <= $no_spam_threshold ) {
+		if ( $score <= $no_spam_threshold ) {
 			return false;
 		}
 
-		if ( $spam_threshold > 0.0 && $score >= $spam_threshold ) {
-			return true;
-		}
-
-		return $score > 0.0;
+		return $score >= $spam_threshold && $score > 0.0;
 	}
 
 	/**
