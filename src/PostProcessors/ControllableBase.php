@@ -7,6 +7,7 @@
 
 namespace AntispamBee\PostProcessors;
 
+use AntispamBee\Admin\Fields\FieldOptions;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\Controllable;
 
@@ -69,7 +70,7 @@ abstract class ControllableBase extends Base implements Controllable {
 	 *
 	 * {@inheritDoc} Default: none.
 	 *
-	 * @return array<int, array<string, mixed>>|null The post-processor options, or null.
+	 * @return array<int, FieldOptions>|null The post-processor options, or null.
 	 */
 	public static function get_options(): ?array {
 		return null;

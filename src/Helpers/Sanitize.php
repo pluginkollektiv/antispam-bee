@@ -8,6 +8,7 @@
 namespace AntispamBee\Helpers;
 
 use AntispamBee\Admin\Fields\Field;
+use AntispamBee\Admin\Fields\FieldOptions;
 use AntispamBee\Handlers\GeneralOptions;
 use AntispamBee\Handlers\PostProcessors;
 use AntispamBee\Handlers\Rules;
@@ -127,23 +128,25 @@ class Sanitize {
 				Settings::remove_array_key_by_path( $option_path, $options );
 			}
 
-			$controllable_options = $controllable::get_options();
+			$controllable_options = (array) $controllable::get_options();
 			if ( ! $controllable_options ) {
 				continue;
 			}
 
 			foreach ( $controllable_options as $controllable_option ) {
-				if ( isset( $controllable_option['valid_for'] ) && $controllable_option['valid_for'] !== $tab ) {
+				$valid_for = $controllable_option->get_valid_for();
+				if ( '' !== $valid_for && $valid_for !== $tab ) {
 					continue;
 				}
 
 				self::call_sanitize_callback( $controllable_option, $options, $tab, $controllable );
-				if (
-					isset( $controllable_option['input'] )
-					&& $controllable_option['input'] instanceof Field
-					&& isset( $controllable_option['input']->get_option()['sanitize'] )
-				) {
-					self::call_sanitize_callback( $controllable_option['input']->get_option(), $options, $tab, $controllable );
+
+				$input = $controllable_option->get_input();
+				if ( $input instanceof Field ) {
+					$input_options = $input->get_option();
+					if ( $input_options->get_sanitize() !== null ) {
+						self::call_sanitize_callback( $input_options, $options, $tab, $controllable );
+					}
 				}
 			}
 		}
@@ -170,7 +173,7 @@ class Sanitize {
 	/**
 	 * Call a sanitization callback.
 	 *
-	 * @param array<string, mixed> $controllable_option Controllable options.
+	 * @param FieldOptions         $controllable_option Controllable field options.
 	 * @param array<string, mixed> $options             Options.
 	 * @param string               $tab                 Settings tab.
 	 * @param string               $controllable        Controllable element (class name).
@@ -179,28 +182,25 @@ class Sanitize {
 	 *
 	 * @return void
 	 */
-	private static function call_sanitize_callback( array $controllable_option, array &$options, string $tab, string $controllable ): void {
-		if ( ! isset( $controllable_option['sanitize'] ) ) {
+	private static function call_sanitize_callback( FieldOptions $controllable_option, array &$options, string $tab, string $controllable ): void {
+		$sanitize    = $controllable_option->get_sanitize();
+		$option_name = $controllable_option->get_option_name();
+
+		if ( null === $sanitize || '' === $option_name ) {
 			return;
 		}
 
-		if ( ! isset( $controllable_option['option_name'] ) ) {
-			return;
-		}
-
-		$option_name = $controllable::get_option_name( $controllable_option['option_name'] );
-		$option_path = str_replace( '-', '_', "$tab.$option_name" );
+		$full_name   = $controllable::get_option_name( $option_name );
+		$option_path = str_replace( '-', '_', "$tab.$full_name" );
 		$new_value   = Settings::get_array_value_by_path( $option_path, $options );
 
-		if ( is_callable( $controllable_option['sanitize'] ) ) {
-			$sanitized = call_user_func( $controllable_option['sanitize'], $new_value );
-			if ( null === $sanitized ) {
-				Settings::remove_array_key_by_path( $option_path, $options );
+		$sanitized = call_user_func( $sanitize, $new_value );
+		if ( null === $sanitized ) {
+			Settings::remove_array_key_by_path( $option_path, $options );
 
-				return;
-			}
-
-			Settings::set_array_value_by_path( $option_path, $sanitized, $options );
+			return;
 		}
+
+		Settings::set_array_value_by_path( $option_path, $sanitized, $options );
 	}
 }

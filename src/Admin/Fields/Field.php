@@ -24,7 +24,7 @@ abstract class Field {
 	/**
 	 * Field options.
 	 *
-	 * @var array<string, mixed>
+	 * @var FieldOptions
 	 */
 	protected $option;
 
@@ -38,17 +38,16 @@ abstract class Field {
 	/**
 	 * Initialize the field.
 	 *
-	 * @param string $reaction_type Reaction type.
-	 * @param array  $option        Field options.
-	 * @param string $controllable  The related controllable (class name).
+	 * @param string       $reaction_type Reaction type.
+	 * @param FieldOptions $options       Field options.
+	 * @param string       $controllable  The related controllable (class name).
 	 *
-	 * @phpstan-param array<string, mixed>       $option
 	 * @phpstan-param class-string<Controllable> $controllable
 	 */
-	public function __construct( string $reaction_type, array $option, string $controllable ) {
+	public function __construct( string $reaction_type, FieldOptions $options, string $controllable ) {
 		$this->reaction_type            = $reaction_type;
-		$this->option                   = $option;
-		$this->controllable_option_name = $controllable::get_option_name( $this->option['option_name'] );
+		$this->option                   = $options;
+		$this->controllable_option_name = $controllable::get_option_name( $options->get_option_name() );
 	}
 
 	/**
@@ -69,8 +68,8 @@ abstract class Field {
 	 * @return string The label of the field.
 	 */
 	public function get_label(): string {
-		$kses  = $this->option['label_kses'] ?? [];
-		$label = $this->option['label'] ?? '';
+		$kses  = $this->option->get_label_kses();
+		$label = $this->option->get_label();
 		if ( ! $kses ) {
 			return esc_html( $label );
 		}
@@ -84,7 +83,7 @@ abstract class Field {
 	 * @return string The placeholder of the field.
 	 */
 	public function get_placeholder(): string {
-		return $this->option['placeholder'] ?? '';
+		return $this->option->get_placeholder();
 	}
 
 	/**
@@ -106,9 +105,9 @@ abstract class Field {
 	/**
 	 * Get the option payload.
 	 *
-	 * @return array<string, mixed> The option payload of the field.
+	 * @return FieldOptions The field options value object.
 	 */
-	public function get_option(): array {
+	public function get_option(): FieldOptions {
 		return $this->option;
 	}
 
@@ -130,6 +129,6 @@ abstract class Field {
 	 * @return string Description of the field.
 	 */
 	public function get_description(): string {
-		return $this->option['description'] ?? '';
+		return $this->option->get_description();
 	}
 }
