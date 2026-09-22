@@ -89,7 +89,7 @@ class Honeypot {
 			case 'textarea':
 				$regex = str_replace(
 					[ '{{HONEYPOT_ID}}', '{{HONEYPOT_NAME}}' ],
-					[ $honeypot_id, $honeypot_name ],
+					[ preg_quote( $honeypot_id, '/' ), preg_quote( $honeypot_name, '/' ) ],
 					'/(?P<all>                                    (?# match the whole textarea tag )
 						<textarea                                        (?# the opening of the textarea and some optional attributes )
 						(                                                (?# match a id attribute followed by some optional ones and the name attribute )
@@ -155,13 +155,58 @@ class Honeypot {
 					$markup
 				) ?? $markup;
 				break;
+			case 'input':
+				// The visible input gets the secret name so its real content is
+				// not the honeypot bait. A hidden duplicate carrying the comment
+				// name is appended right behind it, without an id so there are
+				// not two elements with the same id on the page.
+				$secret_name = self::get_secret_name_for_post();
+
+				$quoted_id   = preg_quote( $honeypot_id, '/' );
+				$quoted_name = preg_quote( $honeypot_name, '/' );
+
+				// Rebuild only the matching input tag in the raw markup, so
+				// single and double quoting and attribute order all work. The
+				// lookaheads make sure this input has the comment id and name,
+				// matched as complete values, not prefix of another one.
+				$tag_re = '/<input\b(?=[^>]*\bid=("' . $quoted_id . '"|\'' . $quoted_id . '\'|' . $quoted_id . '(?=[\s\/>])))(?=[^>]*\bname=("' . $quoted_name . '"|\'' . $quoted_name . '\'|' . $quoted_name . '(?=[\s\/>])))[^>]*\/?>/';
+
+				$honeypot_attrs = sprintf(
+					'name="%1$s" aria-hidden="true" aria-label="hp-comment" autocomplete="new-password" tabindex="-1" style="%2$s"',
+					$honeypot_name,
+					$honeypot_styles
+				);
+
+				$markup = preg_replace_callback(
+					$tag_re,
+					function ( array $matches ) use ( $secret_name, $honeypot_attrs ) {
+						// Swap the name for the secret, keep everything else. The
+						// leading \s stops \b from matching the name inside a
+						// data-name attribute placed before the real one.
+						$rewritten = preg_replace(
+							'/(^|\s)name=["\']?[^"\'>\s]+["\']?/',
+							'$1name="' . esc_attr( $secret_name ) . '"',
+							$matches[0],
+							1
+						);
+
+						return $rewritten
+							. '<input ' . $honeypot_attrs . '>'
+							. sprintf(
+								'<input type="hidden" name="%s" value="1" />',
+								esc_attr( self::get_marker_name_for_post() )
+							);
+					},
+					$markup,
+					1
+				) ?? $markup;
+				break;
 			default:
 				break;
 		}
 
 		return $markup;
 	}
-
 
 	/**
 	 * Return the secret of a post used in the textarea id attribute.
