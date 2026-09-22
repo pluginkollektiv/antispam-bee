@@ -3,10 +3,33 @@
 namespace AntispamBee\Tests\Unit\Handlers;
 
 use AntispamBee\Handlers\Comment;
-use AntispamBee\Handlers\Reaction;
+use AntispamBee\Rules\Base as RuleBase;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 use function Brain\Monkey\Functions\stubs;
 use function Brain\Monkey\Functions\when;
+
+if ( ! defined( 'AntispamBee\PLUGIN_PATH' ) ) {
+	define( 'AntispamBee\PLUGIN_PATH', dirname( __DIR__, 3 ) . DIRECTORY_SEPARATOR );
+}
+
+/**
+ * Ham rule that records every payload it was asked to verify.
+ */
+class CommentTestCountingRule extends RuleBase {
+	protected static $slug = 'test-counting';
+
+	public static $verified = [];
+
+	public static function verify( array $item ): int {
+		self::$verified[] = $item;
+
+		return 0;
+	}
+
+	public static function get_name(): string {
+		return 'Counting test rule';
+	}
+}
 
 /**
  * Unit tests for {@see Comment}.
@@ -15,9 +38,6 @@ class CommentTest extends TestCase {
 
 	/**
 	 * The verification decision is driven by the request context, not by the executing script.
-	 *
-	 * Mockery's `overload:` may only be applied once per process, so the whole contract is
-	 * asserted in a single test method against one overloaded parent.
 	 */
 	public function test_process() {
 		global $_POST;
@@ -34,11 +54,11 @@ class CommentTest extends TestCase {
 
 		stubs(
 			[
-				'esc_url_raw'  => function ( string $url ) {
+				'esc_url_raw'   => function ( string $url ) {
 					return $url;
 				},
-				'wp_parse_url' => 'parse_url',
-				'wp_unslash'   => function ( $value ) {
+				'wp_parse_url'  => 'parse_url',
+				'wp_unslash'    => function ( $value ) {
 					return $value;
 				},
 				'wp_installing' => false,
@@ -61,19 +81,26 @@ class CommentTest extends TestCase {
 					return $skip_filter;
 				}
 
+				if ( 'antispam_bee_rules' === $hook ) {
+					return [ CommentTestCountingRule::class ];
+				}
+
 				return $value;
 			}
 		);
 
-		$processed = [];
-		mock( 'overload:' . Reaction::class )
-			->allows( 'process' )
-			->withArgs( function ( $input ) use ( &$processed ) {
-				$processed[] = $input;
+		/**
+		 * Reset the recorded payloads and return how many the rule saw last time.
+		 */
+		$processed = function () {
+			$count = count( CommentTestCountingRule::$verified );
 
-				return true;
-			} );
+			CommentTestCountingRule::$verified = [];
 
+			return $count;
+		};
+
+		$processed();
 		$comment = [ 'comment_type' => 'comment' ];
 
 		// The front-end comment form is verified, as it always was.
@@ -81,61 +108,55 @@ class CommentTest extends TestCase {
 		$_POST                  = [ 'comment' => 'Hello' ];
 		$result                 = Comment::process( $comment );
 		self::assertSame( '192.0.2.100', $result['comment_author_IP'], 'The client IP fills an empty author IP' );
-		self::assertCount( 1, $processed, 'Comment should have been processed on wp-comments-post.php' );
+		self::assertSame( 1, $processed(), 'Comment should have been processed on wp-comments-post.php' );
 
 		/*
 		 * Every caller of `wp_new_comment()` reaches this handler through
 		 * `preprocess_comment`. XML-RPC's `wp.newComment` is served by /xmlrpc.php with
 		 * an empty $_POST (the payload is a raw XML body), and used to skip every rule.
 		 */
-		$processed              = [];
 		$_SERVER['SCRIPT_NAME'] = '/xmlrpc.php';
 		$_POST                  = [];
 		$result                 = Comment::process( $comment );
-		self::assertCount( 1, $processed, 'Comment submitted over XML-RPC should have been processed' );
+		self::assertSame( 1, $processed(), 'Comment submitted over XML-RPC should have been processed' );
 
-		// A REST or headless front-end submission is verified too.
-		$processed              = [];
+		// A headless front-end submission is verified too.
 		$_SERVER['SCRIPT_NAME'] = '/index.php';
 		$result                 = Comment::process( $comment );
-		self::assertCount( 1, $processed, 'Comment submitted outside the comment form should have been processed' );
+		self::assertSame( 1, $processed(), 'Comment submitted outside the comment form should have been processed' );
 
 		// A moderator working in the admin is not a public submission.
-		$processed    = [];
 		$is_admin     = true;
 		$can_moderate = true;
 		$result       = Comment::process( $comment );
-		self::assertEmpty( $processed, 'Comment created by a moderator in the admin should not have been processed' );
+		self::assertSame( 0, $processed(), 'Comment created by a moderator in the admin should not have been processed' );
 
 		// A visitor hitting an admin-side endpoint is still verified.
-		$processed    = [];
 		$can_moderate = false;
 		$result       = Comment::process( $comment );
-		self::assertCount( 1, $processed, 'Comment from a non-moderator should have been processed' );
+		self::assertSame( 1, $processed(), 'Comment from a non-moderator should have been processed' );
 
 		// The decision is filterable.
-		$processed   = [];
 		$is_admin    = false;
 		$skip_filter = true;
 		$result      = Comment::process( $comment );
-		self::assertEmpty( $processed, 'The filter should have skipped the verification' );
+		self::assertSame( 0, $processed(), 'The filter should have skipped the verification' );
 		$skip_filter = null;
 
 		/*
 		 * An IP supplied by the caller survives. Core only falls back to REMOTE_ADDR for
 		 * an absent value, so importers and plugins passing a historical IP must keep it.
 		 */
-		$processed = [];
-		$result    = Comment::process(
+		$result = Comment::process(
 			[
 				'comment_type'      => 'comment',
 				'comment_author_IP' => '198.51.100.7',
 			]
 		);
 		self::assertSame( '198.51.100.7', $result['comment_author_IP'], 'A supplied IP must not be overwritten' );
+		$processed();
 
 		// An unusable REMOTE_ADDR is left alone instead of blanking the field.
-		$processed              = [];
 		$_SERVER['REMOTE_ADDR'] = 'fe80::1%eth0';
 		$result                 = Comment::process(
 			[
@@ -145,10 +166,12 @@ class CommentTest extends TestCase {
 		);
 		self::assertSame( '203.0.113.9', $result['comment_author_IP'], 'A valid IP must not be clobbered with an empty string' );
 		$_SERVER['REMOTE_ADDR'] = '192.0.2.100';
+		$processed();
 
 		// A reaction of another type is left untouched.
 		$linkback = [ 'comment_type' => 'linkback' ];
 		$result   = Comment::process( $linkback );
 		self::assertSame( $linkback, $result, 'Linkback should not be modified by comment handler' );
+		self::assertSame( 0, $processed(), 'Linkback should not have been processed by the comment handler' );
 	}
 }

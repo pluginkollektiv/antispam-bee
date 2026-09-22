@@ -38,6 +38,11 @@
       address together, the way WordPress core does for its own "Comment author must have a
       previously approved comment" setting, instead of trusting every submission that carries a
       known email address. A commenter who has a user account is matched by that account
+    * Fix: Comments created through the REST API are now checked as well. The REST controller
+      inserts a comment without firing `preprocess_comment`, so such a comment previously
+      reached the database without any rule being applied. The spam reasons and the
+      notification email are now hooked to `wp_insert_comment`, which every channel runs
+      through
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -79,6 +84,11 @@
       „Kommentar-Autor muss einen zuvor genehmigten Kommentar haben“ tut, statt jeder
       Einsendung mit einer bekannten E-Mail-Adresse zu vertrauen. Ein Kommentator mit
       Benutzerkonto wird über dieses Konto erkannt
+    * Fix: Über die REST-API erstellte Kommentare werden nun ebenfalls geprüft. Der
+      REST-Controller speichert einen Kommentar, ohne `preprocess_comment` auszulösen, sodass
+      ein solcher Kommentar bisher ohne jede Regel in der Datenbank landete. Die Spam-Gründe
+      und die Benachrichtigungs-E-Mail hängen jetzt an `wp_insert_comment`, das von allen
+      Kanälen durchlaufen wird
 
 ### 2.11.12 ###
 
