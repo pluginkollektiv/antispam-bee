@@ -38,6 +38,9 @@ class ApprovedEmail extends ControllableBase {
 	 * that were approved before. Matching the email address alone would let anyone
 	 * who knows or guesses an approved address inherit that trust.
 	 *
+	 * The payload is already unslashed, which is the form the comment columns are
+	 * stored in, so both values are compared as they are.
+	 *
 	 * Handled payload attributes: `email`, `author`.
 	 *
 	 * @param array<string, mixed> $item Normalized payload to verify.
@@ -52,7 +55,7 @@ class ApprovedEmail extends ControllableBase {
 			return 0;
 		}
 
-		$user = get_user_by( 'email', wp_unslash( $email ) );
+		$user = get_user_by( 'email', $email );
 
 		if ( $user && ! empty( $user->ID ) ) {
 			$approved_comments_count = get_comments(
@@ -75,8 +78,8 @@ class ApprovedEmail extends ControllableBase {
 		$result = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT `comment_ID` FROM `$wpdb->comments` WHERE `comment_approved` = '1' AND `comment_author` = %s AND `comment_author_email` = %s LIMIT 1",
-				wp_unslash( $author ),
-				wp_unslash( $email )
+				$author,
+				$email
 			)
 		);
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery
