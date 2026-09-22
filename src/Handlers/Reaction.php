@@ -87,10 +87,15 @@ abstract class Reaction {
 	 * rules consume, and for any helper-based enrichment (IP lookup, host
 	 * parsing). The returned payload must include the `reaction_type` attribute.
 	 *
+	 * The payload a rule receives is always unslashed, so that a rule can compare
+	 * it against stored data — WordPress unslashes a comment before writing it —
+	 * without having to know which channel the reaction arrived on.
+	 *
 	 * @param array<string, mixed> $reaction Raw reaction data.
+	 * @param bool                 $slashed  Whether the reaction data is slashed.
 	 * @return array<string, mixed> Normalized payload.
 	 */
-	abstract protected static function build_payload( array $reaction ): array;
+	abstract protected static function build_payload( array $reaction, bool $slashed = true ): array;
 
 	/**
 	 * Handle spam.
