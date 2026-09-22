@@ -131,11 +131,18 @@ Yes. Define the constant `ANTISPAM_BEE_LOG_FILE` in your `wp-config.php` with th
 
 The fields are space-separated `key=value` pairs, and every value is free of spaces, so the line can be parsed without quoting. A field that does not apply to a reaction is written as `-`; a form submission, for example, has no post to refer to. `reasons` lists the slugs of the rules that caught the item, so a Fail2Ban jail can ban honeypot hits longer than other detections.
 
-Match the IP with `ip=<HOST>` rather than by position: that field is the one Fail2Ban needs, and it will keep its name and shape in future versions of the format. This filter bans every detected item and keeps working if the rest of the line changes:
+A ready-made filter and an example jail ship with the plugin, in the `fail2ban` directory:
+
+> cp wp-content/plugins/antispam-bee/fail2ban/filter.d/antispam-bee.conf /etc/fail2ban/filter.d/
+> cp wp-content/plugins/antispam-bee/fail2ban/jail.d/antispam-bee.local /etc/fail2ban/jail.d/
+
+Then set `logpath` in the jail to the file you defined as `ANTISPAM_BEE_LOG_FILE` and reload Fail2Ban. Check the result with `fail2ban-regex /path/to/your.log /etc/fail2ban/filter.d/antispam-bee.conf`, which reports how many lines matched.
+
+The shipped filter matches the IP by field name rather than by position, because that field is the one Fail2Ban needs and it keeps its name and shape in future versions of the format:
 
 `failregex = ^.*?\bip=<HOST>\b`
 
-The `?` matters. Without it the expression is greedy and binds to the *last* `ip=` on the line, so a field added by a plugin whose value happens to contain `ip=` would decide who gets banned.
+The `?` matters. Without it the expression is greedy and binds to the *last* `ip=` on the line, so a field added by a plugin whose value happens to contain `ip=` would decide who gets banned. Every release checks this expression against a freshly written log line, so a change to the format that would stop your jail matching cannot pass unnoticed — which is the reason to prefer the shipped filter over a hand-written one.
 
 Because the reasons are logged, a jail can also act on one detection only — banning honeypot hits, which no human ever triggers, for far longer than a content-based match:
 
