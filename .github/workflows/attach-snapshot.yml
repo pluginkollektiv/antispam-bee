@@ -44,6 +44,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Find the run that classified this commit
@@ -76,16 +77,18 @@ jobs:
         id: download
         env:
           GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.find.outputs.run-id }}
+          CORPUS: ${{ matrix.corpus }}
         run: |
           set -euo pipefail
           # Not every release has a snapshot for every corpus — a version prepared
           # with only the full corpus has no small-corpus artifact. That is not a
           # failure; there is simply nothing to attach.
-          if gh run download "${{ steps.find.outputs.run-id }}" \
-              --name "asb-detection-snapshot-${{ matrix.corpus }}" --dir snapshot 2>/dev/null; then
+          if gh run download "$RUN_ID" \
+              --name "asb-detection-snapshot-$CORPUS" --dir snapshot 2>/dev/null; then
             echo "found=true" >> "$GITHUB_OUTPUT"
           else
-            echo "::notice::No ${{ matrix.corpus }}-corpus snapshot in that run; nothing to attach."
+            echo "::notice::No $CORPUS-corpus snapshot in that run; nothing to attach."
             echo "found=false" >> "$GITHUB_OUTPUT"
           fi
 
