@@ -35,7 +35,7 @@ class DbSpam extends ControllableBase implements SpamReason {
 	public static function verify( array $item ): int {
 		$params = [];
 		$filter = [];
-		$url    = wp_unslash( $item['url'] ?? '' );
+		$url    = $item['url'] ?? '';
 
 		if ( ! empty( $url ) ) {
 			$filter[] = '`comment_author_url` = %s';
@@ -46,14 +46,14 @@ class DbSpam extends ControllableBase implements SpamReason {
 
 		if ( ! empty( $ip ) ) {
 			$filter[] = '`comment_author_IP` = %s';
-			$params[] = wp_unslash( $ip );
+			$params[] = $ip;
 		}
 
 		$email = $item['email'] ?? '';
 
 		if ( ! empty( $email ) ) {
 			$filter[] = '`comment_author_email` = %s';
-			$params[] = wp_unslash( $email );
+			$params[] = $email;
 		}
 		if ( empty( $params ) ) {
 			return 0;

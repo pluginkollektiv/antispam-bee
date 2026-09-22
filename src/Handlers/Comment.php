@@ -97,7 +97,12 @@ class Comment extends Reaction {
 
 		$rules = new Rules( static::$reaction_type );
 
-		if ( ! $rules->apply( static::build_payload( $prepared ) ) ) {
+		/*
+		 * The REST controller slashes the prepared comment only after this filter has
+		 * run (`wp_insert_comment( wp_filter_comment( wp_slash( … ) ) )`), so what
+		 * reaches this point is unslashed already.
+		 */
+		if ( ! $rules->apply( static::build_payload( $prepared, false ) ) ) {
 			return $prepared;
 		}
 
@@ -218,9 +223,14 @@ class Comment extends Reaction {
 	 * Build the normalized payload from a comment.
 	 *
 	 * @param array<string, mixed> $reaction Raw comment data.
+	 * @param bool                 $slashed  Whether the comment data is slashed.
 	 * @return array<string, mixed> Normalized payload.
 	 */
-	protected static function build_payload( array $reaction ): array {
+	protected static function build_payload( array $reaction, bool $slashed = true ): array {
+		if ( $slashed ) {
+			$reaction = wp_unslash( $reaction );
+		}
+
 		$url = $reaction['comment_author_url'] ?? '';
 
 		return [
