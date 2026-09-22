@@ -1,0 +1,199 @@
+# Watches for a WordPress stable release newer than the plugin's `Tested up to`.
+#
+# The scheduled E2E matrix runs `latest`/`nightly` only when somebody pushes, so a
+# release during a quiet week goes unnoticed until it breaks an unrelated pull request,
+# where it reads as that contributor's bug instead of as a core release (#801, #802).
+#
+# This workflow notices the release on its own. It compares the current stable from the
+# WordPress version API against `Tested up to` in `readme.txt`. Only when the release is
+# newer does it run the unit suite, PHPStan and a single E2E entry against that release,
+# and report the outcome on a tracking issue.
+#
+# The check is stateless on purpose: comparing against `Tested up to` keeps the condition
+# true until the readme is bumped, which is the action that resolves it. No cache to
+# evict, nothing a missed run can silently mark "seen".
+#
+# Cron fires only when the workflow lives on the repository's default branch.
+
+name: WordPress release watch
+
+on:
+  schedule:
+    - cron: '14 7 * * 2' # Tue 07:14 UTC, off the :00/:30 marks.
+      id: weekly
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Run the test and report jobs even if Tested up to is current.
+        required: false
+        default: 'false'
+
+permissions:
+  contents: read
+  # The report job opens and comments on tracking issues.
+  issues: write
+
+concurrency:
+  # Keyed off the workflow name, not the schedule id, so a manual dispatch can supersede
+  # a stuck scheduled run and never collides with another workflow's group.
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      newer: ${{ steps.compare.outputs.newer }}
+      wp_version: ${{ steps.gather.outputs.wp_version }}
+      tested_up_to: ${{ steps.gather.outputs.tested_up_to }}
+      run_key: ${{ steps.compare.outputs.run_key }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - id: gather
+        name: Gather current stable and Tested up to
+        run: |
+          API_JSON="$(curl -s https://api.wordpress.org/core/version-check/1.7/)"
+          WP_VERSION="$(printf '%s' "$API_JSON" | jq -r '.offers[0].version // empty')"
+          if [ -z "$WP_VERSION" ]; then
+            echo "::error::Could not read a WordPress version from the API."
+            exit 1
+          fi
+          TESTED_UP_TO="$(grep -m1 '^[[:space:]]*Tested up to:' readme.txt | sed 's/^[[:space:]]*Tested up to:[[:space:]]*//')"
+          if [ -z "$TESTED_UP_TO" ]; then
+            echo "::error::Could not read 'Tested up to' from readme.txt."
+            exit 1
+          fi
+          echo "wp_version=$WP_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tested_up_to=$TESTED_UP_TO" >> "$GITHUB_OUTPUT"
+
+      - id: compare
+        name: Compare against Tested up to
+        run: |
+          WP_VERSION="${{ steps.gather.outputs.wp_version }}"
+          TESTED_UP_TO="${{ steps.gather.outputs.tested_up_to }}"
+
+          # sort -V is version-aware, so 6.10 sorts after 6.9. Strictly greater only, so a
+          # downgrade or a garbled response cannot trigger a run.
+          NEWER="false"
+          HIGHEST="$(printf '%s\n' "$WP_VERSION" "$TESTED_UP_TO" | sort -V | tail -n1)"
+          if [ "$HIGHEST" = "$WP_VERSION" ] && [ "$WP_VERSION" != "$TESTED_UP_TO" ]; then
+            NEWER="true"
+          fi
+
+          # A manual dispatch can force the run regardless of the comparison.
+          if [ "${{ github.event.inputs.force || 'false' }}" = 'true' ]; then
+            NEWER="true"
+          fi
+
+          # Dedupe key: the major.minor of the release, stable across patch releases.
+          RUN_KEY="wp-$(printf '%s' "$WP_VERSION" | cut -d. -f1-2)"
+
+          echo "newer=$NEWER" >> "$GITHUB_OUTPUT"
+          echo "run_key=$RUN_KEY" >> "$GITHUB_OUTPUT"
+
+          echo "::notice::WordPress $WP_VERSION, Tested up to $TESTED_UP_TO, newer=$NEWER"
+
+          # A readable summary is the only evidence the watch ran; scheduled runs have no
+          # pull request or author to attach to.
+          {
+            echo "| WordPress stable | Tested up to | Newer? |"
+            echo "|---|---|---|"
+            echo "| $WP_VERSION | $TESTED_UP_TO | $NEWER |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  test:
+    needs: detect
+    if: needs.detect.outputs.newer == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Setup PHP and install dev dependencies
+        uses: ./.github/actions/setup-php
+        with:
+          php-version: '8.5'
+          extensions: mbstring, intl
+          ini-values: post_max_size=256M, short_open_tag=On
+
+      - name: Run unit tests
+        run: composer test:unit
+
+      - name: Run PHPStan
+        run: composer phpstan
+
+      - name: Configure wp-env for the release under test
+        # latest.zip is a release build with the bundled default themes. The WordPress
+        # git checkout is not (#802) and leaves the site with no active theme.
+        run: |
+          echo '{"core":"https://wordpress.org/latest.zip","phpVersion":"8.5"}' | tee .wp-env.override.json
+
+      - name: Start wp-env
+        run: npm run env:start
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      - name: Upload test report on failure
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: wp-release-watch-report-${{ needs.detect.outputs.run_key }}-${{ github.run_id }}
+          path: tests/e2e/report/
+          retention-days: 7
+
+      - name: Stop wp-env
+        if: always()
+        run: npm run env:stop
+
+  report:
+    needs: [detect, test]
+    # Runs whether the test job passes or fails, so a red suite still raises the issue.
+    if: always() && needs.detect.outputs.newer == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for an existing tracking issue
+        id: find
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ISSUE="$(
+            gh issue list --repo "${{ github.repository }}" \
+              --search "in:title \"WordPress ${{ needs.detect.outputs.run_key }} compatibility\" is:issue is:open" \
+              --state open --json number --jq '.[0].number'
+          )"
+          echo "issue=$ISSUE" >> "$GITHUB_OUTPUT"
+
+      - name: Open or comment on the tracking issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ISSUE_NUMBER="${{ steps.find.outputs.issue }}"
+          RUN_LINK="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          if [ "${{ needs.test.result }}" = 'success' ]; then
+            SUMMARY="green against WordPress ${{ needs.detect.outputs.wp_version }}: bump **Tested up to**, no code change needed."
+          else
+            SUMMARY="red against WordPress ${{ needs.detect.outputs.wp_version }}: see [the report]($RUN_LINK)."
+          fi
+          BODY="Scheduled job for \`${{ needs.detect.outputs.run_key }}\`: $SUMMARY"
+
+          if [ -z "$ISSUE_NUMBER" ]; then
+            gh issue create \
+              --repo "${{ github.repository }}" \
+              --title "WordPress ${{ needs.detect.outputs.run_key }} compatibility" \
+              --body "$BODY"
+          else
+            gh issue comment --repo "${{ github.repository }}" "$ISSUE_NUMBER" --body "$BODY"
+          fi
