@@ -101,8 +101,7 @@ abstract class Reaction {
 	 * @return array<string, mixed>|never-return Handled reaction (or die, if item was deleted).
 	 */
 	protected static function handle_spam( array $reaction, Rules $rules ) {
-		$item = PostProcessors::apply( static::$reaction_type, $reaction, $rules->get_spam_reasons() );
-		if ( ! isset( $item['asb_marked_as_delete'] ) ) {
+		if ( ! static::marked_as_delete( static::run_post_processors( $reaction, $rules ) ) ) {
 			add_filter( 'pre_comment_approved', [ self::class, 'mark_as_spam' ] );
 
 			return $reaction;
@@ -110,6 +109,34 @@ abstract class Reaction {
 
 		status_header( 403 );
 		die( 'Spam deleted.' );
+	}
+
+	/**
+	 * Run the post-processors for a reaction that was classified as spam.
+	 *
+	 * Split out of `handle_spam()` so that channels which cannot mark a reaction
+	 * through the `pre_comment_approved` filter — the REST API decides the approval
+	 * status before the plugin is given the reaction — still run the same
+	 * post-processors.
+	 *
+	 * @param array<string, mixed> $reaction Reaction that was classified as spam.
+	 * @param Rules                $rules    Ruleset that classified it.
+	 *
+	 * @return array<string, mixed> The post-processed item.
+	 */
+	protected static function run_post_processors( array $reaction, Rules $rules ): array {
+		return PostProcessors::apply( static::$reaction_type, $reaction, $rules->get_spam_reasons() );
+	}
+
+	/**
+	 * Whether a post-processor marked the item for deletion.
+	 *
+	 * @param array<string, mixed> $item Post-processed item.
+	 *
+	 * @return bool Whether the item is to be deleted instead of being stored as spam.
+	 */
+	protected static function marked_as_delete( array $item ): bool {
+		return isset( $item['asb_marked_as_delete'] );
 	}
 
 	/**

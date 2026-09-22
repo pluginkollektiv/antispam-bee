@@ -34,6 +34,11 @@
     * Enhancement: New `antispam_bee_country_spam_ip` filter to change which address the country
       rule looks up — mask it differently, send the original one for a more precise country, or
       return an empty string to skip the lookup
+    * Fix: Comments created through the REST API are now checked as well. The REST controller
+      inserts a comment without firing `preprocess_comment`, so such a comment previously
+      reached the database without any rule being applied. The spam reasons and the
+      notification email are now hooked to `wp_insert_comment`, which every channel runs
+      through
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -70,6 +75,11 @@
     * Verbesserung: Neuer Filter `antispam_bee_country_spam_ip`, um die Adresse zu ändern, die die
       Länder-Regel abfragt – anders maskieren, die ursprüngliche Adresse für ein genaueres Land
       senden oder mit einem leeren String die Abfrage ganz überspringen
+    * Fix: Über die REST-API erstellte Kommentare werden nun ebenfalls geprüft. Der
+      REST-Controller speichert einen Kommentar, ohne `preprocess_comment` auszulösen, sodass
+      ein solcher Kommentar bisher ohne jede Regel in der Datenbank landete. Die Spam-Gründe
+      und die Benachrichtigungs-E-Mail hängen jetzt an `wp_insert_comment`, das von allen
+      Kanälen durchlaufen wird
 
 ### 2.11.12 ###
 

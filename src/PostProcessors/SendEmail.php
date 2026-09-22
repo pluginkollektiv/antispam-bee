@@ -27,7 +27,7 @@ class SendEmail extends ControllableBase {
 	 * The processed item the notification is built from.
 	 *
 	 * Carried between `process()` and `send_notification()`, because
-	 * `comment_post` hands the callback nothing but the comment ID.
+	 * `wp_insert_comment` hands the callback nothing but the comment ID.
 	 *
 	 * @var array<string, mixed>
 	 */
@@ -48,7 +48,7 @@ class SendEmail extends ControllableBase {
 
 		self::$item = $item;
 
-		add_action( 'comment_post', [ self::class, 'send_notification' ] );
+		add_action( 'wp_insert_comment', [ self::class, 'send_notification' ] );
 
 		return $item;
 	}
@@ -61,6 +61,8 @@ class SendEmail extends ControllableBase {
 	 * @return void
 	 */
 	public static function send_notification( $id ) {
+		remove_action( 'wp_insert_comment', [ self::class, 'send_notification' ] );
+
 		$comment = get_comment( $id, ARRAY_A );
 
 		if ( empty( $comment ) ) {
