@@ -21,9 +21,12 @@ if ( ! defined( 'AntispamBee\PLUGIN_PATH' ) ) {
 class CommentRestTestRule extends RuleBase {
 	protected static $slug = 'test-rest-rule';
 
-	public static $score = 0;
+	public static $score    = 0;
+	public static $verified = [];
 
 	public static function verify( array $item ): int {
+		self::$verified[] = $item;
+
 		return self::$score;
 	}
 
@@ -94,10 +97,25 @@ class CommentRestDeletingPostProcessor extends PostProcessorBase {
  */
 class CommentRestTest extends TestCase {
 
+	/**
+	 * Stand-in for `wp_unslash()`, which strips one level of slashes recursively.
+	 *
+	 * @param mixed $value Value to unslash.
+	 * @return mixed Unslashed value.
+	 */
+	public static function stripslashes_deep( $value ) {
+		if ( is_array( $value ) ) {
+			return array_map( [ self::class, 'stripslashes_deep' ], $value );
+		}
+
+		return is_string( $value ) ? stripslashes( $value ) : $value;
+	}
+
 	protected function set_up(): void {
 		parent::set_up();
 
-		CommentRestTestRule::$score         = 0;
+		CommentRestTestRule::$score          = 0;
+		CommentRestTestRule::$verified       = [];
 		CommentRestTestPostProcessor::$items = [];
 
 		$_SERVER = [ 'REMOTE_ADDR' => '192.0.2.100' ];
@@ -108,9 +126,7 @@ class CommentRestTest extends TestCase {
 					return $url;
 				},
 				'wp_parse_url'  => 'parse_url',
-				'wp_unslash'    => function ( $value ) {
-					return $value;
-				},
+				'wp_unslash'    => [ self::class, 'stripslashes_deep' ],
 				'wp_installing' => false,
 				'is_admin'      => false,
 			]
@@ -213,6 +229,28 @@ class CommentRestTest extends TestCase {
 		$error = new WP_Error( 'rest_comment_invalid', 'Nope.' );
 
 		self::assertSame( $error, Comment::process_rest( $error ), 'An existing error must be returned untouched' );
+	}
+
+	/**
+	 * The REST controller slashes the prepared comment only after this filter, so the
+	 * payload must not be unslashed a second time here.
+	 */
+	public function test_payload_is_not_unslashed_again() {
+		$this->register_components();
+
+		Comment::process_rest(
+			[
+				'comment_type'         => 'comment',
+				'comment_author'       => 'Windows\\User',
+				'comment_author_email' => 'user@example.com',
+				'comment_content'      => 'A path: C:\\temp',
+			]
+		);
+
+		$payload = CommentRestTestRule::$verified[0];
+
+		self::assertSame( 'Windows\\User', $payload['author'], 'An unslashed author must not be unslashed again' );
+		self::assertSame( 'A path: C:\\temp', $payload['body'], 'An unslashed body must not be unslashed again' );
 	}
 
 	/**

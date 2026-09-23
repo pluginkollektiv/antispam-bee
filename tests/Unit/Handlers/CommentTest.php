@@ -37,6 +37,70 @@ class CommentTestCountingRule extends RuleBase {
 class CommentTest extends TestCase {
 
 	/**
+	 * Stand-in for `wp_unslash()`, which strips one level of slashes recursively.
+	 *
+	 * @param mixed $value Value to unslash.
+	 * @return mixed Unslashed value.
+	 */
+	public static function stripslashes_deep( $value ) {
+		if ( is_array( $value ) ) {
+			return array_map( [ self::class, 'stripslashes_deep' ], $value );
+		}
+
+		return is_string( $value ) ? stripslashes( $value ) : $value;
+	}
+
+	/**
+	 * A comment reaching `preprocess_comment` is slashed, but a rule compares the
+	 * payload against stored data, which WordPress unslashes before writing. The
+	 * payload therefore has to arrive unslashed.
+	 */
+	public function test_payload_is_unslashed() {
+		$_SERVER = [ 'REMOTE_ADDR' => '192.0.2.100' ];
+
+		stubs(
+			[
+				'esc_url_raw'   => function ( string $url ) {
+					return $url;
+				},
+				'wp_parse_url'  => 'parse_url',
+				'wp_unslash'    => [ self::class, 'stripslashes_deep' ],
+				'wp_installing' => false,
+				'is_admin'      => false,
+			]
+		);
+		when( 'current_user_can' )->justReturn( false );
+		when( 'apply_filters' )->alias(
+			function ( $hook, $value = null ) {
+				return 'antispam_bee_rules' === $hook ? [ CommentTestCountingRule::class ] : $value;
+			}
+		);
+
+		CommentTestCountingRule::$verified = [];
+
+		$result = Comment::process(
+			[
+				'comment_type'         => 'comment',
+				'comment_author'       => "O\\'Brien",
+				'comment_author_email' => "o\\'brien@example.com",
+				'comment_content'      => "It\\'s me.",
+			]
+		);
+
+		$payload = CommentTestCountingRule::$verified[0];
+
+		self::assertSame( "O'Brien", $payload['author'], 'The author name should reach the rules unslashed' );
+		self::assertSame( "o'brien@example.com", $payload['email'], 'The email should reach the rules unslashed' );
+		self::assertSame( "It's me.", $payload['body'], 'The content should reach the rules unslashed' );
+
+		self::assertSame(
+			"O\\'Brien",
+			$result['comment_author'],
+			'The comment handed back to WordPress must stay slashed'
+		);
+	}
+
+	/**
 	 * The verification decision is driven by the request context, not by the executing script.
 	 */
 	public function test_process() {
