@@ -31,31 +31,60 @@ class ApprovedEmail extends ControllableBase {
 	/**
 	 * Verify an item.
 	 *
-	 * Handled payload attributes: `email`.
+	 * Mirrors the matching WordPress core uses for the "previously approved
+	 * commenter" discussion setting (see `wp_check_comment_data()`): an email
+	 * address that belongs to a registered user is matched by user ID, and an
+	 * anonymous commenter has to supply the same author name *and* email address
+	 * that were approved before. Matching the email address alone would let anyone
+	 * who knows or guesses an approved address inherit that trust.
+	 *
+	 * The payload is already unslashed, which is the form the comment columns are
+	 * stored in, so both values are compared as they are.
+	 *
+	 * Handled payload attributes: `email`, `author`.
 	 *
 	 * @param array<string, mixed> $item Normalized payload to verify.
 	 *
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
-		$email = $item['email'] ?? '';
-		if ( empty( $email ) ) {
+		$email  = $item['email'] ?? '';
+		$author = $item['author'] ?? '';
+
+		if ( empty( $email ) || empty( $author ) ) {
 			return 0;
 		}
 
-		$approved_comments_count = get_comments(
-			[
-				'status'       => 'approve',
-				'count'        => true,
-				'author_email' => $email,
-			]
+		$user = get_user_by( 'email', $email );
+
+		if ( $user && ! empty( $user->ID ) ) {
+			$approved_comments_count = get_comments(
+				[
+					'status'  => 'approve',
+					'count'   => true,
+					'user_id' => $user->ID,
+				]
+			);
+
+			return $approved_comments_count > 0 ? -100 : 0;
+		}
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery
+		// `WP_Comment_Query` has no parameter for the author name, so the pair has to
+		// be matched in SQL. Both values are passed as %s placeholders to
+		// $wpdb->prepare(); the statement is otherwise a constant string.
+		global $wpdb;
+
+		$result = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT `comment_ID` FROM `$wpdb->comments` WHERE `comment_approved` = '1' AND `comment_author` = %s AND `comment_author_email` = %s LIMIT 1",
+				$author,
+				$email
+			)
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery
 
-		if ( 0 === $approved_comments_count ) {
-			return 0;
-		}
-
-		return -100;
+		return empty( $result ) ? 0 : -100;
 	}
 
 	/**
