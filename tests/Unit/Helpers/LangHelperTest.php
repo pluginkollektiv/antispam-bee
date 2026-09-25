@@ -19,6 +19,11 @@ class LangHelperTest extends TestCase {
 	 * matches the allowed-languages setting, so every comment in that language
 	 * is flagged as spam.
 	 *
+	 * The set is the union of two sources: the trigram tables in franc's
+	 * `data.js` and the single-script languages it returns directly from
+	 * `expressions.js`. Reading only the first misses the latter, which is how
+	 * the six codes below went unmapped after the first pass.
+	 *
 	 * @return array<string, array{string, string}>
 	 */
 	public function macrolanguage_members(): array {
@@ -45,6 +50,12 @@ class LangHelperTest extends TestCase {
 			'Swahili'                      => [ 'swh', 'sw' ],
 			'Northern Uzbek'               => [ 'uzn', 'uz' ],
 			'Malay'                        => [ 'zlm', 'ms' ],
+			'Koongo'                       => [ 'kng', 'kg' ],
+			'Komi-Permyak'                 => [ 'koi', 'kv' ],
+			'Northern Pashto'              => [ 'pbu', 'ps' ],
+			'Logudorese Sardinian'         => [ 'src', 'sc' ],
+			'Eastern Yiddish'              => [ 'ydd', 'yi' ],
+			'Yongbei Zhuang'               => [ 'zyb', 'za' ],
 			'Mandarin Chinese'             => [ 'cmn', 'zh' ],
 			'Cantonese'                    => [ 'yue', 'zh' ],
 		];
