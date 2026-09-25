@@ -160,7 +160,26 @@ class Rules {
 		 * @param string[]             $attributes Attribute keys to remove from the log entry.
 		 * @param array<string, mixed> $item       The normalized payload (includes `reaction_type`).
 		 */
-		$anonymized_attributes = (array) apply_filters( 'antispam_bee_log_anonymized_attributes', [ 'ip', 'email' ], $item );
+		$default_anonymized_attributes = [ 'ip', 'email' ];
+
+		$filtered_attributes = apply_filters( 'antispam_bee_log_anonymized_attributes', $default_anonymized_attributes, $item );
+
+		/*
+		 * Fall back to the defaults rather than to nothing. `array_flip()` silently
+		 * drops anything that is not a string or an integer, so a callback that
+		 * forgets to return, or returns a set-style map like `[ 'ip' => true ]`,
+		 * used to leave the list empty — and an empty list removes nothing, writing
+		 * the IP and email address to a log under `WP_CONTENT_DIR`, which is
+		 * usually served publicly. A site can still narrow the list deliberately by
+		 * returning a shorter array of strings; only unusable values fall back.
+		 */
+		$anonymized_attributes = is_array( $filtered_attributes )
+			? array_filter( $filtered_attributes, 'is_string' )
+			: [];
+
+		if ( [] === $anonymized_attributes && [] !== $filtered_attributes ) {
+			$anonymized_attributes = $default_anonymized_attributes;
+		}
 
 		$log_item = array_diff_key( $item, array_flip( $anonymized_attributes ) );
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r

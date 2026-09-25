@@ -190,4 +190,46 @@ class RulesTest extends TestCase {
 
 		self::assertFalse( $rules->apply( [] ), 'a score matching the ham threshold should not be spam' );
 	}
+
+	/**
+	 * The anonymization list has to fail closed.
+	 *
+	 * `array_flip()` silently drops anything that is not a string or an integer,
+	 * so a callback returning a set-style map used to leave the list empty — and
+	 * an empty list removes nothing, writing the IP and email address into a log
+	 * under `WP_CONTENT_DIR`.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_unusable_anonymization_filter_still_redacts() {
+		$this->register_test_rules();
+
+		$logged = [];
+		$debug  = \Mockery::mock( 'overload:' . \AntispamBee\Helpers\DebugMode::class );
+		$debug->allows( 'log' )->andReturnUsing(
+			function ( $message ) use ( &$logged ) {
+				$logged[] = $message;
+			}
+		);
+
+		// A natural misreading of the filter name: a set-style map, not a list.
+		expectApplied( 'antispam_bee_log_anonymized_attributes' )
+			->once()
+			->andReturn( [ 'ip' => true, 'email' => true ] );
+
+		$rules = new Rules( ContentTypeHelper::COMMENT_TYPE );
+		$rules->apply(
+			[
+				'ip'      => '203.0.113.9',
+				'email'   => 'visitor@example.com',
+				'content' => 'hello',
+			]
+		);
+
+		$payload = implode( "\n", $logged );
+		self::assertStringNotContainsString( '203.0.113.9', $payload, 'the IP must not reach the log' );
+		self::assertStringNotContainsString( 'visitor@example.com', $payload, 'the email must not reach the log' );
+		self::assertStringContainsString( 'hello', $payload, 'the rest of the payload should still be logged' );
+	}
 }
