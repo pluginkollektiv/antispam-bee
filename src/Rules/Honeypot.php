@@ -110,19 +110,33 @@ class Honeypot extends ControllableBase implements SpamReason {
 		$plugin_field = Settings::get_key( $_POST, $plugin_field_name );
 		$marker_field = Settings::get_key( $_POST, $marker_field_name );
 
+		$was_injected = ! is_null( $marker_field );
+		unset( $_POST[ $marker_field_name ] );
+
 		/*
-		 * The form this was submitted from does not carry the honeypot. Injection
-		 * is skipped whenever the comment field cannot be found, is not a
-		 * textarea, or the markup does not match, and a page cached before the
-		 * plugin was active or before the salt was rotated ships without it too.
-		 * The honeypot cannot judge such a submission, so it casts no verdict and
-		 * leaves the decision to the remaining rules.
+		 * Repair the form before judging it. `Helpers\Honeypot::inject()` moves the
+		 * visitor's text to the secret field and leaves an empty decoy behind under
+		 * the `comment` name, and this is the only code that moves it back. Any
+		 * submission carrying the secret field has to be repaired, whether or not
+		 * the honeypot goes on to judge it — a form rendered before the marker
+		 * existed, or served from a page cache, would otherwise arrive with an
+		 * empty comment and the visitor's text would be lost.
 		 */
-		if ( is_null( $marker_field ) ) {
-			return;
+		if ( ! is_null( $plugin_field ) ) {
+			$_POST['comment'] = $plugin_field;
+			unset( $_POST[ $plugin_field_name ] );
 		}
 
-		unset( $_POST[ $marker_field_name ] );
+		/*
+		 * Only a form known to carry the honeypot can be judged by it. Injection is
+		 * skipped whenever the comment field cannot be found, is not a textarea, or
+		 * the markup does not match, and a page cached before the plugin was active
+		 * ships without it too. Such a submission gets no verdict, and the decision
+		 * is left to the remaining rules.
+		 */
+		if ( ! $was_injected || ! self::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
+			return;
+		}
 
 		// The form carried the honeypot, but the secret comment field was stripped.
 		if ( is_null( $plugin_field ) ) {
@@ -134,12 +148,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 		// The honeypot field was not present in $_POST data or was filled out.
 		if ( is_null( $hidden_field ) || ! empty( $hidden_field ) ) {
 			$_POST['ab_spam__hidden_field'] = 1;
-
-			return;
 		}
-
-		$_POST['comment'] = $plugin_field;
-		unset( $_POST[ $plugin_field_name ] );
 	}
 
 	/**
