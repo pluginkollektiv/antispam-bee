@@ -136,11 +136,22 @@ class Settings {
 	public static function get_options(): array {
 		PluginUpdate::maybe_run_plugin_updated_logic();
 		$options = wp_cache_get( self::OPTION_NAME );
-		if ( $options ) {
+		if ( is_array( $options ) && [] !== $options ) {
 			return $options;
 		}
 
 		$options = get_option( self::OPTION_NAME, self::$defaults );
+
+		/*
+		 * `get_option()` only substitutes the default when the row is missing, so a
+		 * row holding a scalar — an empty string written by a migration that went
+		 * wrong, for one — comes back as-is and would break the `: array` return
+		 * type, fataling every request that reads a setting.
+		 */
+		if ( ! is_array( $options ) ) {
+			$options = self::$defaults;
+		}
+
 		wp_cache_set( self::OPTION_NAME, $options );
 
 		return $options;
@@ -260,9 +271,13 @@ class Settings {
 				break;
 			}
 
-			if ( isset( $tmp[ $value ] ) ) {
-				$tmp = &$tmp[ $value ];
+			// Stop rather than descend into a scalar: taking a reference into one
+			// is an uncatchable fatal, and there is nothing further down to remove.
+			if ( ! isset( $tmp[ $value ] ) || ! is_array( $tmp[ $value ] ) ) {
+				return;
 			}
+
+			$tmp = &$tmp[ $value ];
 		}
 	}
 
@@ -293,8 +308,13 @@ class Settings {
 				break;
 			}
 
-			if ( ! isset( $tmp[ $value ] ) ) {
-				$tmp[ $value ] = null;
+			/*
+			 * Replace anything that is not an array before descending. The walker
+			 * takes a reference into each segment, and doing that to a scalar is an
+			 * uncatchable fatal during the settings save.
+			 */
+			if ( ! isset( $tmp[ $value ] ) || ! is_array( $tmp[ $value ] ) ) {
+				$tmp[ $value ] = [];
 			}
 
 			$tmp = &$tmp[ $value ];
