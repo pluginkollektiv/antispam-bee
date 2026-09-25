@@ -79,17 +79,30 @@ class Honeypot {
 		 */
 		$honeypot_styles = apply_filters( 'antispam_bee_honeypot_styles', 'padding:0 !important;clip:rect(1px, 1px, 1px, 1px) !important;position:absolute !important;white-space:nowrap !important;height:1px !important;width:1px !important;overflow:hidden !important;' );
 
+		/*
+		 * The id and name come from the theme's markup and the styles from a
+		 * filter, so none of them is trusted here — the sibling values a few lines
+		 * down are escaped the same way.
+		 */
 		$attributes_string = sprintf(
 			'id="%s" name="%s" aria-hidden="true" aria-label="hp-comment" autocomplete="new-password" tabindex="-1" style="%s"',
-			$honeypot_id,
-			$honeypot_name,
-			$honeypot_styles
+			esc_attr( $honeypot_id ),
+			esc_attr( $honeypot_name ),
+			esc_attr( $honeypot_styles )
 		);
 		switch ( $input_type ) {
 			case 'textarea':
+				/*
+				 * Quoted before substitution: the pattern uses the `/x` modifier, so
+				 * an unescaped `#` in an id or name comments out the rest of that
+				 * line, and characters such as `[`, `]`, `(`, `.` or `\` change what
+				 * the pattern means. Both values come from the theme's markup. The
+				 * failure is silent — the pattern still compiles and simply stops
+				 * matching, so the field is left without a honeypot.
+				 */
 				$regex = str_replace(
 					[ '{{HONEYPOT_ID}}', '{{HONEYPOT_NAME}}' ],
-					[ $honeypot_id, $honeypot_name ],
+					[ preg_quote( $honeypot_id, '/' ), preg_quote( $honeypot_name, '/' ) ],
 					'/(?P<all>                                    (?# match the whole textarea tag )
 						<textarea                                        (?# the opening of the textarea and some optional attributes )
 						(                                                (?# match a id attribute followed by some optional ones and the name attribute )
@@ -121,7 +134,7 @@ class Honeypot {
 
 						$id_script = '';
 						if ( ! empty( $matches['id1'] ) || ! empty( $matches['id2'] ) ) {
-							$output .= 'id="' . self::get_secret_id_for_post() . '" ';
+							$output .= 'id="' . esc_attr( self::get_secret_id_for_post() ) . '" ';
 							if ( ! self::is_amp() ) {
 								$id_script = sprintf(
 									'<script data-noptimize>document.getElementById("%1$s").setAttribute( "id", "a%2$s" );document.getElementById("%3$s").setAttribute( "id", "%1$s" );</script>',
