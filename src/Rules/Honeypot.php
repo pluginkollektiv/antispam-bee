@@ -195,6 +195,25 @@ class Honeypot extends ControllableBase implements SpamReason {
 		$plugin_field = Settings::get_key( $_POST, $plugin_field_name );
 
 		/*
+		 * Repair the form before judging it. `Helpers\Honeypot::inject()` moves the
+		 * visitor's text to the secret field and leaves an empty decoy behind under
+		 * the `comment` name, and this is the only code that moves it back. Any
+		 * submission carrying the secret field has to be repaired, whether or not
+		 * the honeypot goes on to judge it, or whether the rule is even active - a
+		 * form rendered while the rule was on, then switched off (or a page cached
+		 * from before this ran), would otherwise arrive with an empty comment and
+		 * the visitor's text would be lost.
+		 */
+		if ( ! is_null( $plugin_field ) ) {
+			$_POST['comment'] = $plugin_field;
+			unset( $_POST[ $plugin_field_name ] );
+		}
+
+		if ( ! self::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
+			return;
+		}
+
+		/*
 		 * The secret comment field was not present in $_POST data. Once the server has
 		 * seen the honeypot placed into the form it renders, a submission without it
 		 * did not come from that form: bots posting to `wp-comments-post.php`
@@ -220,12 +239,7 @@ class Honeypot extends ControllableBase implements SpamReason {
 		 */
 		if ( is_null( $hidden_field ) || '' !== (string) $hidden_field ) {
 			$_POST['ab_spam__hidden_field'] = 1;
-
-			return;
 		}
-
-		$_POST['comment'] = $plugin_field;
-		unset( $_POST[ $plugin_field_name ] );
 	}
 
 	/**
