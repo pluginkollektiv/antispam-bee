@@ -25,7 +25,9 @@ class Honeypot {
 	/**
 	 * Inject the honeypot field.
 	 *
-	 * @param string                $markup  The field markup.
+	 * @param string|mixed         $markup  The field markup. Anything on the
+	 *                                       `comment_form_field_comment` filter can
+	 *                                       reach this, so the type is not enforced.
 	 * @param array<string, string> $options {
 	 *                           The field options.
 	 *
@@ -38,7 +40,21 @@ class Honeypot {
 	 *
 	 * @return string The markup with the injected honeypot field.
 	 */
-	public static function inject( string $markup, array $options ): string {
+	public static function inject( $markup, array $options ): string {
+		/*
+		 * The value comes from `comment_form_field_comment`, so anything on that
+		 * filter can hand this an empty string or null: a theme that renders the
+		 * comment textarea itself, or a callback that forgets to return. Neither
+		 * is a problem on its own — core would simply render nothing — but
+		 * `DOMDocument::loadHTML()` throws a `ValueError` on an empty string, and
+		 * a non-nullable `string` parameter throws a `TypeError` on null. Either
+		 * would fatal every page that renders a comment form, so nothing to parse
+		 * means nothing to inject.
+		 */
+		if ( ! is_string( $markup ) || '' === trim( $markup ) ) {
+			return is_string( $markup ) ? $markup : '';
+		}
+
 		$dom = new DOMDocument();
 		// Malformed or HTML5-only markup must not bubble up as PHP warnings.
 		$use_internal_errors = libxml_use_internal_errors( true );

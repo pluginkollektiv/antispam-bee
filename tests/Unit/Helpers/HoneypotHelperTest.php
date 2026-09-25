@@ -238,4 +238,28 @@ class HoneypotHelperTest extends TestCase {
 			'the marker must not collide with the secret comment field'
 		);
 	}
+
+	/**
+	 * Anything on `comment_form_field_comment` can hand this an empty string — a
+	 * theme rendering the comment textarea itself, for one. `loadHTML()` throws a
+	 * ValueError on that, which would fatal every page with a comment form.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_returns_empty_markup_untouched(): void {
+		self::assertSame( '', Honeypot::inject( '', [ 'field_id' => 'comment' ] ) );
+		self::assertSame( '   ', Honeypot::inject( '   ', [ 'field_id' => 'comment' ] ) );
+	}
+
+	/**
+	 * A filter callback that forgets to return hands this null. Without a guard
+	 * the non-nullable parameter throws a TypeError before the body even runs.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_survives_a_null_from_the_filter(): void {
+		self::assertSame( '', Honeypot::inject( null, [ 'field_id' => 'comment' ] ) );
+	}
 }
