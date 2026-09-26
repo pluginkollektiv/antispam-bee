@@ -76,8 +76,26 @@ class LookupCache {
 			return $cached['value'];
 		}
 
+		/*
+		 * A failure is remembered for the whole kind of lookup, not just this
+		 * subject. Caching it per subject only helps when the same subject comes
+		 * back, which is true of an address or an email but not of a comment: every
+		 * one is different text, so an outage would cost a full request timeout on
+		 * every submission — the very thing this cache exists to prevent.
+		 */
+		$cooldown = self::PREFIX . $namespace . '_unavailable';
+		if ( false !== get_transient( $cooldown ) ) {
+			self::$memo[ $name ] = null;
+
+			return null;
+		}
+
 		$value = $lookup();
 		$ttl   = self::ttl( $namespace, null === $value );
+
+		if ( null === $value && $ttl > 0 ) {
+			set_transient( $cooldown, 1, $ttl );
+		}
 
 		if ( $ttl > 0 ) {
 			set_transient( $name, [ 'value' => $value ], $ttl );
