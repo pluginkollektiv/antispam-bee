@@ -8,6 +8,7 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\IpHelper;
+use AntispamBee\Helpers\LookupCache;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\SpamReason;
@@ -117,41 +118,43 @@ class CountrySpam extends ControllableBase implements SpamReason {
 		 */
 		$args = '' === $apikey ? [] : [ 'headers' => [ 'X-Api-Key' => $apikey ] ];
 
-		$response = wp_safe_remote_get(
-			esc_url_raw(
-				sprintf(
-					'https://www.iplocate.io/api/lookup/%s',
-					$lookup_ip
-				),
-				[ 'https' ]
-			),
-			$args
+		$country = LookupCache::remember(
+			'country',
+			$lookup_ip,
+			static function () use ( $lookup_ip, $args ) {
+				$response = wp_safe_remote_get(
+					esc_url_raw(
+						sprintf(
+							'https://www.iplocate.io/api/lookup/%s',
+							$lookup_ip
+						),
+						[ 'https' ]
+					),
+					$args
+				);
+
+				if ( is_wp_error( $response ) ) {
+					return null;
+				}
+
+				if ( wp_remote_retrieve_response_code( $response ) !== 200 ) {
+					return null;
+				}
+
+				$json = json_decode( wp_remote_retrieve_body( $response ), true );
+
+				// Check if response is valid json.
+				if ( ! is_array( $json ) || empty( $json['country_code'] ) ) {
+					return null;
+				}
+
+				$country = strtoupper( $json['country_code'] );
+
+				return 2 === strlen( $country ) ? $country : null;
+			}
 		);
 
-		if ( is_wp_error( $response ) ) {
-			return 0;
-		}
-
-		if ( wp_remote_retrieve_response_code( $response ) !== 200 ) {
-			return 0;
-		}
-
-		$body = wp_remote_retrieve_body( $response );
-
-		$json = json_decode( $body, true );
-
-		// Check if response is valid json.
-		if ( ! is_array( $json ) ) {
-			return 0;
-		}
-
-		if ( empty( $json['country_code'] ) ) {
-			return 0;
-		}
-
-		$country = strtoupper( $json['country_code'] );
-
-		if ( strlen( $country ) !== 2 ) {
+		if ( null === $country ) {
 			return 0;
 		}
 
