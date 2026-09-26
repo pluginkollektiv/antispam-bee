@@ -143,8 +143,14 @@ class CountrySpam extends ControllableBase implements SpamReason {
 
 				$json = json_decode( wp_remote_retrieve_body( $response ), true );
 
-				// Check if response is valid json.
-				if ( ! is_array( $json ) || empty( $json['country_code'] ) ) {
+				/*
+				 * `json_decode( …, true )` turns a JSON object or list into a PHP
+				 * array, so a body like `{"country_code":["DE"]}` passes an
+				 * emptiness check and would reach `strtoupper()` as an array — an
+				 * uncaught TypeError inside `preprocess_comment`, which aborts the
+				 * comment submission itself.
+				 */
+				if ( ! is_array( $json ) || empty( $json['country_code'] ) || ! is_string( $json['country_code'] ) ) {
 					return null;
 				}
 
