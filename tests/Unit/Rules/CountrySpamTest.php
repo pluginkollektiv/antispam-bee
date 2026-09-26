@@ -433,4 +433,36 @@ class CountrySpamTest extends AbstractRuleTestCase {
 
 		return $method->invoke( null );
 	}
+
+	/**
+	 * The field is a textarea and `verify()` splits on whitespace, commas and
+	 * semicolons, so a list entered one code per line is ordinary — Antispam Bee
+	 * 2.x accepted the same separators. Splitting only on the comma at save time
+	 * turned such a list into one over-long token, which was discarded, leaving
+	 * the option empty and country filtering doing nothing.
+	 */
+	public function test_country_list_accepts_every_separator_the_rule_parses(): void {
+		$method = new \ReflectionMethod( \AntispamBee\Rules\CountrySpam::class, 'sanitize_iso_codes_string' );
+		$method->setAccessible( true );
+
+		$cases = [
+			'commas'         => [ 'BF,SG,YE', 'BF,SG,YE' ],
+			'commas, spaced' => [ 'BF, SG, YE', 'BF,SG,YE' ],
+			'one per line'   => [ "BF\nSG\nYE", 'BF,SG,YE' ],
+			'spaces'         => [ 'BF SG YE', 'BF,SG,YE' ],
+			'semicolons'     => [ 'BF; SG; YE', 'BF,SG,YE' ],
+			'mixed'          => [ "BF, SG;\nYE", 'BF,SG,YE' ],
+			'lower case'     => [ 'bf,sg', 'BF,SG' ],
+			'empty'          => [ '', '' ],
+			'not a code'     => [ 'BF,XYZ,SG', 'BF,SG' ],
+		];
+
+		foreach ( $cases as $description => list( $stored, $expected ) ) {
+			self::assertSame(
+				$expected,
+				$method->invoke( null, $stored ),
+				"a list written with $description should survive the save"
+			);
+		}
+	}
 }
