@@ -43,72 +43,6 @@ class Settings {
 	];
 
 	/**
-	 * Initialize.
-	 *
-	 * @return void
-	 */
-	public static function init(): void {
-		add_action(
-			'update_option_' . self::OPTION_NAME,
-			[ __CLASS__, 'update_cache' ],
-			1,
-			2
-		);
-
-		/*
-		 * `update_option()` delegates to `add_option()` when the row does not exist
-		 * yet, and that path fires `add_option_{$option}` instead of
-		 * `update_option_{$option}`. Without this the very first save leaves the
-		 * cache holding the defaults that were read before the write.
-		 */
-		add_action(
-			'add_option_' . self::OPTION_NAME,
-			[ __CLASS__, 'add_cache' ],
-			1,
-			2
-		);
-
-		add_action(
-			'delete_option_' . self::OPTION_NAME,
-			[ __CLASS__, 'delete_cache' ],
-			1
-		);
-	}
-
-	/**
-	 * Update the cache.
-	 *
-	 * @param mixed $old_value The old option value.
-	 * @param mixed $value     The new option value.
-	 *
-	 * @return void
-	 */
-	public static function update_cache( $old_value, $value ): void {
-		wp_cache_set( self::OPTION_NAME, $value );
-	}
-
-	/**
-	 * Cache the option value when the option row is created.
-	 *
-	 * @param string $option The option name.
-	 * @param mixed  $value  The option value.
-	 *
-	 * @return void
-	 */
-	public static function add_cache( $option, $value ): void {
-		wp_cache_set( self::OPTION_NAME, $value );
-	}
-
-	/**
-	 * Drop the cached option value when the option row is deleted.
-	 *
-	 * @return void
-	 */
-	public static function delete_cache(): void {
-		wp_cache_delete( self::OPTION_NAME );
-	}
-
-	/**
 	 * Get a single option field.
 	 *
 	 * @param string $option_name   Option name.
@@ -135,13 +69,26 @@ class Settings {
 	 */
 	public static function get_options(): array {
 		PluginUpdate::maybe_run_plugin_updated_logic();
-		$options = wp_cache_get( self::OPTION_NAME );
-		if ( $options ) {
-			return $options;
+		/*
+		 * Read straight through `get_option()`. The option is autoloaded, so core
+		 * already keeps it in the `alloptions` cache; a second copy here bought
+		 * nothing and had to be invalidated on every path that writes or deletes
+		 * the option — including uninstall, where `register_uninstall_hook()` runs
+		 * after `plugins_loaded`, so the hooks were never registered and the stale
+		 * copy resurrected settings that had just been deleted.
+		 */
+		$options = get_option( self::OPTION_NAME, self::$defaults );
+
+		/*
+		 * `get_option()` only substitutes the default when the row is missing, so a
+		 * row holding a scalar — an empty string written by a migration that went
+		 * wrong, for one — comes back as-is and would break the `: array` return
+		 * type, fataling every request that reads a setting.
+		 */
+		if ( ! is_array( $options ) ) {
+			$options = self::$defaults;
 		}
 
-		$options = get_option( self::OPTION_NAME, self::$defaults );
-		wp_cache_set( self::OPTION_NAME, $options );
 
 		return $options;
 	}
@@ -260,9 +207,13 @@ class Settings {
 				break;
 			}
 
-			if ( isset( $tmp[ $value ] ) ) {
-				$tmp = &$tmp[ $value ];
+			// Stop rather than descend into a scalar: taking a reference into one
+			// is an uncatchable fatal, and there is nothing further down to remove.
+			if ( ! isset( $tmp[ $value ] ) || ! is_array( $tmp[ $value ] ) ) {
+				return;
 			}
+
+			$tmp = &$tmp[ $value ];
 		}
 	}
 
@@ -293,8 +244,13 @@ class Settings {
 				break;
 			}
 
-			if ( ! isset( $tmp[ $value ] ) ) {
-				$tmp[ $value ] = null;
+			/*
+			 * Replace anything that is not an array before descending. The walker
+			 * takes a reference into each segment, and doing that to a scalar is an
+			 * uncatchable fatal during the settings save.
+			 */
+			if ( ! isset( $tmp[ $value ] ) || ! is_array( $tmp[ $value ] ) ) {
+				$tmp[ $value ] = [];
 			}
 
 			$tmp = &$tmp[ $value ];
