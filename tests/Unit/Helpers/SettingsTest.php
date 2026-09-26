@@ -4,7 +4,7 @@ namespace AntispamBee\Tests\Unit\Helpers;
 
 use AntispamBee\Helpers\Settings;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
-use function Brain\Monkey\Actions\expectAdded;
+use function Brain\Monkey\Functions\when;
 
 /**
  * Unit tests for {@see Settings}.
@@ -12,46 +12,31 @@ use function Brain\Monkey\Actions\expectAdded;
 class SettingsTest extends TestCase {
 
 	/**
-	 * The cache has to be invalidated on every mutation of the option.
-	 *
-	 * `update_option()` routes to `add_option()` when the option row does not
-	 * exist yet, and that path fires `add_option_{$option}` rather than
-	 * `update_option_{$option}`. Hooking the update alone therefore misses the
-	 * very first save: the cache keeps the defaults that were read before the
-	 * write, and with a persistent object cache every later read serves them
-	 * instead of the settings the admin just saved.
+	 * The option is autoloaded, so core already caches it. The plugin used to
+	 * keep a second copy, which had to be invalidated on every write and delete
+	 * — including uninstall, where the hooks were never registered at all, so a
+	 * deleted option came back from the stale copy.
 	 */
-	public function test_init_hooks_the_option_being_created(): void {
-		expectAdded( 'add_option_' . Settings::OPTION_NAME )
-			->once()
-			->with( [ Settings::class, 'add_cache' ], 1, 2 );
+	public function test_options_are_read_straight_from_the_option(): void {
+		$stored = [ 'general' => [ 'some_option' => 'on' ] ];
 
-		Settings::init();
-	}
+		when( 'get_file_data' )->justReturn( [ 'Version' => '3.0.0' ] );
+		when( 'get_option' )->alias(
+			function ( $name, $default = false ) use ( $stored ) {
+				if ( 'antispambee_db_version' === $name ) {
+					return '3.0.0';
+				}
 
-	public function test_init_hooks_the_option_being_updated(): void {
-		expectAdded( 'update_option_' . Settings::OPTION_NAME )
-			->once()
-			->with( [ Settings::class, 'update_cache' ], 1, 2 );
+				return Settings::OPTION_NAME === $name ? $stored : $default;
+			}
+		);
 
-		Settings::init();
-	}
-
-	public function test_init_hooks_the_option_being_deleted(): void {
-		expectAdded( 'delete_option_' . Settings::OPTION_NAME )
-			->once()
-			->with( [ Settings::class, 'delete_cache' ], 1 );
-
-		Settings::init();
-	}
-
-	public function test_cache_callbacks_are_callable_with_the_hook_signatures(): void {
-		// `add_option_{$option}` passes ( $option, $value ), `delete_option_{$option}` passes ( $option ).
-		Settings::add_cache( Settings::OPTION_NAME, [ 'foo' => 'bar' ] );
-		Settings::update_cache( [ 'foo' => 'old' ], [ 'foo' => 'new' ] );
-		Settings::delete_cache();
-
-		self::assertTrue( true, 'the cache callbacks should accept the arguments their hooks pass' );
+		self::assertSame( $stored, Settings::get_options(), 'the stored option should be returned as-is' );
+		self::assertSame(
+			$stored,
+			Settings::get_options(),
+			'a second read should return the same thing without a cache in between'
+		);
 	}
 
 	/**

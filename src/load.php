@@ -22,7 +22,6 @@ use AntispamBee\Handlers\Comment;
 use AntispamBee\Handlers\Linkback;
 use AntispamBee\Handlers\PluginStateChangeHandler;
 use AntispamBee\Handlers\PluginUpdate;
-use AntispamBee\Helpers\Settings;
 use AntispamBee\Helpers\SpamReasonTextHelper;
 use AntispamBee\PostProcessors\Delete;
 use AntispamBee\PostProcessors\DeleteForReasons;
@@ -61,7 +60,6 @@ function init(): void {
 		MigrationFailureNotice::class,
 		PreReleaseNotice::class,
 		DeleteSpamCron::class,
-		Settings::class,
 		// Handlers.
 		PluginUpdate::class,
 		Comment::class,
