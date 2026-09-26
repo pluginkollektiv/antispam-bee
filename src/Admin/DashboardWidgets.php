@@ -10,6 +10,7 @@ namespace AntispamBee\Admin;
 use AntispamBee\GeneralOptions\Statistics;
 use AntispamBee\Helpers\DashboardHelper;
 use AntispamBee\Helpers\Settings;
+use AntispamBee\PostProcessors\UpdateSpamCount;
 
 /**
  * Dashboard widgets handler.
@@ -82,6 +83,6 @@ class DashboardWidgets {
 	 * Return the number of spam comments.
 	 */
 	private static function get_spam_count(): int {
-		return intval( Settings::get_option( 'spam_count', '' ) );
+		return UpdateSpamCount::get_count();
 	}
 }
