@@ -159,4 +159,46 @@ class LookupCacheTest extends TestCase {
 			'the subject must not be recoverable from the stored name'
 		);
 	}
+
+	/**
+	 * Caching a failure against its subject only helps when that subject comes
+	 * back. A comment never does — every one is different text — so an outage
+	 * would cost a full request timeout on every submission unless the failure
+	 * is remembered for the kind of lookup as a whole.
+	 */
+	public function test_an_outage_is_remembered_across_different_subjects(): void {
+		$calls  = 0;
+		$lookup = function () use ( &$calls ) {
+			++$calls;
+
+			return null;
+		};
+
+		self::assertNull( LookupCache::remember( 'lang', 'one comment', $lookup ) );
+		LookupCache::flush_memo();
+		self::assertNull( LookupCache::remember( 'lang', 'a different comment', $lookup ) );
+		LookupCache::flush_memo();
+		self::assertNull( LookupCache::remember( 'lang', 'a third comment', $lookup ) );
+
+		self::assertSame( 1, $calls, 'the service should be contacted once while it is down' );
+	}
+
+	public function test_an_outage_of_one_kind_does_not_stop_another(): void {
+		$lang_calls = 0;
+		$geo_calls  = 0;
+
+		LookupCache::remember( 'lang', 'a comment', function () use ( &$lang_calls ) {
+			++$lang_calls;
+
+			return null;
+		} );
+		LookupCache::remember( 'country', '203.0.113.0', function () use ( &$geo_calls ) {
+			++$geo_calls;
+
+			return 'DE';
+		} );
+
+		self::assertSame( 1, $lang_calls );
+		self::assertSame( 1, $geo_calls, 'a failing language service must not disable geolocation' );
+	}
 }
