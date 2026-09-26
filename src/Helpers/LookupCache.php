@@ -41,31 +41,46 @@ class LookupCache {
 	 *
 	 * @param string   $namespace Identifies the kind of lookup, e.g. `country`.
 	 * @param string   $key       Identifies the subject of the lookup. Hashed before use.
-	 * @param callable $lookup    Performs the lookup. Returns `null` to indicate failure.
+	 * @param callable $lookup    Performs the lookup. Returning `null` marks it as failed,
+	 *                            which is cached too, for a shorter time.
 	 *
 	 * @return mixed The lookup result, or null when it failed.
 	 */
 	public static function remember( string $namespace, string $key, callable $lookup ) {
-		$name = self::PREFIX . $namespace . '_' . md5( $key );
+		/*
+		 * Keyed digest, not a plain hash. The transient name is written to the
+		 * options table, and the subjects are a visitor's network and a commenter's
+		 * email address: an unkeyed MD5 over either is small enough to reverse by
+		 * brute force, which would turn the row into a log of who interacted with
+		 * the site. Keying it on the site's salt also means the value being looked
+		 * up cannot be used to predict — or collide with — a cache entry.
+		 */
+		$name = self::PREFIX . $namespace . '_' . substr( hash_hmac( 'sha256', $key, wp_salt( 'nonce' ) ), 0, 32 );
 
 		if ( array_key_exists( $name, self::$memo ) ) {
 			return self::$memo[ $name ];
 		}
 
+		/*
+		 * Stored inside an envelope rather than on its own. `get_transient()`
+		 * reports a miss as `false`, so a lookup that legitimately returns `false`
+		 * would be written and then read back as a miss for ever, quietly removing
+		 * the protection this class exists to provide. Anything that is not the
+		 * envelope is a miss; anything inside it round-trips, including `false`,
+		 * `''`, `0` and `null`.
+		 */
 		$cached = get_transient( $name );
-		if ( false !== $cached ) {
-			// A failed lookup is stored as an empty string, so it is cached too.
-			$value              = '' === $cached ? null : $cached;
-			self::$memo[ $name ] = $value;
+		if ( is_array( $cached ) && array_key_exists( 'value', $cached ) ) {
+			self::$memo[ $name ] = $cached['value'];
 
-			return $value;
+			return $cached['value'];
 		}
 
 		$value = $lookup();
 		$ttl   = self::ttl( $namespace, null === $value );
 
 		if ( $ttl > 0 ) {
-			set_transient( $name, null === $value ? '' : $value, $ttl );
+			set_transient( $name, [ 'value' => $value ], $ttl );
 		}
 
 		self::$memo[ $name ] = $value;

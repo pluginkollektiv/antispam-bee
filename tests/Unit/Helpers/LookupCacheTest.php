@@ -5,6 +5,7 @@ namespace AntispamBee\Tests\Unit\Helpers;
 use AntispamBee\Helpers\LookupCache;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 use function Brain\Monkey\Filters\expectApplied;
+use function Brain\Monkey\Functions\when;
 
 /**
  * Unit tests for {@see LookupCache}.
@@ -16,6 +17,7 @@ class LookupCacheTest extends TestCase {
 
 		$GLOBALS['asb_test_transients'] = [];
 		LookupCache::flush_memo();
+		when( 'wp_salt' )->justReturn( 'a-fixed-test-salt' );
 	}
 
 	public function test_a_repeated_lookup_is_answered_from_the_cache(): void {
@@ -98,5 +100,63 @@ class LookupCacheTest extends TestCase {
 		LookupCache::remember( 'country', '203.0.113.0', $lookup );
 
 		self::assertSame( 2, $calls, 'a ttl of zero should stop anything being stored' );
+	}
+
+	/**
+	 * `get_transient()` reports a miss as `false`, so storing a value on its own
+	 * makes a lookup that legitimately returns `false` re-run for ever — quietly
+	 * removing the protection this class exists to provide.
+	 *
+	 * @dataProvider falsy_results
+	 *
+	 * @param mixed $result A value a lookup may legitimately return.
+	 */
+	public function test_a_falsy_result_is_cached_like_any_other( $result ): void {
+		$calls  = 0;
+		$lookup = function () use ( &$calls, $result ) {
+			++$calls;
+
+			return $result;
+		};
+
+		self::assertSame( $result, LookupCache::remember( 'gravatar', 'subject', $lookup ) );
+
+		LookupCache::flush_memo();
+		self::assertSame(
+			$result,
+			LookupCache::remember( 'gravatar', 'subject', $lookup ),
+			'the stored value should round-trip unchanged'
+		);
+
+		self::assertSame( 1, $calls, 'the lookup should not run again' );
+	}
+
+	/**
+	 * @return array<string, array{mixed}>
+	 */
+	public function falsy_results(): array {
+		return [
+			'false'        => [ false ],
+			'empty string' => [ '' ],
+			'zero'         => [ 0 ],
+			'empty array'  => [ [] ],
+		];
+	}
+
+	/**
+	 * The transient name is written to the options table, and the subjects are a
+	 * visitor's network and a commenter's email. An unkeyed digest over either is
+	 * small enough to reverse, so the name must not contain one.
+	 */
+	public function test_the_stored_name_is_not_a_plain_digest_of_the_subject(): void {
+		LookupCache::remember( 'country', '203.0.113.0', static fn() => 'DE' );
+
+		$names = array_keys( $GLOBALS['asb_test_transients'] );
+		self::assertCount( 1, $names );
+		self::assertStringNotContainsString(
+			md5( '203.0.113.0' ),
+			$names[0],
+			'the subject must not be recoverable from the stored name'
+		);
 	}
 }
