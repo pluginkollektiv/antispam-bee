@@ -40,8 +40,26 @@ class ValidGravatar extends ControllableBase {
 	 * @return int Numeric result.
 	 */
 	public static function verify( array $item ): int {
-		$email = $item['email'] ?? '';
+		/*
+		 * The payload carries the reaction as `preprocess_comment` receives it,
+		 * which core has already slashed. Gravatar hashes the address as the
+		 * visitor typed it, so an address containing an apostrophe would otherwise
+		 * be hashed as `o\'brien@…` and never match. `Rules\DbSpam` unslashes the
+		 * same field for the same reason.
+		 */
+		$email = wp_unslash( $item['email'] ?? '' );
 		if ( empty( $email ) ) {
+			return 0;
+		}
+
+		/*
+		 * v2 gated this lookup on the site's avatar setting, and the v3 rewrite
+		 * dropped the guard while porting the body verbatim. Without it a site that
+		 * has avatars switched off still sends a hash of every commenter's address
+		 * to a third party, which is not something disabling avatars should leave
+		 * running.
+		 */
+		if ( 1 !== (int) get_option( 'show_avatars', 0 ) ) {
 			return 0;
 		}
 
