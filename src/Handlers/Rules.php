@@ -162,12 +162,14 @@ class Rules {
 		 */
 		$anonymized_attributes = (array) apply_filters( 'antispam_bee_log_anonymized_attributes', [ 'ip', 'email' ], $item );
 
-		$log_item = array_diff_key( $item, array_flip( $anonymized_attributes ) );
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
-		DebugMode::log( 'Looping through spam rules for reaction with the following data: ' . print_r( $log_item, true ) );
+		if ( DebugMode::enabled() ) {
+			$log_item = array_diff_key( $item, array_flip( $anonymized_attributes ) );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+			DebugMode::log( 'Looping through spam rules for reaction with the following data: ' . print_r( $log_item, true ) );
+		}
 
 		foreach ( $this->sort_rules( $rules ) as $rule ) {
-			DebugMode::log( "Checking »{$rule::get_name()}« rule" );
+			DebugMode::log( "Checking »{$rule::get_slug()}« rule" );
 
 			$rule_score = $rule::verify( $item ) * $rule::get_weight();
 
@@ -177,7 +179,7 @@ class Rules {
 				$this->spam_reasons[] = $rule::get_slug();
 
 				if ( $rule::is_final() ) {
-					DebugMode::log( "»{$rule::get_name()}« is a final rule with a positive score — marking as spam without checking the remaining rules" );
+					DebugMode::log( "»{$rule::get_slug()}« is a final rule with a positive score — marking as spam without checking the remaining rules" );
 
 					return true;
 				}
