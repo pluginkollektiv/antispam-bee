@@ -436,11 +436,6 @@ class PluginUpdate {
 				'antispam_bee',
 				$options
 			);
-
-			wp_cache_set(
-				'antispam_bee',
-				$options
-			);
 		}
 
 		// DB version was raised in ASB 3.0.0 to 1.03.
@@ -529,11 +524,6 @@ class PluginUpdate {
 			];
 
 			update_option(
-				Settings::OPTION_NAME,
-				$new_options
-			);
-
-			wp_cache_set(
 				Settings::OPTION_NAME,
 				$new_options
 			);
