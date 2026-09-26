@@ -5,6 +5,7 @@ namespace AntispamBee\Tests\Unit\Rules;
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\LookupCache;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
+use function Brain\Monkey\Functions\when;
 
 /**
  * Abstract test case for ASB rules.
@@ -40,6 +41,7 @@ abstract class AbstractRuleTestCase extends TestCase {
 
 		$GLOBALS['asb_test_transients'] = [];
 		LookupCache::flush_memo();
+		when( 'wp_salt' )->justReturn( 'a-fixed-test-salt' );
 	}
 
 	/**
