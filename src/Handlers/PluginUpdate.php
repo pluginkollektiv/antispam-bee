@@ -489,6 +489,7 @@ class PluginUpdate {
 					'post_processor_asb_save_reason_active' => isset( $options['no_notice'] ) && ! $options['no_notice'] ? 'on' : '',
 					'rule_asb_regexp_active'               => empty( $options['regexp_check'] ) ? '' : 'on',
 					'rule_asb_honeypot_active'             => 'on',
+					'rule_asb_honeypot_output_buffer'      => self::legacy_output_buffer_enabled( $options ) ? 'on' : '',
 					'rule_asb_db_spam_active'              => empty( $options['spam_ip'] ) ? '' : 'on',
 					'rule_asb_approved_email_active'       => empty( $options['already_commented'] ) ? '' : 'on',
 					'rule_asb_too_fast_submit_active'      => empty( $options['time_check'] ) ? '' : 'on',
@@ -538,6 +539,65 @@ class PluginUpdate {
 				$new_options
 			);
 		}
+
+		/*
+		 * Builds before 3.0.0-beta.4 migrated without the output-buffer setting and had
+		 * no field for it, so on a site they migrated a missing value was never chosen.
+		 * A site still coming from 2.x gets the value from the step above instead —
+		 * and one that saved settings by hand on a build with the field keeps them.
+		 */
+		if (
+			version_compare( $version_from_db, '3.0.0-alpha.1', '>=' )
+			&& version_compare( $version_from_db, '3.0.0-beta.4', '<' )
+		) {
+			self::migrate_output_buffer_setting();
+		}
+	}
+
+	/**
+	 * Whether Antispam Bee 2.x injected the honeypot through output buffering.
+	 *
+	 * 2.x read `use_output_buffer` without a default and treated a missing value as
+	 * enabled, so a site installed before 2.10.0 — which introduced the setting and
+	 * stores `0` on activation — used output buffering without ever saving it.
+	 *
+	 * @param array<string, mixed> $legacy_options The 2.x options.
+	 *
+	 * @return bool Whether output buffering was enabled.
+	 */
+	private static function legacy_output_buffer_enabled( array $legacy_options ): bool {
+		return ! isset( $legacy_options['use_output_buffer'] ) || 1 === (int) $legacy_options['use_output_buffer'];
+	}
+
+	/**
+	 * Carry the 2.x output-buffer setting over to a site already migrated to v3.
+	 *
+	 * Only fills in a value the v3 settings do not hold yet, and only from 2.x
+	 * options that are still stored.
+	 *
+	 * @return void
+	 */
+	private static function migrate_output_buffer_setting(): void {
+		$legacy_options = get_option( 'antispam_bee' );
+		$options        = get_option( Settings::OPTION_NAME );
+
+		if ( ! is_array( $legacy_options ) || ! is_array( $options ) ) {
+			return;
+		}
+
+		if ( isset( $options['comment']['rule_asb_honeypot_output_buffer'] ) || ! self::legacy_output_buffer_enabled( $legacy_options ) ) {
+			return;
+		}
+
+		if ( ! isset( $options['comment'] ) || ! is_array( $options['comment'] ) ) {
+			$options['comment'] = [];
+		}
+
+		$options['comment']['rule_asb_honeypot_output_buffer'] = 'on';
+
+		update_option( Settings::OPTION_NAME, $options );
+
+		wp_cache_set( Settings::OPTION_NAME, $options );
 	}
 
 	/**
