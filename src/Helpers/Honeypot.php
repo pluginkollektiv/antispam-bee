@@ -23,11 +23,25 @@ class Honeypot {
 	public const SECRET_OPTION = 'antispam_bee_honeypot_secret';
 
 	/**
-	 * Option that is set while the comment form renders without the honeypot.
+	 * Option holding whether the last rendered comment form carries the honeypot.
 	 *
 	 * @var string
 	 */
-	public const INJECTION_FAILED_OPTION = 'antispam_bee_honeypot_injection_failed';
+	public const INJECTION_STATE_OPTION = 'antispam_bee_honeypot_injection';
+
+	/**
+	 * Stored when the last rendered comment form carries the honeypot.
+	 *
+	 * @var string
+	 */
+	public const INJECTION_STATE_INJECTED = 'injected';
+
+	/**
+	 * Stored when the honeypot could not be placed into the last rendered form.
+	 *
+	 * @var string
+	 */
+	public const INJECTION_STATE_FAILED = 'failed';
 
 	/**
 	 * Record whether the last rendered comment form carries the honeypot.
@@ -35,40 +49,39 @@ class Honeypot {
 	 * A comment submitted without the secret field is rejected as an invalid
 	 * request, which is only fair if the form it came from had that field.
 	 * `inject()` cannot always place it: the comment field may be missing, carry
-	 * a different id, not be a textarea, or the markup may not match. Only the
-	 * server that rendered the form knows this, so the outcome is kept here for
+	 * a different id, not be a textarea, or the markup may not match — and a form
+	 * built without `comment_form()` never reaches it at all. Only the server that
+	 * rendered the form knows which case applies, so the outcome is kept here for
 	 * `Rules\Honeypot::precheck()` to consult. A bot posting to
-	 * `wp-comments-post.php` directly has no way to set it.
+	 * `wp-comments-post.php` directly has no way to change it.
 	 *
-	 * The option only exists while injection fails, and it is written only when
-	 * the outcome changes, so a site whose form carries the honeypot neither
-	 * stores a row nor writes on page views.
+	 * The option is written only when the outcome changes, so rendering the same
+	 * form again costs no database write.
 	 *
 	 * @param bool $injected Whether the honeypot was placed into the form.
 	 *
 	 * @return void
 	 */
 	public static function record_injection( bool $injected ): void {
-		if ( $injected !== self::injection_failed() ) {
+		$state = $injected ? self::INJECTION_STATE_INJECTED : self::INJECTION_STATE_FAILED;
+
+		if ( get_option( self::INJECTION_STATE_OPTION ) === $state ) {
 			return;
 		}
 
-		if ( $injected ) {
-			delete_option( self::INJECTION_FAILED_OPTION );
-
-			return;
-		}
-
-		update_option( self::INJECTION_FAILED_OPTION, 1 );
+		update_option( self::INJECTION_STATE_OPTION, $state );
 	}
 
 	/**
-	 * Whether the last rendered comment form was left without the honeypot.
+	 * Whether the last rendered comment form was seen to carry the honeypot.
 	 *
-	 * @return bool True if the honeypot could not be injected.
+	 * False both when the injection failed and when no form has been rendered
+	 * through the plugin yet, for example because the theme builds its own.
+	 *
+	 * @return bool True if the honeypot was placed into the last rendered form.
 	 */
-	public static function injection_failed(): bool {
-		return (bool) get_option( self::INJECTION_FAILED_OPTION, false );
+	public static function injection_observed(): bool {
+		return self::INJECTION_STATE_INJECTED === get_option( self::INJECTION_STATE_OPTION );
 	}
 
 	/**

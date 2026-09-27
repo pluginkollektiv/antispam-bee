@@ -88,7 +88,7 @@ class PluginStateChangeHandler {
 		delete_option( PluginUpdate::FAILURE_OPTION_NAME );
 		delete_option( PluginUpdate::MIGRATION_NOTICE_OPTION_NAME );
 		delete_option( Honeypot::SECRET_OPTION );
-		delete_option( Honeypot::INJECTION_FAILED_OPTION );
+		delete_option( Honeypot::INJECTION_STATE_OPTION );
 		// delete_option( 'antispam_bee' );
 		// See https://github.com/pluginkollektiv/antispam-bee/issues/744 - enable on stable 3.0 release.
 

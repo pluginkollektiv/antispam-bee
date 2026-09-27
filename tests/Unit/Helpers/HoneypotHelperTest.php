@@ -208,30 +208,28 @@ class HoneypotHelperTest extends TestCase {
 	}
 
 	/**
-	 * A form the injection could not modify is recorded, so the rule can tell a
-	 * genuine comment from that form from a bot that never used a form at all.
+	 * A form the injection placed the honeypot into is recorded, which is what
+	 * arms the invalid-request verdict for submissions without the secret field.
 	 *
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_record_injection_stores_a_failure(): void {
+	public function test_record_injection_stores_a_success(): void {
 		when( 'get_option' )->justReturn( false );
-		expect( 'update_option' )->once()->with( Honeypot::INJECTION_FAILED_OPTION, 1 );
-		expect( 'delete_option' )->never();
+		expect( 'update_option' )->once()->with( Honeypot::INJECTION_STATE_OPTION, Honeypot::INJECTION_STATE_INJECTED );
 
-		Honeypot::record_injection( false );
+		Honeypot::record_injection( true );
 	}
 
 	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_record_injection_clears_a_failure_once_the_form_carries_the_honeypot(): void {
-		when( 'get_option' )->justReturn( '1' );
-		expect( 'delete_option' )->once()->with( Honeypot::INJECTION_FAILED_OPTION );
-		expect( 'update_option' )->never();
+	public function test_record_injection_stores_a_failure(): void {
+		when( 'get_option' )->justReturn( Honeypot::INJECTION_STATE_INJECTED );
+		expect( 'update_option' )->once()->with( Honeypot::INJECTION_STATE_OPTION, Honeypot::INJECTION_STATE_FAILED );
 
-		Honeypot::record_injection( true );
+		Honeypot::record_injection( false );
 	}
 
 	/**
@@ -243,14 +241,29 @@ class HoneypotHelperTest extends TestCase {
 	 */
 	public function test_record_injection_does_not_write_an_unchanged_outcome(): void {
 		expect( 'update_option' )->never();
-		expect( 'delete_option' )->never();
 
-		when( 'get_option' )->justReturn( false );
+		when( 'get_option' )->justReturn( Honeypot::INJECTION_STATE_INJECTED );
 		Honeypot::record_injection( true );
 
-		when( 'get_option' )->justReturn( '1' );
+		when( 'get_option' )->justReturn( Honeypot::INJECTION_STATE_FAILED );
 		Honeypot::record_injection( false );
+	}
 
-		self::assertTrue( Honeypot::injection_failed() );
+	/**
+	 * Only a recorded success counts: a failure and a site that never rendered a
+	 * form through the plugin must both leave the verdict disarmed.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_injection_observed_only_after_a_recorded_success(): void {
+		when( 'get_option' )->justReturn( false );
+		self::assertFalse( Honeypot::injection_observed(), 'no form rendered yet' );
+
+		when( 'get_option' )->justReturn( Honeypot::INJECTION_STATE_FAILED );
+		self::assertFalse( Honeypot::injection_observed(), 'injection failed' );
+
+		when( 'get_option' )->justReturn( Honeypot::INJECTION_STATE_INJECTED );
+		self::assertTrue( Honeypot::injection_observed(), 'injection succeeded' );
 	}
 }

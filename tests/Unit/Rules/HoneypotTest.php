@@ -54,15 +54,9 @@ class HoneypotTest extends AbstractRuleTestCase {
 				},
 			]
 		);
-		$injection_failed = false;
-
 		$honeypot_helper = mock( 'overload:' . \AntispamBee\Helpers\Honeypot::class );
 		$honeypot_helper->allows( 'get_secret_name_for_post' )->andReturns( 'd7dcf95a06' );
-		$honeypot_helper->allows( 'injection_failed' )->andReturnUsing(
-			function () use ( &$injection_failed ) {
-				return $injection_failed;
-			}
-		);
+		$honeypot_helper->allows( 'injection_observed' )->andReturns( true );
 
 		$_POST = [];
 
@@ -79,24 +73,7 @@ class HoneypotTest extends AbstractRuleTestCase {
 		// Send all following requests to the correct URL.
 		$_SERVER = [ 'SCRIPT_NAME' => '/wp-comments-post.php' ];
 
-		/*
-		 * A bot posting the fields core expects straight to wp-comments-post.php,
-		 * without ever using the rendered form. This is what the honeypot is the
-		 * gate for, so it has to be caught.
-		 */
-		$_POST = [
-			'comment'         => 'Your point of view caught my eye.',
-			'author'          => 'Bot',
-			'email'           => 'bot@example.com',
-			'comment_post_ID' => '433',
-		];
-		Honeypot::precheck();
-		self::assertSame(
-			1,
-			$_POST['ab_spam__invalid_request'],
-			'a submission without the secret field should be treated as an invalid request'
-		);
-
+		// Submissions without the secret field are covered by HoneypotPrecheckTest.
 		$_POST = [
 			'd7dcf95a06' => 'S3cr3t',
 			'comment'    => 'H1dd3n',
@@ -117,21 +94,5 @@ class HoneypotTest extends AbstractRuleTestCase {
 		];
 		Honeypot::precheck();
 		self::assertSame( 1, $_POST['ab_spam__hidden_field'], 'Missing hidden field not detected' );
-
-		/*
-		 * The server could not place the honeypot into the form it rendered, so a
-		 * genuine comment arrives without the secret field and must not be judged.
-		 */
-		$injection_failed = true;
-
-		$_POST = [
-			'comment' => 'A genuine comment.',
-		];
-		Honeypot::precheck();
-		self::assertSame(
-			[ 'comment' => 'A genuine comment.' ],
-			$_POST,
-			'a form the honeypot could not be injected into must not be judged by it'
-		);
 	}
 }

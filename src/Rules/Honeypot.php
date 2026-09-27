@@ -114,15 +114,16 @@ class Honeypot extends ControllableBase implements SpamReason {
 		$plugin_field = Settings::get_key( $_POST, $plugin_field_name );
 
 		/*
-		 * The secret comment field was not present in $_POST data. The comment form
-		 * always carries it while the rule is active, so a submission without it did
-		 * not come from that form: bots posting to `wp-comments-post.php` directly
-		 * send the fields core expects, not the ones the form renders. This is the
-		 * gate that catches them, so it holds unless the server itself found that it
-		 * could not place the field into the form it rendered.
+		 * The secret comment field was not present in $_POST data. Once the server has
+		 * seen the honeypot placed into the form it renders, a submission without it
+		 * did not come from that form: bots posting to `wp-comments-post.php`
+		 * directly send the fields core expects, not the ones the form renders. This
+		 * is the gate that catches them. It only holds while the last rendered form
+		 * carried the field, so a theme the honeypot cannot reach does not lose every
+		 * comment.
 		 */
 		if ( is_null( $plugin_field ) ) {
-			if ( ! HoneypotField::injection_failed() ) {
+			if ( HoneypotField::injection_observed() ) {
 				$_POST['ab_spam__invalid_request'] = 1;
 			}
 
