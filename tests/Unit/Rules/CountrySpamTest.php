@@ -393,6 +393,29 @@ class CountrySpamTest extends AbstractRuleTestCase {
 	}
 
 	/**
+	 * `json_decode( …, true )` turns a JSON object or list into a PHP array, so a
+	 * body like `{"country_code":["DE"]}` passes an emptiness check and used to
+	 * reach `strtoupper()` as an array — an uncaught TypeError inside
+	 * `preprocess_comment`, which aborts the comment submission itself.
+	 */
+	public function test_a_non_string_country_code_does_not_fatal() {
+		$this->denied_countries = 'DE';
+
+		foreach ( [ '{"country_code":["DE"]}', '{"country_code":{"name":"Germany"}}' ] as $body ) {
+			$this->expect_request( $body );
+
+			self::assertSame(
+				0,
+				CountrySpam::verify( self::make_comment_from( '198.51.100.42' ) ),
+				'a malformed country_code should be ignored, not fatal'
+			);
+
+			$GLOBALS['asb_test_transients'] = [];
+			\AntispamBee\Helpers\LookupCache::flush_memo();
+		}
+	}
+
+	/**
 	 * Expect a single request to the geolocation service.
 	 *
 	 * @param string $body The response body to return.

@@ -41,3 +41,33 @@ function _e( $text, $domain ) { echo $text; }
 function esc_attr_e( $text, $domain ) { echo $text; }
 function esc_html_e( $text, $domain ) { echo $text; }
 function load_plugin_textdomain( $domain, $deprecated = false, $plugin_rel_path = false ) { return true; }
+
+if ( ! defined( 'MINUTE_IN_SECONDS' ) ) {
+	define( 'MINUTE_IN_SECONDS', 60 );
+}
+
+if ( ! defined( 'HOUR_IN_SECONDS' ) ) {
+	define( 'HOUR_IN_SECONDS', 60 * MINUTE_IN_SECONDS );
+}
+
+/**
+ * In-memory transients, so a cached lookup behaves the way it does in production.
+ * Reset between tests with `$GLOBALS['asb_test_transients'] = [];`.
+ */
+$GLOBALS['asb_test_transients'] = [];
+
+function get_transient( $key ) {
+	return $GLOBALS['asb_test_transients'][ $key ] ?? false;
+}
+
+function set_transient( $key, $value, $expiration = 0 ) {
+	$GLOBALS['asb_test_transients'][ $key ] = $value;
+
+	return true;
+}
+
+function delete_transient( $key ) {
+	unset( $GLOBALS['asb_test_transients'][ $key ] );
+
+	return true;
+}

@@ -8,6 +8,7 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\ContentTypeHelper;
+use AntispamBee\Helpers\LookupCache;
 
 /**
  * Rule that is responsible for checking if the commenter has a valid gravatar.
@@ -45,22 +46,29 @@ class ValidGravatar extends ControllableBase {
 			return 0;
 		}
 
-		$response = wp_safe_remote_get(
-			sprintf(
-				'https://www.gravatar.com/avatar/%s?d=404',
-				md5( strtolower( trim( $email ) ) )
-			)
+		$hash = md5( strtolower( trim( $email ) ) );
+
+		$has_gravatar = LookupCache::remember(
+			'gravatar',
+			$hash,
+			static function () use ( $hash ) {
+				$response = wp_safe_remote_get(
+					sprintf(
+						'https://www.gravatar.com/avatar/%s?d=404',
+						$hash
+					)
+				);
+
+				if ( is_wp_error( $response ) ) {
+					return null;
+				}
+
+				// Stored as a string, so that "no gravatar" is cached as well.
+				return wp_remote_retrieve_response_code( $response ) === 200 ? 'yes' : 'no';
+			}
 		);
 
-		if ( is_wp_error( $response ) ) {
-			return 0;
-		}
-
-		if ( wp_remote_retrieve_response_code( $response ) === 200 ) {
-			return -1;
-		}
-
-		return 0;
+		return 'yes' === $has_gravatar ? -1 : 0;
 	}
 
 	/**

@@ -8,6 +8,7 @@
 namespace AntispamBee\Rules;
 
 use AntispamBee\Helpers\LangHelper;
+use AntispamBee\Helpers\LookupCache;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Helpers\TextHelper;
@@ -80,23 +81,35 @@ class LangSpam extends ControllableBase implements SpamReason {
 		 */
 		$api_url = apply_filters( 'antispam_bee_lang_api_url', 'https://api.pluginkollektiv.org/language/v1/' );
 
-		$response = wp_safe_remote_post(
-			$api_url,
-			[ 'body' => (string) wp_json_encode( [ 'body' => $comment_text ] ) ]
+		$detected_language = LookupCache::remember(
+			'lang',
+			$comment_text,
+			static function () use ( $api_url, $comment_text ) {
+				$response = wp_safe_remote_post(
+					$api_url,
+					[ 'body' => (string) wp_json_encode( [ 'body' => $comment_text ] ) ]
+				);
+
+				if ( is_wp_error( $response )
+					|| wp_remote_retrieve_response_code( $response ) !== 200 ) {
+					return null;
+				}
+
+				$body = wp_remote_retrieve_body( $response );
+				if ( ! $body ) {
+					return null;
+				}
+
+				$decoded = json_decode( $body );
+				if ( ! $decoded || ! isset( $decoded->code ) || ! is_string( $decoded->code ) ) {
+					return null;
+				}
+
+				return $decoded->code;
+			}
 		);
 
-		if ( is_wp_error( $response )
-			|| wp_remote_retrieve_response_code( $response ) !== 200 ) {
-			return 0;
-		}
-
-		$detected_language = wp_remote_retrieve_body( $response );
-		if ( ! $detected_language ) {
-			return 0;
-		}
-
-		$detected_language = json_decode( $detected_language );
-		if ( ! $detected_language || ! isset( $detected_language->code ) || ! is_string( $detected_language->code ) ) {
+		if ( null === $detected_language ) {
 			return 0;
 		}
 
@@ -104,11 +117,11 @@ class LangSpam extends ControllableBase implements SpamReason {
 		 * The service returns the ISO 639-3 code "und" (undetermined) if it could not
 		 * identify the language. A language we do not know is no reason to assume spam.
 		 */
-		if ( '' === $detected_language->code || 'und' === $detected_language->code ) {
+		if ( '' === $detected_language || 'und' === $detected_language ) {
 			return 0;
 		}
 
-		return (int) ! in_array( LangHelper::map( $detected_language->code ), $allowed_languages, true );
+		return (int) ! in_array( LangHelper::map( $detected_language ), $allowed_languages, true );
 	}
 
 	/**
