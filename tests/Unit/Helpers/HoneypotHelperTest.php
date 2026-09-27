@@ -205,6 +205,7 @@ class HoneypotHelperTest extends TestCase {
 		when( 'wp_salt' )->justReturn( 'test-salt' );
 		when( 'get_option' )->justReturn( '' );
 		when( 'add_option' )->justReturn( true );
+		when( 'delete_option' )->justReturn( true );
 	}
 
 	/**
@@ -301,5 +302,93 @@ class HoneypotHelperTest extends TestCase {
 		$markup = '<textarea name="comment"></textarea>';
 
 		self::assertSame( $markup, Honeypot::inject( $markup, [ 'field_id' => 'comment' ] ) );
+	}
+
+	/**
+	 * Seeing the honeypot in a rendered form answers what an unguarded submission
+	 * raised, so its record goes; a failed injection keeps it.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_a_successful_injection_clears_the_unguarded_submission(): void {
+		$deleted = [];
+		when( 'get_option' )->justReturn( false );
+		when( 'update_option' )->justReturn( true );
+		when( 'delete_option' )->alias(
+			static function ( $name ) use ( &$deleted ) {
+				$deleted[] = $name;
+
+				return true;
+			}
+		);
+
+		Honeypot::record_injection( true );
+		Honeypot::record_injection( false );
+
+		self::assertSame( [ Honeypot::UNGUARDED_SUBMISSION_OPTION ], $deleted );
+	}
+
+	/**
+	 * Every bot posting without the form lands here, so only the first one writes.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_an_unguarded_submission_is_recorded_once(): void {
+		$added = [];
+		when( 'add_option' )->alias(
+			static function ( $name, $value ) use ( &$added ) {
+				$added[] = [ $name, is_int( $value ) ];
+
+				return true;
+			}
+		);
+
+		when( 'get_option' )->justReturn( false );
+		Honeypot::record_unguarded_submission();
+
+		when( 'get_option' )->justReturn( 1727000000 );
+		Honeypot::record_unguarded_submission();
+
+		self::assertSame( [ [ Honeypot::UNGUARDED_SUBMISSION_OPTION, true ] ], $added );
+	}
+
+	/**
+	 * @dataProvider provide_protection_states
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @param mixed $state      The stored injection state.
+	 * @param mixed $unguarded  The stored unguarded submission.
+	 * @param bool  $missing    Whether the protection counts as missing.
+	 */
+	public function test_protection_missing( $state, $unguarded, bool $missing ): void {
+		when( 'get_option' )->alias(
+			static function ( $name ) use ( $state, $unguarded ) {
+				return 'antispam_bee_honeypot_injection' === $name ? $state : $unguarded;
+			}
+		);
+
+		self::assertSame( $missing, Honeypot::protection_missing() );
+	}
+
+	/**
+	 * Injection states, unguarded submissions, and whether the honeypot is missing.
+	 *
+	 * Plain values rather than the class constants: data providers run in the main
+	 * process, and loading the helper there breaks the tests that overload it.
+	 *
+	 * @return array<string, array{0: mixed, 1: mixed, 2: bool}>
+	 */
+	public function provide_protection_states(): array {
+		return [
+			'injected'                             => [ 'injected', false, false ],
+			'injected, older unguarded submission' => [ 'injected', 1727000000, false ],
+			'failed'                               => [ 'failed', false, true ],
+			'never rendered, comments submitted'   => [ false, 1727000000, true ],
+			'never rendered, nothing submitted'    => [ false, false, false ],
+		];
 	}
 }

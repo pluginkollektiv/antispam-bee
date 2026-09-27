@@ -44,6 +44,14 @@ class Honeypot {
 	public const INJECTION_STATE_FAILED = 'failed';
 
 	/**
+	 * Option set when a comment arrived without the secret field before any
+	 * rendered form was seen to carry the honeypot.
+	 *
+	 * @var string
+	 */
+	public const UNGUARDED_SUBMISSION_OPTION = 'antispam_bee_honeypot_unguarded_submission';
+
+	/**
 	 * Record whether the last rendered comment form carries the honeypot.
 	 *
 	 * A comment submitted without the secret field is rejected as an invalid
@@ -70,6 +78,53 @@ class Honeypot {
 		}
 
 		update_option( self::INJECTION_STATE_OPTION, $state );
+
+		// A form carrying the honeypot answers the question that record raised.
+		if ( $injected ) {
+			delete_option( self::UNGUARDED_SUBMISSION_OPTION );
+		}
+	}
+
+	/**
+	 * Record that a comment arrived without the secret field while no rendered
+	 * form had been seen to carry the honeypot.
+	 *
+	 * A theme that builds its comment form without `comment_form()` never reaches
+	 * the filter, so no injection outcome is ever recorded for it. A submission to
+	 * `wp-comments-post.php` is then the only sign that a comment form exists which
+	 * the honeypot does not protect. Bots send the same shape, but either way no
+	 * form has been guarded so far. Written once, so a flood of such submissions
+	 * costs no database writes.
+	 *
+	 * @return void
+	 */
+	public static function record_unguarded_submission(): void {
+		if ( false !== get_option( self::UNGUARDED_SUBMISSION_OPTION ) ) {
+			return;
+		}
+
+		add_option( self::UNGUARDED_SUBMISSION_OPTION, time() );
+	}
+
+	/**
+	 * Whether the comment form is known to be left without the honeypot.
+	 *
+	 * True when the last rendered form could not be injected into, and when
+	 * comments were submitted although no rendered form was ever seen to carry the
+	 * honeypot. False while the last rendered form carried it, and on a site that
+	 * has neither rendered a form nor received a comment yet.
+	 *
+	 * @return bool True if the honeypot does not reach the comment form.
+	 */
+	public static function protection_missing(): bool {
+		$state = get_option( self::INJECTION_STATE_OPTION );
+
+		if ( self::INJECTION_STATE_FAILED === $state ) {
+			return true;
+		}
+
+		return self::INJECTION_STATE_INJECTED !== $state
+			&& false !== get_option( self::UNGUARDED_SUBMISSION_OPTION );
 	}
 
 	/**

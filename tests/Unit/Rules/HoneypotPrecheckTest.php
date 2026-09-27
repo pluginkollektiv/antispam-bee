@@ -60,6 +60,8 @@ class HoneypotPrecheckTest extends TestCase {
 		$honeypot_helper = mock( 'overload:' . \AntispamBee\Helpers\Honeypot::class );
 		$honeypot_helper->allows( 'get_secret_name_for_post' )->andReturns( 'd7dcf95a06' );
 		$honeypot_helper->allows( 'injection_observed' )->andReturns( $observed );
+		// Only a submission the honeypot cannot judge is noted for the admin.
+		$honeypot_helper->expects( 'record_unguarded_submission' )->times( $observed ? 0 : 1 );
 	}
 
 	public function test_a_bare_post_is_an_invalid_request_once_the_form_carried_the_honeypot(): void {

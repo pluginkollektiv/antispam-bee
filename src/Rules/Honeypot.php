@@ -206,6 +206,8 @@ class Honeypot extends ControllableBase implements SpamReason {
 		if ( is_null( $plugin_field ) ) {
 			if ( HoneypotField::injection_observed() ) {
 				$_POST['ab_spam__invalid_request'] = 1;
+			} else {
+				HoneypotField::record_unguarded_submission();
 			}
 
 			return;
