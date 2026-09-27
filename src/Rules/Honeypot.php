@@ -10,6 +10,7 @@ namespace AntispamBee\Rules;
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\DataHelper;
 use AntispamBee\Helpers\Honeypot as HoneypotField;
+use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\SpamReason;
 
@@ -48,6 +49,85 @@ class Honeypot extends ControllableBase implements SpamReason {
 		add_filter( 'antispam_bee_rules', [ __CLASS__, 'add_rule' ] );
 
 		add_filter( 'comment_form_field_comment', [ static::class, 'inject_honeypot_field' ], 99 );
+		add_action( 'template_redirect', [ static::class, 'start_output_buffering' ] );
+	}
+
+	/**
+	 * Get the rule's additional options.
+	 *
+	 * @return array<int, array<string, mixed>> The options.
+	 */
+	public static function get_options(): ?array {
+		return [
+			[
+				'type'        => 'checkbox',
+				'option_name' => 'output_buffer',
+				'label'       => __( 'Inject through output buffering', 'antispam-bee' ),
+				'description' => __( 'For comment forms that are not built with comment_form(), for example by a theme or page builder', 'antispam-bee' ),
+				'sanitize'    => [ Sanitize::class, 'checkbox' ],
+			],
+		];
+	}
+
+	/**
+	 * Whether the honeypot is injected into the whole page instead of the form field.
+	 *
+	 * @return bool True if output buffering is used.
+	 */
+	public static function uses_output_buffering(): bool {
+		return 'on' === Settings::get_option( static::get_option_name( 'output_buffer' ), ContentTypeHelper::COMMENT_TYPE );
+	}
+
+	/**
+	 * Start buffering the front-end page so the honeypot can be injected into it.
+	 *
+	 * The `comment_form_field_comment` filter only sees forms built with
+	 * `comment_form()`. A theme or page builder that renders the textarea itself
+	 * never reaches it, so for such sites the whole page is searched instead, as
+	 * Antispam Bee 2.x did with its `use_output_buffer` setting.
+	 *
+	 * @return void
+	 */
+	public static function start_output_buffering(): void {
+		if ( ! static::is_active( ContentTypeHelper::COMMENT_TYPE ) || ! static::uses_output_buffering() ) {
+			return;
+		}
+
+		if ( is_feed() || is_trackback() || is_robots() || is_embed() ) {
+			return;
+		}
+
+		ob_start( [ static::class, 'inject_into_page' ] );
+	}
+
+	/**
+	 * Inject the honeypot into every comment field of a buffered page.
+	 *
+	 * @param string $html The buffered page.
+	 *
+	 * @return string The page, with the honeypot injected.
+	 */
+	public static function inject_into_page( $html ) {
+		/*
+		 * Every front-end page passes through here, so pages without a comment field
+		 * are handed back before any parsing, and without being recorded as a failed
+		 * injection: there was no form to inject into.
+		 */
+		if ( ! is_string( $html ) || ! preg_match( '/<textarea[^>]*\sname=["\']?comment["\'\s>]/i', $html ) ) {
+			return $html;
+		}
+
+		$markup = HoneypotField::inject(
+			$html,
+			[
+				'field_id'   => 'comment',
+				'field_name' => 'comment',
+			]
+		);
+
+		HoneypotField::record_injection( $markup !== $html );
+
+		return $markup;
 	}
 
 	/**
@@ -58,7 +138,8 @@ class Honeypot extends ControllableBase implements SpamReason {
 	 * @return string The markup, with the honeypot field injected.
 	 */
 	public static function inject_honeypot_field( $field_markup ) {
-		if ( ! static::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
+		// With output buffering, the whole page is injected into later on.
+		if ( ! static::is_active( ContentTypeHelper::COMMENT_TYPE ) || static::uses_output_buffering() ) {
 			return $field_markup;
 		}
 

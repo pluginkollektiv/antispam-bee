@@ -266,4 +266,40 @@ class HoneypotHelperTest extends TestCase {
 		when( 'get_option' )->justReturn( Honeypot::INJECTION_STATE_INJECTED );
 		self::assertTrue( Honeypot::injection_observed(), 'injection succeeded' );
 	}
+
+	/**
+	 * A form not built with `comment_form()` often has no `id="comment"`. With a
+	 * field name to go by, its textarea still gets the honeypot.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_finds_a_comment_textarea_without_the_id_by_its_name(): void {
+		$markup = '<form action="/wp-comments-post.php" method="post"><textarea name="comment" class="field"></textarea></form>';
+
+		$injected = Honeypot::inject(
+			$markup,
+			[
+				'field_id'   => 'comment',
+				'field_name' => 'comment',
+			]
+		);
+
+		self::assertStringContainsString( 'name="' . Honeypot::get_secret_name_for_post() . '"', $injected, 'the visible field was not renamed' );
+		self::assertStringContainsString( '<textarea name="comment" aria-hidden="true"', $injected, 'the decoy was not added' );
+		self::assertStringNotContainsString( 'id=""', $injected, 'a field without an id must not get an empty one' );
+		self::assertStringNotContainsString( '<script', $injected, 'there is no id to swap back' );
+	}
+
+	/**
+	 * Without a field name the lookup stays on the id, as for the form field filter.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_without_a_field_name_needs_the_id(): void {
+		$markup = '<textarea name="comment"></textarea>';
+
+		self::assertSame( $markup, Honeypot::inject( $markup, [ 'field_id' => 'comment' ] ) );
+	}
 }
