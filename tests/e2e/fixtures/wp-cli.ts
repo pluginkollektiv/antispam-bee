@@ -10,6 +10,10 @@ export class WpCli {
 		this.run( `option update ${ name } '${ json }' --format=json` );
 	}
 
+	optionDelete( name: string ): void {
+		this.run( `option delete ${ name }` );
+	}
+
 	commentCreate( fields: Record<string, string | number> ): number {
 		const args = Object.entries( fields )
 			.map( ( [ k, v ] ) => `--${ k }="${ v }"` )
