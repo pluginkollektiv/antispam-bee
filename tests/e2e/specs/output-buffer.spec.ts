@@ -72,19 +72,19 @@ test.describe( 'Honeypot output-buffer injection', () => {
 		enableOutputBuffer( cli );
 
 		await submitCustomForm( page, {
-			author: 'Ned Flanders',
-			email: 'ned.flanders@example.com',
+			author: 'Marge Simpson',
+			email: 'marge.simpson@example.com',
 		} );
 
 		await adminLogin( page );
 		await page.goto( '/wp-admin/edit-comments.php?comment_status=spam' );
 		await expect( page.locator( 'body' ) ).not.toContainText(
-			'Ned Flanders'
+			'Marge Simpson'
 		);
 		await page.goto(
 			'/wp-admin/edit-comments.php?comment_status=moderated'
 		);
-		await expect( page.locator( 'body' ) ).toContainText( 'Ned Flanders' );
+		await expect( page.locator( 'body' ) ).toContainText( 'Marge Simpson' );
 	} );
 
 	test( 'a bot filling the honeypot of a custom form is caught', async ( {
