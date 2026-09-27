@@ -714,4 +714,122 @@ class PluginUpdateTest extends TestCase {
 			$this->written_options[ Settings::OPTION_NAME ]['comment']['rule_asb_regexp_active']
 		);
 	}
+
+	/**
+	 * 2.x treated a missing `use_output_buffer` as enabled, so a site installed before
+	 * 2.10.0 used output buffering without having saved the setting.
+	 *
+	 * @dataProvider provide_legacy_output_buffer_values
+	 *
+	 * @param array<string, mixed> $legacy_options The 2.x options.
+	 * @param string               $expected       The migrated value.
+	 *
+	 * @return void
+	 */
+	public function test_the_output_buffer_setting_is_migrated_from_2x( array $legacy_options, string $expected ): void {
+		$this->stub_options(
+			[
+				'antispam_bee'           => $legacy_options,
+				'antispambee_db_version' => '1.02',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame(
+			$expected,
+			$this->written_options[ Settings::OPTION_NAME ]['comment']['rule_asb_honeypot_output_buffer']
+		);
+	}
+
+	/**
+	 * Legacy `use_output_buffer` values and what they migrate to.
+	 *
+	 * @return array<string, array{0: array<string, mixed>, 1: string}>
+	 */
+	public function provide_legacy_output_buffer_values(): array {
+		return [
+			'not set (installed before 2.10.0)' => [ [ 'regexp_check' => 1 ], 'on' ],
+			'enabled'                           => [ [ 'use_output_buffer' => 1 ], 'on' ],
+			'enabled as a string'               => [ [ 'use_output_buffer' => '1' ], 'on' ],
+			'disabled'                          => [ [ 'use_output_buffer' => 0 ], '' ],
+		];
+	}
+
+	/**
+	 * A site migrated by a build without the setting gets it from the 2.x options that
+	 * are still stored.
+	 *
+	 * @return void
+	 */
+	public function test_a_site_migrated_before_beta_4_gets_the_output_buffer_setting(): void {
+		when( 'get_file_data' )->justReturn( [ 'Version' => '3.0.0-beta.4' ] );
+		$this->stub_options(
+			[
+				'antispam_bee'           => [ 'regexp_check' => 1 ],
+				'antispam_bee_options'   => [ 'comment' => [ 'rule_asb_honeypot_active' => 'on' ] ],
+				'antispambee_db_version' => '3.0.0-beta.3',
+			]
+		);
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertSame(
+			[
+				'comment' => [
+					'rule_asb_honeypot_active'        => 'on',
+					'rule_asb_honeypot_output_buffer' => 'on',
+				],
+			],
+			$this->written_options[ Settings::OPTION_NAME ]
+		);
+	}
+
+	/**
+	 * The beta step never switches output buffering on against the 2.x setting, never
+	 * overrides a value the v3 settings already hold, and needs the 2.x options.
+	 *
+	 * @dataProvider provide_sites_the_beta_step_leaves_alone
+	 *
+	 * @param array<string, mixed> $stored The stored options.
+	 *
+	 * @return void
+	 */
+	public function test_the_beta_step_leaves_the_setting_alone( array $stored ): void {
+		when( 'get_file_data' )->justReturn( [ 'Version' => '3.0.0-beta.4' ] );
+		$this->stub_options( $stored + [ 'antispambee_db_version' => '3.0.0-beta.3' ] );
+
+		PluginUpdate::maybe_run_plugin_updated_logic();
+
+		$this->assertArrayNotHasKey( Settings::OPTION_NAME, $this->written_options );
+	}
+
+	/**
+	 * Sites whose output-buffer setting the beta step must not touch.
+	 *
+	 * @return array<string, array{0: array<string, mixed>}>
+	 */
+	public function provide_sites_the_beta_step_leaves_alone(): array {
+		$v3_options = [ 'comment' => [ 'rule_asb_honeypot_active' => 'on' ] ];
+
+		return [
+			'disabled in 2.x'          => [
+				[
+					'antispam_bee'         => [ 'use_output_buffer' => 0 ],
+					'antispam_bee_options' => $v3_options,
+				],
+			],
+			'already set in v3'        => [
+				[
+					'antispam_bee'         => [ 'regexp_check' => 1 ],
+					'antispam_bee_options' => [ 'comment' => [ 'rule_asb_honeypot_output_buffer' => '' ] ],
+				],
+			],
+			'no 2.x options left'      => [
+				[
+					'antispam_bee_options' => $v3_options,
+				],
+			],
+		];
+	}
 }
