@@ -31,14 +31,32 @@ class TextHelper {
 	private const SPACELESS_SCRIPT_LETTERS = '/(?=' . self::LETTERS . ')[\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}\p{Thai}\p{Lao}\p{Khmer}\p{Myanmar}\p{Tibetan}]/u';
 
 	/**
+	 * Characters that render as a blank without being whitespace.
+	 *
+	 * `\s` under `/u` covers `\p{Z}`, but a text can be spaced out with code
+	 * points that show as a gap and belong to another category: the format
+	 * characters `\p{Cf}` such as U+200B ZERO WIDTH SPACE and U+FEFF, U+2800
+	 * BRAILLE PATTERN BLANK, and U+3164 HANGUL FILLER. A text separated by those
+	 * counts as a single word, which is how a long comment can slip under a
+	 * minimum-words threshold.
+	 *
+	 * @var string
+	 */
+	private const BLANK_RENDERING = '\p{Cf}\x{2800}\x{3164}';
+
+	/**
 	 * Collapse all whitespace into single spaces and trim the text.
+	 *
+	 * Characters that merely render as a blank are treated as whitespace too, so
+	 * that counting words over the result cannot be defeated by spacing a text
+	 * out with them.
 	 *
 	 * @param string $text The text.
 	 *
 	 * @return string The normalized text.
 	 */
 	public static function normalize_whitespace( string $text ): string {
-		$normalized = preg_replace( '/\s+/u', ' ', $text );
+		$normalized = preg_replace( '/[\s' . self::BLANK_RENDERING . ']+/u', ' ', $text );
 
 		if ( null === $normalized ) {
 			// The text is not valid UTF-8, so fall back to matching bytes.

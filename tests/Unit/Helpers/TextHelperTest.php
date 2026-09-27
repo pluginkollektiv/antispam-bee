@@ -146,4 +146,40 @@ class TextHelperTest extends TestCase {
 			'Digits, spaces and punctuation should not be counted as letters'
 		);
 	}
+
+	/**
+	 * `\s` under `/u` covers `\p{Z}`, but a text can be spaced out with code
+	 * points that render as a gap and belong to another category. A text
+	 * separated by those counted as one word, which is how an arbitrarily long
+	 * comment could slip under the minimum-words threshold and never be checked.
+	 */
+	public function test_count_words_treats_blank_rendering_characters_as_separators(): void {
+		$words = [ 'the', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog', 'and', 'keeps', 'going' ];
+
+		$separators = [
+			'space'                 => ' ',
+			'no-break space'        => "\u{00A0}",
+			'ideographic space'     => "\u{3000}",
+			'braille pattern blank' => "\u{2800}",
+			'hangul filler'         => "\u{3164}",
+			'zero width space'      => "\u{200B}",
+			'zero width no-break'   => "\u{FEFF}",
+		];
+
+		foreach ( $separators as $description => $separator ) {
+			self::assertSame(
+				count( $words ),
+				TextHelper::count_words( implode( $separator, $words ) ),
+				"a text spaced out with a $description should still be counted word by word"
+			);
+		}
+	}
+
+	public function test_normalize_whitespace_collapses_blank_rendering_characters(): void {
+		self::assertSame(
+			'one two',
+			TextHelper::normalize_whitespace( "one\u{2800}\u{200B}two" ),
+			'blank-rendering characters should collapse like any other whitespace'
+		);
+	}
 }
