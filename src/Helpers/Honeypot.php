@@ -97,7 +97,9 @@ class Honeypot {
 	 * @type string  $form_name  The form name.
 	 * @type string  $field_type The field type.
 	 * @type string  $field_id   The field id.
-	 * @type string  $field_name The field name.
+	 * @type string  $field_name The field name. When given, a textarea carrying it is
+	 *                           used if no element has the field id — as in forms not
+	 *                           built with `comment_form()`.
 	 *                           }
 	 *
 	 * @return string The markup with the injected honeypot field.
@@ -127,6 +129,10 @@ class Honeypot {
 		$xpath     = new DOMXPath( $dom );
 		$node_list = $xpath->query( '//*[@id="' . $options['field_id'] . '"]' );
 		$input     = $node_list ? $node_list->item( 0 ) : null;
+		if ( ! $input instanceof DOMElement && isset( $options['field_name'] ) ) {
+			$node_list = $xpath->query( '//textarea[@name="' . $options['field_name'] . '"]' );
+			$input     = $node_list ? $node_list->item( 0 ) : null;
+		}
 		if ( ! $input instanceof DOMElement ) {
 			return $markup;
 		}
@@ -134,12 +140,12 @@ class Honeypot {
 		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$id_attr   = $input->attributes->getNamedItem( 'id' );
 		$name_attr = $input->attributes->getNamedItem( 'name' );
-		if ( null === $id_attr || null === $name_attr ) {
+		if ( null === $name_attr || ( null === $id_attr && ! isset( $options['field_name'] ) ) ) {
 			return $markup;
 		}
 
 		$input_type    = $input->nodeName;
-		$honeypot_id   = $id_attr->textContent;
+		$honeypot_id   = null === $id_attr ? '' : $id_attr->textContent;
 		$honeypot_name = $name_attr->textContent;
 		// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
@@ -163,8 +169,8 @@ class Honeypot {
 		 * down are escaped the same way.
 		 */
 		$attributes_string = sprintf(
-			'id="%s" name="%s" aria-hidden="true" aria-label="hp-comment" autocomplete="new-password" tabindex="-1" style="%s"',
-			esc_attr( $honeypot_id ),
+			'%sname="%s" aria-hidden="true" aria-label="hp-comment" autocomplete="new-password" tabindex="-1" style="%s"',
+			'' === $honeypot_id ? '' : 'id="' . esc_attr( $honeypot_id ) . '" ',
 			esc_attr( $honeypot_name ),
 			esc_attr( $honeypot_styles )
 		);
@@ -180,7 +186,8 @@ class Honeypot {
 				 */
 				$regex = str_replace(
 					[ '{{HONEYPOT_ID}}', '{{HONEYPOT_NAME}}' ],
-					[ preg_quote( $honeypot_id, '/' ), preg_quote( $honeypot_name, '/' ) ],
+					// A field without an id can only be matched by the id-less alternative.
+					[ '' === $honeypot_id ? '(?!)' : preg_quote( $honeypot_id, '/' ), preg_quote( $honeypot_name, '/' ) ],
 					'/(?P<all>                                    (?# match the whole textarea tag )
 						<textarea                                        (?# the opening of the textarea and some optional attributes )
 						(                                                (?# match a id attribute followed by some optional ones and the name attribute )
