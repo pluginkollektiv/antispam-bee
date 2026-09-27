@@ -23,6 +23,55 @@ class Honeypot {
 	public const SECRET_OPTION = 'antispam_bee_honeypot_secret';
 
 	/**
+	 * Option that is set while the comment form renders without the honeypot.
+	 *
+	 * @var string
+	 */
+	public const INJECTION_FAILED_OPTION = 'antispam_bee_honeypot_injection_failed';
+
+	/**
+	 * Record whether the last rendered comment form carries the honeypot.
+	 *
+	 * A comment submitted without the secret field is rejected as an invalid
+	 * request, which is only fair if the form it came from had that field.
+	 * `inject()` cannot always place it: the comment field may be missing, carry
+	 * a different id, not be a textarea, or the markup may not match. Only the
+	 * server that rendered the form knows this, so the outcome is kept here for
+	 * `Rules\Honeypot::precheck()` to consult. A bot posting to
+	 * `wp-comments-post.php` directly has no way to set it.
+	 *
+	 * The option only exists while injection fails, and it is written only when
+	 * the outcome changes, so a site whose form carries the honeypot neither
+	 * stores a row nor writes on page views.
+	 *
+	 * @param bool $injected Whether the honeypot was placed into the form.
+	 *
+	 * @return void
+	 */
+	public static function record_injection( bool $injected ): void {
+		if ( $injected !== self::injection_failed() ) {
+			return;
+		}
+
+		if ( $injected ) {
+			delete_option( self::INJECTION_FAILED_OPTION );
+
+			return;
+		}
+
+		update_option( self::INJECTION_FAILED_OPTION, 1 );
+	}
+
+	/**
+	 * Whether the last rendered comment form was left without the honeypot.
+	 *
+	 * @return bool True if the honeypot could not be injected.
+	 */
+	public static function injection_failed(): bool {
+		return (bool) get_option( self::INJECTION_FAILED_OPTION, false );
+	}
+
+	/**
 	 * Inject the honeypot field.
 	 *
 	 * @param string                $markup  The field markup.
@@ -137,16 +186,6 @@ class Honeypot {
 						$output .= $matches['after'] . '>';
 						$output .= $matches['content'];
 						$output .= '</textarea><textarea ' . $attributes_string . '></textarea>';
-
-						/*
-						 * Reached only when the secret field was actually placed, which is
-						 * what lets the rule distinguish a stripped field from a form the
-						 * injection never modified.
-						 */
-						$output .= sprintf(
-							'<input type="hidden" name="%s" value="1" />',
-							esc_attr( self::get_marker_name_for_post() )
-						);
 
 						$output .= $id_script;
 
@@ -292,27 +331,5 @@ class Honeypot {
 	 */
 	public static function get_secret_name_for_post(): string {
 		return self::get_secret();
-	}
-
-	/**
-	 * Return the name of the field marking a form the honeypot was injected into.
-	 *
-	 * `inject()` cannot always place the secret field: the comment field may be
-	 * missing, carry a different id, not be a textarea, or the markup may not
-	 * match. Its absence from a submission is therefore not by itself a bot
-	 * signal. This marker is emitted only where the injection actually
-	 * succeeded, so the rule can tell "no honeypot in this form" from "honeypot
-	 * present and the secret field was stripped".
-	 *
-	 * The name is built from the same stored secret as the secret field, so the
-	 * two always belong to the same form: whatever renames one renames the
-	 * other, and a marker can never outlive the field it vouches for.
-	 *
-	 * @return string The marker field name.
-	 */
-	public static function get_marker_name_for_post(): string {
-		return self::ensure_secret_starts_with_letter(
-			substr( sha1( md5( 'comment-marker' . self::get_secret() ) ), 0, 10 )
-		);
 	}
 }

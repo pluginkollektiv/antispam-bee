@@ -4,6 +4,7 @@ namespace AntispamBee\Tests\Unit\Helpers;
 
 use AntispamBee\Helpers\Honeypot;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
+use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\when;
 
 /**
@@ -207,35 +208,49 @@ class HoneypotHelperTest extends TestCase {
 	}
 
 	/**
-	 * The marker is what lets the rule tell a stripped secret field from a form
-	 * the injection never touched, so it must appear exactly where the secret
-	 * field does — and nowhere else.
+	 * A form the injection could not modify is recorded, so the rule can tell a
+	 * genuine comment from that form from a bot that never used a form at all.
 	 *
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_inject_emits_the_marker_only_when_it_placed_the_secret_field(): void {
-		when( 'esc_attr' )->returnArg();
-		when( 'esc_js' )->returnArg();
+	public function test_record_injection_stores_a_failure(): void {
+		when( 'get_option' )->justReturn( false );
+		expect( 'update_option' )->once()->with( Honeypot::INJECTION_FAILED_OPTION, 1 );
+		expect( 'delete_option' )->never();
 
-		$untouched = Honeypot::inject( '<textarea id="other" name="other"></textarea>', [ 'field_id' => 'comment' ] );
-
-		self::assertStringNotContainsString(
-			Honeypot::get_marker_name_for_post(),
-			$untouched,
-			'markup the injection did not modify must not carry the marker'
-		);
+		Honeypot::record_injection( false );
 	}
 
 	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_marker_name_differs_from_the_secret_name(): void {
-		self::assertNotSame(
-			Honeypot::get_secret_name_for_post(),
-			Honeypot::get_marker_name_for_post(),
-			'the marker must not collide with the secret comment field'
-		);
+	public function test_record_injection_clears_a_failure_once_the_form_carries_the_honeypot(): void {
+		when( 'get_option' )->justReturn( '1' );
+		expect( 'delete_option' )->once()->with( Honeypot::INJECTION_FAILED_OPTION );
+		expect( 'update_option' )->never();
+
+		Honeypot::record_injection( true );
+	}
+
+	/**
+	 * The outcome is recorded on every comment form render, so an unchanged one
+	 * must not cost a database write.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_record_injection_does_not_write_an_unchanged_outcome(): void {
+		expect( 'update_option' )->never();
+		expect( 'delete_option' )->never();
+
+		when( 'get_option' )->justReturn( false );
+		Honeypot::record_injection( true );
+
+		when( 'get_option' )->justReturn( '1' );
+		Honeypot::record_injection( false );
+
+		self::assertTrue( Honeypot::injection_failed() );
 	}
 }

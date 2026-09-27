@@ -62,7 +62,12 @@ class Honeypot extends ControllableBase implements SpamReason {
 			return $field_markup;
 		}
 
-		return HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
+		$markup = HoneypotField::inject( $field_markup, [ 'field_id' => 'comment' ] );
+
+		// `inject()` hands the markup back untouched whenever it cannot place the field.
+		HoneypotField::record_injection( $markup !== $field_markup );
+
+		return $markup;
 	}
 
 	/**
@@ -104,29 +109,22 @@ class Honeypot extends ControllableBase implements SpamReason {
 		}
 
 		$plugin_field_name = HoneypotField::get_secret_name_for_post();
-		$marker_field_name = HoneypotField::get_marker_name_for_post();
 
 		$hidden_field = Settings::get_key( $_POST, 'comment' );
 		$plugin_field = Settings::get_key( $_POST, $plugin_field_name );
-		$marker_field = Settings::get_key( $_POST, $marker_field_name );
 
 		/*
-		 * The form this was submitted from does not carry the honeypot. Injection
-		 * is skipped whenever the comment field cannot be found, is not a
-		 * textarea, or the markup does not match, and a page cached before the
-		 * plugin was active or before the salt was rotated ships without it too.
-		 * The honeypot cannot judge such a submission, so it casts no verdict and
-		 * leaves the decision to the remaining rules.
+		 * The secret comment field was not present in $_POST data. The comment form
+		 * always carries it while the rule is active, so a submission without it did
+		 * not come from that form: bots posting to `wp-comments-post.php` directly
+		 * send the fields core expects, not the ones the form renders. This is the
+		 * gate that catches them, so it holds unless the server itself found that it
+		 * could not place the field into the form it rendered.
 		 */
-		if ( is_null( $marker_field ) ) {
-			return;
-		}
-
-		unset( $_POST[ $marker_field_name ] );
-
-		// The form carried the honeypot, but the secret comment field was stripped.
 		if ( is_null( $plugin_field ) ) {
-			$_POST['ab_spam__invalid_request'] = 1;
+			if ( ! HoneypotField::injection_failed() ) {
+				$_POST['ab_spam__invalid_request'] = 1;
+			}
 
 			return;
 		}

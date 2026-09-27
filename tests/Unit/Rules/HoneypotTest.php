@@ -54,9 +54,15 @@ class HoneypotTest extends AbstractRuleTestCase {
 				},
 			]
 		);
+		$injection_failed = false;
+
 		$honeypot_helper = mock( 'overload:' . \AntispamBee\Helpers\Honeypot::class );
 		$honeypot_helper->allows( 'get_secret_name_for_post' )->andReturns( 'd7dcf95a06' );
-		$honeypot_helper->allows( 'get_marker_name_for_post' )->andReturns( 'm4rk3rf13' );
+		$honeypot_helper->allows( 'injection_failed' )->andReturnUsing(
+			function () use ( &$injection_failed ) {
+				return $injection_failed;
+			}
+		);
 
 		$_POST = [];
 
@@ -74,30 +80,24 @@ class HoneypotTest extends AbstractRuleTestCase {
 		$_SERVER = [ 'SCRIPT_NAME' => '/wp-comments-post.php' ];
 
 		/*
-		 * Without the marker the form never carried the honeypot, so the rule must
-		 * stay silent instead of returning a final, unappealable spam verdict.
+		 * A bot posting the fields core expects straight to wp-comments-post.php,
+		 * without ever using the rendered form. This is what the honeypot is the
+		 * gate for, so it has to be caught.
 		 */
-		Honeypot::precheck();
-		self::assertArrayNotHasKey(
-			'ab_spam__invalid_request',
-			$_POST,
-			'a form without the honeypot marker must not be treated as an invalid request'
-		);
-
-		// Marker present but the secret field stripped: that is a real bot signal.
 		$_POST = [
-			'm4rk3rf13' => '1',
-			'comment'   => 'H1dd3n',
+			'comment'         => 'Your point of view caught my eye.',
+			'author'          => 'Bot',
+			'email'           => 'bot@example.com',
+			'comment_post_ID' => '433',
 		];
 		Honeypot::precheck();
 		self::assertSame(
 			1,
 			$_POST['ab_spam__invalid_request'],
-			'a stripped secret field on an injected form should be detected'
+			'a submission without the secret field should be treated as an invalid request'
 		);
 
 		$_POST = [
-			'm4rk3rf13'  => '1',
 			'd7dcf95a06' => 'S3cr3t',
 			'comment'    => 'H1dd3n',
 		];
@@ -105,24 +105,33 @@ class HoneypotTest extends AbstractRuleTestCase {
 		self::assertSame( 1, $_POST['ab_spam__hidden_field'], 'Non-empty hidden field not detected' );
 
 		$_POST = [
-			'm4rk3rf13'  => '1',
 			'd7dcf95a06' => 'S3cr3t',
 			'comment'    => '',
 		];
 		Honeypot::precheck();
-		self::assertSame(
-			[ 'comment' => 'S3cr3t' ],
-			$_POST,
-			'Secret was not moved to hidden field, or the marker was left behind'
-		);
+		self::assertSame( [ 'comment' => 'S3cr3t' ], $_POST, 'Secret was not moved to hidden field' );
 
 		// Honeypot field entirely absent while the secret field is present.
 		$_POST = [
-			'm4rk3rf13'  => '1',
 			'd7dcf95a06' => 'S3cr3t',
 		];
 		Honeypot::precheck();
 		self::assertSame( 1, $_POST['ab_spam__hidden_field'], 'Missing hidden field not detected' );
 
+		/*
+		 * The server could not place the honeypot into the form it rendered, so a
+		 * genuine comment arrives without the secret field and must not be judged.
+		 */
+		$injection_failed = true;
+
+		$_POST = [
+			'comment' => 'A genuine comment.',
+		];
+		Honeypot::precheck();
+		self::assertSame(
+			[ 'comment' => 'A genuine comment.' ],
+			$_POST,
+			'a form the honeypot could not be injected into must not be judged by it'
+		);
 	}
 }
