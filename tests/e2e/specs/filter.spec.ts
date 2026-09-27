@@ -92,6 +92,34 @@ test.describe( 'Spam filter mechanisms', () => {
 		await expect( page.locator( 'body' ) ).toContainText( 'Lisa Simpson' );
 	} );
 
+	test( 'a comment posted straight to wp-comments-post.php is an invalid request', async ( {
+		page,
+	} ) => {
+		// Like the bots that got past 3.0.0-beta.3: fetch the post, then send the
+		// fields core expects without ever using the rendered form, so the
+		// honeypot's secret field is missing.
+		await page.goto( '/?p=1' );
+		const response = await page.request.post( '/wp-comments-post.php', {
+			form: {
+				comment:
+					'Your point of view caught my eye and was very interesting. Thanks. I have a question for you.',
+				author: 'Registrera',
+				email: '8982894@example.com',
+				url: 'https://example.com/futures/ref?code=GGYHGRE',
+				comment_post_ID: '1',
+			},
+			maxRedirects: 0,
+		} );
+		expect( response.status() ).toBe( 302 );
+
+		await adminLogin( page );
+		await page.goto( '/wp-admin/edit-comments.php?comment_status=spam' );
+		await expect( page.locator( 'body' ) ).toContainText( 'Registrera' );
+		await expect( page.locator( 'body' ) ).toContainText(
+			'Invalid Request'
+		);
+	} );
+
 	test( 'local spam DB flags comment from same IP', async ( { page } ) => {
 		test.setTimeout( 90_000 );
 
