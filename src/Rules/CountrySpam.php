@@ -288,8 +288,15 @@ class CountrySpam extends ControllableBase implements SpamReason {
 			return '';
 		}
 
-		$value  = strtoupper( $value );
-		$values = explode( ',', $value );
+		/*
+		 * Split on the same separators `verify()` parses with. The field is a
+		 * textarea, and Antispam Bee 2.x accepted spaces and semicolons as well, so
+		 * a list entered one code per line is entirely ordinary. Splitting on the
+		 * comma alone turned such a list into a single over-long token, which
+		 * `Sanitize::iso_codes()` then discarded — the option was saved empty and
+		 * country filtering silently stopped doing anything.
+		 */
+		$values = preg_split( '/[\s,;]+/', strtoupper( $value ), -1, PREG_SPLIT_NO_EMPTY ) ?: [];
 		$values = Sanitize::iso_codes( $values );
 
 		return implode( ',', $values );
