@@ -14,6 +14,20 @@ if ( ! defined( 'AntispamBee\PLUGIN_PATH' ) ) {
 }
 
 /**
+ * A rule written exactly to the contract `docs/adding-rules.md` documents:
+ * extends `Base`, implements `SpamReason`, and defines no `get_name()`.
+ */
+class RulesTestRuleWithoutName extends Base {
+	protected static $slug = 'test-no-name';
+
+	public static $score = 0;
+
+	public static function verify( array $item ): int {
+		return self::$score;
+	}
+}
+
+/**
  * Non-final test rule with a configurable score that counts its calls.
  */
 class RulesTestNonFinalRule extends Base {
@@ -189,5 +203,25 @@ class RulesTest extends TestCase {
 		$rules = new Rules( ContentTypeHelper::COMMENT_TYPE );
 
 		self::assertFalse( $rules->apply( [] ), 'a score matching the ham threshold should not be spam' );
+	}
+
+	/**
+	 * `get()` selects rules on `Verifiable`, which declares `get_slug()` but not
+	 * `get_name()`. A rule following the documented contract therefore has no
+	 * `get_name()`, and calling it while logging fataled the public comment
+	 * endpoint.
+	 */
+	public function test_rule_without_get_name_does_not_fatal() {
+		expectApplied( 'antispam_bee_rules' )
+			->andReturn( [ RulesTestRuleWithoutName::class ] );
+		RulesTestRuleWithoutName::$score = 1;
+
+		$rules = new Rules( ContentTypeHelper::COMMENT_TYPE );
+
+		self::assertTrue(
+			$rules->apply( [] ),
+			'a rule that implements only Verifiable must be usable'
+		);
+		self::assertSame( [ 'test-no-name' ], $rules->get_spam_reasons() );
 	}
 }
