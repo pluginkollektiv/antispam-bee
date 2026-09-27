@@ -9,6 +9,7 @@ namespace AntispamBee;
 
 use AntispamBee\Admin\CommentsColumns;
 use AntispamBee\Admin\DashboardWidgets;
+use AntispamBee\Admin\HoneypotNotice;
 use AntispamBee\Admin\MigrationFailureNotice;
 use AntispamBee\Admin\PreReleaseNotice;
 use AntispamBee\Admin\SettingsPage;
@@ -62,6 +63,7 @@ function init(): void {
 		MigrationFailureNotice::class,
 		PreReleaseNotice::class,
 		SiteHealth::class,
+		HoneypotNotice::class,
 		DeleteSpamCron::class,
 		Settings::class,
 		// Handlers.
