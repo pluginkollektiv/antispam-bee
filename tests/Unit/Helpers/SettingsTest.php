@@ -53,4 +53,34 @@ class SettingsTest extends TestCase {
 
 		self::assertTrue( true, 'the cache callbacks should accept the arguments their hooks pass' );
 	}
+
+	/**
+	 * The walkers take a reference into each path segment, and doing that to a
+	 * scalar is an uncatchable fatal. The settings save walks paths built from
+	 * submitted keys, so a stored scalar where an array is expected must not be
+	 * able to bring the request down.
+	 */
+	public function test_setting_a_value_below_a_scalar_replaces_it(): void {
+		$options = [ 'comment' => 'a scalar where a section is expected' ];
+
+		Settings::set_array_value_by_path( 'comment.rule_asb_honeypot_active', 'on', $options );
+
+		self::assertSame(
+			[ 'comment' => [ 'rule_asb_honeypot_active' => 'on' ] ],
+			$options,
+			'the scalar should be replaced by the section it was blocking'
+		);
+	}
+
+	public function test_removing_a_key_below_a_scalar_is_a_no_op(): void {
+		$options = [ 'comment' => 'a scalar where a section is expected' ];
+
+		Settings::remove_array_key_by_path( 'comment.rule_asb_honeypot_active', $options );
+
+		self::assertSame(
+			[ 'comment' => 'a scalar where a section is expected' ],
+			$options,
+			'there is nothing below a scalar to remove, so it should be left alone'
+		);
+	}
 }
