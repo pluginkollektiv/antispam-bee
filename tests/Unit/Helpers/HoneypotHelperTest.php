@@ -77,6 +77,119 @@ class HoneypotHelperTest extends TestCase {
 	}
 
 	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_supports_input_field(): void {
+		$name   = Honeypot::get_secret_name_for_post();
+		$markup = '<input type="text" id="comment" name="comment" class="my-class">';
+
+		$result = Honeypot::inject( $markup, [ 'field_id' => 'comment' ] );
+
+		// The visible input must keep its id and class, only the name becomes
+		// the secret, and a hidden honeypot input with the comment name follows.
+		self::assertStringContainsString(
+			'<input type="text" id="comment" name="' . $name . '" class="my-class">',
+			$result,
+			'The visible input should keep its id and class and get the secret name'
+		);
+		self::assertStringContainsString( 'aria-hidden="true"', $result, 'The honeypot input should be hidden' );
+		self::assertStringContainsString( 'name="comment"', $result, 'The honeypot bait name should survive' );
+		self::assertStringContainsString(
+			'name="' . Honeypot::get_marker_name_for_post() . '" value="1"',
+			$result,
+			'An input-based form should include the honeypot marker'
+		);
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_supports_unquoted_input_field(): void {
+		$name   = Honeypot::get_secret_name_for_post();
+		$markup = '<input type="text" id=comment name=comment class="my-class">';
+
+		$result = Honeypot::inject( $markup, [ 'field_id' => 'comment' ] );
+
+		self::assertStringContainsString(
+			'name="' . $name . '" class="my-class"><input name="comment"',
+			$result,
+			'Unquoted attributes should keep the class intact and append a hidden honeypot with the comment name'
+		);
+		self::assertStringContainsString( 'aria-hidden="true"', $result, 'The honeypot input should be hidden' );
+		self::assertStringContainsString( 'name="comment"', $result, 'The honeypot bait name should survive' );
+	}
+
+	/**
+	 * A data-name attribute must not be mistaken for the comment field's name,
+	 * so the rewrite has to hit the real name attribute only.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_rewrites_the_real_name_when_a_data_name_attribute_precedes_it(): void {
+		$name   = Honeypot::get_secret_name_for_post();
+		$markup = '<input type="text" data-name="honeypot-decoy" id="comment" name="comment">';
+
+		$result = Honeypot::inject( $markup, [ 'field_id' => 'comment' ] );
+
+		self::assertStringContainsString(
+			'data-name="honeypot-decoy"',
+			$result,
+			'The data-name attribute should keep its value'
+		);
+		self::assertStringContainsString(
+			'name="' . $name . '"',
+			$result,
+			'The real name attribute should become the secret'
+		);
+		self::assertStringNotContainsString(
+			'name="' . $name . '-decoy"',
+			$result,
+			'The rewrite must not corrupt the data-name attribute'
+		);
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_ignores_prefixed_input_field(): void {
+		$name   = Honeypot::get_secret_name_for_post();
+		$markup = '<input type="text" id="comment-extra" name="comment-extra"><input type="text" id="comment" name="comment">';
+
+		$result = Honeypot::inject( $markup, [ 'field_id' => 'comment' ] );
+
+		self::assertStringContainsString( 'id="comment-extra" name="comment-extra">', $result, 'The prefixed input should be left untouched' );
+		self::assertStringContainsString( 'id="comment"', $result, 'The comment input should keep its id' );
+		self::assertStringContainsString( 'name="' . $name . '"', $result, 'The comment input should get the secret name' );
+		self::assertStringContainsString( 'aria-hidden="true"', $result, 'A honeypot should be appended after the comment input' );
+	}
+
+	/**
+	 * An id and name carrying regex metacharacters must still match the literal
+	 * attribute value instead of being interpreted as a pattern.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_handles_regex_metacharacters_in_the_field_id_and_name(): void {
+		$id     = 'comment.body';
+		$name   = 'comment[body]';
+		$markup = '<input type="text" id="' . $id . '" name="' . $name . '">';
+
+		$result = Honeypot::inject( $markup, [ 'field_id' => $id ] );
+
+		self::assertStringContainsString(
+			'name="' . Honeypot::get_secret_name_for_post() . '"',
+			$result,
+			'A field id and name with regex metacharacters should still be rewritten'
+		);
+		self::assertStringContainsString( 'aria-hidden="true"', $result, 'A honeypot should be appended' );
+	}
+
+	/**
 	 * Antispam Bee 2.x derived the field names from the raw salt with this exact
 	 * chain, so a site upgrading keeps the names it already rendered — including
 	 * the ones sitting in a page cache. Hashing or shortening the salt first would

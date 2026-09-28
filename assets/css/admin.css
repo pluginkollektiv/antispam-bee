@@ -93,3 +93,7 @@
 		padding-top: 16px;
 	}
 }
+
+.asb-checkbox-group-disabled {
+	color: #8c8f94;
+}
