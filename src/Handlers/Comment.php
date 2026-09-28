@@ -29,15 +29,17 @@ class Comment extends Reaction {
 	}
 
 	/**
-	 * Run the honeypot pre-check, if the honeypot rule is active.
+	 * Run the honeypot pre-check.
+	 *
+	 * Called whether or not the rule is active: a form that was already rendered
+	 * with the honeypot in it still carries the visitor's text under the secret
+	 * field name, and `Honeypot::precheck()` is what moves it back. Skipping the
+	 * call for an inactive rule would leave such a comment empty. The rule itself
+	 * checks whether it may judge the submission.
 	 *
 	 * @return void
 	 */
 	public static function precheck_honeypot() {
-		if ( ! Honeypot::is_active( ContentTypeHelper::COMMENT_TYPE ) ) {
-			return;
-		}
-
 		Honeypot::precheck();
 	}
 
