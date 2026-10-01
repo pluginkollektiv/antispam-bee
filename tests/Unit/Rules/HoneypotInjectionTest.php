@@ -36,4 +36,67 @@ class HoneypotInjectionTest extends TestCase {
 		Honeypot::inject_honeypot_field( '<textarea id="comment" name="comment"></textarea>' );
 		Honeypot::inject_honeypot_field( '<input id="comment-text" name="comment" />' );
 	}
+
+	/**
+	 * While output buffering is on, the whole page is injected into, so the form
+	 * field filter must not inject a second time.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_the_field_filter_leaves_the_form_to_the_output_buffer(): void {
+		$settings = mock( 'alias:' . \AntispamBee\Helpers\Settings::class );
+		$settings->allows( 'get_option' )->andReturns( 'on' );
+
+		$honeypot_helper = mock( 'overload:' . \AntispamBee\Helpers\Honeypot::class );
+		$honeypot_helper->expects( 'inject' )->never();
+		$honeypot_helper->expects( 'record_injection' )->never();
+
+		$markup = '<textarea id="comment" name="comment"></textarea>';
+
+		self::assertSame( $markup, Honeypot::inject_honeypot_field( $markup ) );
+	}
+
+	/**
+	 * Every front-end page passes through the buffer, and one without a comment field
+	 * had no form to inject into, so it must not count as a failed injection.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_a_page_without_a_comment_field_is_left_alone(): void {
+		$honeypot_helper = mock( 'overload:' . \AntispamBee\Helpers\Honeypot::class );
+		$honeypot_helper->expects( 'inject' )->never();
+		$honeypot_helper->expects( 'record_injection' )->never();
+
+		$page = '<html><body><form><textarea name="comments"></textarea></form></body></html>';
+
+		self::assertSame( $page, Honeypot::inject_into_page( $page ) );
+	}
+
+	/**
+	 * A page with a comment field is injected into by field name, and the outcome is
+	 * recorded as for the form field filter.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_a_page_with_a_comment_field_is_injected_into_and_recorded(): void {
+		$page = '<html><body><form><textarea name=comment rows="8"></textarea></form></body></html>';
+
+		$honeypot_helper = mock( 'overload:' . \AntispamBee\Helpers\Honeypot::class );
+		$honeypot_helper->expects( 'inject' )
+			->once()
+			->with(
+				$page,
+				[
+					'field_id'   => 'comment',
+					'field_name' => 'comment',
+				]
+			)
+			->andReturn( $page . '<!-- injected -->' );
+		$honeypot_helper->expects( 'record_injection' )->once()->with( true );
+
+		self::assertSame( $page . '<!-- injected -->', Honeypot::inject_into_page( $page ) );
+	}
 }

@@ -92,6 +92,7 @@ final class PluginUpdateTest extends TestCase {
 				'post_processor_asb_save_reason_active' => '',
 				'rule_asb_regexp_active'               => '',
 				'rule_asb_honeypot_active'             => 'on',
+				'rule_asb_honeypot_output_buffer'      => '',
 				'rule_asb_db_spam_active'              => 'on',
 				'rule_asb_approved_email_active'       => '',
 				'rule_asb_too_fast_submit_active'      => 'on',
@@ -466,6 +467,8 @@ final class PluginUpdateTest extends TestCase {
 			'reasons_enable'           => 1,
 			'ignore_reasons'           => [ 'css', 'empty', 'server', 'lang' ],
 			'delete_data_on_uninstall' => 0,
+			// Missing means enabled in 2.x, so `0` shows the mapping reads the key.
+			'use_output_buffer'        => 0,
 			'spam_count'               => 4711,
 		];
 	}
