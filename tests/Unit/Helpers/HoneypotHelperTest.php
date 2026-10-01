@@ -238,4 +238,32 @@ class HoneypotHelperTest extends TestCase {
 			'the marker must not collide with the secret comment field'
 		);
 	}
+
+	/**
+	 * The pattern that finds the comment textarea uses the `/x` modifier, so an
+	 * unescaped `#` in the field name comments out the rest of that line and the
+	 * match silently stops working — leaving the form without a honeypot.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_inject_handles_a_field_name_with_regex_metacharacters(): void {
+		when( 'esc_attr' )->returnArg();
+		when( 'esc_js' )->returnArg();
+
+		$markup = '<textarea id="comment" name="comment[body]#x"></textarea>';
+
+		$result = Honeypot::inject( $markup, [ 'field_id' => 'comment' ] );
+
+		self::assertNotSame(
+			$markup,
+			$result,
+			'a name containing regex metacharacters must still be matched and rewritten'
+		);
+		self::assertStringContainsString(
+			Honeypot::get_marker_name_for_post(),
+			$result,
+			'the injection should have completed and emitted its marker'
+		);
+	}
 }
