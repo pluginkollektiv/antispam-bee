@@ -52,9 +52,14 @@ class Linkback extends Reaction {
 	 * rules can treat every payload value uniformly.
 	 *
 	 * @param array<string, mixed> $reaction Raw linkback data.
+	 * @param bool                 $slashed  Whether the linkback data is slashed.
 	 * @return array<string, mixed> Normalized payload.
 	 */
-	protected static function build_payload( array $reaction ): array {
+	protected static function build_payload( array $reaction, bool $slashed = true ): array {
+		if ( $slashed ) {
+			$reaction = wp_unslash( $reaction );
+		}
+
 		$url = self::scalar( $reaction['comment_author_url'] ?? '' );
 
 		return [

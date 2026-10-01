@@ -13,6 +13,20 @@ use function Brain\Monkey\Functions\when;
 class LinkbackTest extends TestCase {
 
 	/**
+	 * Stand-in for `wp_unslash()`, which strips one level of slashes recursively.
+	 *
+	 * @param mixed $value Value to unslash.
+	 * @return mixed Unslashed value.
+	 */
+	public static function stripslashes_deep( $value ) {
+		if ( is_array( $value ) ) {
+			return array_map( [ self::class, 'stripslashes_deep' ], $value );
+		}
+
+		return is_string( $value ) ? stripslashes( $value ) : $value;
+	}
+
+	/**
 	 * Invoke the protected static build_payload().
 	 *
 	 * @param array $reaction Raw reaction data.
@@ -20,6 +34,7 @@ class LinkbackTest extends TestCase {
 	 */
 	private static function build_payload( array $reaction ): array {
 		when( 'wp_parse_url' )->alias( 'parse_url' ); // used for the 'host' attribute
+		when( 'wp_unslash' )->alias( [ self::class, 'stripslashes_deep' ] );
 		$method = new \ReflectionMethod( Linkback::class, 'build_payload' );
 		$method->setAccessible( true );
 
