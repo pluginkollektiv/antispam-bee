@@ -22,7 +22,7 @@ class SaveReason extends ControllableBase {
 	/**
 	 * The spam reasons to persist once the comment has been saved.
 	 *
-	 * Carried between `process()` and `save_reasons()`, because `comment_post`
+	 * Carried between `process()` and `save_reasons()`, because `wp_insert_comment`
 	 * hands the callback nothing but the comment ID.
 	 *
 	 * @var array<int, string>
@@ -50,7 +50,7 @@ class SaveReason extends ControllableBase {
 
 		self::$reasons = (array) $item['asb_reasons'];
 
-		add_action( 'comment_post', [ self::class, 'save_reasons' ] );
+		add_action( 'wp_insert_comment', [ self::class, 'save_reasons' ] );
 
 		return $item;
 	}
@@ -63,6 +63,8 @@ class SaveReason extends ControllableBase {
 	 * @return void
 	 */
 	public static function save_reasons( $comment_id ) {
+		remove_action( 'wp_insert_comment', [ self::class, 'save_reasons' ] );
+
 		add_comment_meta(
 			$comment_id,
 			'antispam_bee_reason',
