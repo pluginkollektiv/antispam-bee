@@ -116,6 +116,20 @@ class HoneypotTest extends AbstractRuleTestCase {
 			'Secret was not moved to hidden field, or the marker was left behind'
 		);
 
+		// A form filler that writes 0 into every field it does not recognise has
+		// still filled the decoy in, even though `empty( '0' )` is true.
+		$_POST = [
+			'm4rk3rf13'  => '1',
+			'd7dcf95a06' => 'S3cr3t',
+			'comment'    => '0',
+		];
+		Honeypot::precheck();
+		self::assertSame(
+			1,
+			$_POST['ab_spam__hidden_field'],
+			'a honeypot containing the literal string "0" must count as filled in'
+		);
+
 		// Honeypot field entirely absent while the secret field is present.
 		$_POST = [
 			'm4rk3rf13'  => '1',

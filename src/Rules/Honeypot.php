@@ -131,8 +131,14 @@ class Honeypot extends ControllableBase implements SpamReason {
 			return;
 		}
 
-		// The honeypot field was not present in $_POST data or was filled out.
-		if ( is_null( $hidden_field ) || ! empty( $hidden_field ) ) {
+		/*
+		 * The honeypot field was not present in $_POST data or was filled out.
+		 * Compared against the empty string rather than with `empty()`, which
+		 * treats the string "0" as empty — a form filler that writes 0 into every
+		 * field it does not recognise would otherwise pass the decoy untouched.
+		 * Whitespace still counts as filled in, as it did before.
+		 */
+		if ( is_null( $hidden_field ) || '' !== (string) $hidden_field ) {
 			$_POST['ab_spam__hidden_field'] = 1;
 
 			return;
