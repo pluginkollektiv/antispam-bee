@@ -34,6 +34,10 @@
     * Enhancement: New `antispam_bee_country_spam_ip` filter to change which address the country
       rule looks up — mask it differently, send the original one for a more precise country, or
       return an empty string to skip the lookup
+    * Fix: The "Trust approved commenters" rule now matches the author name and the email
+      address together, the way WordPress core does for its own "Comment author must have a
+      previously approved comment" setting, instead of trusting every submission that carries a
+      known email address. A commenter who has a user account is matched by that account
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -70,6 +74,11 @@
     * Verbesserung: Neuer Filter `antispam_bee_country_spam_ip`, um die Adresse zu ändern, die die
       Länder-Regel abfragt – anders maskieren, die ursprüngliche Adresse für ein genaueres Land
       senden oder mit einem leeren String die Abfrage ganz überspringen
+    * Fix: Die Regel „Bereits freigeschalteten Kommentatoren vertrauen“ prüft nun Autorenname
+      und E-Mail-Adresse gemeinsam, so wie es WordPress selbst für die Einstellung
+      „Kommentar-Autor muss einen zuvor genehmigten Kommentar haben“ tut, statt jeder
+      Einsendung mit einer bekannten E-Mail-Adresse zu vertrauen. Ein Kommentator mit
+      Benutzerkonto wird über dieses Konto erkannt
 
 ### 2.11.12 ###
 
