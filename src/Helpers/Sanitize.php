@@ -77,11 +77,21 @@ class Sanitize {
 		$tabs = self::get_tab_slugs();
 
 		foreach ( $tabs as $tab ) {
+			/*
+			 * `sanitize_controllables()` and the whole read path normalise a
+			 * reaction type the same way, so a hyphenated one is sanitised into and
+			 * later read from the underscored branch. Storing it under the raw key
+			 * instead would split the two apart: the sanitised branch would be
+			 * discarded and the raw posted data kept, never having passed a
+			 * sanitize callback.
+			 */
+			$storage_key = str_replace( '-', '_', $tab );
+
 			if ( ! isset( $options[ $tab ] ) ) {
 				$options[ $tab ] = [];
 			}
-			$sanitized_options       = self::sanitize_controllables( $options, $tab );
-			$current_options[ $tab ] = $sanitized_options[ $tab ] ?? [];
+			$sanitized_options               = self::sanitize_controllables( $options, $tab );
+			$current_options[ $storage_key ] = $sanitized_options[ $storage_key ] ?? [];
 		}
 
 		return $current_options;

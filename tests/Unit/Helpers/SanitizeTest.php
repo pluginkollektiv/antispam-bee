@@ -3,8 +3,37 @@
 namespace AntispamBee\Tests\Unit\Helpers;
 
 use AntispamBee\Helpers\Sanitize;
+use AntispamBee\Rules\ControllableBase;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
+use function Brain\Monkey\Filters\expectApplied;
 use function Brain\Monkey\Functions\when;
+
+/**
+ * A third-party rule registering a reaction type whose name contains a hyphen.
+ */
+class SanitizeTestHyphenatedRule extends ControllableBase {
+	protected static $slug = 'test-hyphenated';
+
+	public static function verify( array $item ): int {
+		return 0;
+	}
+
+	public static function get_name(): string {
+		return 'Hyphenated test rule';
+	}
+
+	public static function get_label(): ?string {
+		return 'Hyphenated test rule';
+	}
+
+	public static function get_description(): ?string {
+		return null;
+	}
+
+	public static function get_supported_types(): array {
+		return [ 'my-type' ];
+	}
+}
 
 /**
  * Unit tests for {@see Sanitize}.
@@ -80,5 +109,40 @@ class SanitizeTest extends TestCase {
 				"Posting $description should be discarded rather than raise a TypeError"
 			);
 		}
+	}
+
+	/**
+	 * The read path normalises a reaction type to underscores, so the save has to
+	 * store it the same way. Keeping the raw, hyphenated key split the two apart:
+	 * the sanitised branch was discarded and the raw posted data was persisted
+	 * without ever passing a sanitize callback.
+	 */
+	public function test_hyphenated_reaction_type_is_stored_under_the_normalised_key(): void {
+		// Report the database as current so the v2 migration stays out of this test.
+		when( 'get_file_data' )->justReturn( [ 'Version' => '3.0.0' ] );
+		when( 'get_option' )->alias(
+			function ( $name, $default = false ) {
+				return 'antispambee_db_version' === $name ? '3.0.0' : [];
+			}
+		);
+		expectApplied( 'antispam_bee_rules' )->andReturn( [ SanitizeTestHyphenatedRule::class ] );
+		expectApplied( 'antispam_bee_post_processors' )->andReturn( [] );
+
+		$sanitized = Sanitize::sanitize_options(
+			[
+				'my-type' => [ 'rule_test_hyphenated_active' => '<script>alert(1)</script>' ],
+			]
+		);
+
+		self::assertArrayNotHasKey(
+			'my-type',
+			$sanitized,
+			'the raw hyphenated key must not be persisted alongside the normalised one'
+		);
+		self::assertArrayHasKey(
+			'my_type',
+			$sanitized,
+			'the reaction type should be stored under the key the read path uses'
+		);
 	}
 }
