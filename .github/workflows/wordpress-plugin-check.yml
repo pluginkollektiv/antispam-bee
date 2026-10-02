@@ -26,9 +26,16 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    # `wp dist-archive` names the zip and its top-level directory after the checkout
+    # directory, which is the repository name. Bound once here so the shell steps below
+    # read it from the environment instead of having it spliced into the script.
+    env:
+      PLUGIN_SLUG: ${{ github.event.repository.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup PHP
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
@@ -58,11 +65,11 @@ jobs:
 
       - name: Build the plugin archive
         run: |
-          wp dist-archive . ./${{ github.event.repository.name }}.zip
+          wp dist-archive . "./$PLUGIN_SLUG.zip"
           mkdir tmp-build
-          unzip -q ${{ github.event.repository.name }}.zip -d tmp-build
+          unzip -q "$PLUGIN_SLUG.zip" -d tmp-build
 
       - name: Run plugin check
         uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
         with:
-          build-dir: ./tmp-build/${{ github.event.repository.name }}
+          build-dir: ./tmp-build/${{ env.PLUGIN_SLUG }}

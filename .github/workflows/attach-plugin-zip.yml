@@ -49,13 +49,15 @@ jobs:
         # which is what gives the archive its `antispam-bee/` top-level directory.
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           ref: ${{ github.event.release.tag_name || inputs.tag }}
 
       - name: Setup PHP and install production dependencies
         # The archive ships `vendor/autoload.php` and `vendor/composer/`, so the
         # autoloader inside it has to be the production one. `vendor/` is not committed,
         # so this step is what puts it there in the first place.
-        uses: ./.github/actions/setup-php
+        # See the `self-repository` note on the `workflows` job in static-analysis.yml.
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.3'
           tools: 'composer, wp-cli'
