@@ -19,14 +19,14 @@ class Select extends Field implements RenderElement {
 	 */
 	public function render(): void {
 		$value    = $this->get_value();
-		$multiple = isset( $this->option['multiple'] ) && $this->option['multiple'];
+		$multiple = $this->option->is_multiple();
 
 		printf(
 			'<select name="%s"%s>',
 			esc_attr( $this->get_name() . ( $multiple ? '[]' : '' ) ),
 			$multiple ? ' multiple' : ''
 		);
-		foreach ( $this->option['options'] as $key => $label ) {
+		foreach ( $this->option->get_choices() as $key => $label ) {
 			$is_selected = is_array( $value )
 				? in_array( (string) $key, array_map( 'strval', $value ), true )
 				: (string) $key === (string) $value;

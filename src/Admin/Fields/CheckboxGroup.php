@@ -20,8 +20,8 @@ class CheckboxGroup extends Field implements RenderElement {
 	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 
-		$options = $this->option['options'] ?? [];
-		if ( ! is_array( $options ) ) {
+		$options = $this->option->get_choices();
+		if ( empty( $options ) ) {
 			return;
 		}
 

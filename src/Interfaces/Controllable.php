@@ -7,6 +7,8 @@
 
 namespace AntispamBee\Interfaces;
 
+use AntispamBee\Admin\Fields\FieldOptions;
+
 /**
  * Common interface for controllable elements.
  * This can be options, processors, or rules.
@@ -35,24 +37,11 @@ interface Controllable {
 	public static function get_description(): ?string;
 
 	/**
-	 * First thoughts on how a rule can specify what kind of advanced option it is. If `type` is no callable,
-	 * ASB takes care of rendering the option. If it is a callable, the rule has to take care of rendering, loading
-	 * the data, saving.
-	 * [
-	 *   [
-	 *     'type' => 'textarea|radio|checkbox|input|select|callable',
-	 *       'input_type' => 'email|password|number...',
-	 *     *   'label' => 'asb_deny_langcodes',
-	 *       'option_name' => 'asb_deny_langcodes',
-	 *       'options' => [ [ 'value' => 1, 'label' => 'Option 1' ], [ 'value' => 2, 'label' => 'Option 2' ] ],
-	 *       'multiple' => true,
-	 *       'placeholder' => 'My placeholder text',
-	 *       'default' => 'Default value',
-	 *       'sanitize' => callable,
-	 *       'persist' => callable,
-	 *       'load' => callable,
-	 *   ]
-	 * ]
+	 * Get the advanced options for this element.
+	 *
+	 * Each option is a {@see FieldOptions} value object that the admin UI
+	 * renders. Build them via the {@see FieldBuilder} factory so the available
+	 * keys stay typed and discoverable.
 	 *
 	 * A `sanitize` callback is handed the posted value exactly as it arrived, so it
 	 * has to accept `mixed`. Nothing guarantees the shape a request submits — a
@@ -61,7 +50,7 @@ interface Controllable {
 	 * Returning `null` removes the option, so discarding an unusable value is
 	 * always possible.
 	 *
-	 * @return array<int, array<string, mixed>>|null A list of advanced options, or null.
+	 * @return array<int, FieldOptions>|null A list of advanced options, or null.
 	 */
 	public static function get_options(): ?array;
 
