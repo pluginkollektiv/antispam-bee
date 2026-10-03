@@ -151,15 +151,22 @@ class Comment extends Reaction {
 		}
 
 		/*
-		 * Only filled in when the caller did not supply one. Core does the same
-		 * (`wp_new_comment()` falls back to REMOTE_ADDR only for an absent value), so
-		 * importers, migrations and plugins that pass a historical or explicit IP keep
-		 * it. An unusable REMOTE_ADDR is left alone rather than written back as an
-		 * empty string: `IpHelper::get_client_ip()` returns '' for anything
-		 * `FILTER_VALIDATE_IP` rejects, such as a zone-scoped IPv6 address, and storing
-		 * that would drop an IP core would have kept.
+		 * Re-resolved whenever the caller did not supply one, or supplied exactly what
+		 * `wp_new_comment()` already filled in from `REMOTE_ADDR` before this runs (core
+		 * has done so unconditionally since WP 5.6, which otherwise makes the `empty()`
+		 * case below unreachable in a real comment path and leaves `pre_comment_user_ip`
+		 * - the documented way to supply an IP from a trusted proxy header - without any
+		 * effect). Importers, migrations and plugins that pass a historical or distinct
+		 * IP are unaffected, since theirs will not match raw `REMOTE_ADDR`. An unusable
+		 * REMOTE_ADDR is left alone rather than written back as an empty string:
+		 * `IpHelper::get_client_ip()` returns '' for anything `FILTER_VALIDATE_IP`
+		 * rejects, such as a zone-scoped IPv6 address, and storing that would drop an IP
+		 * core would have kept.
 		 */
-		if ( empty( $reaction['comment_author_IP'] ) ) {
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		$remote_addr = isset( $_SERVER['REMOTE_ADDR'] ) ? wp_unslash( $_SERVER['REMOTE_ADDR'] ) : null;
+
+		if ( empty( $reaction['comment_author_IP'] ) || $reaction['comment_author_IP'] === $remote_addr ) {
 			$client_ip = IpHelper::get_client_ip();
 
 			if ( '' !== $client_ip ) {
