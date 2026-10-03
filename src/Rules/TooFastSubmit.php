@@ -53,28 +53,46 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 			return $field_markup;
 		}
 
-		// The timestamp is set again client-side below, because the rendered value is
-		// frozen for as long as a page cache serves this form. On a client that does
-		// not run the script the rendered value survives, and behind a cache it is
-		// always old enough to clear the limit, so the rule lets the reaction pass
-		// rather than rejecting a visitor whose browser it cannot measure.
+		/*
+		 * ab_init_time is the server's own clock and is left untouched by the script
+		 * below: it is the fallback for a client that does not run JavaScript, and
+		 * behind a page cache it is always old enough to clear the limit, so the rule
+		 * lets the reaction pass rather than rejecting a visitor whose browser it
+		 * cannot measure.
+		 *
+		 * ab_elapsed_time is filled in by the script at submit time, as the number of
+		 * seconds between render and submission measured entirely by the client's own
+		 * clock. Comparing it to the time limit below never mixes the client's and
+		 * server's clocks, so clock skew between them - in either direction - cannot
+		 * affect the result, unlike a comparison against an absolute timestamp from
+		 * either clock.
+		 *
+		 * performance.now(), not Date.now(), measures it: Date.now() is a wall clock
+		 * and can jump backwards mid-session if the OS corrects it (NTP sync on a
+		 * device that booted with the wrong time), which would otherwise yield a
+		 * negative duration. performance.now() is monotonic - unaffected by wall-clock
+		 * adjustments - precisely because it is not tied to wall-clock time at all.
+		 */
 		$unique_id = uniqid( 'antispam-bee-time-' );
 		$script    = sprintf(
 			'<script>(function() {
-				var time = Math.floor(Date.now() / 1000),
-					timeField = document.querySelector(\'input[data-unique-id="%s"]\');
+				var start = performance.now(),
+					elapsedField = document.querySelector(\'input[data-unique-id="%s"]\'),
+					form = elapsedField ? elapsedField.closest(\'form\') : null;
 
-				if (timeField) {
-					timeField.value = time;
+				if (form) {
+					form.addEventListener(\'submit\', function() {
+						elapsedField.value = Math.floor((performance.now() - start) / 1000);
+					});
 				}
 			}());</script>',
 			$unique_id
 		);
 
 		return $field_markup . sprintf(
-			'<input type="hidden" name="ab_init_time" data-unique-id="%s" value="%d" />%s',
-			$unique_id,
+			'<input type="hidden" name="ab_init_time" value="%d" /><input type="hidden" name="ab_elapsed_time" data-unique-id="%s" value="" />%s',
 			time(),
+			$unique_id,
 			$script
 		);
 	}
@@ -93,14 +111,46 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 	public static function verify( array $item ): int {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Everybody can Post.
-		if ( ! isset( $_POST['ab_init_time'] ) ) {
-			return 0;
+		if ( isset( $_POST['ab_elapsed_time'] ) && '' !== wp_unslash( $_POST['ab_elapsed_time'] ) ) {
+			// Measured entirely by the client's own clock (two performance.now() reads,
+			// differenced), so client/server clock skew cannot affect it either way -
+			// unlike comparing an absolute timestamp from one clock against the other.
+			$dwell_time = (int) wp_unslash( $_POST['ab_elapsed_time'] );
+
+			// A negative value is impossible for a correctly functioning client (the
+			// script uses performance.now(), which cannot go backwards) and is a sign
+			// of a forged or malfunctioning value, not a fast submission - fail open
+			// rather than let it reach the comparison below, where it would otherwise
+			// always classify as spam regardless of magnitude.
+			if ( $dwell_time < 0 ) {
+				return 0;
+			}
+		} else {
+			if ( ! isset( $_POST['ab_init_time'] ) ) {
+				return 0;
+			}
+			$init_time = (int) $_POST['ab_init_time'];
+			if ( 0 === $init_time ) {
+				return 0;
+			}
+
+			$dwell_time = time() - $init_time;
+
+			/*
+			 * No ab_elapsed_time means a client that did not run the script (or a form
+			 * cached from before it existed): ab_init_time is the server's own clock, so
+			 * comparing it to time() below is normally skew-free too. The one exception
+			 * is a page cached from before this fallback existed, whose script rewrote
+			 * ab_init_time to the client's clock - a negative computed dwell time is a
+			 * sign of that stale cached page (or any other clock mismatch between render
+			 * and submission), not a fast submission, so fail open instead of
+			 * misclassifying it. Mirrors the guard on the ab_elapsed_time branch above.
+			 */
+			if ( $dwell_time < 0 ) {
+				return 0;
+			}
 		}
-		$init_time = (int) $_POST['ab_init_time'];
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
-		if ( 0 === $init_time ) {
-			return 0;
-		}
 
 		/**
 		 * Filters the minimum time (in seconds) a form has to stay open before submission.
@@ -113,13 +163,9 @@ class TooFastSubmit extends ControllableBase implements SpamReason {
 		 * @param int $action_time_limit The minimum number of seconds. Default 5.
 		 */
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-		$action_time_limit = apply_filters( 'antispam_bee_action_time_limit', 5 );
+		$action_time_limit = (int) apply_filters( 'antispam_bee_action_time_limit', 5 );
 
-		if ( time() - $init_time < $action_time_limit ) {
-			return 1;
-		}
-
-		return 0;
+		return (int) ( $dwell_time < $action_time_limit );
 	}
 
 	/**
