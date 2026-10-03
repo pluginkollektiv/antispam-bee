@@ -158,6 +158,49 @@ class LangSpamTest extends AbstractRuleTestCase {
 		);
 	}
 
+	public function test_verify_detected_lang_filter_does_not_flag_an_undetermined_language(): void {
+		$this->expect_no_request();
+
+		expectApplied( 'antispam_bee_detected_lang' )
+			->once()
+			->andReturn( 'und' );
+
+		self::assertSame(
+			0,
+			LangSpam::verify( self::make_comment_with( '中文' ) ),
+			'A language the filter could not determine should not be flagged, same as the API path'
+		);
+	}
+
+	public function test_verify_detected_lang_filter_maps_a_macrolanguage_member_code(): void {
+		$this->expect_no_request();
+		$this->allowed_languages = [ 'zh' => 'on' ];
+
+		expectApplied( 'antispam_bee_detected_lang' )
+			->once()
+			->andReturn( 'cmn' );
+
+		self::assertSame(
+			0,
+			LangSpam::verify( self::make_comment_with( '中文' ) ),
+			'A macrolanguage member code from the filter should be mapped the same as the API path'
+		);
+	}
+
+	public function test_verify_detected_lang_filter_fails_open_on_a_non_string_return(): void {
+		$this->expect_no_request();
+
+		expectApplied( 'antispam_bee_detected_lang' )
+			->once()
+			->andReturn( [ 'zh' ] );
+
+		self::assertSame(
+			0,
+			LangSpam::verify( self::make_comment_with( '中文' ) ),
+			'A non-string return from the filter must not reach LangHelper::map() or the comparison'
+		);
+	}
+
 	/**
 	 * Set up the test environment.
 	 *
