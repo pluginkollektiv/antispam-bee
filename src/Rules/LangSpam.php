@@ -102,8 +102,7 @@ class LangSpam extends ControllableBase implements SpamReason {
 					[ 'body' => (string) wp_json_encode( [ 'body' => $comment_text ] ) ]
 				);
 
-				if ( is_wp_error( $response )
-					|| wp_remote_retrieve_response_code( $response ) !== 200 ) {
+				if ( self::response_failed( $response ) ) {
 					return null;
 				}
 

@@ -85,4 +85,15 @@ abstract class ControllableBase extends Base implements Controllable {
 	public static function only_print_custom_options(): bool {
 		return static::$only_print_custom_options;
 	}
+
+	/**
+	 * Whether a remote lookup response counts as failed.
+	 *
+	 * @param array<string, mixed>|\WP_Error $response Response from a `wp_safe_remote_*()` call.
+	 *
+	 * @return bool Whether the response is a `WP_Error` or did not return HTTP 200.
+	 */
+	protected static function response_failed( $response ): bool {
+		return is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200;
+	}
 }

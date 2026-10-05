@@ -133,11 +133,7 @@ class CountrySpam extends ControllableBase implements SpamReason {
 					$args
 				);
 
-				if ( is_wp_error( $response ) ) {
-					return null;
-				}
-
-				if ( wp_remote_retrieve_response_code( $response ) !== 200 ) {
+				if ( self::response_failed( $response ) ) {
 					return null;
 				}
 
