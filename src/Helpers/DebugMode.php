@@ -35,10 +35,17 @@ class DebugMode {
 
 		$date        = date( 'Y-m-d' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 		$time        = date( 'H-i-s' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-		$content_dir = WP_CONTENT_DIR;
+		$content_dir = defined( 'ANTISPAM_BEE_DEBUG_MODE_LOG_DIR' ) ? ANTISPAM_BEE_DEBUG_MODE_LOG_DIR : WP_CONTENT_DIR;
 		$suffix      = self::get_log_file_suffix();
 
 		if ( null === $suffix ) {
+			return;
+		}
+
+		if ( ! is_dir( $content_dir ) ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug use.
+			error_log( "The directory set for Antispam Bee debug logging does not exist: {$content_dir}" );
+
 			return;
 		}
 
