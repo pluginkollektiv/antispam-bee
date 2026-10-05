@@ -115,6 +115,7 @@ class CommentTest extends TestCase {
 		$is_admin     = false;
 		$can_moderate = false;
 		$skip_filter  = null;
+		$trusted_ip   = null;
 
 		stubs(
 			[
@@ -140,13 +141,17 @@ class CommentTest extends TestCase {
 			}
 		);
 		when( 'apply_filters' )->alias(
-			function ( $hook, $value = null ) use ( &$skip_filter ) {
+			function ( $hook, $value = null ) use ( &$skip_filter, &$trusted_ip ) {
 				if ( 'antispam_bee_skip_comment_verification' === $hook && null !== $skip_filter ) {
 					return $skip_filter;
 				}
 
 				if ( 'antispam_bee_rules' === $hook ) {
 					return [ CommentTestCountingRule::class ];
+				}
+
+				if ( 'pre_comment_user_ip' === $hook && null !== $trusted_ip ) {
+					return $trusted_ip;
 				}
 
 				return $value;
@@ -230,6 +235,27 @@ class CommentTest extends TestCase {
 		);
 		self::assertSame( '203.0.113.9', $result['comment_author_IP'], 'A valid IP must not be clobbered with an empty string' );
 		$_SERVER['REMOTE_ADDR'] = '192.0.2.100';
+		$processed();
+
+		/*
+		 * Since WP 5.6, `wp_new_comment()` fills `comment_author_IP` from `REMOTE_ADDR`
+		 * before `preprocess_comment` runs, so a real comment never arrives with an empty
+		 * value - the `pre_comment_user_ip` filter (the documented way to supply a
+		 * trusted-proxy IP) must still apply in that case, or it would have no effect.
+		 */
+		$trusted_ip = '203.0.113.55';
+		$result     = Comment::process(
+			[
+				'comment_type'      => 'comment',
+				'comment_author_IP' => '192.0.2.100',
+			]
+		);
+		self::assertSame(
+			'203.0.113.55',
+			$result['comment_author_IP'],
+			'pre_comment_user_ip must apply when core already filled in REMOTE_ADDR'
+		);
+		$trusted_ip = null;
 		$processed();
 
 		// A reaction of another type is left untouched.
