@@ -43,56 +43,64 @@ class SendEmail extends ControllableBase {
 			return $item;
 		}
 
-		add_action(
-			'comment_post',
-			function ( $id ) use ( $item ) {
-				$comment = get_comment( $id, ARRAY_A );
+		/*
+		 * Hooked to wp_insert_comment rather than comment_post, which fires for
+		 * every insertion channel (including the REST API, which never reaches
+		 * comment_post). The callback unhooks itself once it has run, so a later,
+		 * unrelated comment inserted in the same request cannot inherit this
+		 * item's notification.
+		 */
+		$callback = null;
+		$callback = function ( $id ) use ( $item, &$callback ): void {
+			remove_action( 'wp_insert_comment', $callback );
 
-				if ( empty( $comment ) ) {
-					return;
-				}
+			$comment = get_comment( $id, ARRAY_A );
 
-				$post = get_post( $comment['comment_post_ID'] );
-				if ( ! $post ) {
-					return;
-				}
-
-				$subject = self::get_subject();
-
-				// Body.
-				$body = self::get_body( $post, $comment, $item );
-
-				wp_mail(
-				/**
-				 * Filters the recipients of the spam notification email.
-				 *
-				 * By default the notification is sent to the site’s admin email
-				 * address. Use this filter to send it to additional or different
-				 * recipients.
-				 *
-				 * @since 2.8.0
-				 *
-				 * @param array $recipients The list of recipient email addresses.
-				 */
-					apply_filters(
-						'antispam_bee_notification_recipients',
-						[ get_bloginfo( 'admin_email' ) ]
-					),
-					/**
-					 * Filters the subject of the spam notification email.
-					 *
-					 * @since 2.5.7
-					 *
-					 * @param string $subject The email subject line.
-					 */
-					apply_filters(
-						'antispam_bee_notification_subject',
-						$subject
-					),
-					$body
-				);
+			if ( empty( $comment ) ) {
+				return;
 			}
-		);
+
+			$post = get_post( $comment['comment_post_ID'] );
+			if ( ! $post ) {
+				return;
+			}
+
+			$subject = self::get_subject();
+
+			// Body.
+			$body = self::get_body( $post, $comment, $item );
+
+			wp_mail(
+			/**
+			 * Filters the recipients of the spam notification email.
+			 *
+			 * By default the notification is sent to the site’s admin email
+			 * address. Use this filter to send it to additional or different
+			 * recipients.
+			 *
+			 * @since 2.8.0
+			 *
+			 * @param array $recipients The list of recipient email addresses.
+			 */
+				apply_filters(
+					'antispam_bee_notification_recipients',
+					[ get_bloginfo( 'admin_email' ) ]
+				),
+				/**
+				 * Filters the subject of the spam notification email.
+				 *
+				 * @since 2.5.7
+				 *
+				 * @param string $subject The email subject line.
+				 */
+				apply_filters(
+					'antispam_bee_notification_subject',
+					$subject
+				),
+				$body
+			);
+		};
+		add_action( 'wp_insert_comment', $callback );
 
 		return $item;
 	}

@@ -45,16 +45,24 @@ class SaveReason extends ControllableBase {
 			return $item;
 		}
 
-		add_action(
-			'comment_post',
-			function ( $comment_id ) use ( $item ) {
-				add_comment_meta(
-					$comment_id,
-					'antispam_bee_reason',
-					implode( ',', (array) $item['asb_reasons'] )
-				);
-			}
-		);
+		/*
+		 * Hooked to wp_insert_comment rather than comment_post, which fires for
+		 * every insertion channel (including the REST API, which never reaches
+		 * comment_post). The callback unhooks itself once it has run, so a later,
+		 * unrelated comment inserted in the same request cannot inherit this
+		 * item's reasons.
+		 */
+		$callback = null;
+		$callback = function ( $comment_id ) use ( $item, &$callback ): void {
+			remove_action( 'wp_insert_comment', $callback );
+
+			add_comment_meta(
+				$comment_id,
+				'antispam_bee_reason',
+				implode( ',', (array) $item['asb_reasons'] )
+			);
+		};
+		add_action( 'wp_insert_comment', $callback );
 
 		return $item;
 	}
