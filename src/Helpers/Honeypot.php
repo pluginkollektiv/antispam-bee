@@ -261,8 +261,8 @@ class Honeypot {
 
 				$honeypot_attrs = sprintf(
 					'name="%1$s" aria-hidden="true" aria-label="hp-comment" autocomplete="new-password" tabindex="-1" style="%2$s"',
-					$honeypot_name,
-					$honeypot_styles
+					esc_attr( $honeypot_name ),
+					esc_attr( $honeypot_styles )
 				);
 
 				$markup = preg_replace_callback(
