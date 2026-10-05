@@ -87,3 +87,37 @@ test.describe( 'Honeypot status in Site Health', () => {
 		await expect( page.getByText( WARNING ) ).toHaveCount( 0 );
 	} );
 } );
+
+test.describe( 'Honeypot notice on the settings page', () => {
+	const SETTINGS_PAGE = '/wp-admin/options-general.php?page=antispam_bee';
+	const NOTICE =
+		'The Antispam Bee honeypot could not be added to your comment form.';
+
+	test( 'a comment form without the honeypot is reported on the settings page only', async ( {
+		page,
+		cli,
+	} ) => {
+		resetHoneypotState( cli );
+		await commentThroughCustomForm( page );
+
+		await adminLogin( page );
+		await page.goto( SETTINGS_PAGE );
+		await expect( page.getByText( NOTICE ) ).toBeVisible();
+
+		await page.goto( '/wp-admin/index.php' );
+		await expect( page.getByText( NOTICE ) ).toHaveCount( 0 );
+	} );
+
+	test( 'the notice goes away once a comment form carries the honeypot', async ( {
+		page,
+		cli,
+	} ) => {
+		resetHoneypotState( cli );
+		await commentThroughCustomForm( page );
+		await page.goto( '/?p=1' );
+
+		await adminLogin( page );
+		await page.goto( SETTINGS_PAGE );
+		await expect( page.getByText( NOTICE ) ).toHaveCount( 0 );
+	} );
+} );
