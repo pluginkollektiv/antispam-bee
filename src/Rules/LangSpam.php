@@ -54,12 +54,24 @@ class LangSpam extends ControllableBase implements SpamReason {
 		 *
 		 * @since 2.8.2
 		 *
-		 * @param null   $detected_language The detected language.
-		 * @param string $comment_text      The text, to detect the language.
+		 * @param string|null $detected_language The detected language code, or null to run the built-in detection.
+		 * @param string      $comment_text      The text, to detect the language.
 		 */
 		$detected_language = apply_filters( 'antispam_bee_detected_lang', null, $comment_text );
 		if ( null !== $detected_language ) {
-			return (int) ! in_array( $detected_language, $allowed_languages, true );
+			/*
+			 * Normalize exactly like the API path below: a callback on this filter can
+			 * return any code the detection service itself could have, including "und"
+			 * for "could not determine" (no reason to assume spam) and a macrolanguage
+			 * member code that LangHelper::map() resolves to the ISO 639-1 code the
+			 * allowed-languages setting is expressed in. A non-string return is treated
+			 * as "no result", the same as the API path falling through on a bad response.
+			 */
+			if ( ! is_string( $detected_language ) || '' === $detected_language || 'und' === $detected_language ) {
+				return 0;
+			}
+
+			return (int) ! in_array( LangHelper::map( $detected_language ), $allowed_languages, true );
 		}
 
 		if ( ! self::has_enough_text_for_detection( $comment_text ) ) {
