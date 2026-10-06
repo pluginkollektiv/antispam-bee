@@ -46,7 +46,7 @@ class UpdateSpamLog extends Base {
 			return $item;
 		}
 
-		$log_file = self::get_log_file();
+		$log_file = static::get_log_file();
 
 		if (
 			null === $log_file
@@ -55,6 +55,68 @@ class UpdateSpamLog extends Base {
 			return $item;
 		}
 
+		$entry = static::uses_legacy_format()
+			? self::get_legacy_entry( $item, $ip )
+			: self::get_filtered_entry( $item, $ip );
+
+		if ( '' === $entry ) {
+			return $item;
+		}
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- WP_Filesystem cannot perform an atomic FILE_APPEND | LOCK_EX write to the log file.
+		file_put_contents(
+			$log_file,
+			$entry . PHP_EOL,
+			FILE_APPEND | LOCK_EX
+		);
+
+		return $item;
+	}
+
+	/**
+	 * Whether the active log file came from the deprecated `ANTISPAM_BEE_LOG_FILE`
+	 * constant rather than `ANTISPAM_BEE_SPAM_LOG`.
+	 *
+	 * @return bool Whether the pre-3.0 line format applies.
+	 */
+	protected static function uses_legacy_format(): bool {
+		return null === LogPath::resolve( 'ANTISPAM_BEE_SPAM_LOG', 'ANTISPAM_BEE_SPAM_LOG_DIR', self::LOG_PREFIX )
+			&& defined( 'ANTISPAM_BEE_LOG_FILE' )
+			&& \ANTISPAM_BEE_LOG_FILE;
+	}
+
+	/**
+	 * Build the log entry in the pre-3.0 format.
+	 *
+	 * Written only for `ANTISPAM_BEE_LOG_FILE`, and kept byte-for-byte identical to
+	 * what Antispam Bee 2.x wrote — no filters are applied to it — so that a jail
+	 * with `marked as spam$` keeps matching after the upgrade.
+	 *
+	 * @param array<string, mixed> $item Item that was marked as spam.
+	 * @param string               $ip   IP address the item was submitted from.
+	 *
+	 * @return string The log entry, without a trailing newline.
+	 */
+	private static function get_legacy_entry( array $item, string $ip ): string {
+		return sprintf(
+			'%s comment for post=%d from host=%s marked as spam',
+			current_time( 'mysql' ),
+			isset( $item['comment_post_ID'] ) ? (int) $item['comment_post_ID'] : 0,
+			$ip
+		);
+	}
+
+	/**
+	 * Build the log entry for an item and run it through the filters the new format
+	 * added, forcing the result onto a single line.
+	 *
+	 * @param array<string, mixed> $item Item that was marked as spam.
+	 * @param string               $ip   IP address the item was submitted from.
+	 *
+	 * @return string The log entry, without a trailing newline, or an empty string
+	 *                 if the filter asked for the item to be skipped.
+	 */
+	private static function get_filtered_entry( array $item, string $ip ): string {
 		$entry = self::get_entry( $item, $ip );
 
 		/**
@@ -71,25 +133,13 @@ class UpdateSpamLog extends Base {
 		$entry = apply_filters( 'antispam_bee_spam_log_entry', $entry, $item );
 
 		if ( ! is_string( $entry ) ) {
-			return $item;
+			return '';
 		}
 
 		// A filtered entry must stay a single line, otherwise it breaks every log parser reading the file.
 		$single_line = preg_replace( '/\s+/', ' ', $entry );
-		$entry       = null === $single_line ? '' : trim( $single_line );
 
-		if ( '' === $entry ) {
-			return $item;
-		}
-
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- WP_Filesystem cannot perform an atomic FILE_APPEND | LOCK_EX write to the log file.
-		file_put_contents(
-			$log_file,
-			$entry . PHP_EOL,
-			FILE_APPEND | LOCK_EX
-		);
-
-		return $item;
+		return null === $single_line ? '' : trim( $single_line );
 	}
 
 	/**
