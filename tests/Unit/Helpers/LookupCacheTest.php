@@ -60,7 +60,7 @@ class LookupCacheTest extends TestCase {
 		$lookup = function () use ( &$calls ) {
 			++$calls;
 
-			return null;
+			return LookupCache::service_failed();
 		};
 
 		self::assertNull( LookupCache::remember( 'country', '203.0.113.0', $lookup ) );
@@ -171,7 +171,7 @@ class LookupCacheTest extends TestCase {
 		$lookup = function () use ( &$calls ) {
 			++$calls;
 
-			return null;
+			return LookupCache::service_failed();
 		};
 
 		self::assertNull( LookupCache::remember( 'lang', 'one comment', $lookup ) );
@@ -183,6 +183,26 @@ class LookupCacheTest extends TestCase {
 		self::assertSame( 1, $calls, 'the service should be contacted once while it is down' );
 	}
 
+	/**
+	 * A service that answers successfully but has nothing to say about a given
+	 * subject is not the same as an outage: only {@see LookupCache::service_failed()}
+	 * may disable the whole namespace. A rule that returns plain `null` for "no
+	 * data" must not have every other subject's lookup skipped for it.
+	 */
+	public function test_a_null_result_is_not_mistaken_for_an_outage(): void {
+		$calls  = 0;
+		$lookup = function () use ( &$calls ) {
+			++$calls;
+
+			return null;
+		};
+
+		self::assertNull( LookupCache::remember( 'country', '203.0.113.0', $lookup ) );
+		self::assertNull( LookupCache::remember( 'country', '198.51.100.0', $lookup ) );
+
+		self::assertSame( 2, $calls, 'a plain null result must not disable the lookup for other subjects' );
+	}
+
 	public function test_an_outage_of_one_kind_does_not_stop_another(): void {
 		$lang_calls = 0;
 		$geo_calls  = 0;
@@ -190,7 +210,7 @@ class LookupCacheTest extends TestCase {
 		LookupCache::remember( 'lang', 'a comment', function () use ( &$lang_calls ) {
 			++$lang_calls;
 
-			return null;
+			return LookupCache::service_failed();
 		} );
 		LookupCache::remember( 'country', '203.0.113.0', function () use ( &$geo_calls ) {
 			++$geo_calls;

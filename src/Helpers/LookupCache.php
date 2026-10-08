@@ -37,14 +37,36 @@ class LookupCache {
 	private static $memo = [];
 
 	/**
+	 * Sentinel the lookup callback returns to signal that the service itself
+	 * failed — a network error, a non-200 response — as opposed to answering
+	 * successfully with nothing usable in it.
+	 *
+	 * Only this value triggers the namespace-wide cooldown. `null` and anything
+	 * else the callback returns is cached as an ordinary, successful result: a
+	 * response that simply carries no usable data (a geolocation service with no
+	 * entry for a given address range, for example) is not an outage, and must
+	 * not disable the lookup for every other visitor for the length of the
+	 * cooldown.
+	 *
+	 * @return object The sentinel. Identical on every call, so `===` finds it.
+	 */
+	public static function service_failed(): object {
+		static $marker;
+
+		return $marker ?? $marker = new \stdClass();
+	}
+
+	/**
 	 * Return a cached lookup result, performing the lookup when there is none.
 	 *
 	 * @param string   $namespace Identifies the kind of lookup, e.g. `country`.
 	 * @param string   $key       Identifies the subject of the lookup. Hashed before use.
-	 * @param callable $lookup    Performs the lookup. Returning `null` marks it as failed,
-	 *                            which is cached too, for a shorter time.
+	 * @param callable $lookup    Performs the lookup. Return {@see self::service_failed()} to
+	 *                            mark the service itself as unavailable, which is cached too,
+	 *                            for a shorter time, and disables the whole namespace for it.
+	 *                            Any other value, including `null`, is cached as a normal result.
 	 *
-	 * @return mixed The lookup result, or null when it failed.
+	 * @return mixed The lookup result, or null when the service is in its cooldown.
 	 */
 	public static function remember( string $namespace, string $key, callable $lookup ) {
 		/*
@@ -90,11 +112,18 @@ class LookupCache {
 			return null;
 		}
 
-		$value = $lookup();
-		$ttl   = self::ttl( $namespace, null === $value );
+		$value  = $lookup();
+		$failed = self::service_failed() === $value;
+		$ttl    = self::ttl( $namespace, $failed );
 
-		if ( null === $value && $ttl > 0 ) {
-			set_transient( $cooldown, 1, $ttl );
+		if ( $failed ) {
+			if ( $ttl > 0 ) {
+				set_transient( $cooldown, 1, $ttl );
+			}
+
+			self::$memo[ $name ] = null;
+
+			return null;
 		}
 
 		if ( $ttl > 0 ) {

@@ -78,7 +78,7 @@ class ValidGravatar extends ControllableBase {
 				);
 
 				if ( is_wp_error( $response ) ) {
-					return null;
+					return LookupCache::service_failed();
 				}
 
 				// Stored as a string, so that "no gravatar" is cached as well.
