@@ -47,6 +47,9 @@
       WordPress stores it in. An author name or email address containing a quote or a
       backslash — `O'Brien`, for example — is matched correctly by the "Trust approved
       commenters" and local spam database rules instead of being missed
+    * Fix: The spam log no longer rejects a Windows absolute path (`C:\...`) for
+      `ANTISPAM_BEE_LOG_FILE`, which silently disabled logging — and with it the documented
+      Fail2Ban setup — on every Windows/IIS install
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -98,6 +101,9 @@
       einem Anführungszeichen oder einem Backslash – etwa `O'Brien` – wird von den Regeln
       „Bereits freigeschalteten Kommentatoren vertrauen“ und „Lokale Spam-Datenbank“ korrekt
       erkannt, statt übersehen zu werden
+    * Fix: Das Spam-Log lehnt einen absoluten Windows-Pfad (`C:\...`) für `ANTISPAM_BEE_LOG_FILE`
+      nicht mehr ab – dies deaktivierte die Protokollierung und damit auch das dokumentierte
+      Fail2Ban-Setup stillschweigend auf jeder Windows/IIS-Installation
 
 ### 2.11.12 ###
 
