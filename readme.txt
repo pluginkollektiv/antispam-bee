@@ -69,6 +69,31 @@ Whether Antispam Bee works with a comment form submitted via AJAX depends on how
 
 If the comments are sent to the `admin-ajax.php`, the `antispam_bee_disallow_ajax_calls` filter must be used to run ASB for requests to that file as well. If the script does not send all form data to the file, but only some selected ones, further customization is probably necessary, as [exemplified in this post by Torsten Landsiedel](https://torstenlandsiedel.de/2020/10/04/ajaxifizierte-kommentare-und-antispam-bee/) (in German).
 
+### The honeypot field is visible on my site, which uses a strict Content Security Policy. What can I do? ###
+Antispam Bee hides its honeypot field with inline styles. If your site sends a Content Security Policy that does not allow inline styles (a `style-src` directive without `'unsafe-inline'`), the browser drops those styles and the field becomes visible to your visitors.
+
+Use the `antispam_bee_honeypot_styles` filter to return an empty string, so no inline styles are rendered at all:
+
+`
+add_filter( 'antispam_bee_honeypot_styles', '__return_empty_string' );
+`
+
+Then hide the field from your own stylesheet, which your policy already allows:
+
+`
+[aria-label="hp-comment"] {
+    padding: 0 !important;
+    clip: rect(1px, 1px, 1px, 1px) !important;
+    position: absolute !important;
+    white-space: nowrap !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden !important;
+}
+`
+
+The honeypot deliberately copies the id and the name of the real comment field, so `aria-label="hp-comment"` is the attribute to select it by. The same filter can also be used to return a modified set of styles instead of an empty one. Do not hide the field with `display: none` or `visibility: hidden`, as many spam bots skip fields hidden that way, which is exactly what the honeypot needs them not to do.
+
 ### How can I customize the regular expressions used for spam detection? ###
 The "Regular Expression" rule ships with a set of built-in patterns that can be adjusted via the `antispam_bee_patterns` filter. Every pattern is an array of subject fields (`ip`, `host`, `rawurl`, `body`, `email`, `author`, `useragent`) mapped to a regular expression without delimiters. All fields of a pattern must match for a reaction to be flagged as spam.
 
