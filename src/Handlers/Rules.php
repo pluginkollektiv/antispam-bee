@@ -16,6 +16,9 @@ use ReflectionException;
 
 /**
  * Rules.
+ *
+ * @internal Third-party code should use {@see \AntispamBee\Api\SpamCheck} instead.
+ *           This class is an implementation detail and may change in any release.
  */
 class Rules {
 
@@ -126,6 +129,10 @@ class Rules {
 	 */
 	public function apply( array $item ): bool {
 		$rules = self::get( $this->reaction_type, true );
+
+		if ( empty( $rules ) ) {
+			DebugMode::log( "No active rule for reaction type {$this->reaction_type}, the item was not checked." );
+		}
 
 		/**
 		 * Filters the score threshold below which a reaction is considered no spam.
