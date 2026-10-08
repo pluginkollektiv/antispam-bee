@@ -37,12 +37,17 @@ class UpdateSpamLog extends Base {
 			return $item;
 		}
 
+		// Read through constant(), not the bare constant name: the latter is declared
+		// as a literal string for static analysis (see phpstan-bootstrap.php), which
+		// would make the is_string() check below a tautology there, masking the real,
+		// dynamic wp-config.php value this is actually guarding against.
+		$log_file = defined( 'ANTISPAM_BEE_LOG_FILE' ) ? constant( 'ANTISPAM_BEE_LOG_FILE' ) : null;
+
 		if (
-			! defined( 'ANTISPAM_BEE_LOG_FILE' )
-			|| ! ANTISPAM_BEE_LOG_FILE
-			|| validate_file( ANTISPAM_BEE_LOG_FILE ) !== 0
+			! is_string( $log_file )
+			|| '' === $log_file
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- WP_Filesystem cannot perform an atomic FILE_APPEND | LOCK_EX write to the log file.
-			|| ! is_writable( ANTISPAM_BEE_LOG_FILE )
+			|| ! is_writable( $log_file )
 		) {
 			return $item;
 		}
@@ -76,7 +81,7 @@ class UpdateSpamLog extends Base {
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- WP_Filesystem cannot perform an atomic FILE_APPEND | LOCK_EX write to the log file.
 		file_put_contents(
-			ANTISPAM_BEE_LOG_FILE,
+			$log_file,
 			$entry . PHP_EOL,
 			FILE_APPEND | LOCK_EX
 		);

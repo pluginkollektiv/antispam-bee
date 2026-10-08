@@ -170,6 +170,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
     * Fix: The country rule no longer asks the geolocation service about loopback, link-local and private addresses, which have no country anyway
     * Fix: The regular expression rule no longer raises a PHP warning when the author or the content of a comment is not valid UTF-8
     * Enhancement: New `antispam_bee_country_spam_ip` filter to change which address the country rule looks up — mask it differently, send the original one for a more precise country, or return an empty string to skip the lookup
+    * Fix: The spam log no longer rejects a Windows absolute path (`C:\...`) for `ANTISPAM_BEE_LOG_FILE`, which silently disabled logging — and with it the documented Fail2Ban setup — on every Windows/IIS install
 
 ### 2.11.12 ###
   * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)

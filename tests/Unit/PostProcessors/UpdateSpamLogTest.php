@@ -5,6 +5,7 @@ namespace AntispamBee\Tests\Unit\PostProcessors;
 use AntispamBee\PostProcessors\UpdateSpamLog;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 use function Brain\Monkey\Filters\expectApplied;
+use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\stubs;
 
 if ( ! defined( 'ANTISPAM_BEE_LOG_FILE' ) ) {
@@ -23,8 +24,7 @@ class UpdateSpamLogTest extends TestCase {
 
 		stubs(
 			[
-				'current_time'  => '2026-01-15 10:23:45',
-				'validate_file' => 0,
+				'current_time' => '2026-01-15 10:23:45',
 			]
 		);
 	}
@@ -42,6 +42,25 @@ class UpdateSpamLogTest extends TestCase {
 	 */
 	private function get_log(): string {
 		return (string) file_get_contents( ANTISPAM_BEE_LOG_FILE );
+	}
+
+	/**
+	 * `ANTISPAM_BEE_LOG_FILE` is trusted `wp-config.php` input, not a relative
+	 * name a theme/plugin editor writes, so there is nothing for `validate_file()`
+	 * to usefully constrain — and its Windows-drive-letter code used to reject
+	 * every absolute Windows path, breaking logging on every such install.
+	 */
+	public function test_does_not_consult_validate_file(): void {
+		expect( 'validate_file' )->never();
+
+		UpdateSpamLog::process(
+			[
+				'reaction_type'     => 'comment',
+				'comment_post_ID'   => 474,
+				'comment_author_IP' => '192.0.2.42',
+				'asb_reasons'       => [ 'asb-honeypot' ],
+			]
+		);
 	}
 
 	public function test_logs_a_comment_with_its_spam_reason(): void {
