@@ -7,16 +7,16 @@ use Yoast\WPTestUtils\BrainMonkey\TestCase;
 use function Brain\Monkey\Functions\stubs;
 
 /**
- * Covers the `ANTISPAM_BEE_LOG_FILE` path guard.
+ * Covers the deprecated `ANTISPAM_BEE_LOG_FILE` constant's path guard.
  *
  * `validate_file()` exists to constrain a relative path a theme/plugin editor
- * writes; `ANTISPAM_BEE_LOG_FILE` is already fully trusted `wp-config.php`
- * input, so rejecting every code it reports — including the one for a
- * Windows absolute drive path (`validate_file( 'C:\...' )` returns 2) — broke
- * spam logging on every Windows/IIS install without ever running on Windows:
- * the guard was dropped entirely, so any path shape a real filesystem accepts
- * is now written to. A literal `C:\...` path cannot be exercised end-to-end
- * on the Linux test runner, so this covers the one invalid `validate_file()`
+ * writes; a resolved log path is already fully trusted `wp-config.php` input,
+ * so rejecting every code it reports — including the one for a Windows
+ * absolute drive path (`validate_file( 'C:\...' )` returns 2) — broke spam
+ * logging on every Windows/IIS install without ever running on Windows: the
+ * guard was dropped entirely, so any path shape a real filesystem accepts is
+ * now written to. A literal `C:\...` path cannot be exercised end-to-end on
+ * the Linux test runner, so this covers the one invalid `validate_file()`
  * code that *can* be realised on both: a path containing an interior `../`.
  *
  * A constant cannot be undefined once it is set, so this needs its own
@@ -58,8 +58,9 @@ class UpdateSpamLogWindowsPathTest extends TestCase {
 			]
 		);
 
+		// The deprecated constant writes the pre-3.0 line, unaffected by this change.
 		self::assertSame(
-			'2026-01-15T10:23:45+00:00 ip=192.0.2.42 type=comment post=474 reasons=asb-honeypot' . PHP_EOL,
+			'2026-01-15 10:23:45 comment for post=474 from host=192.0.2.42 marked as spam' . PHP_EOL,
 			(string) file_get_contents( $dir . '/asb-spam.log' ),
 			'a path containing ../ should no longer be rejected outright'
 		);
