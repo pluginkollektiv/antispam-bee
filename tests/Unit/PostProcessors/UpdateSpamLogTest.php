@@ -45,9 +45,9 @@ class UpdateSpamLogTest extends TestCase {
 	}
 
 	/**
-	 * `ANTISPAM_BEE_LOG_FILE` is trusted `wp-config.php` input, not a relative
-	 * name a theme/plugin editor writes, so there is nothing for `validate_file()`
-	 * to usefully constrain — and its Windows-drive-letter code used to reject
+	 * The resolved path is trusted `wp-config.php` input, not a relative name a
+	 * theme/plugin editor writes, so there is nothing for `validate_file()` to
+	 * usefully constrain — and its Windows-drive-letter code used to reject
 	 * every absolute Windows path, breaking logging on every such install.
 	 */
 	public function test_does_not_consult_validate_file(): void {
