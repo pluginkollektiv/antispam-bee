@@ -93,6 +93,33 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 		);
 	}
 
+	/**
+	 * The filter's own docblock invites editing a pattern field by field (to modify
+	 * or remove a single field of a default entry), which can empty one out without
+	 * removing it. `count( [] ) === count( [] )` would otherwise be true, matching
+	 * every reaction regardless of its content.
+	 */
+	public function test_verify_does_not_match_a_pattern_emptied_through_the_filter() {
+		$item           = self::make_comment();
+		$item['author'] = 'An entirely unremarkable author';
+
+		expectApplied( 'antispam_bee_patterns' )
+			->once()
+			->andReturnUsing(
+				static function ( $patterns ) {
+					$patterns['asb-spam-keywords-author'] = [];
+
+					return $patterns;
+				}
+			);
+
+		self::assertSame(
+			0,
+			RegexpSpam::verify( $item ),
+			'A pattern emptied out field by field must not match everything'
+		);
+	}
+
 	public function test_verify_allows_modifying_a_default_pattern() {
 		expectApplied( 'antispam_bee_patterns' )
 			->twice()

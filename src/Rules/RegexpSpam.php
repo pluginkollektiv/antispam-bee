@@ -167,6 +167,13 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		foreach ( $patterns as $pattern ) {
 			$hits = [];
 
+			// A pattern with no fields left to check (emptied out through the filter
+			// above) must not match by default: count( [] ) === count( [] ) would
+			// otherwise flag every reaction as spam regardless of its content.
+			if ( ! is_array( $pattern ) || ! $pattern ) {
+				continue;
+			}
+
 			foreach ( $pattern as $field => $regexp ) {
 				if ( empty( $field ) || ! in_array( $field, $fields, true ) || empty( $regexp ) ) {
 					continue;
@@ -190,7 +197,10 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 				}
 			}
 
-			if ( count( $hits ) === count( $pattern ) ) {
+			// $hits && guards the case above a second time (a pattern whose every
+			// field was skipped leaves $hits empty too), so an all-skipped entry can
+			// never satisfy count( $hits ) === count( $pattern ) by both being zero.
+			if ( $hits && count( $hits ) === count( $pattern ) ) {
 				return 1;
 			}
 		}
