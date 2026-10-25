@@ -50,6 +50,9 @@
     * Fix: The spam log no longer rejects a Windows absolute path (`C:\...`) for
       `ANTISPAM_BEE_LOG_FILE`, which silently disabled logging — and with it the documented
       Fail2Ban setup — on every Windows/IIS install
+    * Fix: The regular expression rule no longer flags every reaction as spam when a pattern
+      added or modified through the `antispam_bee_patterns` filter is emptied out field by
+      field rather than removed entirely
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -104,6 +107,9 @@
     * Fix: Das Spam-Log lehnt einen absoluten Windows-Pfad (`C:\...`) für `ANTISPAM_BEE_LOG_FILE`
       nicht mehr ab – dies deaktivierte die Protokollierung und damit auch das dokumentierte
       Fail2Ban-Setup stillschweigend auf jeder Windows/IIS-Installation
+    * Fix: Die Regular-Expression-Regel markiert nicht mehr jede Reaktion als Spam, wenn ein über
+      den Filter `antispam_bee_patterns` hinzugefügtes oder verändertes Pattern Feld für Feld
+      geleert statt vollständig entfernt wird
 
 ### 2.11.12 ###
 
