@@ -53,22 +53,26 @@ class LookupCache {
 	public static function service_failed(): object {
 		static $marker;
 
-		return $marker ?? $marker = new \stdClass();
+		if ( null === $marker ) {
+			$marker = new \stdClass();
+		}
+
+		return $marker;
 	}
 
 	/**
 	 * Return a cached lookup result, performing the lookup when there is none.
 	 *
-	 * @param string   $namespace Identifies the kind of lookup, e.g. `country`.
-	 * @param string   $key       Identifies the subject of the lookup. Hashed before use.
-	 * @param callable $lookup    Performs the lookup. Return {@see self::service_failed()} to
-	 *                            mark the service itself as unavailable, which is cached too,
-	 *                            for a shorter time, and disables the whole namespace for it.
-	 *                            Any other value, including `null`, is cached as a normal result.
+	 * @param string   $kind    Identifies the kind of lookup, e.g. `country`.
+	 * @param string   $key     Identifies the subject of the lookup. Hashed before use.
+	 * @param callable $lookup  Performs the lookup. Return {@see self::service_failed()} to
+	 *                          mark the service itself as unavailable, which is cached too,
+	 *                          for a shorter time, and disables the whole namespace for it.
+	 *                          Any other value, including `null`, is cached as a normal result.
 	 *
 	 * @return mixed The lookup result, or null when the service is in its cooldown.
 	 */
-	public static function remember( string $namespace, string $key, callable $lookup ) {
+	public static function remember( string $kind, string $key, callable $lookup ) {
 		/*
 		 * Keyed digest, not a plain hash. The transient name is written to the
 		 * options table, and the subjects are a visitor's network and a commenter's
@@ -77,7 +81,7 @@ class LookupCache {
 		 * the site. Keying it on the site's salt also means the value being looked
 		 * up cannot be used to predict — or collide with — a cache entry.
 		 */
-		$name = self::PREFIX . $namespace . '_' . substr( hash_hmac( 'sha256', $key, wp_salt( 'nonce' ) ), 0, 32 );
+		$name = self::PREFIX . $kind . '_' . substr( hash_hmac( 'sha256', $key, wp_salt( 'nonce' ) ), 0, 32 );
 
 		if ( array_key_exists( $name, self::$memo ) ) {
 			return self::$memo[ $name ];
@@ -105,7 +109,7 @@ class LookupCache {
 		 * one is different text, so an outage would cost a full request timeout on
 		 * every submission — the very thing this cache exists to prevent.
 		 */
-		$cooldown = self::PREFIX . $namespace . '_unavailable';
+		$cooldown = self::PREFIX . $kind . '_unavailable';
 		if ( false !== get_transient( $cooldown ) ) {
 			self::$memo[ $name ] = null;
 
@@ -114,7 +118,7 @@ class LookupCache {
 
 		$value  = $lookup();
 		$failed = self::service_failed() === $value;
-		$ttl    = self::ttl( $namespace, $failed );
+		$ttl    = self::ttl( $kind, $failed );
 
 		if ( $failed ) {
 			if ( $ttl > 0 ) {
@@ -138,15 +142,15 @@ class LookupCache {
 	/**
 	 * Determine how long a lookup result may be reused.
 	 *
-	 * @param string $namespace Identifies the kind of lookup.
-	 * @param bool   $failed    Whether the lookup failed.
+	 * @param string $kind   Identifies the kind of lookup.
+	 * @param bool   $failed Whether the lookup failed.
 	 *
 	 * @return int Lifetime in seconds. Zero or less disables caching.
 	 */
-	private static function ttl( string $namespace, bool $failed ): int {
+	private static function ttl( string $kind, bool $failed ): int {
 		$default = $failed ? 5 * MINUTE_IN_SECONDS : HOUR_IN_SECONDS;
 
-		if ( ! $failed && 'lang' === $namespace ) {
+		if ( ! $failed && 'lang' === $kind ) {
 			/*
 			 * Keyed on a digest of the comment, so this entry is a fingerprint of
 			 * text the site may have chosen not to store — the delete-instead-of-
@@ -164,11 +168,11 @@ class LookupCache {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param int    $ttl       Lifetime in seconds.
-		 * @param string $namespace The kind of lookup: `country`, `lang` or `gravatar`.
-		 * @param bool   $failed    Whether the lookup failed and is being cached negatively.
+		 * @param int    $ttl    Lifetime in seconds.
+		 * @param string $kind   The kind of lookup: `country`, `lang` or `gravatar`.
+		 * @param bool   $failed Whether the lookup failed and is being cached negatively.
 		 */
-		return (int) apply_filters( 'antispam_bee_lookup_cache_ttl', $default, $namespace, $failed );
+		return (int) apply_filters( 'antispam_bee_lookup_cache_ttl', $default, $kind, $failed );
 	}
 
 	/**
