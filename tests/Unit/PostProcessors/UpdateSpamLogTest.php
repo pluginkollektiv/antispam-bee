@@ -8,8 +8,8 @@ use function Brain\Monkey\Filters\expectApplied;
 use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\stubs;
 
-if ( ! defined( 'ANTISPAM_BEE_LOG_FILE' ) ) {
-	define( 'ANTISPAM_BEE_LOG_FILE', sys_get_temp_dir() . '/asb-spam-log-test.log' );
+if ( ! defined( 'ANTISPAM_BEE_SPAM_LOG' ) ) {
+	define( 'ANTISPAM_BEE_SPAM_LOG', sys_get_temp_dir() . '/asb-spam-log-test.log' );
 }
 
 /**
@@ -20,7 +20,7 @@ class UpdateSpamLogTest extends TestCase {
 	public function set_up(): void {
 		parent::set_up();
 
-		file_put_contents( ANTISPAM_BEE_LOG_FILE, '' );
+		file_put_contents( ANTISPAM_BEE_SPAM_LOG, '' );
 
 		stubs(
 			[
@@ -30,8 +30,8 @@ class UpdateSpamLogTest extends TestCase {
 	}
 
 	public function tear_down(): void {
-		if ( file_exists( ANTISPAM_BEE_LOG_FILE ) ) {
-			unlink( ANTISPAM_BEE_LOG_FILE );
+		if ( file_exists( ANTISPAM_BEE_SPAM_LOG ) ) {
+			unlink( ANTISPAM_BEE_SPAM_LOG );
 		}
 
 		parent::tear_down();
@@ -41,13 +41,13 @@ class UpdateSpamLogTest extends TestCase {
 	 * @return string The contents of the log file.
 	 */
 	private function get_log(): string {
-		return (string) file_get_contents( ANTISPAM_BEE_LOG_FILE );
+		return (string) file_get_contents( ANTISPAM_BEE_SPAM_LOG );
 	}
 
 	/**
-	 * `ANTISPAM_BEE_LOG_FILE` is trusted `wp-config.php` input, not a relative
-	 * name a theme/plugin editor writes, so there is nothing for `validate_file()`
-	 * to usefully constrain — and its Windows-drive-letter code used to reject
+	 * The resolved path is trusted `wp-config.php` input, not a relative name a
+	 * theme/plugin editor writes, so there is nothing for `validate_file()` to
+	 * usefully constrain — and its Windows-drive-letter code used to reject
 	 * every absolute Windows path, breaking logging on every such install.
 	 */
 	public function test_does_not_consult_validate_file(): void {
