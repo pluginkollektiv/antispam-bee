@@ -14,6 +14,9 @@ use ReflectionException;
 
 /**
  * Post-processors.
+ *
+ * @internal Third-party code should use {@see \AntispamBee\Api\SpamCheck::post_process()}
+ *           instead. This class is an implementation detail and may change in any release.
  */
 class PostProcessors {
 	/**
