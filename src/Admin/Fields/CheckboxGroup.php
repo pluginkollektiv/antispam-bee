@@ -38,17 +38,24 @@ class CheckboxGroup extends Field implements RenderElement {
 			$is_disabled = isset( $disabled_keys[ $key ] );
 			$label_class = $is_disabled ? ' class="asb-checkbox-group-disabled"' : '';
 			$disabled    = $is_disabled ? ' disabled' : '';
+			$field_name  = esc_attr( $this->get_name() . '[' . $key . ']' );
+			$stored      = $this->get_custom_value( $key );
 
 			printf(
 				'<label for="%1$s"%4$s>
 						<input type="checkbox" id="%1$s" name="%1$s" %2$s%5$s />%3$s
 					</label><br>',
-				esc_attr( $this->get_name() . '[' . $key . ']' ),
-				checked( 'on', $this->get_custom_value( $key ), false ),
+				$field_name,
+				checked( 'on', $stored, false ),
 				esc_html( $value ),
 				$label_class,
 				$disabled
 			);
+
+			// A disabled checkbox is not submitted and the save replaces the stored reasons, so keep a checked one.
+			if ( $is_disabled && 'on' === $stored ) {
+				printf( '<input type="hidden" name="%s" value="on" />', $field_name );
+			}
 		}
 		$this->maybe_show_description();
 	}

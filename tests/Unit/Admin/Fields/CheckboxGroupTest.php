@@ -95,6 +95,7 @@ class CheckboxGroupTest extends TestCase {
 		self::assertStringContainsString( 'type="checkbox"', $html, 'each row should render a checkbox input' );
 		self::assertStringNotContainsString( 'disabled', $html, 'no row should be disabled when disabled_keys is absent' );
 		self::assertStringNotContainsString( 'asb-checkbox-group-disabled', $html, 'no label should carry the disabled class' );
+		self::assertStringNotContainsString( 'type="hidden"', $html, 'no hidden field should be rendered when no row is disabled' );
 	}
 
 	public function test_disabled_rule_renders_disabled_input_and_label_class(): void {
@@ -139,6 +140,13 @@ class CheckboxGroupTest extends TestCase {
 		// The row is both checked (preserved user intent) and disabled (rule no longer fires).
 		self::assertStringContainsString( 'checked="checked"', $html, 'a stored choice should still render as checked' );
 		self::assertStringContainsString( 'disabled', $html, 'the row should be disabled while the rule is inactive' );
+
+		// A disabled checkbox is not submitted, so a hidden field must carry the stored value through a save.
+		self::assertStringContainsString(
+			'<input type="hidden" name="antispam_bee_options[comment][post_processor_asb_delete_for_reasons_reasons][bbcode]" value="on" />',
+			$html,
+			'a checked disabled row should post its stored value through a hidden field'
+		);
 	}
 
 	public function test_stored_off_value_renders_unchecked_but_still_disabled(): void {
@@ -156,6 +164,7 @@ class CheckboxGroupTest extends TestCase {
 
 		self::assertStringNotContainsString( 'checked="checked"', $html, 'a stored off value should not render as checked' );
 		self::assertStringContainsString( 'disabled', $html, 'the row should still be disabled while its rule is inactive' );
+		self::assertStringNotContainsString( 'type="hidden"', $html, 'an unchecked disabled row should not post a value' );
 	}
 
 	public function test_row_uses_escaped_name_and_id(): void {
