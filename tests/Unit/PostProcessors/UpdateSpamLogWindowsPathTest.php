@@ -47,7 +47,12 @@ class UpdateSpamLogWindowsPathTest extends TestCase {
 
 		define( 'ANTISPAM_BEE_LOG_FILE', $log_file );
 
-		stubs( [ 'current_time' => '2026-01-15 10:23:45' ] );
+		stubs(
+			[
+				'current_time'    => '2026-01-15 10:23:45',
+				'_doing_it_wrong' => null,
+			]
+		);
 
 		UpdateSpamLog::process(
 			[

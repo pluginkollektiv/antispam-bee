@@ -71,8 +71,13 @@ class DebugMode {
 			return $log_file;
 		}
 
-		// Deprecated since 3.0.0, use `ANTISPAM_BEE_DEBUG_LOG` instead.
 		if ( defined( 'ANTISPAM_BEE_DEBUG_MODE_ENABLED' ) && \ANTISPAM_BEE_DEBUG_MODE_ENABLED ) {
+			_doing_it_wrong(
+				'ANTISPAM_BEE_DEBUG_MODE_ENABLED',
+				esc_html__( 'The constant `ANTISPAM_BEE_DEBUG_MODE_ENABLED` is deprecated. Use `ANTISPAM_BEE_DEBUG_LOG` instead.', 'antispam-bee' ),
+				'3.0.0'
+			);
+
 			return LogPath::generate( 'ANTISPAM_BEE_DEBUG_LOG_DIR', self::LOG_PREFIX, true );
 		}
 

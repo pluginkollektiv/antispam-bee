@@ -353,6 +353,12 @@ class UpdateSpamLog extends Base {
 		$legacy = defined( 'ANTISPAM_BEE_LOG_FILE' ) ? constant( 'ANTISPAM_BEE_LOG_FILE' ) : null;
 
 		if ( is_string( $legacy ) && '' !== $legacy ) {
+			_doing_it_wrong(
+				'ANTISPAM_BEE_LOG_FILE',
+				esc_html__( 'The constant `ANTISPAM_BEE_LOG_FILE` is deprecated. Use `ANTISPAM_BEE_SPAM_LOG` instead.', 'antispam-bee' ),
+				'3.0.0'
+			);
+
 			return $legacy;
 		}
 
