@@ -45,7 +45,6 @@
 	<exclude-pattern>/build/</exclude-pattern>
 	<exclude-pattern>/vendor/</exclude-pattern>
 	<exclude-pattern>/node_modules/</exclude-pattern>
-	<exclude-pattern>/tests/</exclude-pattern>
 
 	<!-- The `<file>` list above already keeps the default run out of these, but a path
 		 passed on the command line (by an IDE, or `phpcs .`) overrides that list, so the
