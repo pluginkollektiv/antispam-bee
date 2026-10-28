@@ -10,6 +10,9 @@ namespace AntispamBee\Admin;
 use AntispamBee\Admin\Fields\Checkbox;
 use AntispamBee\Admin\Fields\CheckboxGroup;
 use AntispamBee\Admin\Fields\Field;
+use AntispamBee\Admin\Fields\FieldBuilder;
+use AntispamBee\Admin\Fields\FieldOptions;
+use AntispamBee\Admin\Fields\FieldType;
 use AntispamBee\Admin\Fields\Inline;
 use AntispamBee\Admin\Fields\Select;
 use AntispamBee\Admin\Fields\Text;
@@ -93,30 +96,21 @@ class Section {
 	 */
 	private function generate_fields( array $controllables ): void {
 		foreach ( $controllables as $controllable ) {
-			$label       = $controllable::get_label();
-			$description = $controllable::get_description();
-			$fields      = [];
+			$fields = [];
 			if ( ! $controllable::only_print_custom_options() ) {
-				$fields[] = $this->generate_field(
-					[
-						'type'        => 'checkbox',
-						'option_name' => 'active',
-						'label'       => $label,
-						'description' => $description,
-					],
-					$controllable
-				);
+				$options  = FieldBuilder::checkbox()
+					->option_name( 'active' )
+					->label( (string) $controllable::get_label() )
+					->description( (string) $controllable::get_description() );
+				$fields[] = $this->generate_field( $options, $controllable );
 			}
 
-			$options = $controllable::get_options();
-			if ( ! empty( $options ) ) {
-				foreach ( $options as $option ) {
-					$valid_for = $option['valid_for'] ?? null;
-					if ( null !== $valid_for && $this->reaction_type !== $valid_for ) {
-						continue;
-					}
-					$fields[] = $this->generate_field( $option, $controllable );
+			foreach ( (array) $controllable::get_options() as $options ) {
+				$valid_for = $options->get_valid_for();
+				if ( '' !== $valid_for && $this->reaction_type !== $valid_for ) {
+					continue;
 				}
+				$fields[] = $this->generate_field( $options, $controllable );
 			}
 
 			$this->rows[] = [
@@ -138,28 +132,27 @@ class Section {
 	/**
 	 * Generate field for a controllable item's option.
 	 *
-	 * @param array  $option       Option name.
-	 * @param string $controllable Controllable item (class name).
+	 * @param FieldOptions $options      Field options.
+	 * @param string       $controllable Controllable item (class name).
 	 *
-	 * @phpstan-param array<string, mixed>       $option
 	 * @phpstan-param class-string<Controllable> $controllable
 	 *
 	 * @return Checkbox|CheckboxGroup|Inline|Select|Text|Textarea|null The generated field, or null if the type is missing or invalid.
 	 */
-	private function generate_field( array $option, string $controllable ): ?Field {
-		switch ( $option['type'] ) {
-			case 'input':
-				return new Text( $this->reaction_type, $option, $controllable );
-			case 'select':
-				return new Select( $this->reaction_type, $option, $controllable );
-			case 'textarea':
-				return new Textarea( $this->reaction_type, $option, $controllable );
-			case 'checkbox':
-				return new Checkbox( $this->reaction_type, $option, $controllable );
-			case 'checkbox-group':
-				return new CheckboxGroup( $this->reaction_type, $option, $controllable );
-			case 'inline':
-				return new Inline( $this->reaction_type, $option, $controllable );
+	private function generate_field( FieldOptions $options, string $controllable ): ?Field {
+		switch ( $options->type() ) {
+			case FieldType::INPUT:
+				return new Text( $this->reaction_type, $options, $controllable );
+			case FieldType::SELECT:
+				return new Select( $this->reaction_type, $options, $controllable );
+			case FieldType::TEXTAREA:
+				return new Textarea( $this->reaction_type, $options, $controllable );
+			case FieldType::CHECKBOX:
+				return new Checkbox( $this->reaction_type, $options, $controllable );
+			case FieldType::CHECKBOX_GROUP:
+				return new CheckboxGroup( $this->reaction_type, $options, $controllable );
+			case FieldType::INLINE:
+				return new Inline( $this->reaction_type, $options, $controllable );
 		}
 
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log

@@ -22,12 +22,12 @@ class Inline extends Field implements RenderElement {
 	public function render(): void {
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 
-		if ( ! $this->option['input'] instanceof InjectableField ) {
+		$inject_field_object = $this->option->get_input();
+		if ( ! $inject_field_object instanceof InjectableField ) {
 			echo '';
 
 			return;
 		}
-		$inject_field_object     = $this->option['input'];
 		$inject_markup           = $inject_field_object->get_injectable_markup();
 		$label_with_inline_field = sprintf(
 			$this->get_label(),

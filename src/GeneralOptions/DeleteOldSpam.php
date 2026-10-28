@@ -7,6 +7,8 @@
 
 namespace AntispamBee\GeneralOptions;
 
+use AntispamBee\Admin\Fields\FieldBuilder;
+use AntispamBee\Admin\Fields\FieldOptions;
 use AntispamBee\Admin\Fields\Text;
 use AntispamBee\Helpers\Sanitize;
 
@@ -54,32 +56,31 @@ class DeleteOldSpam extends Base {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array<int, array<string, mixed>> The option data.
+	 * @return array<int, FieldOptions> The option data.
 	 */
 	public static function get_options(): array {
+		$days = FieldBuilder::input()
+			->input_type( 'number' )
+			->input_size( 'small' )
+			->option_name( 'delete_spam_cronjob_days' )
+			->sanitize(
+				function ( $value ) {
+					return absint( $value );
+				}
+			);
+
 		return [
-			[
-				'type'        => 'inline',
-				'input'       => new Text(
-					'general',
-					[
-						'input_type'  => 'number',
-						'input_size'  => 'small',
-						'option_name' => 'delete_spam_cronjob_days',
-						'sanitize'    => function ( $value ) {
-							return absint( $value );
-						},
-					],
-					static::class
-				),
-				'option_name' => 'active',
+			FieldBuilder::inline()
+				->input( new Text( 'general', $days, static::class ) )
+				->option_name( 'active' )
 				// translators: Number of days inserted at placeholder.
-				'label'       => esc_html__( 'Delete existing spam after %s days', 'antispam-bee' ),
-				'description' => esc_html__( 'Cleaning up the database from old entries', 'antispam-bee' ),
-				'sanitize'    => function ( $value ) {
-					return Sanitize::checkbox( $value );
-				},
-			],
+				->label( esc_html__( 'Delete existing spam after %s days', 'antispam-bee' ) )
+				->description( esc_html__( 'Cleaning up the database from old entries', 'antispam-bee' ) )
+				->sanitize(
+					function ( $value ) {
+						return Sanitize::checkbox( $value );
+					}
+				),
 		];
 	}
 }
