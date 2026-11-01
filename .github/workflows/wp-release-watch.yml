@@ -69,10 +69,11 @@ jobs:
 
       - id: compare
         name: Compare against Tested up to
+        env:
+          WP_VERSION: ${{ steps.gather.outputs.wp_version }}
+          TESTED_UP_TO: ${{ steps.gather.outputs.tested_up_to }}
+          FORCE: ${{ github.event.inputs.force || 'false' }}
         run: |
-          WP_VERSION="${{ steps.gather.outputs.wp_version }}"
-          TESTED_UP_TO="${{ steps.gather.outputs.tested_up_to }}"
-
           # sort -V is version-aware, so 6.10 sorts after 6.9. Strictly greater only, so a
           # downgrade or a garbled response cannot trigger a run.
           NEWER="false"
@@ -82,7 +83,7 @@ jobs:
           fi
 
           # A manual dispatch can force the run regardless of the comparison.
-          if [ "${{ github.event.inputs.force || 'false' }}" = 'true' ]; then
+          if [ "$FORCE" = 'true' ]; then
             NEWER="true"
           fi
 
@@ -168,10 +169,11 @@ jobs:
         id: find
         env:
           GH_TOKEN: ${{ github.token }}
+          RUN_KEY: ${{ needs.detect.outputs.run_key }}
         run: |
           ISSUE="$(
             gh issue list --repo "${{ github.repository }}" \
-              --search "in:title \"WordPress ${{ needs.detect.outputs.run_key }} compatibility\" is:issue is:open" \
+              --search "in:title \"WordPress $RUN_KEY compatibility\" is:issue is:open" \
               --state open --json number --jq '.[0].number'
           )"
           echo "issue=$ISSUE" >> "$GITHUB_OUTPUT"
@@ -179,20 +181,23 @@ jobs:
       - name: Open or comment on the tracking issue
         env:
           GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ steps.find.outputs.issue }}
+          TEST_RESULT: ${{ needs.test.result }}
+          WP_VERSION: ${{ needs.detect.outputs.wp_version }}
+          RUN_KEY: ${{ needs.detect.outputs.run_key }}
         run: |
-          ISSUE_NUMBER="${{ steps.find.outputs.issue }}"
           RUN_LINK="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          if [ "${{ needs.test.result }}" = 'success' ]; then
-            SUMMARY="green against WordPress ${{ needs.detect.outputs.wp_version }}: bump **Tested up to**, no code change needed."
+          if [ "$TEST_RESULT" = 'success' ]; then
+            SUMMARY="green against WordPress $WP_VERSION: bump **Tested up to**, no code change needed."
           else
-            SUMMARY="red against WordPress ${{ needs.detect.outputs.wp_version }}: see [the report]($RUN_LINK)."
+            SUMMARY="red against WordPress $WP_VERSION: see [the report]($RUN_LINK)."
           fi
-          BODY="Scheduled job for \`${{ needs.detect.outputs.run_key }}\`: $SUMMARY"
+          BODY="Scheduled job for \`$RUN_KEY\`: $SUMMARY"
 
           if [ -z "$ISSUE_NUMBER" ]; then
             gh issue create \
               --repo "${{ github.repository }}" \
-              --title "WordPress ${{ needs.detect.outputs.run_key }} compatibility" \
+              --title "WordPress $RUN_KEY compatibility" \
               --body "$BODY"
           else
             gh issue comment --repo "${{ github.repository }}" "$ISSUE_NUMBER" --body "$BODY"
