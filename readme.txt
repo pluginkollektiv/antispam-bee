@@ -125,7 +125,7 @@ No, Antispam Bee is free forever, for both private and commercial projects. You 
 Complete documentation is available on [pluginkollektiv.org](https://antispambee.pluginkollektiv.org/documentation/).
 
 ### Can I log detected spam for Fail2Ban? ###
-Yes. Define the constant `ANTISPAM_BEE_LOG_FILE` in your `wp-config.php` with the path to a writable file. Antispam Bee then appends one line per detected spam item:
+Yes. Define the constant `ANTISPAM_BEE_SPAM_LOG` in your `wp-config.php`. Set it to the path of a writable file to choose the name yourself, which is what a Fail2Ban jail needs, or to `true` to let Antispam Bee pick one. Antispam Bee then appends one line per detected spam item:
 
 > 2026-01-15T10:23:45+01:00 ip=192.0.2.42 type=comment post=474 reasons=asb-honeypot
 
@@ -154,6 +154,14 @@ To add a field of your own, use the `antispam_bee_spam_log_fields` filter: it re
 
 To replace the line wholesale — with CSV, JSON or anything else — use the `antispam_bee_spam_log_entry` filter, or return an empty string from it to skip an item.
 
+With `true`, the file is written to the directory in `ANTISPAM_BEE_SPAM_LOG_DIR`, or to `wp-content` when that is unset, under a name ending in a site-specific suffix — the log holds IP addresses, and `wp-content` is usually reachable from the web, so the name must not be guessable. The suffix does not change, so a Fail2Ban `logpath` keeps matching it.
+
+The older `ANTISPAM_BEE_LOG_FILE` still works, is read as a file path, and keeps writing the line it always has, unchanged by any of the above:
+
+> 2026-01-15 10:23:45 comment for post=474 from host=192.0.2.42 marked as spam
+
+It is not affected by the `antispam_bee_spam_log_fields`/`antispam_bee_spam_log_entry` filters, which only apply to `ANTISPAM_BEE_SPAM_LOG`. It will be removed in 4.0 — migrate to `ANTISPAM_BEE_SPAM_LOG` and update your Fail2Ban filter to the new format when you do.
+
 ### How can I report security bugs? ###
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/445425e4-f5dd-4404-80a7-690999f5bcb3)
 
@@ -163,7 +171,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
     * Complete code rewrite and backend UI overhaul
     * Allows extending Antispam Bee with your own rules
     * Allows using Antispam Bee rules for other reactions than comments, for example, forms
-    * The spam log now uses a `key=value` format with an ISO 8601 timestamp, records the reasons an item was detected and supports reactions other than comments. Fail2Ban filters written for the previous format need to be updated to match `ip=<HOST>`
+    * A new `ANTISPAM_BEE_SPAM_LOG` constant replaces `ANTISPAM_BEE_LOG_FILE` (still supported, unchanged, until 4.0) and writes a `key=value` format with an ISO 8601 timestamp, records the reasons an item was detected and supports reactions other than comments. Fail2Ban filters written for the previous format need to be updated to match `ip=<HOST>` once you switch
     * Fix: The language rule now also checks comments written in a script that does not delimit its words with spaces, for example Chinese, Japanese, Korean or Thai
     * Fix: The language rule no longer marks a comment as spam if the language could not be determined at all
     * Fix: IP addresses are now anonymized by masking the host portion of the address: a /24 for IPv4, the same network WordPress itself keeps, as in Antispam Bee 2.x, and a /48 for IPv6 instead of only its first two groups
