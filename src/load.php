@@ -9,6 +9,7 @@ namespace AntispamBee;
 
 use AntispamBee\Admin\CommentsColumns;
 use AntispamBee\Admin\DashboardWidgets;
+use AntispamBee\Admin\DeprecatedConstantsNotice;
 use AntispamBee\Admin\MigrationFailureNotice;
 use AntispamBee\Admin\PreReleaseNotice;
 use AntispamBee\Admin\SettingsPage;
@@ -59,6 +60,7 @@ function init(): void {
 		UpgradeNotice::class,
 		MigrationFailureNotice::class,
 		PreReleaseNotice::class,
+		DeprecatedConstantsNotice::class,
 		DeleteSpamCron::class,
 		// Handlers.
 		PluginUpdate::class,
