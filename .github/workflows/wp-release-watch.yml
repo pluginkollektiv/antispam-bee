@@ -30,8 +30,6 @@ on:
 
 permissions:
   contents: read
-  # The report job opens and comments on tracking issues.
-  issues: write
 
 concurrency:
   # Keyed off the workflow name, not the schedule id, so a manual dispatch can supersede
@@ -49,6 +47,8 @@ jobs:
       run_key: ${{ steps.compare.outputs.run_key }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - id: gather
         name: Gather current stable and Tested up to
@@ -69,10 +69,11 @@ jobs:
 
       - id: compare
         name: Compare against Tested up to
+        env:
+          WP_VERSION: ${{ steps.gather.outputs.wp_version }}
+          TESTED_UP_TO: ${{ steps.gather.outputs.tested_up_to }}
+          FORCE: ${{ github.event.inputs.force || 'false' }}
         run: |
-          WP_VERSION="${{ steps.gather.outputs.wp_version }}"
-          TESTED_UP_TO="${{ steps.gather.outputs.tested_up_to }}"
-
           # sort -V is version-aware, so 6.10 sorts after 6.9. Strictly greater only, so a
           # downgrade or a garbled response cannot trigger a run.
           NEWER="false"
@@ -82,7 +83,7 @@ jobs:
           fi
 
           # A manual dispatch can force the run regardless of the comparison.
-          if [ "${{ github.event.inputs.force || 'false' }}" = 'true' ]; then
+          if [ "$FORCE" = 'true' ]; then
             NEWER="true"
           fi
 
@@ -108,6 +109,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
@@ -122,7 +125,7 @@ jobs:
         run: npx playwright install chromium --with-deps
 
       - name: Setup PHP and install dev dependencies
-        uses: ./.github/actions/setup-php
+        uses: $/.github/actions/setup-php
         with:
           php-version: '8.5'
           extensions: mbstring, intl
@@ -163,15 +166,19 @@ jobs:
     # Runs whether the test job passes or fails, so a red suite still raises the issue.
     if: always() && needs.detect.outputs.newer == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      # Only this job opens and comments on tracking issues.
+      issues: write
     steps:
       - name: Check for an existing tracking issue
         id: find
         env:
           GH_TOKEN: ${{ github.token }}
+          RUN_KEY: ${{ needs.detect.outputs.run_key }}
         run: |
           ISSUE="$(
             gh issue list --repo "${{ github.repository }}" \
-              --search "in:title \"WordPress ${{ needs.detect.outputs.run_key }} compatibility\" is:issue is:open" \
+              --search "in:title \"WordPress $RUN_KEY compatibility\" is:issue is:open" \
               --state open --json number --jq '.[0].number'
           )"
           echo "issue=$ISSUE" >> "$GITHUB_OUTPUT"
@@ -179,20 +186,23 @@ jobs:
       - name: Open or comment on the tracking issue
         env:
           GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ steps.find.outputs.issue }}
+          TEST_RESULT: ${{ needs.test.result }}
+          WP_VERSION: ${{ needs.detect.outputs.wp_version }}
+          RUN_KEY: ${{ needs.detect.outputs.run_key }}
         run: |
-          ISSUE_NUMBER="${{ steps.find.outputs.issue }}"
           RUN_LINK="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          if [ "${{ needs.test.result }}" = 'success' ]; then
-            SUMMARY="green against WordPress ${{ needs.detect.outputs.wp_version }}: bump **Tested up to**, no code change needed."
+          if [ "$TEST_RESULT" = 'success' ]; then
+            SUMMARY="green against WordPress $WP_VERSION: bump **Tested up to**, no code change needed."
           else
-            SUMMARY="red against WordPress ${{ needs.detect.outputs.wp_version }}: see [the report]($RUN_LINK)."
+            SUMMARY="red against WordPress $WP_VERSION: see [the report]($RUN_LINK)."
           fi
-          BODY="Scheduled job for \`${{ needs.detect.outputs.run_key }}\`: $SUMMARY"
+          BODY="Scheduled job for \`$RUN_KEY\`: $SUMMARY"
 
           if [ -z "$ISSUE_NUMBER" ]; then
             gh issue create \
               --repo "${{ github.repository }}" \
-              --title "WordPress ${{ needs.detect.outputs.run_key }} compatibility" \
+              --title "WordPress $RUN_KEY compatibility" \
               --body "$BODY"
           else
             gh issue comment --repo "${{ github.repository }}" "$ISSUE_NUMBER" --body "$BODY"
