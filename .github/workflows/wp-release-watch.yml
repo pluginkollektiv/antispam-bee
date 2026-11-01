@@ -30,8 +30,6 @@ on:
 
 permissions:
   contents: read
-  # The report job opens and comments on tracking issues.
-  issues: write
 
 concurrency:
   # Keyed off the workflow name, not the schedule id, so a manual dispatch can supersede
@@ -49,6 +47,8 @@ jobs:
       run_key: ${{ steps.compare.outputs.run_key }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - id: gather
         name: Gather current stable and Tested up to
@@ -109,6 +109,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
@@ -123,7 +125,7 @@ jobs:
         run: npx playwright install chromium --with-deps
 
       - name: Setup PHP and install dev dependencies
-        uses: ./.github/actions/setup-php
+        uses: $/.github/actions/setup-php
         with:
           php-version: '8.5'
           extensions: mbstring, intl
@@ -164,6 +166,9 @@ jobs:
     # Runs whether the test job passes or fails, so a red suite still raises the issue.
     if: always() && needs.detect.outputs.newer == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      # Only this job opens and comments on tracking issues.
+      issues: write
     steps:
       - name: Check for an existing tracking issue
         id: find
