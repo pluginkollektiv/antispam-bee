@@ -92,6 +92,14 @@ class SettingsPage {
 			PLUGIN_VERSION,
 			true
 		);
+
+		wp_enqueue_script(
+			'antispam-bee-admin-reasons',
+			plugin_dir_url( MAIN_PLUGIN_FILE ) . 'assets/js/admin-reasons.js',
+			[],
+			PLUGIN_VERSION,
+			true
+		);
 	}
 
 	/**

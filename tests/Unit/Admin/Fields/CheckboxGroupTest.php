@@ -96,6 +96,7 @@ class CheckboxGroupTest extends TestCase {
 		self::assertStringNotContainsString( 'disabled', $html, 'no row should be disabled when disabled_keys is absent' );
 		self::assertStringNotContainsString( 'asb-checkbox-group-disabled', $html, 'no label should carry the disabled class' );
 		self::assertStringNotContainsString( 'type="hidden"', $html, 'no hidden field should be rendered when no row is disabled' );
+		self::assertStringNotContainsString( 'data-asb-active-field', $html, 'no row should point to a rule checkbox when active_fields is absent' );
 	}
 
 	public function test_disabled_rule_renders_disabled_input_and_label_class(): void {
@@ -165,6 +166,25 @@ class CheckboxGroupTest extends TestCase {
 		self::assertStringNotContainsString( 'checked="checked"', $html, 'a stored off value should not render as checked' );
 		self::assertStringContainsString( 'disabled', $html, 'the row should still be disabled while its rule is inactive' );
 		self::assertStringNotContainsString( 'type="hidden"', $html, 'an unchecked disabled row should not post a value' );
+	}
+
+	public function test_row_with_active_field_points_to_the_rule_checkbox(): void {
+		$option = [
+			'label'         => 'Reasons',
+			'type'          => 'checkbox-group',
+			'options'       => [ 'asb-bbcode' => 'BBCode', 'nohtml' => 'No HTML' ],
+			'active_fields' => [ 'asb-bbcode' => 'rule_asb_bbcode_active' ],
+			'option_name'   => 'reasons',
+		];
+
+		$html = $this->render( $option );
+
+		self::assertStringContainsString(
+			'name="antispam_bee_options[comment][post_processor_asb_delete_for_reasons_reasons][asb-bbcode]"  data-asb-active-field="antispam_bee_options[comment][rule_asb_bbcode_active]" />',
+			$html,
+			'a row with an active field should carry the id of its rule checkbox'
+		);
+		self::assertSame( 1, substr_count( $html, 'data-asb-active-field' ), 'a row without an active field should not carry the attribute' );
 	}
 
 	public function test_row_uses_escaped_name_and_id(): void {

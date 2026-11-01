@@ -34,22 +34,34 @@ class CheckboxGroup extends Field implements RenderElement {
 			? $this->option['disabled_keys']
 			: [];
 
+		$active_fields = isset( $this->option['active_fields'] ) && is_array( $this->option['active_fields'] )
+			? $this->option['active_fields']
+			: [];
+
 		foreach ( $options as $key => $value ) {
 			$is_disabled = isset( $disabled_keys[ $key ] );
 			$label_class = $is_disabled ? ' class="asb-checkbox-group-disabled"' : '';
 			$disabled    = $is_disabled ? ' disabled' : '';
 			$field_name  = esc_attr( $this->get_name() . '[' . $key . ']' );
 			$stored      = $this->get_custom_value( $key );
+			$active_attr = '';
+
+			// Point to the rule's checkbox (same name and id as rendered by Checkbox), so the admin script can toggle this row.
+			if ( isset( $active_fields[ $key ] ) ) {
+				$active_field = str_replace( '-', '_', Settings::OPTION_NAME . "[{$this->reaction_type}][{$active_fields[ $key ]}]" );
+				$active_attr  = sprintf( ' data-asb-active-field="%s"', esc_attr( $active_field ) );
+			}
 
 			printf(
 				'<label for="%1$s"%4$s>
-						<input type="checkbox" id="%1$s" name="%1$s" %2$s%5$s />%3$s
+						<input type="checkbox" id="%1$s" name="%1$s" %2$s%5$s%6$s />%3$s
 					</label><br>',
 				$field_name,
 				checked( 'on', $stored, false ),
 				esc_html( $value ),
 				$label_class,
-				$disabled
+				$disabled,
+				$active_attr
 			);
 
 			// A disabled checkbox is not submitted and the save replaces the stored reasons, so keep a checked one.

@@ -254,6 +254,33 @@ class DeleteForReasonsTest extends TestCase {
 		);
 	}
 
+	public function test_active_fields_map_every_controllable_rule_to_its_active_option(): void {
+		$this->register_reason_rules();
+
+		$options = DeleteForReasons::get_options();
+
+		foreach ( $options as $option ) {
+			self::assertSame(
+				[
+					'test-active'   => 'rule_test_active_active',
+					'test-inactive' => 'rule_test_inactive_active',
+				],
+				$option['active_fields'],
+				'every controllable rule, active or not, should point to its active option; a non-controllable rule should not'
+			);
+		}
+	}
+
+	public function test_reasons_option_explains_that_only_active_rules_delete_spam(): void {
+		$this->register_reason_rules();
+
+		$options = DeleteForReasons::get_options();
+
+		foreach ( $options as $option ) {
+			self::assertNotEmpty( $option['description'], 'the reasons option should explain why some reasons are disabled' );
+		}
+	}
+
 	public function test_sanitize_still_accepts_a_stored_value_for_a_disabled_key(): void {
 		$this->register_reason_rules();
 
