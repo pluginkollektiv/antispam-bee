@@ -136,7 +136,7 @@ A ready-made filter and an example jail ship with the plugin, in the `fail2ban` 
 > cp wp-content/plugins/antispam-bee/fail2ban/filter.d/antispam-bee.conf /etc/fail2ban/filter.d/
 > cp wp-content/plugins/antispam-bee/fail2ban/jail.d/antispam-bee.local /etc/fail2ban/jail.d/
 
-Then set `logpath` in the jail to the file you defined as `ANTISPAM_BEE_LOG_FILE` and reload Fail2Ban. Check the result with `fail2ban-regex /path/to/your.log /etc/fail2ban/filter.d/antispam-bee.conf`, which reports how many lines matched.
+Then set `logpath` in the jail to the file `ANTISPAM_BEE_SPAM_LOG` writes to and reload Fail2Ban. Check the result with `fail2ban-regex /path/to/your.log /etc/fail2ban/filter.d/antispam-bee.conf`, which reports how many lines matched.
 
 The shipped filter matches the IP by field name rather than by position, because that field is the one Fail2Ban needs and it keeps its name and shape in future versions of the format:
 
