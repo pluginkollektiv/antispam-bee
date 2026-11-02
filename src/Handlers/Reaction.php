@@ -147,9 +147,14 @@ abstract class Reaction {
 	/**
 	 * Force the approval status of a comment to "spam".
 	 *
+	 * Removes itself on the first call, so the verdict only applies to the comment
+	 * that was checked and not to any other comment created in the same request.
+	 *
 	 * @return string Always `spam`.
 	 */
 	public static function mark_as_spam() {
+		remove_filter( 'pre_comment_approved', [ self::class, 'mark_as_spam' ] );
+
 		return 'spam';
 	}
 
