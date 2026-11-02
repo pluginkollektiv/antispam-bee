@@ -9,6 +9,7 @@ namespace AntispamBee\PostProcessors;
 
 use AntispamBee\Helpers\ContentTypeHelper;
 use AntispamBee\Helpers\SpamReasonTextHelper;
+use WP_Comment;
 use WP_Post;
 
 /**
@@ -48,7 +49,7 @@ class SendEmail extends ControllableBase {
 
 		self::$item = $item;
 
-		add_action( 'wp_insert_comment', [ self::class, 'send_notification' ] );
+		add_action( 'wp_insert_comment', [ self::class, 'send_notification' ], 10, 2 );
 
 		return $item;
 	}
@@ -56,12 +57,20 @@ class SendEmail extends ControllableBase {
 	/**
 	 * Send the spam notification for a comment that was just saved.
 	 *
-	 * @param int $id ID of the comment that was just saved.
+	 * The comment the notification is about is always inserted as spam, so any
+	 * other comment inserted before it in the same request is skipped.
+	 *
+	 * @param int        $id      ID of the comment that was just saved.
+	 * @param WP_Comment $comment The comment that was just saved.
 	 *
 	 * @return void
 	 */
-	public static function send_notification( $id ) {
-		remove_action( 'wp_insert_comment', [ self::class, 'send_notification' ] );
+	public static function send_notification( $id, $comment ) {
+		if ( 'spam' !== $comment->comment_approved ) {
+			return;
+		}
+
+		remove_action( 'wp_insert_comment', [ self::class, 'send_notification' ], 10 );
 
 		$comment = get_comment( $id, ARRAY_A );
 

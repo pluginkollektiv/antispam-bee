@@ -7,6 +7,8 @@
 
 namespace AntispamBee\PostProcessors;
 
+use WP_Comment;
+
 /**
  * Post-processor that is responsible for persisting the reason why something was marked as spam.
  */
@@ -50,7 +52,7 @@ class SaveReason extends ControllableBase {
 
 		self::$reasons = (array) $item['asb_reasons'];
 
-		add_action( 'wp_insert_comment', [ self::class, 'save_reasons' ] );
+		add_action( 'wp_insert_comment', [ self::class, 'save_reasons' ], 10, 2 );
 
 		return $item;
 	}
@@ -58,12 +60,20 @@ class SaveReason extends ControllableBase {
 	/**
 	 * Persist the spam reasons as comment meta.
 	 *
-	 * @param int $comment_id ID of the comment that was just saved.
+	 * The comment the reasons belong to is always inserted as spam, so any other
+	 * comment inserted before it in the same request is skipped.
+	 *
+	 * @param int        $comment_id ID of the comment that was just saved.
+	 * @param WP_Comment $comment    The comment that was just saved.
 	 *
 	 * @return void
 	 */
-	public static function save_reasons( $comment_id ) {
-		remove_action( 'wp_insert_comment', [ self::class, 'save_reasons' ] );
+	public static function save_reasons( $comment_id, $comment ) {
+		if ( 'spam' !== $comment->comment_approved ) {
+			return;
+		}
+
+		remove_action( 'wp_insert_comment', [ self::class, 'save_reasons' ], 10 );
 
 		add_comment_meta(
 			$comment_id,
