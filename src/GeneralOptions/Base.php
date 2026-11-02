@@ -7,6 +7,7 @@
 
 namespace AntispamBee\GeneralOptions;
 
+use AntispamBee\Admin\Fields\FieldOptions;
 use AntispamBee\Helpers\Settings;
 use AntispamBee\Interfaces\Controllable;
 
@@ -42,7 +43,7 @@ abstract class Base implements Controllable {
 	 *
 	 * {@inheritDoc}
 	 *
-	 * @return array<int, array<string, mixed>>|null The option data, or null.
+	 * @return array<int, FieldOptions>|null The option data, or null.
 	 */
 	public static function get_options(): ?array {
 		return null;

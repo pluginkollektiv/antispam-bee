@@ -51,7 +51,7 @@ class Text extends Field implements RenderElement, InjectableField {
 	 * @return string The type of the input field.
 	 */
 	protected function get_type(): string {
-		return $this->option['input_type'] ?? 'text';
+		return $this->option->get_input_type();
 	}
 
 	/**
@@ -64,7 +64,7 @@ class Text extends Field implements RenderElement, InjectableField {
 			'small'   => 'small-text',
 			'regular' => 'regular-text',
 		];
-		$field_size = $this->option['input_size'] ?? '';
+		$field_size = $this->option->get_input_size();
 
 		if ( isset( $classes[ $field_size ] ) ) {
 			return $classes[ $field_size ];
