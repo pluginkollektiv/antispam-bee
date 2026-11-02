@@ -14,7 +14,7 @@
 
 add_action(
 	'wp_head',
-	static function () {
+	static function (): void {
 		echo "<style>@view-transition { navigation: none; }</style>\n";
 	},
 	PHP_INT_MAX
