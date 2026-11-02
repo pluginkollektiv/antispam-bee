@@ -10,6 +10,7 @@ namespace AntispamBee\PostProcessors;
 use AntispamBee\Handlers\Rules;
 use AntispamBee\Helpers\Sanitize;
 use AntispamBee\Helpers\Settings;
+use AntispamBee\Interfaces\Controllable;
 use ReflectionException;
 
 /**
@@ -86,21 +87,40 @@ class DeleteForReasons extends ControllableBase {
 		foreach ( self::get_supported_types() as $reaction_type ) {
 			$filtered_rules   = Rules::get_spam_reason_rules( $reaction_type );
 			$checkbox_options = [];
+			$disabled_keys    = [];
+			$active_fields    = [];
 
 			foreach ( $filtered_rules as $rule ) {
 				if ( $rule::is_invisible() ) {
 					continue;
 				}
-				$checkbox_options[ $rule::get_slug() ] = $rule::get_name();
+
+				$slug                      = $rule::get_slug();
+				$checkbox_options[ $slug ] = $rule::get_name();
+
+				if ( is_a( $rule, Controllable::class, true ) ) {
+					// Lets the admin script toggle the reason as soon as the rule's checkbox changes.
+					$active_fields[ $slug ] = $rule::get_option_name( 'active' );
+
+					// Disable the reason when its rule is inactive, so users cannot pick a reason that never fires.
+					if ( ! $rule::is_active( $reaction_type ) ) {
+						$disabled_keys[ $slug ] = true;
+					}
+				}
 			}
 
 			$options[] = [
-				'valid_for'   => $reaction_type,
-				'label'       => __( 'Reasons', 'antispam-bee' ),
-				'type'        => 'checkbox-group',
-				'options'     => $checkbox_options,
-				'option_name' => 'reasons',
-				'sanitize'    => function ( $value ) use ( $checkbox_options ) {
+				'valid_for'     => $reaction_type,
+				'label'         => __( 'Reasons', 'antispam-bee' ),
+				'description'   => __( 'Only spam found by an active rule is deleted. To select a reason, activate its rule.', 'antispam-bee' ),
+				'type'          => 'checkbox-group',
+				'options'       => $checkbox_options,
+				'disabled_keys' => $disabled_keys,
+				'active_fields' => $active_fields,
+				'option_name'   => 'reasons',
+				// Sanitize still keys on the full option list on purpose: a disabled reason must keep its
+				// stored value, so re-enabling the rule restores the user's earlier choice.
+				'sanitize'      => function ( $value ) use ( $checkbox_options ) {
 					return Sanitize::checkbox_group( $value, $checkbox_options );
 				},
 			];
