@@ -21,7 +21,8 @@ class SaveReasonTest extends TestCase {
 	public function test_process_hooks_wp_insert_comment() {
 		SaveReason::process(
 			[
-				'asb_reasons' => [ 'asb-honeypot' ],
+				'comment_post_ID' => 1,
+				'asb_reasons'     => [ 'asb-honeypot' ],
 			]
 		);
 
@@ -37,6 +38,7 @@ class SaveReasonTest extends TestCase {
 	public function test_process_skips_items_marked_for_deletion() {
 		SaveReason::process(
 			[
+				'comment_post_ID'      => 1,
 				'asb_reasons'          => [ 'asb-honeypot' ],
 				'asb_marked_as_delete' => true,
 			]
@@ -59,7 +61,8 @@ class SaveReasonTest extends TestCase {
 
 		SaveReason::process(
 			[
-				'asb_reasons' => [ 'asb-honeypot', 'asb-regexp' ],
+				'comment_post_ID' => 1,
+				'asb_reasons'     => [ 'asb-honeypot', 'asb-regexp' ],
 			]
 		);
 
@@ -80,7 +83,8 @@ class SaveReasonTest extends TestCase {
 
 		SaveReason::process(
 			[
-				'asb_reasons' => [ 'asb-honeypot' ],
+				'comment_post_ID' => 1,
+				'asb_reasons'     => [ 'asb-honeypot' ],
 			]
 		);
 
@@ -96,7 +100,7 @@ class SaveReasonTest extends TestCase {
 	 * Without reasons the post-processor reports itself as failed and saves nothing.
 	 */
 	public function test_process_without_reasons_is_recorded_as_failed() {
-		$item = SaveReason::process( [] );
+		$item = SaveReason::process( [ 'comment_post_ID' => 1 ] );
 
 		self::assertContains(
 			SaveReason::get_slug(),
@@ -106,6 +110,25 @@ class SaveReasonTest extends TestCase {
 		self::assertFalse(
 			has_action( 'wp_insert_comment', [ SaveReason::class, 'save_reasons' ] ),
 			'Nothing should be hooked without reasons'
+		);
+	}
+
+	/**
+	 * Mirrors the comment_post_ID guard added alongside {@see SendEmail}: the
+	 * reason is stored as comment meta, so an item that never becomes a comment
+	 * must not leave a hook running either.
+	 */
+	public function test_process_without_a_comment_id_is_recorded_as_failed() {
+		$item = SaveReason::process( [ 'asb_reasons' => [ 'asb-honeypot' ] ] );
+
+		self::assertContains(
+			SaveReason::get_slug(),
+			$item['asb_post_processors_failed'],
+			'A missing comment_post_ID should be recorded as a failure'
+		);
+		self::assertFalse(
+			has_action( 'wp_insert_comment', [ SaveReason::class, 'save_reasons' ] ),
+			'Nothing should be hooked for an item that is not a comment'
 		);
 	}
 }

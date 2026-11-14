@@ -7,10 +7,10 @@ use AntispamBee\PostProcessors\SendEmail;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 
 /**
- * `SaveReason` and `SendEmail` defer their work to the `comment_post` action, which
- * only fires for items that are stored as comments. For anything else the callback
- * would never run — and worse, stay attached, so an unrelated comment inserted later
- * in the same request would be stamped with this item’s data.
+ * `SaveReason` and `SendEmail` defer their work to the `wp_insert_comment` action,
+ * which only fires for items that are stored as comments. For anything else the
+ * callback would never run — and worse, stay attached, so an unrelated comment
+ * inserted later in the same request would be stamped with this item’s data.
  */
 class CommentOnlyPostProcessorsTest extends TestCase {
 
@@ -40,8 +40,8 @@ class CommentOnlyPostProcessorsTest extends TestCase {
 		$processed = $post_processor::process( $item );
 
 		self::assertFalse(
-			has_action( 'comment_post' ),
-			'no comment_post callback should be attached for a non-comment item'
+			has_action( 'wp_insert_comment' ),
+			'no wp_insert_comment callback should be attached for a non-comment item'
 		);
 		self::assertSame(
 			[ $slug ],
@@ -66,8 +66,8 @@ class CommentOnlyPostProcessorsTest extends TestCase {
 		$processed = $post_processor::process( $item );
 
 		self::assertTrue(
-			has_action( 'comment_post' ),
-			'a comment_post callback should be attached for a comment'
+			has_action( 'wp_insert_comment' ),
+			'a wp_insert_comment callback should be attached for a comment'
 		);
 		self::assertArrayNotHasKey(
 			'asb_post_processors_failed',

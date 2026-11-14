@@ -68,7 +68,12 @@ final class SpamVerdictScopeTest extends TestCase {
 	}
 
 	public function test_the_reasons_skip_a_comment_inserted_before_the_spam_comment(): void {
-		SaveReason::process( [ 'asb_reasons' => [ 'asb-honeypot' ] ] );
+		SaveReason::process(
+			[
+				'comment_post_ID' => $this->post_id,
+				'asb_reasons'     => [ 'asb-honeypot' ],
+			]
+		);
 
 		$other = $this->create_comment( '1' );
 		$spam  = $this->create_comment( 'spam' );
@@ -80,8 +85,9 @@ final class SpamVerdictScopeTest extends TestCase {
 	public function test_the_notification_skips_a_comment_inserted_before_the_spam_comment(): void {
 		SendEmail::process(
 			[
-				'reaction_type' => 'comment',
-				'asb_reasons'   => [ 'asb-honeypot' ],
+				'reaction_type'   => 'comment',
+				'comment_post_ID' => $this->post_id,
+				'asb_reasons'     => [ 'asb-honeypot' ],
 			]
 		);
 

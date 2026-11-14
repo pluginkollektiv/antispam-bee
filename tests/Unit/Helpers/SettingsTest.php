@@ -36,6 +36,9 @@ class SettingsTest extends TestCase {
 				return Settings::OPTION_NAME === $name ? $stored : $default;
 			}
 		);
+		// Isolated from the default-backfilling behaviour covered elsewhere: this
+		// test is only about the option itself not being altered by a cache layer.
+		expectApplied( 'antispam_bee_default_options' )->andReturn( [] );
 
 		self::assertSame( $stored, Settings::get_options(), 'the stored option should be returned as-is' );
 		self::assertSame(
