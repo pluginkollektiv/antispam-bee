@@ -65,6 +65,9 @@
     * Fix: The regular expression rule no longer flags every reaction as spam when a pattern
       added or modified through the `antispam_bee_patterns` filter is emptied out field by
       field rather than removed entirely
+    * Fix: A spam verdict now only applies to the comment that was checked. Any other comment
+      created later in the same request is no longer marked as spam, and the spam reasons and
+      the notification email are no longer attached to a comment inserted before it
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -134,6 +137,10 @@
     * Fix: Die Regular-Expression-Regel markiert nicht mehr jede Reaktion als Spam, wenn ein über
       den Filter `antispam_bee_patterns` hinzugefügtes oder verändertes Pattern Feld für Feld
       geleert statt vollständig entfernt wird
+    * Fix: Ein Spam-Urteil gilt nun nur noch für den geprüften Kommentar. Ein anderer Kommentar,
+      der später in derselben Anfrage erstellt wird, wird nicht mehr als Spam markiert, und die
+      Spam-Gründe und die Benachrichtigungs-E-Mail landen nicht mehr bei einem Kommentar, der
+      davor gespeichert wurde
 
 ### 2.11.12 ###
 

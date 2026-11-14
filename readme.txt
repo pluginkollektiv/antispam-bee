@@ -189,6 +189,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
     * Fix: The rules now compare a comment against the database in the same unslashed form WordPress stores it in. An author name or email address containing a quote or a backslash — `O'Brien`, for example — is matched correctly by the "Trust approved commenters" and local spam database rules instead of being missed
     * Fix: The spam log no longer rejects a Windows absolute path (`C:\...`) for `ANTISPAM_BEE_LOG_FILE`, which silently disabled logging — and with it the documented Fail2Ban setup — on every Windows/IIS install
     * Fix: The regular expression rule no longer flags every reaction as spam when a pattern added or modified through the `antispam_bee_patterns` filter is emptied out field by field rather than removed entirely
+    * Fix: A spam verdict now only applies to the comment that was checked. Any other comment created later in the same request is no longer marked as spam, and the spam reasons and the notification email are no longer attached to a comment inserted before it
 
 ### 2.11.12 ###
   * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)
