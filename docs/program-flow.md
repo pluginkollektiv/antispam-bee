@@ -24,7 +24,10 @@
            $is_spam = $rules->apply( $reaction );
            ```
            Where `$reaction` is an array of comment data. The `apply` method returns a boolean
-           indicating if the reaction is spam or not.
+           indicating if the reaction is spam or not.\
+           Note that `\AntispamBee\Handlers\Rules` is internal. Other plugins that want their own
+           content checked should use `\AntispamBee\Api\SpamCheck` instead, see
+           [Integrating your own content](integrating-own-content.md).
         2. If it is spam, you can apply the post processors (code snippet from the
            `\AntispamBee\Handlers\Reaction::process` method):
            ```php
