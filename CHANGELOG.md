@@ -8,9 +8,21 @@
     * Allows using Antispam Bee rules for other reactions than comments, for example, forms
     * The built-in patterns of the regular expression rule now have stable identifiers as array keys,
       so single patterns can be removed or modified via the `antispam_bee_patterns` filter
-    * The spam log now uses a `key=value` format with an ISO 8601 timestamp, records the reasons an
-      item was detected and supports reactions other than comments. Fail2Ban filters written for the
-      previous format need to be updated to match `ip=<HOST>`
+    * A new `ANTISPAM_BEE_SPAM_LOG` constant replaces `ANTISPAM_BEE_LOG_FILE` and writes a
+      `key=value` format with an ISO 8601 timestamp, records the reasons an item was detected and
+      supports reactions other than comments. `ANTISPAM_BEE_LOG_FILE` still works and keeps writing
+      the old format until 4.0. Fail2Ban filters written for the old format need to be updated to
+      match `ip=<HOST>` once you switch
+    * The spam log and the debug log are configured the same way: `ANTISPAM_BEE_SPAM_LOG` and
+      `ANTISPAM_BEE_DEBUG_LOG` take a file path, or `true` for a generated file name, and
+      `ANTISPAM_BEE_SPAM_LOG_DIR` and `ANTISPAM_BEE_DEBUG_LOG_DIR` set the directory for a
+      generated name. `ANTISPAM_BEE_LOG_FILE` and `ANTISPAM_BEE_DEBUG_MODE_ENABLED` are deprecated
+      and show a notice in the admin
+    * The honeypot now also works with themes that render the comment field as a text input
+      instead of a textarea
+    * Enhancement: The country, language and Gravatar rules cache the answers of the external
+      services for a short time, so a burst of comments no longer sends one request per comment
+      and rule
     * Fix: The language rule now also checks comments written in a script that does not delimit
       its words with spaces, for example Chinese, Japanese, Korean or Thai
     * Fix: The language rule no longer marks a comment as spam if the language could not be
@@ -53,6 +65,9 @@
     * Fix: The regular expression rule no longer flags every reaction as spam when a pattern
       added or modified through the `antispam_bee_patterns` filter is emptied out field by
       field rather than removed entirely
+    * Fix: A spam verdict now only applies to the comment that was checked. Any other comment
+      created later in the same request is no longer marked as spam, and the spam reasons and
+      the notification email are no longer attached to a comment inserted before it
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -62,9 +77,21 @@
     * Die eingebauten Patterns der Regular-Expression-Regel haben nun feste Bezeichner als Array-Keys,
       sodass einzelne Patterns über den Filter `antispam_bee_patterns` entfernt oder angepasst werden
       können
-    * Das Spam-Log verwendet jetzt ein `key=value`-Format mit einem ISO-8601-Zeitstempel, enthält die
-      Gründe der Erkennung und unterstützt auch andere Reaktionen als Kommentare. Fail2Ban-Filter für
-      das bisherige Format müssen auf `ip=<HOST>` umgestellt werden
+    * Die neue Konstante `ANTISPAM_BEE_SPAM_LOG` ersetzt `ANTISPAM_BEE_LOG_FILE` und schreibt ein
+      `key=value`-Format mit einem ISO-8601-Zeitstempel, enthält die Gründe der Erkennung und
+      unterstützt auch andere Reaktionen als Kommentare. `ANTISPAM_BEE_LOG_FILE` funktioniert
+      weiterhin und schreibt bis 4.0 das alte Format. Fail2Ban-Filter für das alte Format müssen
+      beim Umstieg auf `ip=<HOST>` umgestellt werden
+    * Spam-Log und Debug-Log werden gleich konfiguriert: `ANTISPAM_BEE_SPAM_LOG` und
+      `ANTISPAM_BEE_DEBUG_LOG` nehmen einen Dateipfad oder `true` für einen generierten Dateinamen,
+      `ANTISPAM_BEE_SPAM_LOG_DIR` und `ANTISPAM_BEE_DEBUG_LOG_DIR` legen das Verzeichnis für einen
+      generierten Namen fest. `ANTISPAM_BEE_LOG_FILE` und `ANTISPAM_BEE_DEBUG_MODE_ENABLED` sind
+      veraltet und zeigen einen Hinweis im Admin-Bereich
+    * Der Honeypot funktioniert nun auch mit Themes, die das Kommentarfeld als Text-Input statt als
+      Textarea ausgeben
+    * Verbesserung: Die Länder-, Sprach- und Gravatar-Regel speichern die Antworten der externen
+      Dienste für kurze Zeit zwischen, sodass viele Kommentare in kurzer Zeit nicht mehr eine
+      Anfrage pro Kommentar und Regel auslösen
     * Fix: Die Sprach-Regel prüft nun auch Kommentare in einer Schrift, die ihre Wörter nicht
       durch Leerzeichen trennt, beispielsweise Chinesisch, Japanisch, Koreanisch oder Thai
     * Fix: Die Sprach-Regel markiert einen Kommentar nicht mehr als Spam, wenn die Sprache
@@ -110,6 +137,10 @@
     * Fix: Die Regular-Expression-Regel markiert nicht mehr jede Reaktion als Spam, wenn ein über
       den Filter `antispam_bee_patterns` hinzugefügtes oder verändertes Pattern Feld für Feld
       geleert statt vollständig entfernt wird
+    * Fix: Ein Spam-Urteil gilt nun nur noch für den geprüften Kommentar. Ein anderer Kommentar,
+      der später in derselben Anfrage erstellt wird, wird nicht mehr als Spam markiert, und die
+      Spam-Gründe und die Benachrichtigungs-E-Mail landen nicht mehr bei einem Kommentar, der
+      davor gespeichert wurde
 
 ### 2.11.12 ###
 
