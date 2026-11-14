@@ -63,11 +63,32 @@ class SaveReasonTest extends TestCase {
 			]
 		);
 
-		SaveReason::save_reasons( 42 );
+		SaveReason::save_reasons( 42, (object) [ 'comment_approved' => 'spam' ] );
 
 		self::assertFalse(
 			has_action( 'wp_insert_comment', [ SaveReason::class, 'save_reasons' ] ),
 			'The callback should have unhooked itself after saving'
+		);
+	}
+
+	/**
+	 * A comment that is not spam is not the one the reasons belong to, so it gets no
+	 * meta and the callback keeps waiting for the spam comment.
+	 */
+	public function test_save_reasons_skips_a_comment_that_is_not_spam() {
+		expect( 'add_comment_meta' )->never();
+
+		SaveReason::process(
+			[
+				'asb_reasons' => [ 'asb-honeypot' ],
+			]
+		);
+
+		SaveReason::save_reasons( 41, (object) [ 'comment_approved' => '1' ] );
+
+		self::assertNotFalse(
+			has_action( 'wp_insert_comment', [ SaveReason::class, 'save_reasons' ] ),
+			'The callback should still wait for the spam comment'
 		);
 	}
 
