@@ -67,6 +67,70 @@ class TextHelper {
 	}
 
 	/**
+	 * Fold the characters a browser maps to ASCII before it resolves a host name.
+	 *
+	 * `bit。ly` opens bit.ly: the IDNA mapping (UTS #46) turns U+3002 IDEOGRAPHIC
+	 * FULL STOP, U+FF0E FULLWIDTH FULL STOP and U+FF61 HALFWIDTH IDEOGRAPHIC FULL
+	 * STOP into a label separator, and the fullwidth forms U+FF01–U+FF5E into the
+	 * ASCII characters they are wider copies of. A pattern written for `bit\.ly`
+	 * matches none of those spellings unless the subject is folded the same way
+	 * first.
+	 *
+	 * Deliberately not `idn_to_ascii()`, which needs the `intl` extension that
+	 * WordPress only recommends, and not a full NFKC normalization either: only
+	 * the mappings that matter for a host name are applied, so the result stays
+	 * predictable for the rest of a text.
+	 *
+	 * @param string $text The text.
+	 *
+	 * @return string The text with those characters replaced by their ASCII form.
+	 */
+	public static function fold_fullwidth_ascii( string $text ): string {
+		[ $search, $replace ] = self::fullwidth_ascii_map();
+
+		// A byte-level replacement is safe here: every entry is a complete three-byte
+		// UTF-8 sequence, and a lead byte never occurs inside another character, so
+		// neither valid text nor malformed bytes can be altered by accident.
+		return str_replace( $search, $replace, $text );
+	}
+
+	/**
+	 * The folded characters and their ASCII counterparts, in matching order.
+	 *
+	 * Built once per request. The UTF-8 bytes are assembled by hand so that the
+	 * map needs neither `mbstring` nor `intl`, which the plugin does not require.
+	 *
+	 * @return array{0: string[], 1: string[]} The characters to replace and their replacements.
+	 */
+	private static function fullwidth_ascii_map(): array {
+		static $map = null;
+
+		if ( null !== $map ) {
+			return $map;
+		}
+
+		$search  = [ "\u{3002}", "\u{FF61}" ];
+		$replace = [ '.', '.' ];
+
+		// The fullwidth block U+FF01–U+FF5E mirrors ASCII U+0021–U+007E at a fixed offset.
+		for ( $ascii = 0x21; $ascii <= 0x7E; $ascii++ ) {
+			$code_point = 0xFEE0 + $ascii;
+
+			$search[]  = pack(
+				'C3',
+				0xE0 | ( $code_point >> 12 ),
+				0x80 | ( ( $code_point >> 6 ) & 0x3F ),
+				0x80 | ( $code_point & 0x3F )
+			);
+			$replace[] = chr( $ascii );
+		}
+
+		$map = [ $search, $replace ];
+
+		return $map;
+	}
+
+	/**
 	 * Count the words of a text, delimited by whitespace.
 	 *
 	 * @param string $text The text.

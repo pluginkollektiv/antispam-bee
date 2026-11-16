@@ -320,6 +320,67 @@ class RegexpSpamTest extends AbstractRuleTestCase {
 	}
 
 	/**
+	 * A host written with a lookalike dot must match the pattern for its ASCII
+	 * spelling, see #931: `http://bit。ly/foo` opens bit.ly in a browser, so the
+	 * `bit\.ly` pattern has to catch it.
+	 */
+	public function test_verify_folds_lookalike_dots_in_the_host() {
+		$dots = [
+			'ideographic full stop'           => "\u{3002}",
+			'fullwidth full stop'             => "\u{FF0E}",
+			'halfwidth ideographic full stop' => "\u{FF61}",
+		];
+
+		foreach ( $dots as $description => $dot ) {
+			$url          = "http://bit{$dot}ly/foo";
+			$item         = self::make_comment();
+			$item['url']  = $url;
+			$item['host'] = parse_url( $url, PHP_URL_HOST );
+
+			self::assertSame(
+				"bit{$dot}ly",
+				$item['host'],
+				"the host of a URL with a $description is passed through unfolded, as parse_url() returns it"
+			);
+			self::assertSame(
+				1,
+				RegexpSpam::verify( $item ),
+				"a bit.ly host written with a $description should be flagged"
+			);
+		}
+	}
+
+	/**
+	 * The same spelling trick inside the comment body and the raw URL.
+	 */
+	public function test_verify_folds_lookalike_characters_in_body_and_rawurl() {
+		$body           = self::make_comment();
+		$body['body']   = "https://shorturl\u{3002}fm/Ab1cD";
+		$body['email']  = 'someone@gmail.com';
+		$body['author'] = 'Jane1234';
+		self::assertSame( 1, RegexpSpam::verify( $body ), 'A shorturl.fm link written with an ideographic full stop should be flagged' );
+
+		$fullwidth        = self::make_comment();
+		$fullwidth['url'] = "https://accounts\u{FF0E}binance\u{FF0E}com/en/register?ref=ABCDE123";
+		self::assertSame( 1, RegexpSpam::verify( $fullwidth ), 'A Binance referral URL written with fullwidth full stops should be flagged via rawurl' );
+
+		$letters        = self::make_comment();
+		$letters['url'] = "https://\u{FF41}\u{FF43}\u{FF43}\u{FF4F}\u{FF55}\u{FF4E}\u{FF54}\u{FF53}.binance.com/en/register?ref=ABCDE123";
+		self::assertSame( 1, RegexpSpam::verify( $letters ), 'A Binance referral URL written with fullwidth letters should be flagged via rawurl' );
+	}
+
+	/**
+	 * Folding must not turn ordinary CJK prose into spam: the ideographic full stop
+	 * is the regular sentence delimiter in Japanese and Chinese.
+	 */
+	public function test_verify_does_not_flag_cjk_prose_for_its_full_stops() {
+		$item         = self::make_comment();
+		$item['body'] = "とても参考になりました。ありがとうございます。また読みに来ます。";
+
+		self::assertSame( 0, RegexpSpam::verify( $item ), 'Japanese prose with ideographic full stops should not be flagged' );
+	}
+
+	/**
 	 * Set up the test environment.
 	 *
 	 * @return void

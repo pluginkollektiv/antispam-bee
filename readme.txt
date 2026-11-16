@@ -180,6 +180,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
     * Enhancement: New `antispam_bee_country_spam_ip` filter to change which address the country rule looks up — mask it differently, send the original one for a more precise country, or return an empty string to skip the lookup
     * Fix: The spam log no longer rejects a Windows absolute path (`C:\...`) for `ANTISPAM_BEE_LOG_FILE`, which silently disabled logging — and with it the documented Fail2Ban setup — on every Windows/IIS install
     * Fix: The regular expression rule no longer flags every reaction as spam when a pattern added or modified through the `antispam_bee_patterns` filter is emptied out field by field rather than removed entirely
+    * Fix: The regular expression rule now also matches a host or URL written with the lookalike characters a browser maps to ASCII before resolving it — the ideographic full stop in `bit。ly`, for example, or fullwidth letters — which previously slipped past every pattern
 
 ### 2.11.12 ###
   * Fix: Fatal error in the dashboard spam counter (Thanks @robertstaddon!)
