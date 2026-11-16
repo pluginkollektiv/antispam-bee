@@ -53,6 +53,9 @@
     * Fix: The regular expression rule no longer flags every reaction as spam when a pattern
       added or modified through the `antispam_bee_patterns` filter is emptied out field by
       field rather than removed entirely
+    * Fix: The regular expression rule now also matches a host or URL written with the lookalike
+      characters a browser maps to ASCII before resolving it — the ideographic full stop in
+      `bit。ly`, for example, or fullwidth letters — which previously slipped past every pattern
 
 * **Deutsch**
     * Kompletter Code-Rewrite und Überarbeitung des Backend-User-Interfaces
@@ -110,6 +113,9 @@
     * Fix: Die Regular-Expression-Regel markiert nicht mehr jede Reaktion als Spam, wenn ein über
       den Filter `antispam_bee_patterns` hinzugefügtes oder verändertes Pattern Feld für Feld
       geleert statt vollständig entfernt wird
+    * Fix: Die Regular-Expression-Regel erkennt nun auch einen Host oder eine URL, die mit Zeichen
+      geschrieben ist, die ein Browser vor dem Auflösen auf ASCII abbildet – etwa der ideografische
+      Punkt in `bit。ly` oder Vollbreite-Buchstaben –, womit sich bisher jedes Pattern umgehen ließ
 
 ### 2.11.12 ###
 

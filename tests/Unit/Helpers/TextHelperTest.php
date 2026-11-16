@@ -182,4 +182,71 @@ class TextHelperTest extends TestCase {
 			'blank-rendering characters should collapse like any other whitespace'
 		);
 	}
+
+	/**
+	 * The three full stops a browser treats as a label separator, see #931.
+	 */
+	public function test_fold_fullwidth_ascii_folds_the_dots_a_browser_resolves(): void {
+		$dots = [
+			'ideographic full stop'           => "\u{3002}",
+			'fullwidth full stop'             => "\u{FF0E}",
+			'halfwidth ideographic full stop' => "\u{FF61}",
+		];
+
+		foreach ( $dots as $description => $dot ) {
+			self::assertSame(
+				'http://bit.ly/foo',
+				TextHelper::fold_fullwidth_ascii( "http://bit{$dot}ly/foo" ),
+				"a host written with a $description should fold to the ASCII host"
+			);
+		}
+	}
+
+	public function test_fold_fullwidth_ascii_folds_the_whole_fullwidth_block(): void {
+		self::assertSame(
+			'bit.ly/Foo-9?x=1',
+			TextHelper::fold_fullwidth_ascii( "\u{FF42}\u{FF49}\u{FF54}\u{FF0E}\u{FF4C}\u{FF59}\u{FF0F}\u{FF26}\u{FF4F}\u{FF4F}\u{FF0D}\u{FF19}\u{FF1F}\u{FF58}\u{FF1D}\u{FF11}" ),
+			'fullwidth letters, digits and punctuation should fold to their ASCII counterparts'
+		);
+
+		self::assertSame(
+			'!',
+			TextHelper::fold_fullwidth_ascii( "\u{FF01}" ),
+			'the first character of the fullwidth block should fold to the first printable ASCII character'
+		);
+		self::assertSame(
+			'~',
+			TextHelper::fold_fullwidth_ascii( "\u{FF5E}" ),
+			'the last character of the fullwidth block should fold to the last printable ASCII character'
+		);
+	}
+
+	public function test_fold_fullwidth_ascii_leaves_other_text_alone(): void {
+		$untouched = [
+			'plain ASCII'                 => 'http://bit.ly/foo and some text.',
+			'umlauts'                     => 'Grüße aus Köln',
+			'CJK letters'                 => 'こんにちは',
+			'fullwidth space (U+3000)'    => "a\u{3000}b",
+			'middle dot (U+00B7)'         => "bit\u{00B7}ly",
+			'one-dot leader (U+2024)'     => "bit\u{2024}ly",
+			'character before the block'  => "\u{FF00}",
+			'character after the block'   => "\u{FF5F}",
+		];
+
+		foreach ( $untouched as $description => $text ) {
+			self::assertSame(
+				$text,
+				TextHelper::fold_fullwidth_ascii( $text ),
+				"a text with $description should not be changed"
+			);
+		}
+	}
+
+	public function test_fold_fullwidth_ascii_handles_invalid_utf8(): void {
+		self::assertSame(
+			self::INVALID_UTF8,
+			TextHelper::fold_fullwidth_ascii( self::INVALID_UTF8 ),
+			'a text that is not valid UTF-8 should be returned unchanged instead of becoming empty'
+		);
+	}
 }

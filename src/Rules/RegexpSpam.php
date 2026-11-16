@@ -7,6 +7,7 @@
 
 namespace AntispamBee\Rules;
 
+use AntispamBee\Helpers\TextHelper;
 use AntispamBee\Interfaces\SpamReason;
 
 /**
@@ -61,9 +62,17 @@ class RegexpSpam extends ControllableBase implements SpamReason {
 		 * is spliced into the patterns below, and a pattern that is not valid UTF-8
 		 * makes the `u` modifier fail to compile — which raises a warning instead of
 		 * simply not matching.
+		 *
+		 * Then fold the lookalike characters a browser maps to ASCII when it resolves
+		 * a host: `http://bit。ly/foo` opens bit.ly, but `bit\.ly` would never match
+		 * it (#931). Every field is folded, not only the host — the same spelling
+		 * works inside a URL in the body, and the author is spliced into patterns
+		 * that are matched against the body, so both sides have to agree.
 		 */
 		$subject = array_map(
-			[ self::class, 'repair_utf8' ],
+			static function ( $value ): string {
+				return TextHelper::fold_fullwidth_ascii( self::repair_utf8( $value ) );
+			},
 			[
 				'ip'        => $item['ip'] ?? '',
 				'rawurl'    => $item['url'] ?? '',
